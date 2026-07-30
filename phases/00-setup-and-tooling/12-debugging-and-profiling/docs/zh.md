@@ -11,7 +11,7 @@
 
 - 用條件式的 `breakpoint()` 與 `debug_print`，在訓練途中檢查張量的形狀、dtype 與 NaN
 - 用 `cProfile`、`line_profiler` 與 `tracemalloc` 分析訓練迴圈，找出瓶頸
-- 抓出常見的 AI bug：形狀不合、損失變成 NaN、資料洩漏、張量跑錯裝置
+- 抓出常見的 AI bug：形狀不符、損失變成 NaN、資料洩漏、張量跑錯裝置
 - 設定 TensorBoard，把損失曲線、權重直方圖與梯度分布視覺化
 
 ## 問題所在
@@ -216,7 +216,7 @@ if torch.cuda.is_available():
 
 ### 第 7 部分：常見的 AI bug 與抓法
 
-#### 形狀不合
+#### 形狀不符
 
 最常見的 bug。模型預期 `[batch, channels, height, width]`，張量卻是 `[batch, features]`。
 
