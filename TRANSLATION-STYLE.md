@@ -42,7 +42,7 @@ don't write one.
 
 | English | Chinese |
 |---|---|
-| `**Type:**` | `**類型：**` — Build→實作, Learn→學習, Reference→參考 |
+| `**Type:**` | `**類型：**` — Build→實作, Learn→學習, Use→應用, Reference→參考, Capstone→總結專案. Compounds keep the `+`: "Learn + Build"→`學習 + 實作`, "Build + Use"→`實作 + 應用` |
 | `**Languages:**` | `**程式語言：**` (values stay English) |
 | `**Prerequisites:**` | `**先修單元：**` — "Phase 7 · 05 (Full Transformer)" → "階段 7 · 05（完整的 Transformer）"; "None" → "無" |
 | `**Time:**` | `**時間：**` — "~45 minutes" → "約 45 分鐘" |
