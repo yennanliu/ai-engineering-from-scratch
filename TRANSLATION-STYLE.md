@@ -75,7 +75,13 @@ Taiwan usage, not Mainland: 程式碼 (not 代碼) · 資料 (not 數據) · 函
 
 ML terms: 詞元 (token) · 嵌入 (embedding) · 微調 (fine-tuning) · 預訓練 · 損失函式 · 梯度 · 張量 ·
 最佳化器 (optimizer) · 注意力機制 · 自注意力 · 編碼器／解碼器 · 代理程式 (agent) · 提示詞 (prompt) ·
-量化 · 分詞器 (tokenizer) · 正則化 · 過度擬合 (overfitting).
+量化 · 分詞器 (tokenizer) · 正則化 · 過度擬合 (overfitting) · 單純貝氏 (naive Bayes, **not** the
+Mainland 樸素貝氏) · 過濾法／包裝法／嵌入法 (filter / wrapper / embedded methods).
+
+**One collision to keep straight.** 反向傳播 is the *algorithm* (backpropagation). The two directions
+of a single training step are 前向傳播 (forward pass) and 反向傳遞 (backward pass) — using 反向傳播
+for the pass as well leaves a sentence that cannot distinguish them, which matters most in exactly
+the lessons that teach both.
 
 Keep in English: Transformer, PyTorch, BERT, GPT, LoRA, RAG, MCP, ReLU, softmax, beam search, and
 any other name a reader would search for.
