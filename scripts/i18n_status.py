@@ -51,6 +51,7 @@ def shape(text: str) -> dict:
         "figures": re.findall(r"^```figure\s*\n\s*([\w-]+)", text, re.M),
         "links": sorted(re.findall(r"\]\((https?://[^)\s]+)\)", text)),
         "images": re.findall(r"!\[[^\]]*\]\(([^)\s]+)\)", text),
+        "alts": re.findall(r"!\[([^\]]*)\]\([^)\s]+\)", text),
         "code": [f.split("\n", 1)[1] for f in fenced],
     }
 
@@ -72,6 +73,14 @@ def verify(lesson_dir: Path, lang: str) -> list[str]:
         problems.append(f"links differ (missing {len(missing)}, added {len(added)})")
     if a["images"] != b["images"]:
         problems.append(f"image paths differ: en={a['images']} {lang}={b['images']}")
+    # Alt text is what a screen reader reads out, and comparing image paths
+    # cannot see it: an untranslated caption passes every other check.
+    untranslated = [
+        en_alt for en_alt, zh_alt in zip(a["alts"], b["alts"])
+        if en_alt and en_alt == zh_alt and not re.search(r"[\u4e00-\u9fff]", zh_alt)
+    ]
+    if untranslated:
+        problems.append(f"image alt text left untranslated: {untranslated}")
     if a["code"] != b["code"]:
         n = sum(1 for x, y in zip(a["code"], b["code"]) if x != y)
         problems.append(f"code block contents drifted in {n} block(s)")
