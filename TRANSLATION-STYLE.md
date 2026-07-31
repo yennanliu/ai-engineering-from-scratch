@@ -78,10 +78,13 @@ ML terms: 詞元 (token) · 嵌入 (embedding) · 微調 (fine-tuning) · 預訓
 量化 · 分詞器 (tokenizer) · 正則化 · 過度擬合 (overfitting) · 單純貝氏 (naive Bayes, **not** the
 Mainland 樸素貝氏) · 過濾法／包裝法／嵌入法 (filter / wrapper / embedded methods).
 
-**One collision to keep straight.** 反向傳播 is the *algorithm* (backpropagation). The two directions
-of a single training step are 前向傳播 (forward pass) and 反向傳遞 (backward pass) — using 反向傳播
-for the pass as well leaves a sentence that cannot distinguish them, which matters most in exactly
-the lessons that teach both.
+**Two collisions to keep straight.** Both are cases where one Chinese word would have to cover two
+English terms that a lesson uses in the same sentence:
+
+- 反向傳播 is the *algorithm* (backpropagation). The two directions of a single training step are
+  前向傳播 (forward pass) and 反向傳遞 (backward pass).
+- 編解碼器 is a *codec*; 編碼器 is an *encoder*. The audio-codec lessons discuss a codec's own
+  encoder and decoder, so reusing 編碼器 for both makes those sentences ambiguous.
 
 Keep in English: Transformer, PyTorch, BERT, GPT, LoRA, RAG, MCP, ReLU, softmax, beam search, and
 any other name a reader would search for.
