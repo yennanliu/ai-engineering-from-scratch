@@ -21,7 +21,7 @@ BERTopic（2020）用 BERT 編碼文件、用 UMAP 降維、用 HDBSCAN 分群�
 
 ## 核心概念
 
-![LDA mixture model vs BERTopic clustering](../assets/topic-modeling.svg)
+![LDA 混合模型與 BERTopic 分群的對照](../assets/topic-modeling.svg)
 
 **LDA 的生成過程。** 每個主題是詞上的分布。每份文件是主題的混合。要在一份文件裡生成一個詞，先從該文件的主題分布抽出一個主題，再從那個主題的詞分布抽出一個詞。推論則是把這個過程倒推回去：給定觀察到的詞，反推每份文件的主題分布與每個主題的詞分布。這段數學由 collapsed Gibbs sampling 或變分貝氏來完成。
 

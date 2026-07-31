@@ -17,7 +17,7 @@
 
 ## 核心概念
 
-![BPE vs Unigram vs WordPiece, character-by-character](../assets/subword-tokenization.svg)
+![BPE、Unigram 與 WordPiece 的逐字元對照](../assets/subword-tokenization.svg)
 
 **BPE（位元組對編碼）。** 從字元層級的詞彙表開始。統計每一個相鄰的配對。把出現頻率最高的配對合併成一個新詞元。重複下去，直到達到目標詞彙表大小。這是目前的主流演算法：GPT-2/3/4、Llama、Gemma、Qwen2、Mistral 都用它。
 
