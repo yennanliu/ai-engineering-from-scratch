@@ -1702,7 +1702,11 @@
           html += '<div class="book-card reveal"' + (i > 0 ? ' style="--stagger-delay: ' + (i * 60) + 'ms;"' : '') + '>';
           html += '<span class="vol">VOL_00' + v.n + '</span>';
           html += '<h3>' + v.title + '</h3>';
-          html += '<p>' + v.subtitle + ' · phases ' + v.phases + '</p>';
+          // Each translatable phrase gets its own text node: i18n.js matches a
+          // node's whole text against the dictionary, so concatenating the
+          // subtitle with " · phases 00–02" would make it unmatchable and the
+          // card would stay English under a translated heading.
+          html += '<p><span>' + v.subtitle + '</span> · <span>phases</span> ' + v.phases + '</p>';
           html += '<div class="dl">';
           html += '<a href="' + base + '.epub">EPUB</a>';
           html += '<a href="' + base + '.pdf">PDF</a>';

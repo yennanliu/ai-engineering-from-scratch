@@ -112,6 +112,7 @@ window.I18N_ZH_HANT = {
   'Multimodality, Protocols, Autonomy, and Swarms': '多模態、協定、自主性與群體智慧',
   'Production': '生產環境',
   'Infrastructure, Safety, and Capstones': '基礎設施、安全與總結專案',
+  'phases': '階段',
 
   /* ── Catalog ───────────────────────────────────────────────────── */
   'Lesson Catalog': '課程目錄',
