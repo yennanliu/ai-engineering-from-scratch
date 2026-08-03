@@ -94,6 +94,7 @@ window.I18N_ZH_HANT = {
   'Colophon': '版本說明',
   'The entire curriculum is on GitHub. Clone it, fork it, learn at your own pace. No paywall, no signup. Every lesson has runnable code in Python, TypeScript, Rust, or Julia, depending on what fits the concept best.':
     '整套課程都放在 GitHub 上。你可以複製、分支，按自己的步調學習。沒有付費牆，不用註冊。每個單元都有可執行的程式碼，視概念最適合哪種語言而定，可能是 Python、TypeScript、Rust 或 Julia。',
+  'Copy': '複製',
   'Copy command': '複製指令',
   'Copied!': '已複製！',
 

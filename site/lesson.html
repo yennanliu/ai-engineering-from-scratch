@@ -459,6 +459,15 @@
       z-index: 2;
     }
 
+    .lesson-article .code-block {
+      position: relative;
+      margin: 20px 0;
+    }
+
+    .lesson-article .code-block pre {
+      margin: 0;
+    }
+
     .code-copy {
       position: absolute;
       top: 6px;
@@ -2053,28 +2062,52 @@
         var DOC_CODE = { 'zh-Hant': 'zh' };
         var docCode = DOC_CODE[(window.I18N && window.I18N.lang) || 'en'];
         var docUrl = docCode ? base + path + '/docs/' + docCode + '.md' : enUrl;
+        // quiz.<code>.json mirrors the docs/<code>.md convention: same schema,
+        // same question order, prose translated. Per-lesson fallback to the
+        // English quiz.json keeps an untranslated lesson's quiz working.
+        var localQuizUrl = docCode ? base + path + '/quiz.' + docCode + '.json' : quizUrl;
 
-        if (!retried || !lessonQuizPromise) {
-          lessonQuizPromise = fetch(quizUrl)
+        function fetchJson(url) {
+          return fetch(url)
             .then(function (res) { return res.ok ? res.json() : null; })
             .catch(function () { return null; });
         }
+
+        if (!retried || !lessonQuizPromise) {
+          lessonQuizPromise = fetchJson(localQuizUrl).then(function (data) {
+            return (data || localQuizUrl === quizUrl) ? data : fetchJson(quizUrl);
+          });
+        }
+
+        // Read alongside a translation to recover the English heading text the
+        // anchors and section styling key on — see canonHeadings.
+        var enDocPromise = (docUrl === enUrl)
+          ? null
+          : fetch(enUrl)
+              .then(function (r) { return r.ok ? r.text() : null; })
+              .catch(function () { return null; });
 
         fetch(docUrl)
           .then(function (res) {
             if (res.ok) return res.text();
             // translation not published yet -> fall back to canonical English
             if (docUrl !== enUrl) {
-              return fetch(enUrl).then(function (r) {
-                if (!r.ok) throw new Error('fetch-failed');
-                return r.text();
+              return enDocPromise.then(function (md) {
+                if (md == null) throw new Error('fetch-failed');
+                return md;
               });
             }
             throw new Error('fetch-failed');
           })
           .then(function (md) {
+            return (enDocPromise || Promise.resolve(null)).then(function (enMd) {
+              return { md: md, enMd: enMd };
+            });
+          })
+          .then(function (docs) {
+            var md = docs.md;
             try {
-              renderLesson(md);
+              renderLesson(md, docs.enMd);
             } catch (err) {
               console.error('renderLesson failed', err);
               showError('Render error', 'Loaded the lesson markdown but failed to render it. Details in the browser console.');
@@ -2166,8 +2199,47 @@
         document.head.appendChild(s);
       }
 
-      function renderLesson(md) {
+      // Heading anchors are derived from the English source even when the
+      // reader is on a translation. slugify() strips everything outside
+      // [a-z0-9], so a Chinese heading yields an empty id — and with it goes
+      // every anchor the page navigates by: renderQuiz() places the pre/mid/
+      // post quizzes at #the-concept / #build-it / #use-it / #key-terms, and
+      // the Build/Use/Ship section tints, the Learning Objectives card, and
+      // the Lab Challenge block are all matched on English heading text.
+      //
+      // en.md and zh.md are required to mirror each other's structure, and
+      // all 503 pairs currently agree on heading counts at every level, so
+      // the nth heading of a level in the translation is the nth heading of
+      // that level in English. That ordinal is what the map is keyed on —
+      // no dictionary of translated heading names to keep in sync.
+      var canonHeadings = null;
+
+      function headingsByLevel(md) {
+        var byLevel = { 1: [], 2: [], 3: [] };
+        if (!md) return null;
+        var lines = md.split(/\r?\n/);
+        var inFence = false;
+        for (var i = 0; i < lines.length; i++) {
+          if (/^```/.test(lines[i])) { inFence = !inFence; continue; }
+          if (inFence) continue;
+          var m = lines[i].match(/^(#{1,3}) (?!#)(.+)/);
+          if (m) byLevel[m[1].length].push(m[2].trim());
+        }
+        return byLevel;
+      }
+
+      // Index of the next heading to consume per level, advanced by parseMd.
+      var headingSeen = { 1: 0, 2: 0, 3: 0 };
+
+      function canonicalHeading(level, ownText) {
+        var idx = headingSeen[level]++;
+        var list = canonHeadings && canonHeadings[level];
+        return (list && list[idx]) || ownText;
+      }
+
+      function renderLesson(md, enMd) {
         var el = document.getElementById('lessonContent');
+        canonHeadings = (enMd && enMd !== md) ? headingsByLevel(enMd) : null;
         var html = parseMd(md);
         html += '<div class="ai-panels" id="aiPanels"></div>';
         html = addBottomNav(html);
@@ -2392,6 +2464,7 @@
       }
 
       function parseMd(md) {
+        headingSeen = { 1: 0, 2: 0, 3: 0 };
         var lines = md.split(/\r?\n/);
         var out = '';
         var inCodeBlock = false;
@@ -2540,7 +2613,7 @@
           if (h1) {
             out += flushList();
             out += flushLabChallenge();
-            var slug = slugify(h1[1]);
+            var slug = slugify(canonicalHeading(1, h1[1]));
             out += '<h1 id="' + slug + '">' + inlineFormat(h1[1]) + '</h1>';
             continue;
           }
@@ -2548,9 +2621,10 @@
           var h2 = line.match(/^## (.+)/);
           if (h2) {
             out += flushList();
-            var slug2 = slugify(h2[1]);
+            var canon2 = canonicalHeading(2, h2[1]);
+            var slug2 = slugify(canon2);
             var sectionClass = '';
-            var txt = h2[1].toLowerCase();
+            var txt = canon2.toLowerCase();
             if (txt.indexOf('build it') >= 0 || txt.indexOf('build ') === 0) sectionClass = ' section-build';
             else if (txt.indexOf('use it') >= 0 || txt.indexOf('use ') === 0) sectionClass = ' section-use';
             else if (txt.indexOf('ship it') >= 0 || txt.indexOf('ship ') === 0) sectionClass = ' section-ship';
@@ -2589,7 +2663,7 @@
           var h3 = line.match(/^### (.+)/);
           if (h3) {
             out += flushList();
-            var slug3 = slugify(h3[1]);
+            var slug3 = slugify(canonicalHeading(3, h3[1]));
             out += '<h3 id="' + slug3 + '">' + inlineFormat(h3[1]) + '</h3>';
             continue;
           }
@@ -2713,7 +2787,13 @@
       function renderCodeBlock(code, lang) {
         var highlighted = highlightSyntax(escapeHtml(code), lang);
         var langLabel = lang ? '<span class="code-lang">' + escapeHtml(lang) + '</span>' : '';
-        return '<pre>' + langLabel + '<button class="code-copy" data-code="' + escapeAttr(code) + '">Copy</button><code>' + highlighted + '</code></pre>';
+        // The copy button sits outside the <pre>: i18n.js rejects that subtree
+        // wholesale as non-prose, so a button nested in it could never be
+        // translated. .code-block is the positioning context it used to get
+        // from the <pre>, so the rendered result is unchanged.
+        return '<div class="code-block">' +
+          '<button class="code-copy" data-code="' + escapeAttr(code) + '">Copy</button>' +
+          '<pre>' + langLabel + '<code>' + highlighted + '</code></pre></div>';
       }
 
       function highlightSyntax(code, lang) {
