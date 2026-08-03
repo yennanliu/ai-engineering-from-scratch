@@ -62,6 +62,10 @@
 - 可觀測性：帶 `gen_ai.*` 語意慣例的 OpenTelemetry SDK → 自架 Langfuse
 - PR 張貼：GitHub App 配細緻權限的權杖，範圍限縮在目標儲存庫
 
+```figure
+ce-agent-loop
+```
+
 ## 動手建
 
 1. **TUI 與指令迴路。** 用 Ink 搭一個 Bun 專案的骨架。接受 `agent run <repo> "<task>"`。印出一個分割畫面：計畫窗格（上）、工具呼叫串流（中）、詞元預算（下）。加上 Ctrl-C 取消，並在退出前先觸發 `SessionEnd` 掛鉤。

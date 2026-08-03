@@ -89,6 +89,10 @@ InternVL-U 把 Janus-Pro 的架構選擇，收編進一個更大的框架裡。�
 
 至於兩者都需要的產品，Janus-Pro 如今就是那個作為參考的開放架構。
 
+```figure
+l5-janus-decouple
+```
+
 ## 框架應用
 
 `code/main.py` 模擬了 Janus-Pro 的路由：

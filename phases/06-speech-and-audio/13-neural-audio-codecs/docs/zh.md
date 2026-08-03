@@ -74,6 +74,10 @@ frame_t → [semantic_token_t, acoustic_token_0_t, acoustic_token_1_t, ..., acou
 
 在感知品質的每位元表現上，Opus 這類傳統編解碼器還是贏。神經編解碼器贏的地方是**離散詞元**（Opus 產不出來）以及**生成模型的品質**（LM 拿這些詞元能做到什麼）。
 
+```figure
+rvq-codec-cascade
+```
+
 ## 動手實作
 
 ### 步驟 1：用 EnCodec 編碼

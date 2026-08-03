@@ -135,6 +135,10 @@ L = lambda_coord * L_box(pred, target, where obj=1)
 
 四個都要報。一個 mAP@0.5 很強但 mAP@0.5:0.95 很弱的偵測器，是位置抓得大概對但框不夠貼；用更好的邊界框回歸損失來修。一個 precision 高、recall 低的偵測器太保守；把信賴分數門檻調低，或把 objectness 的權重調高。
 
+```figure
+object-detection-nms
+```
+
 ## 動手實作
 
 ### 步驟 1：IoU

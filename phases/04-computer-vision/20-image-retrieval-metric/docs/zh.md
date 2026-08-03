@@ -102,6 +102,10 @@ Facebook AI Similarity Search，最近鄰搜尋事實上的標準函式庫。有
 
 挑模型之前，永遠先問清楚你要解的是哪一個。
 
+```figure
+metric-embedding
+```
+
 ## 動手實作
 
 ### 步驟 1：三元組損失

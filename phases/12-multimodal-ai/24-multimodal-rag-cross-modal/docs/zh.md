@@ -111,6 +111,10 @@ MuRAG（Chen 等人，2022）是第一個多模態 RAG。它從一個多模態�
 
 沒有橫跨所有模態的標準基準。多數論文都在領域專屬的任務上評測。
 
+```figure
+contrastive-matrix
+```
+
 ## 框架應用
 
 `code/main.py`：

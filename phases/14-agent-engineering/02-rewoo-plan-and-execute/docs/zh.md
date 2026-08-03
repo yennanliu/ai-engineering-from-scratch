@@ -66,6 +66,10 @@ Plan-and-Act 把這套模式擴到長時程的網頁與行動代理。關鍵貢�
 
 Anthropic 2024 年 12 月的指引：從最簡單的開始。如果任務是一次工具呼叫加一段摘要，別去蓋 ReWOO。如果任務是一份 40 步的研究作業，別只用 ReAct。
 
+```figure
+rewoo-plan
+```
+
 ## 建構它
 
 `code/main.py` 實作一個玩具版 ReWOO：

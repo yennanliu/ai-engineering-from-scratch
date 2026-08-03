@@ -77,6 +77,10 @@ Python SDK 近期新增：`list_subagents()`、`get_subagent_messages()`，用�
 - **掛鉤蔓生。** 每個團隊都加掛鉤；啟動時間膨脹。每季審一次掛鉤。
 - **工作階段肥大。** 工作階段一直累積；體積長大。用 `list_sessions` 加一套到期策略。
 
+```figure
+ae-subagent-isolation
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib 實作這個 SDK 的形狀：

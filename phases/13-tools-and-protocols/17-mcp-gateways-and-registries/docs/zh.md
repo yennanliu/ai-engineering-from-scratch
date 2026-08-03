@@ -92,6 +92,10 @@ Cloudflare MCP Portals、Kong AI Gateway、IBM ContextForge、MintMCP、TrueFoun
 
 階段 17（生產基礎設施）會更深入談閘道的維運。
 
+```figure
+t3-gateway-funnel
+```
+
 ## 框架應用
 
 `code/main.py` 用約 150 行出貨了一個最小閘道：以一個假的 Bearer token 認證使用者、持有逐使用者的 RBAC 政策、把請求路由到兩台後端 MCP 伺服器、把每一次呼叫寫進稽核日誌、施行速率限制，並拒絕任何描述雜湊與釘選清單不符的後端工具。

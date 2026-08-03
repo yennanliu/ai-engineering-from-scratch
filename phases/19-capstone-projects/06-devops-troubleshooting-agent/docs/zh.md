@@ -64,6 +64,10 @@ PagerDuty / Alertmanager webhook
 - 稽核：只能追加的結構化日誌（考慮過、執行過、核可過、結果）
 - 部署：以自己那份權限收窄的 RBAC 角色做 K8s 部署；獨立命名空間
 
+```figure
+ce-rootcause-walk
+```
+
 ## 動手建
 
 1. **圖的攝取。** 每 30 秒把 kube-state-metrics 同步進 Neo4j/kuzu。節點：Pod、Deployment、Node、Service、PVC、HPA。邊：OWNED_BY、SCHEDULED_ON、EXPOSES、MOUNTS、SCALES。遙測疊層邊：OBSERVED_BY（某個 Pod 被某條 Prometheus 時間序列觀測）。

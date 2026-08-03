@@ -36,6 +36,10 @@ Paper
 
 references 與 citations 這兩個欄位構成那張有向引用圖。兩個模擬 API 回傳的欄位有重疊但不完全相同，所以語料載入器在 `id` 上把它們做聯集。
 
+```figure
+cg-citation-hops
+```
+
 ## 架構
 
 ```mermaid

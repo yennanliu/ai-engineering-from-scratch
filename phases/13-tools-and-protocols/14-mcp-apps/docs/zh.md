@@ -162,6 +162,10 @@ MCP Apps 於 2026 年 1 月 26 日出貨。截至 2026 年 4 月的客戶端支�
 
 生產環境中的伺服器有：儀表板、地圖視覺化、資料表格、圖表產生器、沙箱 IDE 預覽。
 
+```figure
+t3-ui-sandbox
+```
+
 ## 框架應用
 
 `code/main.py` 為那台筆記伺服器擴充了一個 `visualize_timeline` 工具，它會回傳一個 `ui://notes/timeline` 資源；另外還有一個針對該 URI 的 `resources/read` 處理器，會回傳一份小巧但完整、帶 SVG 時間軸的 HTML 套件。那份 HTML 是用 stdlib 套模板產生的 —— 沒有建置系統。postMessage 則以 JS 註解的形式勾勒出來，因為 stdlib 驅動不了瀏覽器。

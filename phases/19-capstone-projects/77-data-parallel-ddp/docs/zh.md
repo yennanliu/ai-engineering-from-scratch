@@ -59,6 +59,10 @@ Allreduce-SUM 除以 world_size，得到的是平均梯度。那個平均對 wor
 
 每個 rank 在洗牌時都必須呼叫 `torch.manual_seed(seed + rank)`，但在參數初始化時要呼叫 `torch.manual_seed(seed)`。單一個共享種子代表每個 rank 看到同樣的批次順序（那就打敗了資料平行的意義）；而替參數用逐 rank 的種子，會讓初始參數差了一個浮點 epsilon，於是梯度同步就再也無法讓那些副本一致。把那個種子的樣式做對，否則參數等價性的測試在第 1 步就失敗。
 
+```figure
+ci-ddp-grad-sync
+```
+
 ## 動手建
 
 `code/main.py` 實作：

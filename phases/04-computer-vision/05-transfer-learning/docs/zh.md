@@ -115,6 +115,10 @@ lr_layer_k = base_lr * decay^(L - k)
 
 如果微調後比僅預訓練還差，那你有一個學習率或 BN 的 bug。兩個都要印出來。
 
+```figure
+transfer-learning
+```
+
 ## 動手實作
 
 ### 步驟 1：載入一個預訓練主幹網路並檢視它

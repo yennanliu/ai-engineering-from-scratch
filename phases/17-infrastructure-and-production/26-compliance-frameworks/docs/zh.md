@@ -98,6 +98,10 @@ OpenAI 維持 SOC 2 Type 2、ISO/IEC 27001:2022、ISO/IEC 27701:2019、GDPR/CCPA
 - SOC 2 Type II 的觀察窗口：控制項運作 6-12 個月。
 - 科羅拉多 AI 法生效日：2026 年 6 月 30 日（因 SB25B-004 從 2026 年 2 月延後）。
 
+```figure
+i4-control-matrix
+```
+
 ## 框架應用
 
 `code/main.py` 是一份用 Python 寫的法遵對映試算表 —— 給定一個控制項，列出它滿足哪些框架。

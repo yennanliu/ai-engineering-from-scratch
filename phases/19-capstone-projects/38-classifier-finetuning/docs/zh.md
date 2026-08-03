@@ -89,6 +89,10 @@ flowchart LR
 
 混淆矩陣把那四個計數印成一個 2x2 的網格。示範會替兩種訓練體制都把它寫到標準輸出。
 
+```figure
+cap-classifier-head-swap
+```
+
 ## 架構
 
 ```mermaid

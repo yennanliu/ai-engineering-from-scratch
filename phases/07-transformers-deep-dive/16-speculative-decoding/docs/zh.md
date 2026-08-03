@@ -80,6 +80,10 @@ EAGLE-3（2025）加上了對候選續寫的樹狀搜尋。vLLM 與 SGLang 出�
 
 生產級實作（vLLM 的 `--speculative-model`、TensorRT-LLM 的 LookaheadDecoder）用暫存 KV 緩衝區處理這件事：先寫進去，接受了才提交。概念上不難，但很瑣碎。
 
+```figure
+draft-verify-tokens
+```
+
 ## 動手實作
 
 請看 `code/main.py`。我們會實作推測式取樣的核心演算法（拒絕步驟 + 殘差分布），內容包括：

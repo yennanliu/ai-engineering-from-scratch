@@ -100,6 +100,10 @@ OpenTelemetry 在 2025 年底發布了 GenAI 語意慣例（`gen_ai.system`、`g
 - Arize AX 的宣稱：在規模上比單體式便宜約 100 倍。
 - OpenTelemetry 的 GenAI 慣例：2025 年出貨，2026 年被廣泛採用。
 
+```figure
+i4-otel-glue
+```
+
 ## 框架應用
 
 `code/main.py` 在幾種保留策略（100% 吞入、取樣、取樣 + 錯誤）之下，模擬每天 100 萬條軌跡的情境。回報儲存成本，以及每一種策略下失去了什麼。

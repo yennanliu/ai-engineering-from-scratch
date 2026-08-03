@@ -111,6 +111,10 @@ MIO 是最貼近純詞元式任意對任意的一個。AnyGPT 則是它概念上
 
 這些都是開放的研究問題。Qwen3-Omni（見單元 12.20）是 2025 年最先進的開放嘗試。
 
+```figure
+any-to-any-stream
+```
+
 ## 框架應用
 
 `code/main.py`：

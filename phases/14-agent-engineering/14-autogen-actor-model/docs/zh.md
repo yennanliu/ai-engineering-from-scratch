@@ -62,6 +62,10 @@ AutoGen v0.4 把它的表面切成三層：
 
 2026 年初：AutoGen v0.7.x 對研究與原型開發而言是穩定的。Microsoft 已把活躍開發移到 Microsoft Agent Framework，也就是它的生產接班人（2025 年 10 月 1 日公開預覽；1.0 GA 原訂 2026 年第一季末）。AutoGen 的那些模式可以乾淨地往前移植 —— 演員模型才是那個耐久的構想。
 
+```figure
+actor-mailbox
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib 實作一個演員執行環境：

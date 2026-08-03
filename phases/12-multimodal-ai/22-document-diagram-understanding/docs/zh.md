@@ -127,6 +127,10 @@ OCR 管線仍然在這些方面勝出：
 - 完整的 arXiv 匯入：數學交給 Nougat，圖交給 VLM。
 - 受監管場景：OCR 管線 + VLM 驗證器做交叉核對。
 
+```figure
+mm-doc-layout
+```
+
 ## 框架應用
 
 `code/main.py`：

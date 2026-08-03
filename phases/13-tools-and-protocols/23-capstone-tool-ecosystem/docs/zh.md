@@ -106,6 +106,10 @@ research-system/
 | 20 | LLM 層的路由閘道 |
 | 21 | SKILL.md + AGENTS.md 打包 |
 
+```figure
+t3-capstone-chain
+```
+
 ## 框架應用
 
 `code/main.py` 把前面各課的模式縫成一份可執行的示範。全部 stdlib、全部在同一個行程內，好讓你從頭讀到尾。它把「研究並產出報告」這個情境的完整流程跑一遍：與閘道握手、模擬 OAuth 2.1、合併 tools/list、把 generate_report 當成 task、對寫作代理發 A2A 呼叫、回傳 ui:// 資源、吐出 OTel span。

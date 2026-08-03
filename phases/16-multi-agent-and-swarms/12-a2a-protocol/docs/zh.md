@@ -98,6 +98,10 @@ A2A 支援三種常見模式：
 
 截至 2026 年 4 月，A2A 是採用度最高的同儕協定。比較請見 arXiv:2505.02279（Liu 等人，〈A Survey of Agent Interoperability Protocols〉）。
 
+```figure
+sw-agent-card-discovery
+```
+
 ## 建構它
 
 `code/main.py` 用 `http.server` 與 JSON 實作一個最小的 A2A 伺服器與客戶端。伺服器：

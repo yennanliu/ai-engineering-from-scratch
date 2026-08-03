@@ -101,6 +101,10 @@ Z = d
 
 對相對深度模型（Depth Anything V3、MiDaS），評估時兩個指標都要用尺度與位移不變的版本。
 
+```figure
+depth-sweep
+```
+
 ## 動手實作
 
 ### 步驟 1：深度指標

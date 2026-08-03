@@ -45,6 +45,10 @@ graph TD
     end
 ```
 
+```figure
+s0-env-isolation
+```
+
 ## 動手實作
 
 ### 選項 1：uv venv（推薦）

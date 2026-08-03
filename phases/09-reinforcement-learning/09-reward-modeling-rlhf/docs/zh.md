@@ -54,6 +54,10 @@ RLHF（Christiano et al. 2017；Ouyang et al. 2022）蒐集人類對模型輸出
 - **過程獎勵模型（PRM）：** 對部分解答（每一個推理步驟）評分，在 RLHF 與推理用的 GRPO 變體裡都會用到。
 - **Constitutional AI／RLAIF：** 用一個已對齊的 LLM 來生成偏好，取代人類。把偏好資料的預算放大。
 
+```figure
+reward-model
+```
+
 ## 動手實作
 
 這個單元用極小的合成「提示詞」與「回應」，都以字串表示。RM 是一個建立在詞袋表示上的線性評分器。沒有真的 LLM——重點在流水線的*形狀*，不在規模。見 `code/main.py`。

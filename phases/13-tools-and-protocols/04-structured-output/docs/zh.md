@@ -101,6 +101,10 @@ generate -> parse -> validate -> if fail, inject error and retry, max 3x
 
 受限解碼在小模型上也管用。一個帶文法強制的 30 億參數開放模型，在結構化任務上勝過一個純靠提示詞的 700 億參數模型。這正是結構化輸出對生產環境如此重要的主因：它把可靠性與模型大小解耦了。
 
+```figure
+constrained-decoding
+```
+
 ## 框架應用
 
 `code/main.py` 用 stdlib 出貨了一個最小的 JSON Schema 2020-12 驗證器（型別、required、enum、min/max、pattern、items、additionalProperties）。它包住一份 `Invoice` schema，並把一段假的 LLM 輸出送過驗證器，展示解析錯誤、schema 違規與拒絕三條路徑。到了生產環境，把那段假輸出換成任何供應商的真實回應即可。

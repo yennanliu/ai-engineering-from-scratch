@@ -66,6 +66,10 @@ model card (2026 MOF) + safety eval (Llama Guard 4)
 - 基礎設施：Kubernetes + NVIDIA device plugin，以佇列等待指標做 HPA
 - 可觀測性：訓練用 W&B，推論用 Langfuse
 
+```figure
+ce-finetune-stages
+```
+
 ## 動手建
 
 1. **資料管線。** 對原始語料跑 Datatrove 去重。套用 Nemotron-CC 式的品質分類器。用 Presidio 清洗 PII。以明確的種子寫出訓練／驗證切分。

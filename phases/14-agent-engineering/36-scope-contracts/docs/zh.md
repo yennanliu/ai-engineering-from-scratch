@@ -90,6 +90,10 @@ flowchart LR
 
 契約與清單以最小權限的方式組合，就是下面描述的那套合併：任務契約的 `allowed_files` 必須坐在當前功能所觸及的範圍之內，絕不能在它之外。
 
+```figure
+wb-scope-bounce
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

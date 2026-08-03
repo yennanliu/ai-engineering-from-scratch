@@ -47,6 +47,10 @@ flowchart TB
 
 那個模擬 LLM 有兩種依提示詞而定的行為：它拒答認得出來的攻擊（回傳 `I cannot ...`），並回答良性提示詞（回傳一段通用的有幫助字串）。對一小部分攻擊（尤其是輸入管線沒抓到的編碼把戲），它會產出一段有害的部分接續，而那正是生成中過濾器該抓到的。這是刻意的。閘門的價值在那套分層防禦；示範顯示的是那些層互動得正確。
 
+```figure
+safety-checkpoints
+```
+
 ## 動手建
 
 `code/safety_gate.py` 定義 `SafetyGate` 類別。它透過相對檔案路徑，從先前那幾課匯入偵測器、分類器路由器與規則引擎。`code/mock_llm_stream.py` 定義一個帶三種腳本化人設（clean、attacker-honest、attacker-lazy）的串流模擬 LLM。`code/main.py` 把第 82 課那份語料端到端跑過閘門，並寫出 `outputs/gate_trace.json`。

@@ -79,6 +79,10 @@ CMMD（Jayasumana 等人，2024）修掉了其中一部分問題：改用 CLIP �
 
 任何單一評估指標都是謊言。三個互相佐證的指標 + 質性審視，才算一個主張。
 
+```figure
+gx-fid-distributions
+```
+
 ## 動手實作
 
 `code/main.py` 在合成的「特徵向量」上實作 FID、類 CLIP score 與 Elo 彙總（我們用 4 維向量來替代 Inception 特徵）。你會看到：

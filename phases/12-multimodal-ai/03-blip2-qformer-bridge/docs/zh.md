@@ -87,6 +87,10 @@ Flamingo（見單元 12.04）出現在 BLIP-2 之前，用的是同樣的交叉�
 
 四者都是有效的。決定性的問題是：你受限的是詞元預算，還是每個詞元的品質。
 
+```figure
+modality-projection
+```
+
 ## 框架應用
 
 `code/main.py` 用 stdlib 做出一個 Q-Former 風格的交叉注意力：

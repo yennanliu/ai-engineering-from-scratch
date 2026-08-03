@@ -116,6 +116,10 @@ Anthropic 的多代理研究系統使用「彩虹式部署」：多個版本的�
 - 給有狀態工作負載用的彩虹／金絲雀部署。
 - 可觀測性：逐代理軌跡、super-step 稽核、重試計數。
 
+```figure
+sw-checkpoint-replay
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

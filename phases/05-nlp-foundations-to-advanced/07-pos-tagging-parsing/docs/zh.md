@@ -40,6 +40,14 @@ at is prep of running
 3pm is pobj of at
 ```
 
+```figure
+dependency-arcs
+```
+
+```figure
+pos-tagger
+```
+
 ## 動手實作
 
 ### 步驟 1：最高頻標記基線

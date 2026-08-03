@@ -75,6 +75,10 @@ shift-by-one cross-entropy            ◀── Lesson 07
 - 取樣輸出長得有莎士比亞的形狀：古語詞彙、換行，以及像「ROMEO:」這樣的人名開始出現。
 - 驗證損失（保留最後 10% 的文本）緊跟著訓練損失；在這個規模與預算下不會過度擬合。
 
+```figure
+n5-block-stack
+```
+
 ## 動手實作
 
 本單元使用 PyTorch。請安裝 `torch`（CPU 版即可）。請看 `code/main.py`。這支腳本會處理：

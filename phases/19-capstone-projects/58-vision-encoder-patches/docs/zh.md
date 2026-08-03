@@ -61,6 +61,10 @@ flowchart LR
 
 圖塊那一步有兩種寫法：一個 `Conv2d` 投影，以及一個明確的「先 unfold 再線性」。在同樣的權重下，它們必須產出同樣的輸出。若不然，那個 unfold 的數學就錯了，而編碼器其餘部分是蓋在沙上的。這一課的測試演練了那份等價性。
 
+```figure
+ch-patch-tokenizer
+```
+
 ## 動手建
 
 `code/main.py` 實作：

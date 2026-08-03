@@ -54,6 +54,10 @@ NCCL 跑在 PCIe 與 NVLink 上，並帶硬體卸載的歸約。在 CPU 上你�
 
 每一個原語落地時都附上一項單元測試，把它的輸出，與以 gloo 後端初始化、在同樣世界大小上跑同一個張量的 `torch.distributed` 做比較。若你的環狀 allreduce 與 gloo 的差距超過 float32 的 epsilon，那項測試就失敗。對照參考實作做驗證沒得商量；沒有它，那個原語會一直看起來正確，直到一次真實訓練的第 10000 步。
 
+```figure
+ci-ring-allreduce
+```
+
 ## 動手建
 
 `code/main.py` 實作：

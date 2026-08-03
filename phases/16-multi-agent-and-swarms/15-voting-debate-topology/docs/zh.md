@@ -97,6 +97,10 @@ Sibyl 框架（在 Minsky-LLM 文獻中被引用）把「陪審團」形式化 �
 - 回合無界。從眾每次都贏。
 - 任務很簡單。單一代理配 N=5 的自我一致性又便宜又一樣準。
 
+```figure
+sw-debate-topology
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

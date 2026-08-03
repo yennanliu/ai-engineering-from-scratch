@@ -56,6 +56,10 @@ flowchart TD
 
 Dataloader 是唯一知道訓練序列長度的那個階段。它在全域詞元串流裡挑一個隨機起始索引、讀 `window_size + 1` 個詞元，然後回傳 `(input, target) = (tokens[:-1], tokens[1:])`。文件邊界不被強制執行：一個窗口可能跨在兩份文件上，中間有一個明確的 `boundary_token_id`，好讓模型學會使用那個分隔符。這是那條標準的打包規則；它也是初學者會忘掉的規則，結果搞出一份 8% 是訓練邊界詞元、92% 是自然文本的語料。
 
+```figure
+cc-hdf5-corpus
+```
+
 ## 動手建
 
 `code/main.py` 實作：

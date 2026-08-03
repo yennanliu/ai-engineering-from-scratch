@@ -64,6 +64,10 @@ Schema 涵蓋：
 
 當 schema 改變時，要在 schema 版本進位的旁邊出貨一支遷移腳本。狀態檔帶一個 `schema_version` 欄位；管理器對於它無法遷移的版本，一律拒絕載入。
 
+```figure
+wb-state-persist
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

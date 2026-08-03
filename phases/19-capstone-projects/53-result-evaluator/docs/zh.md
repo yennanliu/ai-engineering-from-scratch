@@ -46,6 +46,10 @@ elif direction == "lower_is_better":
 
 一個平坦的門檻（`improvement_threshold=0.02`，也就是 2%）決定這次改動大到值不值得下結論。低於那個門檻，不管 p 值如何判定都是「雜訊」；迴路對「使用者量不出來的改動」不感興趣。
 
+```figure
+cg-paired-verdict
+```
+
 ## 架構
 
 ```mermaid

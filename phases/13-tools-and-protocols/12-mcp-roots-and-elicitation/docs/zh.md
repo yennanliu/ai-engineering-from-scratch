@@ -122,6 +122,10 @@ Roots 由客戶端宣告，是因為它代表的是使用者的同意模型。�
 
 Elicitation 加上 sampling，共同構成了 MCP 的「人在迴圈中」模型。一台伺服器的代理迴圈可以為了使用者輸入（elicitation）或模型推理（sampling）而暫停。階段 13 · 11 談了 sampling；這一課談 elicitation。把兩者放在一起，就能對迴圈中途做完整的控制。
 
+```figure
+t3-roots-boundary
+```
+
 ## 框架應用
 
 `code/main.py` 為那台筆記伺服器擴充了：

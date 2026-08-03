@@ -63,6 +63,10 @@ flowchart TD
 
 Allreduce 給每個 rank 完整的梯度總和。若你只需要分片 r，那被歸約出來的 (N-1)/N 梯度在 rank r 上就是浪費。Reduce_scatter 恰好交出每個 rank 所擁有的那一片；每個 rank 的位元組數與 allreduce 相同（因為 allreduce 就是 reduce_scatter + allgather），但後半段被稍後那次參數分片的 allgather 取代了。淨線上流量與 DDP 一模一樣，記憶體卻被除掉了。
 
+```figure
+cd-zero-shard
+```
+
 ## 動手建
 
 `code/main.py` 實作：

@@ -113,6 +113,10 @@ DPO 的實作必須小心處理那個參考模型。參考是那個被凍在原�
 - 在每一個參考參數上設 `requires_grad=False`。
 - 在參考建好之後，透過 `policy.load_state_dict(reference.state_dict())` 建構策略。
 
+```figure
+cap-dpo-preference
+```
+
 ## 架構
 
 ```mermaid

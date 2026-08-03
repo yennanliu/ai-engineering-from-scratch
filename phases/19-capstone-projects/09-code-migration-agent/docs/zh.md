@@ -63,6 +63,10 @@ file under failure class + attach repro
 - 可觀測性：Langfuse + 每個儲存庫一份含所有差異片段的軌跡打包檔
 - 儀表板：帶逐類別計數與範例差異的失敗分類法儀表板
 
+```figure
+ce-migration-funnel
+```
+
 ## 動手建
 
 1. **配方階段。** 先跑 OpenRewrite（Java）或 libcst（Python）配方。抓下那 70-80% 屬於機械式的遷移。以一次「recipe」提交存下來。

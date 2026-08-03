@@ -70,6 +70,10 @@ Google 在 2025 年把推測解碼部署進 AI Overviews（品質相同、回應
 - 沒有領域訓練草稿頭的特化領域。Alpha 太低。
 - vLLM v0.18.0 加草稿模型推測解碼加 `--enable-chunked-prefill`。這個組合編不起來。有文件的例外是 V1 裡的 N-gram GPU 推測解碼。
 
+```figure
+mx-speculative-tree
+```
+
 ## 框架應用
 
 `code/main.py` 在一系列 alpha 值與草稿長度 K 上，模擬有與沒有推測解碼的解碼迴圈。它會印出損益平衡 alpha、量到的加速，以及尾端行為。用好幾組 (alpha, K) 跑它，看推測解碼確切在哪裡就不再划算。

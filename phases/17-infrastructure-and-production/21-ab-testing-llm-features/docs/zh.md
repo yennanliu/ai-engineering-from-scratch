@@ -90,6 +90,10 @@ Controlled-experiments Using Pre-Experiment Data（用實驗前資料的受控�
 - CUPED 的變異數縮減：30-70%。
 - LLM 的非決定性 → 樣本數要多留 30-50% 的緩衝。
 
+```figure
+mx-sequential-test
+```
+
 ## 框架應用
 
 `code/main.py` 以固定邊界與序貫邊界模擬一次序貫 A/B 測試。展示序貫如何讓你提早停止。

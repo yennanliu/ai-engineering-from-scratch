@@ -49,6 +49,10 @@ flowchart TD
 
 那個固定任務的臭蟲是 `fizz.py` 裡的差一錯誤。確定性策略透過正規表示式從測試失敗訊息中偵測到那個臭蟲，並產出修正後的檔案。把策略換成 LLM，不會改變框架的契約。
 
+```figure
+cg-harness-weave
+```
+
 ## 架構
 
 ```mermaid

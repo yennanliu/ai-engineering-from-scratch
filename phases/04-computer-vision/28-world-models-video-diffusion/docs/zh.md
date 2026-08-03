@@ -119,6 +119,10 @@ Sora 2 在 2026 年的發布明確主打**物理合理性**：重量、平衡、
 | Cosmos / Cosmos-Drive | 自動駕駛模擬 | 7-14B | 駕駛場景 | NVIDIA 開放 |
 | Magica / Mirage 2 | AI 原生遊戲引擎 | —— | 可修改的世界 | 產品 |
 
+```figure
+v4-world-rollout
+```
+
 ## 動手實作
 
 ### 步驟 1：影片的 3D 區塊化

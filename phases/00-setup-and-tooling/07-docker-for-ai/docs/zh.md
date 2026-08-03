@@ -73,6 +73,10 @@ Inference Container
   Runs behind a load balancer in production.
 ```
 
+```figure
+s0-image-layers
+```
+
 ## 動手實作
 
 ### 步驟 1：安裝 Docker
@@ -378,4 +382,3 @@ docker logs -f <container_id>
 | NVIDIA Container Toolkit | 「Docker 裡的 GPU」 | 一個執行環境掛鉤，透過 `--gpus` 旗標把主機 GPU 開放給容器 |
 | Volume mount | 「共享資料夾」 | 主機上的一個目錄映射進容器內。容器停掉之後變更依然保留。 |
 | Base image | 「起點」 | 你的 Dockerfile 用 `FROM` 疊在上面的那個映像檔。它決定了預先裝好什麼。 |
-```

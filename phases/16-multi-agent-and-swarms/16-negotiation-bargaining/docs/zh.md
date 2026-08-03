@@ -102,6 +102,10 @@ NeurIPS 2024（https://proceedings.neurips.cc/paper_files/paper/2024/file/984dd3
 
 若出價必須是一個數字（價格、預計時間、數量），就從談判狀態決定性地產生它，並讓 LLM 產出那層包裝。若出價必須是一份提案結構（任務分解、角色指派），就讓 LLM 起草，但在送出前對照一份 schema 驗證並做限制檢查。
 
+```figure
+a5-og-narrator
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

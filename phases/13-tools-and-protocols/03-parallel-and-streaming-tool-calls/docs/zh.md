@@ -110,6 +110,10 @@ call_C: median API, returns third
 
 如果模型本身在串流，你可以在某一次呼叫的參數一完整就開始執行，而不必等到所有呼叫都定案。OpenAI 有記載這項最佳化，但並非所有 SDK 都暴露它。這一課的測試框架有做：只要模擬串流吐出一個完整的參數物件，宿主就立刻發動那次呼叫。
 
+```figure
+tp-parallel-fanout
+```
+
 ## 框架應用
 
 `code/main.py` 分兩半。前半用 `concurrent.futures.ThreadPoolExecutor` 把三次模擬的天氣呼叫分別以循序與平行跑一遍，並印出壁鐘時間。後半重播一份假的串流回應 —— 三次平行呼叫的 `arguments` 分塊交錯在同一道串流上 —— 並用 `StreamAccumulator` 逐 id 把它們重組起來。沒有 LLM、沒有網路，就只有重組邏輯。

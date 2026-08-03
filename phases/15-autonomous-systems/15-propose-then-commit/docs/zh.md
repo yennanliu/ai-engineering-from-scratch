@@ -66,6 +66,10 @@ HITL 的預設 UI（「核准」／「拒絕」按鈕）產出的是沒有真正
 
 第 14 條要求歐盟境內的高風險 AI 系統要有有效的人類監督。「有效」不是裝飾用的。法規語言明確排除橡皮圖章式的模式。在 Microsoft Agent Governance Toolkit 的法遵文件中，帶挑戰—回應的先提議後提交，就是那個撐得過第 14 條檢視的形狀。
 
+```figure
+mx-propose-then-commit
+```
+
 ## 框架應用
 
 `code/main.py` 用 stdlib Python 實作一台先提議後提交的狀態機。持久儲存是一個 JSON 檔。冪等鍵是 (thread_id, action_signature) 的雜湊。驅動程式模擬三種案例：一次乾淨的核准流程、一次暫時性失敗後的重試（絕不能重複執行），以及橡皮圖章的預設對照帶挑戰—回應的流程。

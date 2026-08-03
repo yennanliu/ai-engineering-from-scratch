@@ -101,6 +101,10 @@ agent-C ──pub────▶ │                  │ ──▶ agent-F (sub
 
 沒有這道隔離，查證者的輸出就變成池子裡的新條目，這代表被投毒的池子會毒到查證者，而它又毒到自己的查證結果。
 
+```figure
+swarm-blackboard
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib Python 實作兩種拓撲，外加一次玩具版投毒攻擊與那三種緩解。

@@ -170,6 +170,10 @@ graph TD
     end
 ```
 
+```figure
+agentic-rag-loop
+```
+
 ## 實作
 
 ### 步驟 1：BM25 實作

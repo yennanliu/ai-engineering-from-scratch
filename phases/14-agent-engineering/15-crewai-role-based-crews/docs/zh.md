@@ -133,6 +133,10 @@ CrewAI 開箱就出貨四種記憶型別。它們可以組合：一個 Crew 可�
 - **脆弱的交接。** 第 N 項任務的 `expected_output` 是「一份大綱」。第 N+1 項任務把它當成 `context` 讀進來，並試著解析出三個段落。LLM 產出了四個。下游的 Agent 就開始即興發揮。用第 N 項任務上的 `output_pydantic` 來修，讓第 N+1 項任務讀到的是具型別的物件，而不是自由文字。
 - **拿 Crew 當生產。** 自由形式的 Crew 沒包 Flow 就出貨到生產。輸出變異度很高；重播不可能；值班的人沒辦法把一趟壞的執行跟一趟好的做 diff。用 Flow 包起來。
 
+```figure
+ae-crew-vs-flow
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib 實作了兩種形狀，外加一個三代理 crew。

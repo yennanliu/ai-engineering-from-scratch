@@ -86,6 +86,10 @@ AAAI 2026 Bridge Program —— 多代理協調工作坊（https://multiagents.o
 
 替你真正在意的那條軸建一套自己的內部基準，往往才是對的做法。
 
+```figure
+a5-bench-gap
+```
+
 ## 建構它
 
 `code/main.py` 是一段非互動式的走訪：

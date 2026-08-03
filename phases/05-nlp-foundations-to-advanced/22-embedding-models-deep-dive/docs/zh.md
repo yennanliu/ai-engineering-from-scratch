@@ -49,6 +49,10 @@ Massive Text Embedding Benchmark —— 剛推出時（2022）是 8 種任務類
 
 多數生產環境的堆疊三層全用。
 
+```figure
+gx-matryoshka
+```
+
 ## 動手實作
 
 ### 步驟 1：基準線 —— 用 Sentence-BERT 做稠密嵌入

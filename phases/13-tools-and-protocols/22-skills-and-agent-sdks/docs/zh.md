@@ -132,6 +132,10 @@ SkillKit 這類工具與類似的跨代理散布層，能把單一份 SKILL.md �
 
 三者都能組合起來：代理在工作階段開始時讀 AGENTS.md，使用者調用一項技能，該技能的指示中包含 MCP 工具呼叫，代理再透過 MCP 客戶端分派出去。
 
+```figure
+t3-skill-layers
+```
+
 ## 框架應用
 
 `code/main.py` 出貨了一個 stdlib 的 SKILL.md 解析器與載入器。它在 `./skills/` 底下探索技能、解析 YAML frontmatter 與 markdown 本體，並產出一個以技能名稱為鍵的 dict。接著它模擬一個代理迴圈，依名稱調用 `release-notes-writer`。

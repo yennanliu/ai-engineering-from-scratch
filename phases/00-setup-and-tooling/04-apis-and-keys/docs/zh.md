@@ -34,6 +34,10 @@ sequenceDiagram
 3. 一份請求主體（你想要什麼）
 4. 一份回應主體（你拿回什麼）
 
+```figure
+s0-secret-inject
+```
+
 ## 動手實作
 
 ### 步驟 1：安全地保管 API 金鑰

@@ -82,6 +82,10 @@ BP = 1                if generated length > reference length
 
 對一次在合成資料上跑 50 步的訓練而言，這些指標並不預期會很高；預期的是它們高於隨機基線，而那正是示範所檢查的。
 
+```figure
+ch-recall-window
+```
+
 ## 動手建
 
 `code/main.py` 實作：

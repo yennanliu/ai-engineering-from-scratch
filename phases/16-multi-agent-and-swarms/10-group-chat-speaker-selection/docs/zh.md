@@ -90,6 +90,10 @@ manager = GroupChatManager(groupchat=chat, llm_config={...})
 
 兩者都用第 04 課那四個原語。群聊預設採 LLM 選擇式編排與完整池式的共享狀態。
 
+```figure
+swarm-speaker
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib 從零實作一個 GroupChat。三個代理（寫程式的、審查者、經理）、輪替與 LLM 選擇兩種變體，以及一個以 `TERMINATE` 詞元終止的機制。

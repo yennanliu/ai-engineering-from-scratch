@@ -59,6 +59,10 @@
 
 〈Effective context engineering for AI agents〉（Anthropic，2025）把這門相鄰學科形式化了：那 200k 視窗是一筆預算，不是一個容器。該放什麼進去、何時壓實、何時讓脈絡長大。細節見階段 14 談脈絡壓縮的那一課（在本課程重新編號之前，是階段 14 較前面的第 06 課）。
 
+```figure
+workflow-chain
+```
+
 ## 建構它
 
 `code/main.py` 對著一個 `ScriptedLLM` 實作全部五種工作流模式：

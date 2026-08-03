@@ -72,6 +72,10 @@ Sesame CSM（2025）用了類似的想法 —— 一個 Llama-3 骨幹配上 Mim
 | GPT-4o Realtime | ~300 ms | 閉源，OpenAI API | 商業 |
 | Gemini 2.5 Live | ~350 ms | 閉源，Google API | 商業 |
 
+```figure
+sp-fullduplex
+```
+
 ## 動手實作
 
 ### 步驟 1：介面

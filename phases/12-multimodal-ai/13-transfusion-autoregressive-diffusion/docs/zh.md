@@ -99,6 +99,10 @@ Janus-Pro（見單元 12.15）精煉了 Transfusion 的想法，把理解與生�
 
 2026 年那些會吐影像的生產級 VLM —— Gemini 3 Pro、GPT-5、Claude Opus 4.7 的影像生成路徑 —— 幾乎可以肯定用的是這個家族的某個後裔。細節並未公開。
 
+```figure
+cfg-guidance-scale
+```
+
 ## 框架應用
 
 `code/main.py` 在一個迷你的類 MNIST 問題上，做了一個玩具版的 Transfusion：

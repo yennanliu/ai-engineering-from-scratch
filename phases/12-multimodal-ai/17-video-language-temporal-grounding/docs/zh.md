@@ -105,6 +105,10 @@ TMRoPE 讓「貓在第幾秒跳起來？」這類查詢成為可能。模型能�
 - 輸出：帶時間與事件欄位的結構化 JSON。
 - 基準：一般用途用 VideoMME + TempCompass；長時程用 EgoSchema。
 
+```figure
+video-temporal-patches
+```
+
 ## 框架應用
 
 `code/main.py` 包含：

@@ -118,6 +118,10 @@ FLUX.1-schnell 是 2026 年開源界的預設選擇。Z-Image 是效率上的領
 
 DDPM + U-Net 是行得通的。DiT + 修正流則**更好、更快，而且縮放得更乾淨**。這個轉變跟 NLP 從 RNN 走向 Transformer 那一次很像：兩種架構解的是同一個問題，但 Transformer 撐得起縮放律，如今主宰了整個領域。2026 年每一篇談影像、影片或 3D 生成的論文，用的都是 DiT 形狀的去噪器，而且通常搭配修正流的目標函式。U-Net DDPM 現在主要是教學用途（單元 10）。
 
+```figure
+cv3-rectified-flow
+```
+
 ## 動手實作
 
 ### 步驟 1：帶 AdaLN 的 DiT 區塊

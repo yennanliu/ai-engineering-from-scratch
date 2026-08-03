@@ -71,6 +71,10 @@ Datadog v1.37+ 會把 GenAI 屬性原生對映進它的 LLM Observability schema
 - **沒有父子連結的 span。** 孤兒工具 span。永遠要傳播脈絡。
 - **沒設穩定性選擇加入。** 後端升級時你的屬性可能被改名。
 
+```figure
+ae-genai-span-tree
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib 實作一個符合 GenAI 慣例的 span 發射器：

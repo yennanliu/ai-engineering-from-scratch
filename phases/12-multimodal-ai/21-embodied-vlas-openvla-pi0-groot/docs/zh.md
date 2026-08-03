@@ -106,6 +106,10 @@ RT-2 的比例：約 1:1。OpenVLA：網路對機器人約 0.5:1。π0 相近。
 
 這些都位於 VLA 之外，作為控制層的檢查。VLA 的輸出是建議，不是命令。
 
+```figure
+mm-action-tokens
+```
+
 ## 框架應用
 
 `code/main.py`：

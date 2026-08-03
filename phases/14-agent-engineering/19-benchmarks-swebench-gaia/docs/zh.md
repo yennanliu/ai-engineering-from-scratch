@@ -76,6 +76,10 @@ OpenAI，2024 年 8 月。人工策展的 500 項任務子集。移除了語意�
 - **被汙染的宣稱。** 報 SWE-bench 卻不提 Verified 或 SWE-bench+，是誤導。
 - **拿基準當開發目標。** 為基準最佳化會偏離生產環境中的實用性。
 
+```figure
+ae-swebench-gate
+```
+
 ## 建構它
 
 `code/main.py` 實作一個玩具版、類 SWE-bench 的執行框架：

@@ -43,6 +43,10 @@ flowchart LR
 
 那個偵測器不是安全閘門。它只是閘門會組合起來的眾多訊號之一。設計上它在 encoding-trick 與 instruction-override 上偏向召回率，並接受在 role-play 上中等的精確率，因為角色扮演攻擊會與正當的創意寫作請求糊在一起，而那個閘門在邊界情況上會動用其他訊號（規則引擎、分類器）。
 
+```figure
+injection-gate
+```
+
 ## 動手建
 
 那個語料載入器讀第 82 課的 `outputs/taxonomy.json`。那些規則以資料而非程式碼的形式住在 `code/rules.py`。每條規則是一個字典，帶 `name`、`category`、`score`，以及 `substring` 或 `regex` 其中之一。偵測器類別把它們一次編譯好。

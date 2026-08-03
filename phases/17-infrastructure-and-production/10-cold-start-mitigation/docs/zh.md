@@ -85,6 +85,10 @@ ServerlessLLM 把儲存當成一個階層：NVMe（快但大）、DRAM（中等�
 - Run:ai Model Streamer：權重載入約 2 倍加速。
 - ServerlessLLM 的分層載入：延遲降低 10-200 倍（論文數字）。
 
+```figure
+cold-start-pipeline
+```
+
 ## 框架應用
 
 `code/main.py` 對有與沒有每一項緩解的冷啟動路徑做模型化。回報總冷啟動時間、暖池成本，以及暖池開始划算的那個請求速率損益平衡點。

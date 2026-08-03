@@ -85,6 +85,10 @@ Emu3 深層的貢獻是概念上的。如果下一個詞元預測能擴展到在
 
 Show-o、Janus-Pro 與 InternVL-U，全都是在這套主張之上建構或對它提出挑戰。一路到 2025 年，中國的實驗室（BAAI、DeepSeek）在這個方向上發表得比美國實驗室更積極。
 
+```figure
+l5-emu3-next-token
+```
+
 ## 框架應用
 
 `code/main.py` 做了兩個玩具零件：

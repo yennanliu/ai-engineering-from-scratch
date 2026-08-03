@@ -294,6 +294,10 @@ Network:        curl, wget, scp, rsync
 Sessions:       tmux new/attach/detach
 ```
 
+```figure
+s0-process-fork
+```
+
 ## 練習
 
 1. SSH 進任何一台 Linux 機器（或打開 WSL2），切換到你的家目錄。建一個專案資料夾，用 `touch` 在裡面建三個空檔案，再用 `ls -la` 列出它們。

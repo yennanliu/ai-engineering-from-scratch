@@ -78,6 +78,10 @@ Vertex：HIPAA、GDPR、依區域的資料落地；Google Cloud 的法遵堆疊�
 - Azure PTU 的損益平衡：約 40-60% 的持續使用率。
 - 高使用率下 PTU 相對隨需的節省：最多 70%。
 
+```figure
+i4-platform-lanes
+```
+
 ## 框架應用
 
 `code/main.py` 在一份合成工作負載上比較這三個平台 —— 它模型化隨需與 PTU 的經濟性、TTFT 變異，以及成本歸屬的保真度。跑它，看 PTU 在哪裡划算，以及市集的模型廣度在哪裡勝過一個 TTFT 落差。

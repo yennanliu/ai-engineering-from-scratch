@@ -66,6 +66,10 @@
 | Kokoro v0.19 | 3.87 | 1.8% | 82M |
 | Parler-TTS Large | 3.76 | 2.8% | 2.3B |
 
+```figure
+sp-tts-stack
+```
+
 ## 動手實作
 
 ### 步驟 1：把輸入轉成音素

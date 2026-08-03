@@ -227,6 +227,10 @@ flowchart LR
 
 這條管線永遠不會「做完」。資料分布會偏移、新的異常類型會出現、閾值需要調整。把異常偵測當成一個活的系統，而不是一次性的模型。
 
+```figure
+f3-anomaly-fence
+```
+
 ## 動手實作
 
 `code/anomaly_detection.py` 裡的程式碼從零實作了 Z-score、IQR 與 Isolation Forest。

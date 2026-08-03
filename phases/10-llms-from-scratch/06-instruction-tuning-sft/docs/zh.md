@@ -189,6 +189,10 @@ graph TD
     style C3 fill:#1a1a2e,stroke:#51cf66,color:#fff
 ```
 
+```figure
+loss-masking
+```
+
 ## 動手實作
 
 ### 步驟 1：指令資料集
