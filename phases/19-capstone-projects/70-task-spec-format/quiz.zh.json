@@ -1,0 +1,78 @@
+{
+  "lesson": "70-task-spec-format",
+  "title": "Task Spec Format",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼要在寫計分程式碼之前先凍結任務紀錄的 schema？",
+      "options": [
+        "它鎖定契約，讓指標、執行器與後處理器對欄位名稱有一致認知",
+        "它讓任務作者能任意新增指標名稱而不必再做修改",
+        "它讓 JSON 剖析器跑得更快",
+        "它讓驗證器變成不必要"
+      ],
+      "correct": 0,
+      "explanation": "schema 是每個下游消費者讀取的契約。鎖定它，你才能獨立更換元件而不弄壞其他部分。"
+    },
+    {
+      "stage": "pre",
+      "question": "metric_name 欄位接受的封閉詞彙表是什麼？",
+      "options": [
+        "任務作者選擇的任意字串",
+        "只有 exact_match 與 f1",
+        "執行器被設定成能辨識的任何值",
+        "exact_match、f1、bleu_4、rouge_l、accuracy、code_exec"
+      ],
+      "correct": 3,
+      "explanation": "本課把指標詞彙表釘死在六個名稱。要加一個就需要一課新內容與一筆新的驗證器項目。"
+    },
+    {
+      "stage": "check",
+      "question": "當驗證器在紀錄上看到未知的頂層欄位時，它會怎麼做？",
+      "options": [
+        "記錄一則警告但仍接受該紀錄",
+        "把它剝掉後繼續",
+        "把它改名為 metadata.unknown",
+        "回傳驗證錯誤並拒絕該紀錄"
+      ],
+      "correct": 3,
+      "explanation": "未知欄位是向前相容性的風險。驗證器直接拒絕，好讓 schema 維持唯一真實來源。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 few-shot 範例是掛在任務紀錄上，而不是由執行器計算出來？",
+      "options": [
+        "few-shot 只在微調時使用",
+        "作者意圖是評測的一部分；把範例綁在任務上，可消除提示詞組建時的逐模型差異",
+        "這樣可以節省磁碟空間",
+        "執行器沒有檔案 I/O 能力"
+      ],
+      "correct": 1,
+      "explanation": "few-shot 的組成屬於評測定義，而不是模型介面。把它放進任務，每個模型看到的提示詞就完全相同。"
+    },
+    {
+      "stage": "check",
+      "question": "在驗證器下，哪一組「類別-指標」配對是不合法的？",
+      "options": [
+        "code_exec + code_exec",
+        "summary + rouge_l",
+        "arithmetic + exact_match",
+        "mcq + bleu_4"
+      ],
+      "correct": 3,
+      "explanation": "對單一個字母算 BLEU 毫無意義。驗證器強制 mcq 任務只能使用 exact_match 或 accuracy。"
+    },
+    {
+      "stage": "post",
+      "question": "當生成內容是 `Answer: C is correct` 時，post_process 規則 extract_letter 會回傳什麼？",
+      "options": [
+        "Answer",
+        "空字串",
+        "完整字串，原封不動",
+        "C"
+      ],
+      "correct": 3,
+      "explanation": "extract_letter 會回傳生成內容中第一個符合 [A-E] 的字元。這個字串的主體開頭就是 C。"
+    }
+  ]
+}

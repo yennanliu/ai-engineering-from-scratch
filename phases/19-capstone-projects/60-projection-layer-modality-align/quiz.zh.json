@@ -1,0 +1,78 @@
+{
+  "lesson": "60-projection-layer-modality-align",
+  "title": "Projection Layer for Modality Alignment",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼視覺編碼器產生的 token 無法直接被文字 decoder 消費？",
+      "options": [
+        "影像 token 被加密了",
+        "影像 token 太短",
+        "它們的檔案格式不同",
+        "影像 token 位於編碼器在視覺預訓練期間學到的基底上，與 decoder 的詞向量沒有任何對應關係"
+      ],
+      "correct": 3,
+      "explanation": "兩個編碼器各自學到獨立的基底；需要一個橋接模組把它們對齊到共享空間。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼實務上兩層 MLP 就足以完成模態對齊？",
+      "options": [
+        "單層投影是被禁止的",
+        "PyTorch 要求兩層",
+        "在兩個線性投影之間放一次非線性轉折（GELU），經驗上就足以把 CLIP 風格的特徵與文字嵌入對齊",
+        "更深的投影是不合法的"
+      ],
+      "correct": 2,
+      "explanation": "LLaVA 與其後繼者採用這個兩層 MLP，因為非線性能修正單一線性投影處理不了的曲率不匹配。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼在這個對齊階段要凍結視覺編碼器？",
+      "options": [
+        "編碼器是空的",
+        "8600 萬參數的編碼器沒辦法在小型模擬語料上重新訓練；只訓練 130 萬參數的投影層才輕到能在幾分鐘內對齊",
+        "凍結代表實際執行時間更快",
+        "PyTorch 不支援訓練編碼器"
+      ],
+      "correct": 1,
+      "explanation": "凍結編碼器與文字嵌入表之後，投影層是唯一在學習的東西，這正是每個基於 adapter 的 VLM 的實際運作形態。"
+    },
+    {
+      "stage": "check",
+      "question": "當兩個向量方向完全相反時，cosine_alignment_loss(image_emb, text_emb) 會回傳什麼？",
+      "options": [
+        "無限大",
+        "1.0",
+        "0.0",
+        "2.0"
+      ],
+      "correct": 3,
+      "explanation": "損失是 1 - cos(角度)。反向平行的向量 cos = -1，所以損失是 1 - (-1) = 2.0。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要用 CLS 池化從 197 個 token 產生單一的影像層級向量？",
+      "options": [
+        "這樣可以省磁碟空間",
+        "PyTorch 會自動把 token 加總",
+        "區塊 token 沒有被用到",
+        "每個樣本的圖說是一個向量，所以影像端也需要一個向量；CLS token 正是編碼器內建的影像摘要"
+      ],
+      "correct": 3,
+      "explanation": "對齊是拿一個影像向量對上一個圖說向量；CLS 池化不需要額外參數就能產生那個影像向量。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一個正式系統與第 60 課的模式最直接對應？",
+      "options": [
+        "LLaVA 1.5：凍結視覺編碼器、凍結 LLM，只訓練一個兩層 MLP 投影",
+        "PaLM",
+        "AlphaFold",
+        "Stable Diffusion"
+      ],
+      "correct": 0,
+      "explanation": "LLaVA 的第一階段訓練就是這樣：凍結的編碼器與語言模型，唯一可訓練的部分是兩層 MLP 橋接。"
+    }
+  ]
+}

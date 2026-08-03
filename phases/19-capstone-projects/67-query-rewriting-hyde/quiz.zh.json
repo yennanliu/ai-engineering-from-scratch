@@ -1,0 +1,78 @@
+{
+  "lesson": "67-query-rewriting-hyde",
+  "title": "Query Rewriting: HyDE, Multi-Query, and Decomposition",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "HyDE（Hypothetical Document Embeddings）的核心機制是什麼？",
+      "options": [
+        "用更大的模型嵌入使用者查詢",
+        "對查詢做雜湊後到快取中查表",
+        "把查詢送過多個檢索器再挑出最好的一個",
+        "用 LLM 生成一份假的答案，嵌入這份假想文件，並改用它的向量而非查詢向量去檢索"
+      ],
+      "correct": 3,
+      "explanation": "HyDE 會用語料的口吻寫出一段文件形狀的內容，並用該嵌入去檢索；查詢向量被取代掉了。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼 HyDE 中由 LLM 生成的假想文件在事實上出錯是可以接受的？",
+      "options": [
+        "reranker 會修正事實錯誤",
+        "出錯時那次 LLM 呼叫會被回滾",
+        "檢索器在意的是 token 分布而非事實正確性；假想文件的向量會落在真實段落附近",
+        "使用者永遠看不到那份假想文件"
+      ],
+      "correct": 2,
+      "explanation": "檢索本質上是嵌入空間中的相似度；只要假想文件的用詞與語料相符，向量就會落在正確的區域。"
+    },
+    {
+      "stage": "check",
+      "question": "multi-query 擴展與查詢分解（query decomposition）的差別是什麼？",
+      "options": [
+        "multi-query 產生同一個問題的 N 種改述；分解則產生共同涵蓋一個多主題問題的子問題",
+        "分解在本地執行，multi-query 需要遠端模型",
+        "兩者完全相同",
+        "multi-query 用餘弦，分解用 BM25"
+      ],
+      "correct": 0,
+      "explanation": "改述保留原意；子問題則把一個多主題查詢拆成可各自獨立回答的片段。"
+    },
+    {
+      "stage": "check",
+      "question": "查詢分解在什麼情況下會過度切分而傷害檢索？",
+      "options": [
+        "當 BM25 被停用時",
+        "當語料太小時",
+        "當查詢本身是原子的（單一主題）時，分解器會捏造出假的子問題，而這些檢索都回傳同一份文件卻排名下降",
+        "當查詢長度超過 LLM 上限時"
+      ],
+      "correct": 2,
+      "explanation": "分解一個原子查詢會切出假的子問題；它們的檢索結果會稀釋合併，讓正確文件排得更後面。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼這三種改寫策略是用 RRF 融合，而不是分數內插？",
+      "options": [
+        "分數內插需要逐語料校準；RRF 以排名為基礎組合貢獻，不需校準，而融合來自不同改寫的 N 組檢索時正需要這一點",
+        "分數內插無法處理超過兩個清單",
+        "RRF 能在 GPU 上跑而分數內插不行",
+        "RRF 是 Python 唯一支援的運算"
+      ],
+      "correct": 0,
+      "explanation": "與第 65 課的論點相同；以排名為基礎的融合不需要逐語料調 alpha，且在各種改寫器輸出下都保持穩定。"
+    },
+    {
+      "stage": "post",
+      "question": "三個改寫器平行執行時的延遲下限是多少？",
+      "options": [
+        "三次串接的 LLM 呼叫",
+        "最慢的那一次檢索",
+        "一次 LLM 呼叫（改寫與檢索都平行執行，LLM 呼叫就是下限）",
+        "零，因為改寫器把所有東西都快取了"
+      ],
+      "correct": 2,
+      "explanation": "三個改寫器都會扇出成一次模型呼叫；若平行執行，下限就是一次模型呼叫的延遲，之後的檢索也是平行進行。"
+    }
+  ]
+}

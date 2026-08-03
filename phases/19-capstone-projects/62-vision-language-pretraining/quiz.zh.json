@@ -1,0 +1,78 @@
+{
+  "lesson": "62-vision-language-pretraining",
+  "title": "Vision-Language Pretraining",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "把 InfoNCE 與 LM 損失結合起來，會在同一個模型中訓練出哪兩種不同的能力？",
+      "options": [
+        "排序（為一段圖說找出正確的影像）與生成（為一張影像寫出圖說）",
+        "壓縮與解壓縮",
+        "速度與準確率",
+        "分詞與還原分詞"
+      ],
+      "correct": 0,
+      "explanation": "InfoNCE 負責排序；LM 損失負責生成。CoCa、BLIP 這一類模型在同一趟訓練中把兩者結合起來。"
+    },
+    {
+      "stage": "pre",
+      "question": "在一個含 N 組配對的批次上，InfoNCE 會形成多少正樣本對與負樣本對？",
+      "options": [
+        "相似度矩陣對角線上的 N 個正樣本，以及對角線外的 N*(N-1) 個負樣本",
+        "N 個正樣本與 N 個負樣本",
+        "1 個正樣本與 N 個負樣本",
+        "N^2 個正樣本"
+      ],
+      "correct": 0,
+      "explanation": "N 組相符的配對位於對角線上；對角線以外的一切都是負樣本。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼對比學習的溫度通常是一個可學習的參數？",
+      "options": [
+        "這樣可以不用 Adam",
+        "PyTorch 要求如此",
+        "學習出來的 tau 在 GPU 上比較快",
+        "手動調參很脆弱；讓 tau 自己學，模型才能隨著訓練中嵌入尺度的變化找到合適的 softmax 尖銳度"
+      ],
+      "correct": 3,
+      "explanation": "CLIP 引入了可學習的 log-tau，讓對比 softmax 在嵌入範數增大時仍待在有用的區間內。"
+    },
+    {
+      "stage": "check",
+      "question": "哪些子模組會收到來自 LM 損失、但不會收到來自對比損失的梯度？",
+      "options": [
+        "MLP 投影器",
+        "視覺編碼器",
+        "文字端編碼器",
+        "Cross-attention decoder"
+      ],
+      "correct": 3,
+      "explanation": "對比損失不會碰到 decoder；LM 損失也不會碰到文字端的平均池化編碼器。"
+    },
+    {
+      "stage": "check",
+      "question": "在 LM 的交叉熵中，ignore_index=PAD_ID 達成了什麼？",
+      "options": [
+        "加速損失計算",
+        "把 pad token 加密",
+        "把填充位置從損失中遮掉，讓模型不會因為預測圖說結束之後的 token 而被懲罰",
+        "重新排列 token"
+      ],
+      "correct": 2,
+      "explanation": "填充位置不帶任何訊號；忽略它們可以避免損失去學著預測 pad。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在合成資料上跑 50 步的示範，就足以宣告這一課完成？",
+      "options": [
+        "模型在 50 步就達到最先進水準",
+        "50 步是支援的上限",
+        "這個示範證明梯度的接線從頭到尾都通了；正式訓練的形態完全相同，只是在真實資料上跑上數百萬步",
+        "真實資料會改變架構"
+      ],
+      "correct": 2,
+      "explanation": "示範中呈現的動態（兩種損失都下降、沒有 NaN、tau 穩定）與十億張影像規模的訓練所呈現的動態相同，差別只在規模。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "72-code-exec-metric",
+  "title": "Code Exec Metric",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼執行器對每個候選都要另外開一個全新的 Python 子行程，而不是直接內嵌呼叫 exec？",
+      "options": [
+        "這能避免污染 builtins",
+        "exec 在現代 Python 中已被棄用",
+        "它比 exec 快",
+        "它把逾時、輸出爆量與危險匯入都隔離在主評測行程之外"
+      ],
+      "correct": 3,
+      "explanation": "候選程式碼裡的無窮迴圈或失控的記憶體配置，只會弄垮子行程。主評測行程仍能繼續推進。"
+    },
+    {
+      "stage": "pre",
+      "question": "一個有三項斷言的任務，兩項通過、一項失敗時分數是多少？",
+      "options": [
+        "0.667",
+        "1.0",
+        "0.0",
+        "0.5"
+      ],
+      "correct": 0,
+      "explanation": "分數是通過數除以總數。三分之二是 0.667。結束碼為 assertion_fail。"
+    },
+    {
+      "stage": "check",
+      "question": "當候選程式碼無法剖析時，執行器會回傳哪一個結束碼？",
+      "options": [
+        "syntax_error",
+        "error",
+        "timeout",
+        "assertion_fail"
+      ],
+      "correct": 0,
+      "explanation": "compile() 在執行器內拋出 SyntaxError，內層腳本接住它並寫出 exit_code=syntax_error。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼真正承重的控制手段是實際時間逾時，而不是匯入黑名單？",
+      "options": [
+        "Python 無法禁止匯入",
+        "subprocess.run 不支援黑名單",
+        "大多數失敗都是無窮迴圈，而有心的攻擊者可以繞過任何行程內的黑名單",
+        "實際時間是在編譯期檢查的"
+      ],
+      "correct": 2,
+      "explanation": "黑名單抓的是偷懶的程式碼，逾時抓的是無窮迴圈。黑名單是後備，逾時才是底線。"
+    },
+    {
+      "stage": "check",
+      "question": "當 n - c < k 時，pass_at_k(n, c, k) 會回傳什麼？",
+      "options": [
+        "1，因為抽樣必然包含至少一個通過的解",
+        "c / n，也就是實測通過率",
+        "0，因為此時抽樣沒有定義",
+        "拋出 ValueError"
+      ],
+      "correct": 0,
+      "explanation": "如果失敗數少於抽樣大小，那麼任何大小為 k 的抽樣都必然包含至少一個通過，所以機率是 1。"
+    },
+    {
+      "stage": "post",
+      "question": "執行器如何呈現輸出溢位，以及為什麼上限是 256 KB？",
+      "options": [
+        "只用 stderr；大小對齊作業系統的管線預設值",
+        "分數值，以帶兩位小數的百分比表示",
+        "子行程的 stdout 是串流讀取的；一旦累計量越過 256 KB，子行程就會被殺掉，任務記為 exit_code=error 並附上 detail「output overflow」",
+        "候選原始碼的大小，設上限是為了讓生成的程式碼保持精簡"
+      ],
+      "correct": 2,
+      "explanation": "這個上限是在保護主機。灌爆 stdout 的候選程式碼會在串流中途被殺掉；執行器會把結果統一收斂成 exit_code=error 並附 detail「output overflow」，而不是另立一個新的結束碼。"
+    }
+  ]
+}
