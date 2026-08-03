@@ -1,0 +1,78 @@
+{
+  "lesson": "74-leaderboard-aggregation",
+  "title": "Leaderboard Aggregation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼彙總器要求每一筆輸入分數都落在 [0, 1] 之間？",
+      "options": [
+        "沒有共同尺度時，一個範圍為 0-100 的指標會主導逐模型的平均值",
+        "numpy 有這個要求",
+        "這是 ECE 的分箱範圍",
+        "Markdown 渲染預期是兩位小數"
+      ],
+      "correct": 0,
+      "explanation": "如果通過率在 [0,1] 而 BLEU 在 [0,100]，後者會把平均值淹沒。正規化屬於指標層的責任，並在這裡受檢查。"
+    },
+    {
+      "stage": "pre",
+      "question": "平均分數藏起了哪些勝率會揭露的資訊？",
+      "options": [
+        "bootstrap 區間",
+        "模型是否校準良好",
+        "逐任務的勝負能抵抗離群值與尺度偏移；平均值對兩者都敏感",
+        "已完成的任務數量"
+      ],
+      "correct": 2,
+      "explanation": "勝率是逐任務計算勝負。一個模型可能靠一項簡單任務拉高平均，卻在多數兩兩比較中落敗。"
+    },
+    {
+      "stage": "check",
+      "question": "bootstrap_mean_ci 如何估計信賴區間？",
+      "options": [
+        "假設平均值服從常態分布",
+        "對任務分數做可放回重抽樣，對每組樣本計算平均，再取 alpha/2 與 1 - alpha/2 的百分位數",
+        "以解析方式計算標準差",
+        "呼叫 scipy.stats.bootstrap"
+      ],
+      "correct": 1,
+      "explanation": "對逐任務分數做無母數的百分位 bootstrap；不假設任何分布，也不需要 scipy。"
+    },
+    {
+      "stage": "check",
+      "question": "兩兩差異的信賴區間在什麼時候會回報 `significant`？",
+      "options": [
+        "當兩個模型的任務數都超過三十時",
+        "當該信賴區間不包含零時",
+        "當兩者勝率不相等時",
+        "當平均差異大於 0.1 時"
+      ],
+      "correct": 1,
+      "explanation": "一個嚴格排除零的信賴區間，代表在所選信心水準下差異不太可能為零；這就是本課採用的操作型定義。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼兩兩比較的 bootstrap 是配對式而非獨立式？",
+      "options": [
+        "配對式 bootstrap 尊重「同一個任務同時餵給兩個模型」這件事；差異是先逐任務算出來，再做重抽樣",
+        "配對式是 numpy 唯一支援的做法",
+        "配對式 bootstrap 跑得比較快",
+        "獨立式 bootstrap 在 Python 中不合法"
+      ],
+      "correct": 0,
+      "explanation": "配對式 bootstrap 能降低雜訊：我們是在任務上抽樣而不是在模型上抽樣，所以每一輪比較的都是同一組任務集合。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼彙總器要在主要數字之外，一併回傳逐類別的平均？",
+      "options": [
+        "主要平均值可能遮蔽類別層級的弱點（整體不錯但程式碼很糟）；逐類別能把它攤開",
+        "逐類別平均比整體平均跑得快",
+        "JSON Schema 有此要求",
+        "Markdown 渲染需要它"
+      ],
+      "correct": 0,
+      "explanation": "一個模型可能靠著各處都還行而在總分上勝出，也可能靠著在單一類別上碾壓而勝出。逐類別拆解能讓消費者看出是哪一種。"
+    }
+  ]
+}

@@ -87,6 +87,33 @@ docs/
 
 Keep the same structure as the English version. Translate content, not code.
 
+Structure means *the same headings in the same order*: the site derives every
+heading anchor from the English source by position, and it places the quizzes,
+the Build/Use/Ship tints, and the Learning Objectives card off those anchors.
+Add or drop a heading and the translation's anchors shift out from under it.
+
+A lesson's quiz translates alongside it, as `quiz.<lang>.json` next to
+`quiz.json`:
+
+```
+phases/11-llm-engineering/03-structured-outputs/
+├── quiz.json       (English — always required)
+└── quiz.zh.json    (Chinese)
+```
+
+Same schema, same question order, same number of options. Only `question`,
+`options`, and `explanation` are translated — `stage`, `correct`, and `id` are
+copied verbatim, and options are never reordered, because `correct` is a
+position. Where the English `explanation` is empty, leave it empty rather than
+inventing one. The site falls back to `quiz.json` per lesson, so a partial
+translation is safe.
+
+Verify before opening the PR:
+
+```bash
+python3 scripts/check_quiz_translations.py --lang zh    # must print "clean"
+```
+
 ### 3. Add an Output
 
 If a lesson should produce a reusable prompt, skill, agent, or MCP server:

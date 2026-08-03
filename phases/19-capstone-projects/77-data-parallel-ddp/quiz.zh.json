@@ -1,0 +1,78 @@
+{
+  "lesson": "77-data-parallel-ddp",
+  "title": "Data Parallel DDP From Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 DDP 在建構時要廣播參數，而不是仰賴各 rank 使用相同的隨機種子？",
+      "options": [
+        "廣播比較省記憶體",
+        "廣播比設種子快",
+        "PyTorch 禁止相同種子的初始化",
+        "相同種子的初始化會在各 rank 間出現浮點 epsilon 級的漂移；廣播則保證訓練開始前權重位元組完全相同"
+      ],
+      "correct": 3,
+      "explanation": "在不同硬體上（甚至只是不同的行程順序）浮點運算可能在位元層級不一致。從 rank 0 廣播是讓各處權重位元組相同的唯一辦法。"
+    },
+    {
+      "stage": "pre",
+      "question": "DDP 在 backward 之後、optimizer.step 之前會做什麼？",
+      "options": [
+        "對每個參數的梯度做 allreduce-SUM，再除以 world_size 得到平均梯度",
+        "什麼都不做",
+        "儲存一個檢查點",
+        "廣播 logit"
+      ],
+      "correct": 0,
+      "explanation": "平均梯度對 world_size 不變，所以在單一 rank 上調好的學習率，在 N 個 rank 上一樣適用。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼是在 allreduce-SUM 之後除以 world_size，而不是直接用 allreduce-MEAN？",
+      "options": [
+        "gloo 中沒有 allreduce-MEAN",
+        "world_size 是未知的",
+        "在每個 rank 上除以 world_size 是本地運算；allreduce-MEAN 底層本來也是這樣實作的",
+        "除法會產生 NaN"
+      ],
+      "correct": 2,
+      "explanation": "兩種做法的算術結果相同。NCCL 自 2.10 起提供 allreduce-AVG，gloo 沒有，所以在 SUM 之後於本地做除法。"
+    },
+    {
+      "stage": "check",
+      "question": "正式環境 DDP 中的梯度分桶（gradient bucketing）達成了什麼？",
+      "options": [
+        "把許多次小的 allreduce 合併成一次大的 allreduce，攤薄每次呼叫的延遲底線",
+        "釋放梯度佔用的記憶體",
+        "把梯度量化成 int8",
+        "跳過 backward"
+      ],
+      "correct": 0,
+      "explanation": "一個十億參數的模型有數千個梯度張量；每個張量各做一次 allreduce 就要付上千次 gloo 或 NCCL 的延遲。"
+    },
+    {
+      "stage": "check",
+      "question": "PyTorch DDP 為什麼會有 no_sync()？",
+      "options": [
+        "用來切換後端",
+        "用來關閉 DDP",
+        "用來除錯",
+        "跨 K 個 microbatch 做梯度累積時，其中 K-1 次必須跳過 backward 後的 allreduce；no_sync 就是包住這段暫停的機制"
+      ],
+      "correct": 3,
+      "explanation": "沒有 no_sync 的話，每一個累積步驟都會觸發 K 次 allreduce，吞吐量會掉到谷底。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼本課的參考實作是在單一行程中循序走過每個 rank 的 micro-batch？",
+      "options": [
+        "這是使用 gloo 的唯一方式",
+        "單行程比較快",
+        "這樣比較省記憶體",
+        "它提供一個位元組級相同的基準：循序算出的平均梯度，必須在每一步都等於 DDP 做完 allreduce 的平均梯度"
+      ],
+      "correct": 3,
+      "explanation": "與參考迴圈等價是承重的正確性測試；沒有它，梯度同步的錯誤會一路藏到第 10000 步。"
+    }
+  ]
+}
