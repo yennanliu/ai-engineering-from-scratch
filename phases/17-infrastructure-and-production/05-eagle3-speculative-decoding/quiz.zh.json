@@ -1,0 +1,78 @@
+{
+  "lesson": "05-eagle3-speculative-decoding",
+  "title": "EAGLE-3 Speculative Decoding in Production",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "推測式解碼利用的是純 decode 中存在的什麼落差？",
+      "options": [
+        "decode 無法從批次獲益",
+        "decode 受記憶體限制，所以 GPU 大多在閒置等待從 HBM 讀取權重",
+        "decode 受算力限制，所以增加算力是免費的",
+        "decode 需要的網路頻寬比 prefill 多"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "接受率 alpha 量測的是什麼？",
+      "options": [
+        "draft 模型帶來的延遲額外開銷",
+        "draft 提出的 token 中被目標模型接受的比例",
+        "KV cache 的快取命中率",
+        "decode 期間使用的 GPU 記憶體比例"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "EAGLE-3 相較於 EAGLE-2 改了什麼，使得一般聊天場景的 alpha 推到大約 0.6-0.8？",
+      "options": [
+        "draft head 是在目標模型的多個層上訓練，而不是只用最後一層",
+        "它使用同家族的全尺寸 draft 模型",
+        "它改在 CPU 而不是 GPU 上執行",
+        "它完全移除了驗證步驟"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這一課說在 2026 年的多數硬體上、高並行時，alpha 大約低於多少，推測式解碼就會變成淨負面？",
+      "options": [
+        "0.85",
+        "0.95",
+        "0.05",
+        "0.55"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "打開 EAGLE-3 之後，就算平均 ITL 下降了，你最該緊盯哪個指標？",
+      "options": [
+        "GPU 記憶體使用率",
+        "冷啟動時間",
+        "平均端到端延遲",
+        "P99 ITL，因為 draft 被拒絕時的兩趟運算在批次滿載時會被序列化"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "依照這一課，為什麼推測式解碼在 vLLM 2026 是選擇性開啟而不是預設開啟？",
+      "options": [
+        "它與 PagedAttention 不相容",
+        "它只在 Blackwell GPU 上有效",
+        "它需要另外的授權",
+        "接受率取決於工作負載，沒有先量測 alpha 就打開是生產環境的反模式"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "57-end-to-end-research-demo",
+  "title": "End-to-End Research Demo",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在這一課中，這個示範程式的任務是什麼？",
+      "options": [
+        "拿排程器與某個基準做效能比較",
+        "在每條分支上呼叫真實的語言模型",
+        "用一個全新的框架取代前面幾課",
+        "透過單純的 Python import，把前面幾課的基本元件組合起來"
+      ],
+      "correct": 3,
+      "explanation": "這個示範是一次組合測試。每個階段都有自己的一課，示範程式只是 import 它們並串起報告。沒有新框架，也沒有新抽象。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼這一課用 importlib 載入前面幾課，而不是一般的套件 import？",
+      "options": [
+        "因為 importlib 比較快",
+        "因為前面每一課都是獨立的 code/ 資料夾，不是安裝好的套件；importlib 依檔案路徑載入它們",
+        "因為 asyncio 需要 importlib",
+        "因為這些課共用同一個模組名稱，會互相衝突"
+      ],
+      "correct": 1,
+      "explanation": "這些課並不是安裝好的套件，每一課都在自己的 code/ 資料夾內附一份 main.py。importlib.util.spec_from_file_location 依路徑載入它們，不會污染全域模組命名空間。"
+    },
+    {
+      "stage": "check",
+      "question": "當不只一條分支觸發論文時，最佳結果挑選器如何在分支之間做取捨？",
+      "options": [
+        "它挑平均報酬最高的分支，平手時依分支 id 的字母順序決定",
+        "它挑執行實驗次數最多的分支",
+        "為了公平，它隨機挑一個",
+        "它挑第一條觸發的分支"
+      ],
+      "correct": 0,
+      "explanation": "平均值最高者勝出。平手時以分支 id 決勝，讓示範保持決定性。隨機挑選會破壞決定性測試。"
+    },
+    {
+      "stage": "check",
+      "question": "當排程器回報論文觸發次數為零時，挑選器會拋出什麼錯誤？",
+      "options": [
+        "ValueError",
+        "它回傳 None",
+        "PaperValidationError",
+        "NoTriggerError，它會在撰寫器執行前就把示範短路掉"
+      ],
+      "correct": 3,
+      "explanation": "NoTriggerError 是帶型別的失敗模式。回傳 None 會讓撰寫器拿著格式錯誤的輸入繼續跑，之後才以更難處理的錯誤爆掉。"
+    },
+    {
+      "stage": "post",
+      "question": "在決定性測試中，為什麼示範程式要用同一個種子跑兩次？",
+      "options": [
+        "為了抓出記憶體洩漏",
+        "為了斷言兩次執行挑中的分支、報酬與論文章節 id 完全相同",
+        "為了讓 asyncio 被操練兩次",
+        "為了證明排程器是公平的"
+      ],
+      "correct": 1,
+      "explanation": "決定性是契約的一部分。兩次使用相同種子的執行必須產出相同的產物，這個測試就是把這件事釘死。"
+    },
+    {
+      "stage": "post",
+      "question": "成功執行之後，示範報告包含什麼？",
+      "options": [
+        "只有最終的 LaTeX 檔",
+        "只有實驗次數與一個狀態字串",
+        "一份模型提示詞與回覆的日誌",
+        "scheduler_report、best_branch、best_reward、critic_result、paper_manifest 與 stop_reason"
+      ],
+      "correct": 3,
+      "explanation": "每個階段的輸出都被保留下來。這份報告是上游輸出的組合，而不是經過轉換的摘要。下游工具讀清單檔，除錯的人則讀 scheduler_report 裡的追蹤記錄。"
+    }
+  ]
+}

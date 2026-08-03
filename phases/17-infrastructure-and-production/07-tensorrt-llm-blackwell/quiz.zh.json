@@ -1,0 +1,78 @@
+{
+  "lesson": "07-tensorrt-llm-blackwell",
+  "title": "Hardware-Specialized Inference Compilation — FP8 and NVFP4 on Blackwell",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在同級的 120B 等級工作負載上，這一課回報 Blackwell + TRT-LLM + Dynamo 與 H100 + vLLM 之間每百萬 token 的成本差距大約是多少？",
+      "options": [
+        "約 2 倍",
+        "約 7 倍",
+        "約 1.1 倍",
+        "約 100 倍"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼這一課建議在 Blackwell 上把 KV cache 留在 FP8，而不是 NVFP4？",
+      "options": [
+        "目前沒有任何引擎支援 NVFP4 的 KV cache",
+        "KV cache 橫跨很寬的動態範圍；FP4 量化會讓 attention 分數出現災難性的準確度損失",
+        "FP8 用的記憶體比 FP4 少",
+        "FP8 是 NVLink 5 唯一支援的精度"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "TRT-LLM 利用了 Blackwell 的哪一項特性，讓模型不需要訓練後轉換步驟就能載入？",
+      "options": [
+        "BF16 的 KV cache",
+        "FP64 attention",
+        "透過 bitsandbytes 的 INT2 權重",
+        "模型供應商在第 0 天就提供的 FP4 權重"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "依照這一課，選擇 TRT-LLM 這套堆疊最主要的取捨是什麼？",
+      "options": [
+        "它要求完全自主的修復機制",
+        "它無法服務 MoE 模型",
+        "它只在小規模下有效",
+        "它把你鎖在 NVIDIA 硬體上——沒有 AMD、沒有 Intel、沒有 ARM"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "這一課把哪一種精度組合描述為典型的 Blackwell 設定？",
+      "options": [
+        "全部使用 BF16",
+        "權重 NVFP4、激活值 NVFP4、KV cache FP8、attention 累加器 FP32",
+        "權重 INT8、激活值 FP32、KV cache INT4",
+        "權重 FP4、KV cache FP4、attention 用 INT8"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "對於推理密集、NVFP4 權重轉換會讓 MATH 準確率掉幾個百分點的工作負載，這一課建議怎麼做？",
+      "options": [
+        "改用 AMD MI300X",
+        "停用推測式解碼",
+        "逐個模型在自己的評測集上驗證任務品質；團隊常改用 FP8 權重加 FP4 激活值，或是留在 H200 全程使用 FP8",
+        "還是出貨 NVFP4，因為成本上的勝出壓過一切"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

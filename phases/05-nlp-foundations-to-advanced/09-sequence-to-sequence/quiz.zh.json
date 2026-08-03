@@ -1,0 +1,102 @@
+{
+  "lesson": "09-sequence-to-sequence",
+  "title": "Sequence-to-Sequence Models",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 2014 年風格的 seq2seq 模型中，編碼器的角色是什麼？",
+      "options": [
+        "生成目標端 token",
+        "執行 beam search",
+        "計算 attention 權重",
+        "讀取來源端，產生一個總結它的固定長度脈絡向量"
+      ],
+      "correct": 3,
+      "explanation": "編碼器 RNN 把來源端壓縮成一個最終隱藏狀態，供解碼器使用。"
+    },
+    {
+      "stage": "pre",
+      "question": "seq2seq 訓練中的 teacher forcing 是什麼？",
+      "options": [
+        "人工標註解碼器的每一步",
+        "在推論時加上一個教師網路",
+        "把批次大小加倍",
+        "把真值的前一個 token（而不是模型自己的預測）餵給解碼器當輸入"
+      ],
+      "correct": 3,
+      "explanation": "teacher forcing 用真實的前一個 token 來穩定訓練；沒有它，早期的錯誤會連鎖放大。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼固定脈絡向量的 seq2seq 準確率會隨著輸入變長而下降？",
+      "options": [
+        "交叉熵會發散",
+        "padding token 會累積",
+        "詞彙表變得太大",
+        "來源端的所有資訊都必須塞進單一個固定長度的編碼器隱藏狀態，長輸入的細節會流失"
+      ],
+      "correct": 3,
+      "explanation": "固定脈絡向量這個瓶頸，意味著長輸入無法被無損地摘要。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是 exposure bias？",
+      "options": [
+        "來自類別不平衡的偏差",
+        "編碼器嵌入中的偏差",
+        "標註者之間的歧異",
+        "訓練時用真值 token、推論時卻依模型自己的預測往下生成，兩者之間的落差"
+      ],
+      "correct": 3,
+      "explanation": "模型在訓練時從未練習過從自己的錯誤中恢復，所以推論時錯誤會連鎖放大。"
+    },
+    {
+      "stage": "check",
+      "question": "在生成任務上，beam search 為什麼常常勝過 greedy 解碼？",
+      "options": [
+        "beam search 比較快",
+        "beam search 在每一步都保留前 k 個部分序列，而不是不可逆地押在單一 token 上",
+        "beam search 避免了 exposure bias",
+        "beam search 會降低損失"
+      ],
+      "correct": 1,
+      "explanation": "greedy 每一步就把選擇敲定；beam search 探索多個假設，最後再挑出最好的完整序列。"
+    },
+    {
+      "stage": "post",
+      "question": "在一般生成任務上，哪一類架構取代了 RNN seq2seq？",
+      "options": [
+        "Naive Bayes",
+        "圖神經網路",
+        "一維 CNN",
+        "Transformer 編碼器—解碼器模型（BART、T5、mBART、NLLB）"
+      ],
+      "correct": 3,
+      "explanation": "Transformer 編碼器—解碼器捨棄了遞迴，如今主導生成任務。"
+    },
+    {
+      "stage": "post",
+      "question": "scheduled sampling 做的是什麼？",
+      "options": [
+        "對嵌入加上隨機雜訊",
+        "在訓練過程中逐步調降 teacher forcing 的比例，讓模型學會從自己的預測中恢復",
+        "重新排列訓練集的順序",
+        "安排學習率衰減"
+      ],
+      "correct": 1,
+      "explanation": "scheduled sampling 逐漸把模型自己的預測混進來，縮小訓練與推論之間的落差。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在面向使用者的生成場景中，只用 greedy 解碼常常會失敗？",
+      "options": [
+        "它總是先挑 <EOS>",
+        "它無法使用嵌入",
+        "greedy 可能重複或陷入迴圈，而且無法從一個局部看似不錯、整體卻很差的 token 選擇回頭",
+        "它需要更多記憶體"
+      ],
+      "correct": 2,
+      "explanation": "greedy 解碼每一步不可逆的選擇會造成迴圈與重複，除非改用 beam search 或採樣。"
+    }
+  ]
+}

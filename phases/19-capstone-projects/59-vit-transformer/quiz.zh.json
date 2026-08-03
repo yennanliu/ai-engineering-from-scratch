@@ -1,0 +1,78 @@
+{
+  "lesson": "59-vit-transformer",
+  "title": "Vision Transformer Encoder",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼標準的 ViT 區塊採用 pre-LayerNorm 的擺放位置，而不是 post-LayerNorm？",
+      "options": [
+        "Pre-LN 跑得比較快",
+        "Post-LN 用掉更多記憶體",
+        "Pre-LN 不必做學習率暖身就能在深層網路穩定訓練，而 post-LN 超過大約 6 層就會發散",
+        "Post-LN 有專利"
+      ],
+      "correct": 2,
+      "explanation": "Pre-LN 對每個子層的輸入做正規化，使梯度範數在深度增加時仍維持有界。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 hidden=768、heads=12 時，每個 head 的維度是多少，為什麼這件事重要？",
+      "options": [
+        "12，這樣每個 head 都能跑在小型 GPU 上",
+        "96，由 ResNet-50 決定",
+        "768，因為所有 head 共用同一組投影",
+        "64，它決定每張 attention map 的解析度，並讓十二個 head 能平行且獨立地關注不同資訊"
+      ],
+      "correct": 3,
+      "explanation": "head_dim = hidden / heads = 64。每個 head 把 token 投影到自己的 64 維 q/k/v，並計算自己的 attention map。"
+    },
+    {
+      "stage": "check",
+      "question": "ViT 編碼器需要因果 attention 遮罩嗎？",
+      "options": [
+        "只有訓練時需要",
+        "不需要：編碼器是雙向的，同一序列中每個 token 都可以關注其他任何 token",
+        "需要，就像 GPT decoder 一樣",
+        "只有 CLS 那一列需要"
+      ],
+      "correct": 1,
+      "explanation": "視覺編碼器是雙向的。因果遮罩要等到後面文字 decoder 消費 cross-attention 輸出時才會出現。"
+    },
+    {
+      "stage": "check",
+      "question": "經過全部 12 個區塊之後，CLS token 的最終隱藏狀態代表什麼？",
+      "options": [
+        "整張影像的學習式向量摘要，下游的 head 會把它投影成類別 logit 或對比嵌入",
+        "只有最後一個區塊",
+        "隨機雜訊",
+        "輸入嵌入的一份複本"
+      ],
+      "correct": 0,
+      "explanation": "CLS token 一開始是空的，透過全部 12 個區塊的 self-attention，逐步累積來自每一個區塊的資訊。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼前饋層要擴張到隱藏維度的 4 倍？",
+      "options": [
+        "它讓 FLOPs 減半",
+        "PyTorch 要求必須是 4 倍",
+        "這是自原始 Transformer 以來的經驗甜蜜點；在固定資料預算下，更小會欠擬合，更大會過度擬合",
+        "它讓 attention 變得不必要"
+      ],
+      "correct": 2,
+      "explanation": "4 倍這個係數自 2017 年以來在語言與視覺 Transformer 上都成立。每單位參數所能換到的容量在此達到高點。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種家族擴充保持區塊的數學不變，只在序列前面加上學習式 token？",
+      "options": [
+        "因果遮罩",
+        "RoPE 旋轉",
+        "Register token（DINOv2）：在 CLS 之後前置幾個學習式向量，用來捕捉全域統計並讓 attention map 更平滑",
+        "Mixture-of-experts"
+      ],
+      "correct": 2,
+      "explanation": "Register token 在不改動區塊數學的情況下穩定 attention；它們只是序列中額外的位置。"
+    }
+  ]
+}

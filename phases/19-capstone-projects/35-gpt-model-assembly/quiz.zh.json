@@ -1,0 +1,78 @@
+{
+  "lesson": "35-gpt-model-assembly",
+  "title": "GPT Model Assembly",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課重現的 GPT-2 small 參考設定是什麼？",
+      "options": [
+        "vocab 30000、context 512、d_model 512、6 個 head、6 層",
+        "vocab 50257、context 1024、d_model 768、12 個 head、12 層，參數量接近 1.24 億",
+        "vocab 50000、context 4096、d_model 4096、32 個 head、32 層",
+        "vocab 100000、context 2048、d_model 1024、16 個 head、24 層"
+      ],
+      "correct": 1,
+      "explanation": "GPT-2 small 就是那個 124M 參數的設定；能對上它，代表接線是正確的。"
+    },
+    {
+      "stage": "check",
+      "question": "在模型組裝中，權重綁定（weight tying）是什麼意思？",
+      "options": [
+        "token 嵌入與 LM head 共用完全同一個參數張量；最佳化器更新的是同一個矩陣，它同時服務查找與輸出投影",
+        "兩個形狀相同的不同張量，每一步互相複製",
+        "跨層共用的偏置項",
+        "對 attention head 的一項限制"
+      ],
+      "correct": 0,
+      "explanation": "設定 lm_head.weight = tok_embed.weight 是共用儲存空間；複製則不是。這省下 vocab 乘上 d_model 個參數。"
+    },
+    {
+      "stage": "check",
+      "question": "生成時如何滑動上下文視窗？",
+      "options": [
+        "每一步取目前序列（提示詞加已生成內容）的最後 context_length 個 token，餵給模型",
+        "每一步截斷到上下文的一半",
+        "以零填補到最大上下文長度",
+        "每一步都從提示詞重新開始"
+      ],
+      "correct": 0,
+      "explanation": "一旦目前序列超出上下文長度，滑動視窗就丟掉最舊的 token。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 attention 的輸出投影與第二個 MLP 線性層要用比其他部分更小的標準差來初始化？",
+      "options": [
+        "資料集要求如此",
+        "top-k 取樣需要較小的權重",
+        "兩者都直接餵進一個殘差相加。把它們的標準差乘上 1 除以 sqrt(2 乘上 num_layers)，可以讓殘差流在十二層之間維持在合適的尺度",
+        "這樣可以節省記憶體"
+      ],
+      "correct": 2,
+      "explanation": "沒有這個縮放，殘差流會隨深度增長，把最後的 LayerNorm 推進過熱的區間。"
+    },
+    {
+      "stage": "post",
+      "question": "溫度在取樣時做了什麼？",
+      "options": [
+        "選擇最佳化器的學習率",
+        "在 softmax 之前把 logit 相除。T 小於 1 會讓分布更尖銳、趨近貪婪，T 等於 1 保留模型的自然分布，T 大於 1 則讓分布變平坦",
+        "縮放嵌入",
+        "為 head 加上 dropout"
+      ],
+      "correct": 1,
+      "explanation": "溫度是最簡單的旋鈕；搭配 top-k 可以控制生成的探索程度。"
+    },
+    {
+      "stage": "post",
+      "question": "top-k 過濾在取樣之前做了什麼？",
+      "options": [
+        "挑出最小的 k 個 logit",
+        "保留數值最高的 k 個 logit，把其餘遮成負無限大，再對存活者做 softmax，讓 multinomial 取樣只看得到前 k 個 token",
+        "移除所有小於零的 logit",
+        "把 logit 上限設在 k"
+      ],
+      "correct": 1,
+      "explanation": "top-k 在 softmax 之前截掉長尾；top_k=1 是貪婪解碼，k 越大保留的多樣性越高。"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "lesson": "11-machine-translation",
+  "title": "Machine Translation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "BLEU 衡量的是什麼？",
+      "options": [
+        "假設譯文與參考譯文之間的 n-gram 精確率（通常是 1 到 4），再加上簡短懲罰",
+        "嵌入的餘弦相似度",
+        "語言辨識的準確率",
+        "字元層級的 F 分數"
+      ],
+      "correct": 0,
+      "explanation": "BLEU 是相對於參考譯文的 1 到 4-gram 精確率的幾何平均，再加上簡短懲罰。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼要用 sacrebleu，而不是自己刻一份 BLEU？",
+      "options": [
+        "它能在 GPU 上跑",
+        "它比較準確",
+        "它把斷詞方式標準化，讓分數能跨論文、跨執行互相比較",
+        "它支援串流"
+      ],
+      "correct": 2,
+      "explanation": "sacrebleu 把斷詞方式固定下來，消除了 BLEU 數字無法互相比較的常見原因。"
+    },
+    {
+      "stage": "check",
+      "question": "NLLB 專屬的哪個設定會在解碼時控制目標語言？",
+      "options": [
+        "src_lang",
+        "把 forced_bos_token_id 設成目標語言代碼對應的 token id",
+        "num_beams",
+        "length_penalty"
+      ],
+      "correct": 1,
+      "explanation": "NLLB 透過 forced_bos_token_id 強制第一個解碼出來的 token 為目標語言代碼。"
+    },
+    {
+      "stage": "check",
+      "question": "在有標註資料的情況下，2026 年生產環境評估機器翻譯品質預設會用哪一類指標？",
+      "options": [
+        "token 編輯距離",
+        "延遲",
+        "只用 BLEU",
+        "以人類判斷訓練出來的學習型指標，例如 COMET（以及 BERTScore/BLEURT）"
+      ],
+      "correct": 3,
+      "explanation": "像 COMET 這類學習型指標，與人類判斷的相關性比單用 BLEU/chrF 更強。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼情況下 chrF 往往比 BLEU 更有參考價值？",
+      "options": [
+        "構詞豐富的語言——字元層級的匹配能抓到 BLEU 錯過的詞形變化",
+        "使用 beam search 時",
+        "在非常短的句子上",
+        "只要有參考譯文就適用"
+      ],
+      "correct": 0,
+      "explanation": "字元 F 分數能捕捉部分的構詞匹配，而詞層級的 BLEU 會低估這些匹配。"
+    },
+    {
+      "stage": "post",
+      "question": "多語言機器翻譯中的 off-target generation 是什麼？",
+      "options": [
+        "輸出漏掉了命名實體",
+        "模型解碼成了錯誤的目標語言（例如要求法文，NLLB 卻輸出西班牙文）",
+        "輸出太短",
+        "輸出漏掉標點符號"
+      ],
+      "correct": 1,
+      "explanation": "off-target generation 在罕見語言對上很常見；在翻譯後加一道語言辨識檢查就能抓到。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼用幾千組高品質的領域平行語料微調，常常勝過用大得多的雜訊網路資料？",
+      "options": [
+        "品質與領域契合度的影響大過資料量；有雜訊的平行語料會帶來漂移與幻覺",
+        "較小的資料集訓練比較快",
+        "使用網路資料違法",
+        "資料越大越會撐爆 GPU 記憶體"
+      ],
+      "correct": 0,
+      "explanation": "乾淨且領域對齊的語料對，是生產環境中效益最大的槓桿；有雜訊的資料會損害領域適應。"
+    },
+    {
+      "stage": "post",
+      "question": "到了 2026 年，什麼情況下 LLM（例如 GPT-4）可能勝過專用的機器翻譯模型？",
+      "options": [
+        "對延遲極度敏感的瀏覽器內翻譯",
+        "慣用語內容、長脈絡、透過提示詞做風格調整，或需要控制語氣的內容",
+        "追求最高吞吐量的批次翻譯",
+        "擁有數百萬組平行句子的小語種語言對"
+      ],
+      "correct": 1,
+      "explanation": "LLM 在慣用語、長脈絡或需控制風格的翻譯上勝出；專用機器翻譯模型則在吞吐量與延遲上勝出。"
+    }
+  ]
+}

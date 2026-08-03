@@ -1,0 +1,78 @@
+{
+  "lesson": "32-token-positional-embeddings",
+  "title": "Token and Positional Embeddings",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "嵌入階段從 (B, T) 的 id 產生出什麼形狀？",
+      "options": [
+        "(B, T, D)，其中 D 是模型維度",
+        "(B, V)",
+        "(B, T, V)，其中 V 是詞彙表大小",
+        "(B, T)"
+      ],
+      "correct": 0,
+      "explanation": "每個 id 被對應到一個 D 維向量。批次保留 B 與 T，並多出一個新的特徵維度 D。"
+    },
+    {
+      "stage": "check",
+      "question": "在本課中，token 嵌入與位置嵌入是如何組合的？",
+      "options": [
+        "透過一個額外的線性投影",
+        "取逐元素的最大值",
+        "以逐元素相加，並把位置向量沿批次軸廣播",
+        "沿特徵軸串接"
+      ],
+      "correct": 2,
+      "explanation": "形狀為 (B, T, D) 與 (T, D) 的兩個張量相加。廣播會把位置表沿批次軸複製。"
+    },
+    {
+      "stage": "check",
+      "question": "SinusoidalPositionalEmbedding 貢獻多少可學習參數？",
+      "options": [
+        "max_context_length * d_model",
+        "零個",
+        "max_context_length",
+        "d_model"
+      ],
+      "correct": 1,
+      "explanation": "正弦表是由公式算出並以 buffer 儲存。它不貢獻任何參數。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一種位置編碼無法接受長度超過其建構上限的序列？",
+      "options": [
+        "正弦位置嵌入",
+        "兩者皆非",
+        "兩者皆是",
+        "學習式位置嵌入"
+      ],
+      "correct": 2,
+      "explanation": "在本課的實作中，兩個類別都在 forward 時強制檢查 max_context_length。學習式本質上就受限於表格大小；這裡的正弦式也有界限，因為它使用預先建好的表。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼正弦方案要在相鄰的特徵配對上同時使用 sin 與 cos？",
+      "options": [
+        "這樣位置 p+k 的向量會是位置 p 的向量的線性函式",
+        "因為 cos 本身無法反向傳播",
+        "因為只用 sin 不具週期性",
+        "因為這會讓參數量加倍"
+      ],
+      "correct": 0,
+      "explanation": "在相同波長上配對 sin 與 cos，代表位移 k 個位置就是一次旋轉，而旋轉是線性映射。Attention 因此能透過線性投影學到相對位移。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼嵌入的反向傳播只更新批次中出現過的 token 表列？",
+      "options": [
+        "依連鎖律，前向傳播中未被觸及的列產生的梯度為零",
+        "最佳化器會跳過它沒看過的列",
+        "PyTorch 只為非零項目儲存梯度",
+        "Token id 存放在稀疏資料結構中"
+      ],
+      "correct": 0,
+      "explanation": "沒有對任何輸出有貢獻的列，對損失的導數為零，因此該步的梯度是零。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "56-iteration-scheduler",
+  "title": "Iteration Scheduler",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼排程器使用 UCB 評分，而不是永遠挑目前最好的分支？",
+      "options": [
+        "因為不這樣佇列無法排序",
+        "因為 asyncio 需要 UCB",
+        "因為 UCB 計算比較快",
+        "因為貪婪選擇永遠不會探索；UCB 在利用與探索之間取得平衡"
+      ],
+      "correct": 3,
+      "explanation": "貪婪會鎖死在第一個領先者身上，均勻選擇則從不利用。UCB 會挑領先者，同時透過 sqrt(ln N / n) 這一項為探索較少的分支保留容量。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 UCB1 之下，完成執行次數為零的分支會得到什麼分數？",
+      "options": [
+        "正無限大，所以未嘗試過的分支一定會先被挑中",
+        "所有其他分支的平均報酬",
+        "零",
+        "探索常數 c"
+      ],
+      "correct": 0,
+      "explanation": "這一課在 runs=0 時指派 +inf。這保證每個分支在任何分支被重訪之前，至少都被試過一次。"
+    },
+    {
+      "stage": "check",
+      "question": "排程器如何讓多個執行槽保持忙碌？",
+      "options": [
+        "它對每個派發出去的假設呼叫 asyncio.create_task，並對執行中的集合 await FIRST_COMPLETED",
+        "它把執行器放進執行緒池執行",
+        "它用 sleep 阻塞事件迴圈",
+        "它使用 multiprocessing"
+      ],
+      "correct": 0,
+      "explanation": "每個派發出去的假設都成為一個 task。主迴圈等待 FIRST_COMPLETED，一有執行槽完成就立刻釋出，並派發下一個假設。"
+    },
+    {
+      "stage": "check",
+      "question": "排程器在什麼時候會為某個分支發出 paper.trigger？",
+      "options": [
+        "每次有結果落在該分支上時",
+        "當觸及剪枝下限時",
+        "只在整趟執行結束時",
+        "在第一筆讓分支平均值達到或超過論文門檻的結果出現時，而且每個分支只發一次"
+      ],
+      "correct": 3,
+      "explanation": "這個觸發每個分支只發一次，發生在該分支平均值第一次跨過門檻的時候。BranchStats 上的 paper_triggered 旗標防止重複發送。"
+    },
+    {
+      "stage": "post",
+      "question": "在超過最低執行次數門檻之後，平均報酬仍低於剪枝下限的分支會怎麼樣？",
+      "options": [
+        "什麼都不會發生；UCB 最終會挑到別的分支",
+        "報酬下限會自動調低",
+        "該分支被標為已剪枝，佇列中屬於該分支的剩餘假設會被移除",
+        "排程器拋出例外"
+      ],
+      "correct": 2,
+      "explanation": "剪枝會把分支從後續的排程中移除。剪枝與挑選器是分開的：UCB 負責排名，剪枝負責淘汰。"
+    },
+    {
+      "stage": "post",
+      "question": "排程器把哪兩項預算當成硬性上限來執行？",
+      "options": [
+        "記憶體與 CPU",
+        "論文觸發次數與剪枝次數",
+        "執行槽數與佇列深度",
+        "max_experiments（總執行次數）與 max_seconds（實際時間）"
+      ],
+      "correct": 3,
+      "explanation": "兩者都會成為停止原因。max_experiments 限制總工作量，max_seconds 限制實際耗時。追蹤記錄會記下是哪一項終止了這趟執行。"
+    }
+  ]
+}

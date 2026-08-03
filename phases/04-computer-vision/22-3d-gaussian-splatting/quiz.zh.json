@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼到了 2026 年，3D Gaussian Splatting 大致取代 NeRF 成為擬真場景重建的生產環境預設？",
+      "options": [
+        "NeRF 已從研究紀錄中被撤回",
+        "3DGS 是明確表示（不必逐像素查詢 MLP）：渲染是 GPU 光柵化、可達 100+ fps，訓練只要數分鐘而非數小時，場景可編輯，而且 Khronos 與 OpenUSD 都在 2026 年將它標準化",
+        "Gaussian Splatting 在所有情況下的影像品質都優於 NeRF",
+        "PyTorch 不再支援 NeRF 的運算子"
+      ],
+      "correct": 1,
+      "explanation": "3DGS 把隱式的 MLP 換成數百萬個明確的 3D Gaussian。渲染變成排序後的 alpha 合成，消費級硬體的 GPU 就能跑到 100+ fps。訓練只要數分鐘。每一個 Gaussian 都可編輯。2026 年 Khronos 批准了 3DGS 的 glTF 擴充，OpenUSD 26.03 也內建了原生 schema，讓 3DGS 成為可攜的生產格式。"
+    },
+    {
+      "stage": "pre",
+      "question": "場景中的一個 3D Gaussian 帶有位置、旋轉、尺度、不透明度，還有什麼額外的表示來處理隨視角變化的顏色（例如鏡面高光）？",
+      "options": [
+        "第二張 RGB 貼圖",
+        "每個 Gaussian 各一個小 MLP",
+        "球諧函數係數：到 3 階時每個顏色通道有 16 個係數，在渲染時對觀看方向求值",
+        "一張 light probe cubemap"
+      ],
+      "correct": 2,
+      "explanation": "球諧函數是球面上的 Fourier 基底。每個 Gaussian 儲存學到的 SH 係數，編碼它的顏色如何隨觀看方向改變。渲染時把係數對「像素到 Gaussian 中心」的單位向量求值，就能得到鏡面高光、輕微反射與隨視角變化的著色，不需要貼圖或 MLP。"
+    },
+    {
+      "stage": "post",
+      "question": "3DGS 訓練過程中的稠密化（densification）包含 clone 與 split 兩種操作。各由什麼觸發？",
+      "options": [
+        "都不觸發 — Gaussian 在初始化之後就固定了",
+        "梯度大且尺度小會觸發 clone（需要更多局部細節）；梯度大且尺度大會觸發 split（單一 Gaussian 太平滑，擬合不了該區域）。不透明度低於門檻則觸發剪除",
+        "距離上次檢查點的時間",
+        "每個 epoch 的隨機取樣"
+      ],
+      "correct": 1,
+      "explanation": "自適應稠密化正是讓 3DGS 從約 10 萬個 SfM 初始化的 Gaussian 成長到收斂時 100-500 萬個的機制。clone 複製解析度不足的小 Gaussian；split 把過大的 Gaussian 拆成兩個較小的；prune 丟掉 sigmoid 不透明度已衰減到門檻以下的 Gaussian。這三種操作加上對參數做梯度下降，就是全部的訓練動態。"
+    },
+    {
+      "stage": "post",
+      "question": "NeRF 與 3DGS 對單一像素的顏色方程都是 `C = sum_i alpha_i * T_i * c_i`，其中 `T_i = prod_{j<i}(1 - alpha_j)`。這個共用的方程說明了兩種方法的什麼關係？",
+      "options": [
+        "NeRF 嚴格更好",
+        "兩者積分的是同一個體積渲染方程；差別只在於表示方式（隱式 MLP 取樣點對上明確的稀疏 Gaussian）與渲染程序（光線行進對上光柵化）— 這也是它們影像品質相當的原因",
+        "它們在各方面都是數學上完全相同的",
+        "3DGS 嚴格更好"
+      ],
+      "correct": 1,
+      "explanation": "共用的方程就是古典體積渲染。NeRF 是沿光線取樣、查詢 MLP 來求值。3DGS 是把 Gaussian 投影到 2D，再對排序過的基元逐像素做 alpha 合成。相同的物理、相同的損失，不同的資料結構與渲染演算法。這個一致性就是兩者最終 PSNR / LPIPS 相近的原因；實務上的差距在速度與可編輯性。"
+    },
+    {
+      "stage": "post",
+      "question": "2026 年你想把一個 3DGS 場景跨 Unreal Engine、Vision Pro、Blender 與 Three.js 網頁檢視器出貨。哪種匯出格式最保險？",
+      "options": [
+        "為每個檢視器各做一份自訂二進位檔",
+        "把 3D Gaussian 存成 PNG 條帶",
+        "只用原始的 `.ply`",
+        "帶 `KHR_gaussian_splatting` 擴充的 glTF（Khronos 2026 年 2 月 RC），以及／或 OpenUSD 26.03 的 `UsdVolParticleField3DGaussianSplat`；這是 2026 年兩個已批准／標準化的格式"
+      ],
+      "correct": 3,
+      "explanation": "到 2024 年為止，每個檢視器都有自己的格式。Khronos 在 2026 年 2 月批准了 glTF 的 KHR_gaussian_splatting，OpenUSD 26.03 也在 2026 年 4 月加入原生 3DGS schema。匯出成其中之一，就能在各種引擎、檢視器與流程之間攜帶。`.ply` 在研究圈仍是交換用的通用語，但結構化程度較低。跨工具的生產環境，2026 年的答案是 glTF + USD。"
+    }
+  ]
+}
