@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "訓練神經網路時，GPU 為什麼比 CPU 快？",
+      "options": [
+        "GPU 的時脈比 CPU 高",
+        "GPU 能同時執行數千個平行的矩陣運算",
+        "GPU 使用更有效率的程式語言",
+        "GPU 的記憶體比 CPU 多"
+      ],
+      "correct": 1,
+      "explanation": "GPU 有數千個為平行計算最佳化的核心，非常適合處理神經網路訓練中佔絕大多數的矩陣乘法。"
+    },
+    {
+      "stage": "pre",
+      "question": "VRAM 指的是什麼？",
+      "options": [
+        "所有裝置上可用的記憶體總和",
+        "一種 CPU 快取記憶體",
+        "GPU 上的顯示記憶體，與系統記憶體分開",
+        "作業系統拿來當置換空間的虛擬記憶體"
+      ],
+      "correct": 2,
+      "explanation": "VRAM（顯示記憶體）是 GPU 上的專屬記憶體，與系統主記憶體分開。它限制了訓練時能使用的模型大小與批次大小。"
+    },
+    {
+      "stage": "post",
+      "question": "哪個指令可以確認 NVIDIA GPU 被偵測到，並顯示它目前的狀態？",
+      "options": [
+        "torch.cuda.list_devices()",
+        "nvidia-smi",
+        "lspci | grep gpu",
+        "gpu --status"
+      ],
+      "correct": 1,
+      "explanation": "nvidia-smi（NVIDIA System Management Interface）會顯示 GPU 使用率、記憶體用量、溫度與執行中的行程。它是確認 GPU 可用性的標準工具。"
+    },
+    {
+      "stage": "post",
+      "question": "在比較 GPU 與 CPU 的矩陣乘法效能時，為什麼一定要先呼叫 torch.cuda.synchronize() 再量測 GPU 時間？",
+      "options": [
+        "為了把資料從 CPU 搬到 GPU 記憶體",
+        "為了確保所有 GPU 運算都完成後才停止計時",
+        "為了釋放沒在用的 GPU 記憶體",
+        "為了把 GPU 時脈重設回基礎頻率"
+      ],
+      "correct": 1,
+      "explanation": "GPU 運算是非同步的 —— GPU 還在算的時候 Python 就已經回傳了。synchronize() 會擋住直到所有 GPU 運算結束，量到的時間才準確。"
+    },
+    {
+      "stage": "post",
+      "question": "依照 fp16 的經驗法則，24 GB 的 VRAM 大約放得下多少參數？",
+      "options": [
+        "60 億個參數",
+        "240 億個參數",
+        "120 億個參數",
+        "480 億個參數"
+      ],
+      "correct": 2,
+      "explanation": "在 fp16 下，每個參數佔 2 個位元組。24 GB ÷ 2 位元組 = 120 億個參數。這只是粗估；實際用量還包含激活值、梯度與最佳化器狀態。"
+    }
+  ]
+}

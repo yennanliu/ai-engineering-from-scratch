@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "「版本控制」最主要幫你做到什麼？",
+      "options": [
+        "自動修好程式碼裡的 bug",
+        "加快程式執行速度",
+        "追蹤檔案隨時間的變動，並與他人協作",
+        "壓縮檔案以節省磁碟空間"
+      ],
+      "correct": 2,
+      "explanation": "git 這類版本控制系統會記錄檔案的每一次變動，讓你能回到先前的狀態，也能和其他人在同一份程式碼上協作。"
+    },
+    {
+      "stage": "pre",
+      "question": "在軟體開發的語境裡，「儲存庫（repository）」是什麼？",
+      "options": [
+        "一個安裝函式庫用的套件管理器",
+        "一組檔案，連同版本控制所管理的完整變更歷史",
+        "一個存放使用者資料的資料庫",
+        "一個像 Google Drive 的雲端儲存服務"
+      ],
+      "correct": 1,
+      "explanation": "儲存庫（repo）是一個由 git 追蹤的目錄，裡面包含所有專案檔案，以及這些檔案的完整變更歷史。"
+    },
+    {
+      "stage": "post",
+      "question": "在 git 裡，儲存並備份工作成果的正確順序是什麼？",
+      "options": [
+        "git push、git add、git commit",
+        "git clone、git add、git push",
+        "git add、git commit、git push",
+        "git commit、git add、git push"
+      ],
+      "correct": 2,
+      "explanation": "先用 git add 把變動加入暫存區，再用 git commit 存下一份快照，最後用 git push 上傳到遠端。這就是每天在跑的流程。"
+    },
+    {
+      "stage": "post",
+      "question": "git checkout -b experiment/new-optimizer 會做什麼？",
+      "options": [
+        "建立一個名為 experiment/new-optimizer 的新分支並切換過去",
+        "刪除 experiment/new-optimizer 這個分支",
+        "從 GitHub 下載名為 experiment/new-optimizer 的分支",
+        "把所有檔案還原成 experiment/new-optimizer 分支的內容"
+      ],
+      "correct": 0,
+      "explanation": "-b 旗標會用指定名稱建立新分支，並立刻切換過去，讓你可以放心實驗而不影響主分支。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼該把 .pt、.pth 與 .safetensors 加進 .gitignore？",
+      "options": [
+        "它們是模型檢查點檔案，對 git 來說太大，而且可以重新產生",
+        "git 完全無法追蹤任何二進位檔案",
+        "它們是 Python 測試檔，不該被提交",
+        "它們裡面存有敏感的 API 金鑰"
+      ],
+      "correct": 0,
+      "explanation": "模型檢查點檔案（.pt、.pth、.safetensors）動輒好幾 GB。git 並非為大型二進位檔設計，所以這些檔案應該排除在外，改用重新產生或另外存放的方式處理。"
+    }
+  ]
+}

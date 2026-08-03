@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 shell 指令裡，管線運算子 | 的作用是什麼？",
+      "options": [
+        "平行執行兩個指令",
+        "把兩個檔案合併成一個",
+        "把前一個指令的標準輸出，接成下一個指令的標準輸入",
+        "把指令的輸出存成檔案"
+      ],
+      "correct": 2,
+      "explanation": "管線運算子把指令串成一條流水線。例如 cat log.txt | grep error 會把 log.txt 的內容送給 grep 當輸入，由 grep 篩出含有 error 的行。"
+    },
+    {
+      "stage": "pre",
+      "question": "當你關掉啟動某個行程的終端機時，那個執行中的行程會怎樣？",
+      "options": [
+        "行程會暫停，直到你開一個新終端機",
+        "行程會繼續在背景執行",
+        "行程會收到一個掛斷訊號（SIGHUP），通常就此結束",
+        "行程會自動轉為系統服務"
+      ],
+      "correct": 2,
+      "explanation": "關閉終端機會對子行程送出 SIGHUP，預設行為就是結束。tmux、nohup 或 screen 這類工具可以避免這件事。"
+    },
+    {
+      "stage": "post",
+      "question": "對於長時間執行的訓練工作，tmux 相較於 nohup command & 最關鍵的優勢是什麼？",
+      "options": [
+        "tmux 會自動重啟失敗的行程",
+        "tmux 比 nohup 吃更少 CPU",
+        "tmux 讓你能中離、重新接回，並在多個窗格中看到即時輸出",
+        "tmux 會壓縮行程輸出以節省磁碟空間"
+      ],
+      "correct": 2,
+      "explanation": "tmux 建立的是持久的工作階段，你可以中離、之後再接回來，還能在多個窗格裡看到即時輸出。nohup 只會把輸出寫進檔案，沒辦法互動也沒辦法重新接回。"
+    },
+    {
+      "stage": "post",
+      "question": "python train.py > output.log 2>&1 做了什麼？",
+      "options": [
+        "執行 train.py，只把錯誤存進 output.log",
+        "以雙倍記憶體配額執行 train.py",
+        "執行 train.py 兩次，並記錄第二次的結果",
+        "執行 train.py，並把標準輸出與標準錯誤都導向 output.log"
+      ],
+      "correct": 3,
+      "explanation": "> output.log 把 stdout 導向檔案。2>&1 則把 stderr 送到和 stdout 相同的地方。結果就是正常輸出與錯誤訊息都收進同一個檔案。"
+    },
+    {
+      "stage": "post",
+      "question": "哪個指令能讓你從本機瀏覽器，存取 GPU 機器上跑在 8888 埠的遠端 Jupyter notebook？",
+      "options": [
+        "ssh -L 8888:localhost:8888 user@gpu-box",
+        "ssh user@gpu-box --forward-port 8888",
+        "scp -P 8888 user@gpu-box:~/notebook.ipynb",
+        "rsync -avz user@gpu-box:8888 localhost:8888"
+      ],
+      "correct": 0,
+      "explanation": "SSH 本機埠轉發（-L）會把遠端的埠映射到你的本機。下完這道指令後，在瀏覽器開 localhost:8888 就等於連上遠端的 Jupyter 伺服器。"
+    }
+  ]
+}

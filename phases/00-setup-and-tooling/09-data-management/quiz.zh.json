@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在機器學習裡，為什麼一定要把資料分成訓練、驗證與測試三份？",
+      "options": [
+        "為了讓每一份都採用不同的檔案格式",
+        "為了縮小資料集，讓訓練更快",
+        "為了把資料分散到多顆 GPU 上",
+        "為了在沒看過的資料上評估模型表現，並防止過度擬合"
+      ],
+      "correct": 3,
+      "explanation": "訓練集用來教模型，驗證集用來在訓練過程中調整超參數，測試集則提供最終的無偏評估 —— 用的是模型從未看過的資料。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 AI／ML 的工作流程裡，Hugging Face Hub 主要拿來做什麼？",
+      "options": [
+        "管理 Python 虛擬環境",
+        "像 GitHub 那樣做原始碼版本控制",
+        "在雲端執行 GPU 訓練工作",
+        "託管與分享資料集、模型和各種 ML 產出"
+      ],
+      "correct": 3,
+      "explanation": "Hugging Face Hub 是一個託管與分享預訓練模型、資料集與 ML 展示的平台。datasets 函式庫提供了從上面載入資料的標準做法。"
+    },
+    {
+      "stage": "post",
+      "question": "儲存 ML 資料集時，Parquet 格式相較於 CSV 有什麼優勢？",
+      "options": [
+        "Parquet 支援的資料型別比 CSV 多",
+        "Parquet 檔案在任何文字編輯器裡都能直接讀懂",
+        "Parquet 採用欄式儲存，檔案更小、讀取更快",
+        "Parquet 檔案可以用試算表軟體編輯"
+      ],
+      "correct": 2,
+      "explanation": "Parquet 是欄式的二進位格式，壓縮率優於 CSV，而且能快速讀取單一欄位。它是 ML 資料集首選的儲存格式。"
+    },
+    {
+      "stage": "post",
+      "question": "用 Hugging Face datasets 函式庫載入資料集時，streaming=True 會做什麼？",
+      "options": [
+        "把資料集轉成串流影音格式",
+        "在 Hub 上有新資料加入時即時更新",
+        "一列一列地載入資料，不必先把整個資料集下載到磁碟",
+        "用平行連線加速下載資料集"
+      ],
+      "correct": 2,
+      "explanation": "串流模式會建立一個 IterableDataset，需要時才抓取資料列。不論資料集多大，記憶體用量都維持恆定 —— 對於大到放不進磁碟的資料集，這是必要手段。"
+    },
+    {
+      "stage": "post",
+      "question": "對於大型檔案，什麼時候該用 DVC（Data Version Control），而不只是靠 .gitignore？",
+      "options": [
+        "當你需要在不同機器上，用有版本的資料重現一模一樣的實驗時",
+        "當你的專案裡只有 CSV 檔時",
+        "當你的資料集小於 1 MB 時",
+        "當你獨自進行個人專案時"
+      ],
+      "correct": 0,
+      "explanation": "DVC 在 git 裡用小小的指標檔追蹤資料版本，實際資料則放在遠端儲存（S3、GCS）。這樣任何人都能用完全相同的資料重現你的實驗。"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Language Server Protocol（LSP）是什麼？",
+      "options": [
+        "一個在編輯器之間傳輸檔案的協定",
+        "一種原始碼檔案的壓縮格式",
+        "一個遠端結對程式設計用的網路協定",
+        "一套標準，讓編輯器能從特定語言的伺服器取得型別資訊、自動完成與診斷訊息"
+      ],
+      "correct": 3,
+      "explanation": "LSP 是一套標準化協定，讓編輯器能和語言伺服器溝通，取得自動完成、型別檢查與錯誤診斷等功能，而且不限定用哪一款編輯器。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼「存檔時自動格式化」對團隊專案很有幫助？",
+      "options": [
+        "它讓所有貢獻者的程式碼風格保持一致，不需要手動整理",
+        "它壓縮程式碼，讓 git 操作更快",
+        "它移除空白以縮小檔案體積",
+        "它能在程式執行前抓出執行期的 bug"
+      ],
+      "correct": 0,
+      "explanation": "存檔時自動格式化會在每次儲存時跑一次格式化工具（例如 Black 或 Ruff），確保不管是誰寫的，程式碼都遵循同一套風格慣例。"
+    },
+    {
+      "stage": "post",
+      "question": "哪個 VS Code 擴充套件能讓你像在本機一樣，直接編輯遠端 GPU 機器上的程式碼？",
+      "options": [
+        "Pylance",
+        "Debugpy",
+        "GitLens",
+        "Remote SSH"
+      ],
+      "correct": 3,
+      "explanation": "Remote SSH 會在遠端機器上安裝一個輕量的 VS Code 伺服器，再把介面串流回你本機的編輯器，讓你能遠端編輯檔案、開終端機與除錯。"
+    },
+    {
+      "stage": "post",
+      "question": "做 AI 開發時，為什麼該在 VS Code 設定裡啟用 notebook.output.scrolling？",
+      "options": [
+        "它會啟用編輯器裡的平滑捲動動畫",
+        "它讓你能用滑鼠滾輪在 notebook 儲存格之間捲動",
+        "它為寬的 dataframe 啟用水平捲動",
+        "它避免訓練迴圈的輸出（好幾千行）把輸出面板撐爆"
+      ],
+      "correct": 3,
+      "explanation": "訓練迴圈可能印出好幾千行輸出。沒有輸出捲動的話，notebook 的輸出面板會無限膨脹，整份 notebook 就沒法用了。"
+    },
+    {
+      "stage": "post",
+      "question": "在 VS Code 裡把 python.analysis.typeCheckingMode 設成 basic 有什麼作用？",
+      "options": [
+        "它為 Python 檔案啟用語法高亮",
+        "它依照 PEP 8 規範格式化 Python 程式碼",
+        "它啟用 Python 3.12 的語言特性",
+        "它在你執行程式之前就抓出錯誤的引數型別與張量形狀不符"
+      ],
+      "correct": 3,
+      "explanation": "Pylance 的基本型別檢查會在編輯階段就標出型別不符、引數型別錯誤與 API 參數不正確，讓你在跑一次可能很燒錢的訓練腳本之前就抓到 bug。"
+    }
+  ]
+}

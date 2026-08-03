@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Docker 容器與虛擬機最主要的差別是什麼？",
+      "options": [
+        "實務上沒有差別",
+        "容器比虛擬機慢，但更安全",
+        "容器共用主機的作業系統核心，虛擬機則各自跑一套完整的作業系統",
+        "容器只能跑 Linux，虛擬機則支援任何作業系統"
+      ],
+      "correct": 2,
+      "explanation": "容器共用主機核心，在行程層級做隔離，所以幾秒內就能啟動。虛擬機則跑一整套帶有自己核心的客體作業系統，吃更多資源，啟動也更慢。"
+    },
+    {
+      "stage": "pre",
+      "question": "Dockerfile 是什麼？",
+      "options": [
+        "Docker daemon 的設定檔",
+        "一組指令，用來一層一層建構出 Docker 映像檔",
+        "一個列出執行中容器的檔案",
+        "一份記錄容器活動的日誌檔"
+      ],
+      "correct": 1,
+      "explanation": "Dockerfile 內含依序執行的指令（FROM、RUN、COPY 等），Docker 會照著建構出映像檔。每一道指令都會產生一個可快取的層。"
+    },
+    {
+      "stage": "post",
+      "question": "用 Docker 做 AI 開發時，為什麼掛載磁碟區（volume mount）至關重要？",
+      "options": [
+        "磁碟區讓多個容器可以共用同一顆 GPU",
+        "磁碟區借用主機磁碟速度，讓容器跑得更快",
+        "Python 套件要正確安裝一定得靠磁碟區",
+        "磁碟區讓資料（模型、資料集、程式碼）在容器重建後依然存在，不必每次重新下載好幾 GB"
+      ],
+      "correct": 3,
+      "explanation": "沒有磁碟區的話，容器停止時裡面的一切都會消失。掛載磁碟區把主機目錄映射進容器，模型權重（動輒 14 GB 以上）與資料集就能撐過重建。"
+    },
+    {
+      "stage": "post",
+      "question": "NVIDIA Container Toolkit 讓你能做到什麼？",
+      "options": [
+        "在容器內安裝 CUDA 驅動程式",
+        "在 AMD 硬體上執行 NVIDIA GPU 容器",
+        "透過 --gpus 旗標把主機 GPU 開放給 Docker 容器使用",
+        "在 Docker 建構過程中編譯 CUDA 程式碼"
+      ],
+      "correct": 2,
+      "explanation": "NVIDIA Container Toolkit 是一個執行期掛鉤，負責把主機 GPU 開放給容器。CUDA toolkit 住在容器裡，但 GPU 驅動程式是從主機共用過來的。"
+    },
+    {
+      "stage": "post",
+      "question": "在給 AI 用的 Docker Compose 設定裡，ai-dev 這個服務要怎麼連到 qdrant 向量資料庫？",
+      "options": [
+        "在兩個容器之間掛載一個共用磁碟區",
+        "直接把服務名稱 qdrant 當成主機名稱用，因為 Compose 會建立一個共用網路",
+        "在容器之間設定 VPN",
+        "使用主機的 IP 位址與連接埠"
+      ],
+      "correct": 1,
+      "explanation": "Docker Compose 會自動建立一個共用網路，服務之間可以直接用名稱互相連線。ai-dev 容器就用服務名稱當主機名，連到 http://qdrant:6333。"
+    }
+  ]
+}

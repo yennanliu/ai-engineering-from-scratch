@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "AI 專案為什麼需要獨立的虛擬環境？",
+      "options": [
+        "Python 必須有虛擬環境才能匯入套件",
+        "虛擬環境可以隔離相依套件，讓不同專案不會互相衝突",
+        "虛擬環境能讓程式跑得更快",
+        "虛擬環境提供 GPU 存取能力"
+      ],
+      "correct": 1,
+      "explanation": "虛擬環境讓每個專案各自持有一份套件版本。少了它，為某個專案升級 PyTorch 就可能弄壞另一個依賴舊版的專案。"
+    },
+    {
+      "stage": "pre",
+      "question": "CUDA 為 AI 工作負載提供了什麼？",
+      "options": [
+        "在 NVIDIA GPU 上做矩陣運算的平行計算能力",
+        "一套給 ML 函式庫用的 Python 套件管理器",
+        "一個部署模型用的 Web 框架",
+        "一個模型服務用的容器執行環境"
+      ],
+      "correct": 0,
+      "explanation": "CUDA 是 NVIDIA 的平行計算平台，讓你能同時在數千個 GPU 核心上執行矩陣運算。PyTorch 與 TensorFlow 底層都靠它。"
+    },
+    {
+      "stage": "post",
+      "question": "在四層環境堆疊裡，哪一層必須最先安裝？",
+      "options": [
+        "語言執行環境（Python、Node.js）",
+        "系統基礎（作業系統、shell、GPU 驅動程式）",
+        "套件管理器（pip、npm、cargo）",
+        "AI／ML 函式庫（PyTorch、JAX）"
+      ],
+      "correct": 1,
+      "explanation": "安裝順序由下而上：先是系統基礎（作業系統、驅動程式），接著套件管理器，然後語言執行環境，最後才是 AI 函式庫。每一層都依賴它下面那一層。"
+    },
+    {
+      "stage": "post",
+      "question": "在 Python AI 專案裡，uv 的用途是什麼？",
+      "options": [
+        "一個 GPU 監控工具",
+        "一個神經網路視覺化函式庫",
+        "一個極快的 Python 套件安裝與相依解析工具",
+        "一個編譯自訂 kernel 的 CUDA 編譯器"
+      ],
+      "correct": 2,
+      "explanation": "uv 是用 Rust 寫的高速 Python 套件安裝工具。它取代 pip，相依解析與安裝都快上許多，常常快 10 到 100 倍。"
+    },
+    {
+      "stage": "post",
+      "question": "要怎麼確認 PyTorch 能存取你的 GPU？",
+      "options": [
+        "python -c 'import gpu'",
+        "import torch; print(torch.cuda.is_available())",
+        "import torch; print(torch.__version__)",
+        "nvidia-smi --query"
+      ],
+      "correct": 1,
+      "explanation": "torch.cuda.is_available() 在 PyTorch 能存取 CUDA GPU 時回傳 True。在 Apple Silicon 上，則用 torch.backends.mps.is_available() 檢查 Metal Performance Shaders。"
+    }
+  ]
+}

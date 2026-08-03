@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "呼叫 LLM 服務時，API 金鑰的用途是什麼？",
+      "options": [
+        "把送往伺服器的資料加密",
+        "驗證你的身分並授權你的請求",
+        "壓縮請求以節省頻寬",
+        "選擇伺服器要用哪種程式語言"
+      ],
+      "correct": 1,
+      "explanation": "API 金鑰是一串唯一的字串，用來辨識你的帳號、授權你的請求，也讓服務供應商能追蹤用量與計費。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼絕對不該把 API 金鑰直接寫死在原始碼裡？",
+      "options": [
+        "Python 無法讀取超過 50 個字元的字串字面值",
+        "API 供應商會封鎖出現在原始檔裡的金鑰",
+        "寫死的金鑰會讓程式跑得比較慢",
+        "它們可能不小心被提交進 git 而公開外洩"
+      ],
+      "correct": 3,
+      "explanation": "寫死在原始碼裡的金鑰，很可能被提交進版本控制並推上公開儲存庫，接著就被人爬走濫用。"
+    },
+    {
+      "stage": "post",
+      "question": "在本機開發時，建議怎麼保存 API 金鑰？",
+      "options": [
+        "放在已列入 .gitignore 的 .env 檔案裡",
+        "放在 README.md 裡方便隨時查看",
+        "放在腳本開頭的 Python 變數裡",
+        "放在 requirements.txt 裡，跟套件版本擺在一起"
+      ],
+      "correct": 0,
+      "explanation": ".env 檔案把金鑰存成環境變數，並且應該加進 .gitignore，這樣就永遠不會被提交進版本控制。各家 SDK 也會自動從環境變數讀取金鑰。"
+    },
+    {
+      "stage": "post",
+      "question": "在直接對 Anthropic 發出的原始 HTTP 請求中，API 金鑰放在哪個標頭？",
+      "options": [
+        "Authorization: Bearer sk-ant-...",
+        "Content-Type: application/json",
+        "anthropic-version: 2023-06-01",
+        "x-api-key: sk-ant-..."
+      ],
+      "correct": 3,
+      "explanation": "Anthropic 的 API 用 x-api-key 標頭做身分驗證，而不是比較常見的 Authorization: Bearer 形式。這是它們 API 設計上的特有做法。"
+    },
+    {
+      "stage": "post",
+      "question": "超過 API 的速率限制時會發生什麼事？",
+      "options": [
+        "你的請求會排進佇列，稍後自動處理",
+        "伺服器回傳錯誤（通常是 HTTP 429），你必須等一下再重試",
+        "你的 API 金鑰會被永久撤銷",
+        "API 會默默丟掉你的請求，完全不回應"
+      ],
+      "correct": 1,
+      "explanation": "觸發速率限制會回傳 HTTP 429（Too Many Requests）。你得等待後重試，通常搭配指數退避。速率限制的用意是防止濫用並確保資源公平分配。"
+    }
+  ]
+}
