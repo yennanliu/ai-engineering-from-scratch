@@ -9,42 +9,104 @@
       "number": 1,
       "title": "Foundations",
       "subtitle": "Math, Tooling, and Classical Machine Learning",
-      "phases": ["00-setup-and-tooling", "01-math-foundations", "02-ml-fundamentals"]
+      "phases": [
+        "00-setup-and-tooling",
+        "01-math-foundations",
+        "02-ml-fundamentals"
+      ],
+      "i18n": {
+        "zh-Hant": {
+          "title": "基礎",
+          "subtitle": "數學、工具鏈與傳統機器學習"
+        }
+      }
     },
     {
       "slug": "deep-learning",
       "number": 2,
       "title": "Deep Learning",
       "subtitle": "Networks, Vision, and Speech",
-      "phases": ["03-deep-learning-core", "04-computer-vision", "06-speech-and-audio"]
+      "phases": [
+        "03-deep-learning-core",
+        "04-computer-vision",
+        "06-speech-and-audio"
+      ],
+      "i18n": {
+        "zh-Hant": {
+          "title": "深度學習",
+          "subtitle": "網路架構、視覺與語音"
+        }
+      }
     },
     {
       "slug": "language",
       "number": 3,
       "title": "Language",
       "subtitle": "NLP Foundations and the Transformer",
-      "phases": ["05-nlp-foundations-to-advanced", "07-transformers-deep-dive"]
+      "phases": [
+        "05-nlp-foundations-to-advanced",
+        "07-transformers-deep-dive"
+      ],
+      "i18n": {
+        "zh-Hant": {
+          "title": "語言",
+          "subtitle": "自然語言處理基礎與 Transformer"
+        }
+      }
     },
     {
       "slug": "llms",
       "number": 4,
       "title": "Large Language Models",
       "subtitle": "Generation, Reinforcement, Pretraining, and Engineering",
-      "phases": ["08-generative-ai", "09-reinforcement-learning", "10-llms-from-scratch", "11-llm-engineering"]
+      "phases": [
+        "08-generative-ai",
+        "09-reinforcement-learning",
+        "10-llms-from-scratch",
+        "11-llm-engineering"
+      ],
+      "i18n": {
+        "zh-Hant": {
+          "title": "大型語言模型",
+          "subtitle": "生成、強化學習、預訓練與工程實務"
+        }
+      }
     },
     {
       "slug": "agents",
       "number": 5,
       "title": "Agents",
       "subtitle": "Multimodality, Protocols, Autonomy, and Swarms",
-      "phases": ["12-multimodal-ai", "13-tools-and-protocols", "14-agent-engineering", "15-autonomous-systems", "16-multi-agent-and-swarms"]
+      "phases": [
+        "12-multimodal-ai",
+        "13-tools-and-protocols",
+        "14-agent-engineering",
+        "15-autonomous-systems",
+        "16-multi-agent-and-swarms"
+      ],
+      "i18n": {
+        "zh-Hant": {
+          "title": "代理程式",
+          "subtitle": "多模態、協定、自主性與群體智慧"
+        }
+      }
     },
     {
       "slug": "production",
       "number": 6,
       "title": "Production",
       "subtitle": "Infrastructure, Safety, and Capstones",
-      "phases": ["17-infrastructure-and-production", "18-ethics-safety-alignment", "19-capstone-projects"]
+      "phases": [
+        "17-infrastructure-and-production",
+        "18-ethics-safety-alignment",
+        "19-capstone-projects"
+      ],
+      "i18n": {
+        "zh-Hant": {
+          "title": "生產環境",
+          "subtitle": "基礎設施、安全與總結專案"
+        }
+      }
     }
   ]
 }

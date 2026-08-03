@@ -35,15 +35,23 @@ jobs:
         if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
         run: |
           sudo apt-get update -q
-          sudo apt-get install -y -q texlive-xetex texlive-fonts-recommended fonts-dejavu librsvg2-bin
+          # fonts-noto-cjk carries the TC faces the zh-Hant PDF needs. Without
+          # it xelatex drops every CJK glyph and emits a book of blank pages,
+          # which still exits 0 -- so the font is a build requirement, not a
+          # nicety. build_book.py's pick_font falls back to no CJKmainfont.
+          sudo apt-get install -y -q texlive-xetex texlive-fonts-recommended fonts-dejavu fonts-noto-cjk librsvg2-bin
 
       - name: Build EPUB volumes
         if: github.event_name == 'push'
-        run: python3 scripts/build_book.py
+        run: |
+          python3 scripts/build_book.py
+          python3 scripts/build_book.py --lang zh-Hant
 
       - name: Build EPUB and PDF volumes
         if: github.event_name != 'push'
-        run: python3 scripts/build_book.py --pdf
+        run: |
+          python3 scripts/build_book.py --pdf
+          python3 scripts/build_book.py --pdf --lang zh-Hant
 
       - name: Upload EPUBs
         uses: actions/upload-artifact@v4
