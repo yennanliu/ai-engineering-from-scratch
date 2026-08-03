@@ -1,0 +1,65 @@
+{
+  "lesson": "phase-11/16-langgraph-state-machines",
+  "questions": [
+    {
+      "stage": "post",
+      "question": "為什麼 LangGraph State TypedDict 中的 `messages` 欄位需要 `Annotated[list, add_messages]`？",
+      "options": [
+        "它會在檢查點寫入磁碟時壓縮訊息串列。",
+        "它讓模型能夠串流 token 增量。",
+        "它會在執行期把純 dict 轉換成 LangChain 訊息物件。",
+        "少了這個 reducer，節點更新會覆寫整個串列而非附加，於是每一輪都會弄丟先前的歷史。"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "`interrupt_before=['tools']` 與 `interrupt_after=['tools']` 有什麼差別？",
+      "options": [
+        "`interrupt_before` 在模型送出 tool_calls 之後、tools 執行之前暫停；`interrupt_after` 則在 tools 已經跑完之後暫停。",
+        "`interrupt_before` 先在沙箱裡執行 tool；`interrupt_after` 則在正式環境執行。",
+        "沒有差別，兩者是別名。",
+        "`interrupt_before` 用於單元測試；`interrupt_after` 用於正式環境。"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "給定某個 thread 的檢查點歷史，你要如何時光回溯到先前的狀態並探索另一條分支？",
+      "options": [
+        "設定 `graph.rewind = True` 後重新呼叫。",
+        "先呼叫 `graph.reset(thread_id)`，再呼叫 `graph.invoke(new_input, config)`。",
+        "刪掉檢查點目錄，再用同一個 thread_id 重新呼叫。",
+        "在 config 中帶入想要的先前 `checkpoint_id` 來呼叫 graph；輸入傳 `None` 會從該檢查點重播，傳入新值則會先附加上去再繼續執行。"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在一個四節點的 ReAct graph（agent、tools、一條條件邊、一條回到 agent 的靜態邊）中，條件邊位於何處？",
+      "options": [
+        "從 `START` 出發，依輸入長度路由到 `agent` 或 `END`。",
+        "從 `tools` 回到 `agent`，依 tool 輸出是否為空來路由。",
+        "沒有條件邊；兩條都是靜態邊。",
+        "從 `agent` 出發，若最後一則訊息帶有 tool_calls 就路由到 `tools`，否則路由到 `END`。"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候該用 `Send(node_name, state)` 而不是普通的邊？",
+      "options": [
+        "為了隔離而在不同行程中呼叫某個節點。",
+        "為了延後某個節點直到計時器到期。",
+        "為了在失敗後重試某個節點。",
+        "為了對目標節點派發 N 個平行執行，其輸出再透過 state reducer 匯回。"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

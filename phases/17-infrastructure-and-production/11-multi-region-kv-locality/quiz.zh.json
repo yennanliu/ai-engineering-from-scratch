@@ -1,0 +1,78 @@
+{
+  "lesson": "11-multi-region-kv-locality",
+  "title": "Multi-Region LLM Serving and KV Cache Locality",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 round-robin 負載平衡對有快取的 LLM 推論反而有害？",
+      "options": [
+        "Round-robin 會破壞 TLS",
+        "Round-robin 只適用於有狀態的資料庫",
+        "Round-robin 需要 sticky session",
+        "請求若沒落在持有其前綴的節點上，就得付出完整的 prefill 成本，而不是命中快取"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "感知快取的路由器會吃進哪兩項輸入？",
+      "options": [
+        "只有 user_id 與 tenant_id",
+        "Round-robin 計數器與 TLS 金鑰",
+        "來自各 replica 的 KV 快取事件，以及進來請求的前綴雜湊",
+        "隨機洗牌與請求大小"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Llama 3.3 70B FP8 上，2K token 的提示詞命中快取與冷 prefill 的 TTFT 差距大約是多少？",
+      "options": [
+        "大約 1000 倍",
+        "大約 10 倍（約 80 ms 對上約 800 ms）",
+        "大約 1.1 倍",
+        "完全一樣"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼跨區域路由在快取命中上不見得贏過區域內路由？",
+      "options": [
+        "跨區域根本做不到感知快取的路由",
+        "所有超大規模雲端業者都禁止跨區域路由",
+        "GORGO 的研究發現快取命中對延遲沒有幫助",
+        "省下的 prefill 可能被網路 RTT 淹沒，例如 440 ms 的來回時間就足以蓋過從 800 ms 降到 80 ms 的 prefill 節省"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課引用的 LLM 災難復原失敗成因中，占 32% 的是什麼？",
+      "options": [
+        "備份含有權重，卻漏掉分詞器檔案或量化設定",
+        "區域配額用盡",
+        "負載平衡器設定錯誤",
+        "備份未加密"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課對 Bedrock CRI 這類商用跨區域推論服務的說法是什麼？",
+      "options": [
+        "它們最佳化的是可用性而非 TTFT，並把推論視為黑箱——你仍然需要應用層感知快取的路由器",
+        "它們在 GDPR 下是被禁止的",
+        "它們感知 KV 快取，可以取代應用層路由",
+        "它們只在 us-east-1 可用"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

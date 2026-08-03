@@ -1,0 +1,102 @@
+{
+  "lesson": "16-text-generation-pre-transformer",
+  "title": "Text Generation Before Transformers — N-gram Language Models",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "n-gram 語言模型估計的是什麼？",
+      "options": [
+        "文件嵌入",
+        "詞與詞之間的編輯距離",
+        "由計數統計得出的 P(下一個詞 | 前 n-1 個詞)",
+        "P(標籤 | 文件)"
+      ],
+      "correct": 2,
+      "explanation": "n-gram LM 透過計數出現次數來建模 P(w | 前 n-1 個詞)。"
+    },
+    {
+      "stage": "pre",
+      "question": "平滑（smoothing）解決了 n-gram 模型的什麼問題？",
+      "options": [
+        "數值精度",
+        "訓練中未見過的 n-gram 被指派為零機率，導致整句的概似值塌陷為零",
+        "記憶體用量",
+        "分詞不一致"
+      ],
+      "correct": 1,
+      "explanation": "平滑會重新分配機率質量，讓未見過的 n-gram 得到非零機率。"
+    },
+    {
+      "stage": "check",
+      "question": "是什麼洞見讓 Kneser-Ney 平滑優於單純的絕對折扣？",
+      "options": [
+        "它使用更大的 n",
+        "它使用 TF-IDF",
+        "它使用梯度下降",
+        "它以延續機率（一個詞出現過的相異脈絡數量）而不是原始頻率，來估計低階分布"
+      ],
+      "correct": 3,
+      "explanation": "延續機率獎勵的是脈絡的多樣性，而不只是原始計數。"
+    },
+    {
+      "stage": "check",
+      "question": "Perplexity 衡量什麼？",
+      "options": [
+        "相異 n-gram 的數量",
+        "在留出測試集上每個 token 平均負對數概似的指數；越低越好",
+        "標籤的交叉熵",
+        "生成的吞吐量"
+      ],
+      "correct": 1,
+      "explanation": "Perplexity = exp(- 平均 log P)；數值越低，表示模型對測試文本越不感到意外。"
+    },
+    {
+      "stage": "check",
+      "question": "比較 perplexity 數值時，為什麼訓練集與測試集必須使用相同的分詞方式？",
+      "options": [
+        "為了避免 OOV",
+        "Perplexity 取決於分詞方案；分詞器不一致會產生無法互相比較的分數",
+        "梯度下降的要求",
+        "為了控制批次大小"
+      ],
+      "correct": 1,
+      "explanation": "不同的分詞會改變 token 數量與概似值，使 perplexity 數值無從比較。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 trigram LM 生成的句子讀起來局部通順、整體卻不連貫？",
+      "options": [
+        "局部的 trigram 脈絡引導了每一個下一個詞，但模型在 n-1 個 token 之外沒有任何長程記憶",
+        "它們會漏掉標點",
+        "它們使用 Laplace 平滑",
+        "beam search 失效"
+      ],
+      "correct": 0,
+      "explanation": "只以最後 n-1 個 token 為條件，長程連貫性只能靠運氣。"
+    },
+    {
+      "stage": "post",
+      "question": "2026 年 n-gram 模型仍在正式環境的哪些地方運作？",
+      "options": [
+        "多語言翻譯",
+        "摘要",
+        "開放領域聊天機器人",
+        "延遲敏感的路徑，例如語音辨識重評分，以及透過 KenLM 這類函式庫實作的裝置端自動完成"
+      ],
+      "correct": 3,
+      "explanation": "KenLM 式的 n-gram 模型仍是快速的裝置端或重評分元件。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在宣稱一個神經語言模型「夠好」之前，仍建議先算出 n-gram 基準？",
+      "options": [
+        "它能加快訓練",
+        "ROUGE 的要求",
+        "它能消除 OOV",
+        "若 Transformer LM 在相同分詞下沒有大幅勝過調校過的 Kneser-Ney 基準，訓練流程一定有問題"
+      ],
+      "correct": 3,
+      "explanation": "KN 基準出乎意料地強；神經語言模型應該大幅勝出，否則就是哪裡有 bug。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "83-prompt-injection-detector",
+  "title": "Capstone 83 — Prompt Injection Detector",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "針對一段提示詞，這個偵測器回傳什麼？",
+      "options": [
+        "只有一個布林值的封鎖決策",
+        "模型完整的系統提示詞",
+        "規則庫裡所有規則的清單",
+        "一個分類，以及一個落在 [0, 1] 的信心值"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼 normalize 要在子字串規則與正規表達式規則之前執行？",
+      "options": [
+        "因為正規表達式比子字串比對慢",
+        "因為標準函式庫禁止在原始文字上跑規則",
+        "因為 normalize 能縮小檔案在磁碟上的體積",
+        "因為 normalize 會把 base64、rot13 與零寬字元插入這類隱藏 token 攤開來，下游規則才看得到"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "某個分類 C 的真陽性是 6、偽陽性是 2，精確率是多少？",
+      "options": [
+        "0.86",
+        "0.60",
+        "0.75",
+        "0.50"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼評測要納入無害提示詞的語料？",
+      "options": [
+        "為了計算攻擊的召回率",
+        "為了灌水準確率數字",
+        "為了預先訓練規則",
+        "為了量測安全文字上的偽陽性率，抓出範圍過寬的規則"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "當沒有任何規則被觸發時，analyze 方法會做什麼？",
+      "options": [
+        "回傳最後嘗試過的那條規則的分類",
+        "回傳一個隨機分類",
+        "回傳 benign 這個分類，信心值為 0.0",
+        "拋出例外"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "這一課為什麼主張偵測器並不是安全閘門本身？",
+      "options": [
+        "因為偵測器是用 Python 實作的",
+        "因為規則是以資料形式儲存的",
+        "因為偵測器快到沒有用處",
+        "因為偵測器只是閘門會組合起來的多個訊號之一，而每個訊號在精確率與召回率之間的取捨都不一樣"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

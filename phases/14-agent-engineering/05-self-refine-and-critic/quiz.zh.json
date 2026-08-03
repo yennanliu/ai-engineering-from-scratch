@@ -1,0 +1,90 @@
+{
+  "lesson": "05-self-refine-and-critic",
+  "title": "Self-Refine and CRITIC: Iterative Output Improvement",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "哪三個提示詞構成一個 Self-Refine 迴圈？",
+      "options": [
+        "plan、execute、solve",
+        "generate、feedback、refine",
+        "actor、evaluator、reflector",
+        "search、score、synthesize"
+      ],
+      "correct": 1,
+      "explanation": "Self-Refine 讓同一個模型扮演三種角色：generate、feedback、refine。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼 Self-Refine 的 refine 步驟需要歷史紀錄？",
+      "options": [
+        "計費需要歷史紀錄",
+        "供應商只在有歷史紀錄時才快取",
+        "它能加快 token 生成速度",
+        "少了先前的輸出與批評，refine 步驟會重蹈先前的錯誤；消融實驗顯示品質會急遽下滑"
+      ],
+      "correct": 3,
+      "explanation": "refine 提示詞以完整歷史為條件，模型才不會重複自己先前的錯誤。"
+    },
+    {
+      "stage": "check",
+      "question": "相對於 Self-Refine，CRITIC 改變了什麼？",
+      "options": [
+        "它用更大的模型來生成",
+        "它平行執行 feedback 步驟",
+        "它把自我回饋步驟換成以外部 tool 為依據的驗證器",
+        "它拿掉了 refine 步驟"
+      ],
+      "correct": 2,
+      "explanation": "CRITIC 把自我批評換成一個 verify 步驟，經由搜尋、程式碼直譯器、計算機或領域驗證器來執行。"
+    },
+    {
+      "stage": "check",
+      "question": "用 Claude 慣用的說法，哪一種 Anthropic 工作流程模式對應 Self-Refine 與 CRITIC？",
+      "options": [
+        "平行取樣",
+        "提示詞串接",
+        "Evaluator-Optimizer",
+        "路由器"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic 把這個模式命名為 Evaluator-Optimizer：evaluator 評分、optimizer 修訂，反覆直到收斂。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是蓋章放行迴圈（rubber-stamp loop），本課建議怎麼避免？",
+      "options": [
+        "會逾時的護欄；把逾時放寬即可",
+        "總是失敗的重試；把預算提高即可",
+        "同一個模型用同一種提示詞批評自己的輸出並予以放行；要用結構上明顯不同的提示詞，或另設一個獨立的小型批評者",
+        "總是通過的測試；把測試刪掉即可"
+      ],
+      "correct": 2,
+      "explanation": "同一種風格的自我批評最後只會收斂成「我看沒問題」；要讓 evaluator 與 optimizer 有所區別。"
+    },
+    {
+      "stage": "post",
+      "question": "OpenAI Agents SDK 中哪一項功能的形狀與 CRITIC 相符？",
+      "options": [
+        "Sessions",
+        "Tracing",
+        "Handoffs",
+        "輸出護欄（可以呼叫 tools）"
+      ],
+      "correct": 3,
+      "explanation": "輸出護欄會驗證代理程式的最終輸出，而且可以呼叫 tools，正好對應 CRITIC 中驗證器的角色。"
+    },
+    {
+      "stage": "post",
+      "question": "對於 2026 年的 evaluator-optimizer 迴圈，本課建議採用什麼停止條件？",
+      "options": [
+        "只在模型說「可以了」時停止",
+        "永不停止；讓代理程式無止境地自我改進",
+        "只在驗證器通過時停止",
+        "組合條件：驗證器通過，或（模型說可以了 且 迭代次數 >= 2），或 迭代次數 >= max_iterations"
+      ],
+      "correct": 3,
+      "explanation": "組合式條件可以避開單一條件各自的失效模式。"
+    }
+  ]
+}

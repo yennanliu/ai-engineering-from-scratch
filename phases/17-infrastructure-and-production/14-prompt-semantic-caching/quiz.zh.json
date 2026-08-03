@@ -1,0 +1,78 @@
+{
+  "lesson": "14-prompt-semantic-caching",
+  "title": "Prompt Caching and Semantic Caching Economics",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "L1 語意快取與 L2 提示詞／前綴快取的差別是什麼？",
+      "options": [
+        "L2 存嵌入；L1 存 attention KV",
+        "L1 在供應商端，L2 在客戶端",
+        "L1 和 L2 是同一回事",
+        "L1 在嵌入相似度命中時完全跳過 LLM；L2 則在供應商端針對重複前綴重用 attention KV"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 用哪個機制把區塊標記為可供 L2 提示詞快取使用？",
+      "options": [
+        "在請求區塊上明確加上 cache_control 屬性",
+        "工具定義中的檔名後綴",
+        "隱含的提示詞長度門檻",
+        "另一個獨立的 /caches 端點"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "平行化這個反模式如何把帳單推高？",
+      "options": [
+        "平行請求會繞過批次處理",
+        "平行化會觸發每請求一次的護欄費用",
+        "所有平行請求會自動共用同一筆快取項目",
+        "N 個相同前綴的平行請求在第一次快取寫入完成前就抵達，於是每一個都付了寫入溢價卻拿不到任何折扣"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "可快取前綴中的動態內容反模式是什麼？",
+      "options": [
+        "把每次請求都會變的內容（精確到分鐘的當前時間、請求 ID、隨機排序的範例）放進可快取前綴，命中率就毀了",
+        "系統提示詞寫得太短",
+        "總是使用串流回應",
+        "把工具 schema 放進前綴"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "批次與快取輸入如何在夜間疊加以壓低成本？",
+      "options": [
+        "批次與快取不相容",
+        "啟用快取會讓請求失去批次資格",
+        "批次只省下輸出成本",
+        "批次 API 打五折；快取輸入再帶來約 10 倍的節省；兩者相加後，夜間管線可降到同步未快取成本的約 10%"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課對語意快取「95% 準確率」這類宣稱怎麼說？",
+      "options": [
+        "95% 表示你可以預期 95% 的快取命中率",
+        "95% 是 OpenAI 預設的快取命中率",
+        "95% 是廠商文件記載的命中率基準",
+        "95% 指的是比對正確性，不是命中率；實際回報的生產命中率從約 10%（開放式對話）到約 70%（結構化 FAQ）都有"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

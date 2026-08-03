@@ -1,0 +1,78 @@
+{
+  "lesson": "22-differential-privacy-for-llms",
+  "title": "Differential Privacy for LLMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "(epsilon, delta)-差分隱私對隨機化演算法 M 保證了什麼？",
+      "options": [
+        "對任意兩個相差一筆範例的資料集與任意事件 S，P(M(D) in S) <= e^epsilon * P(M(D') in S) + delta，因此任何單一個體的貢獻都無法被可靠地推斷出來",
+        "M 可被證明等價於一個非隱私的演算法",
+        "M 永遠不會記住任何訓練資料",
+        "M 在雜訊範圍內是確定性的"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不是 Abadi et al. 2016 所描述的 DP-SGD 步驟？",
+      "options": [
+        "在每一步之間重新隨機化模型的分詞器",
+        "將每筆範例的梯度裁剪到閾值 C",
+        "加總裁剪後的梯度並加入以 sigma * C 縮放的高斯雜訊",
+        "抽樣一個 mini-batch 並計算每筆範例的梯度"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 LoRA + DP-SGD 是 2025 年常見的組態？",
+      "options": [
+        "LoRA 的設計本身就會提高 epsilon",
+        "LoRA 讓 accountant 變得不再必要",
+        "在前沿模型上做完整的 DP-SGD 成本過高；LoRA 把梯度更新限制在一個小型 adapter 上，降低每筆範例的梯度儲存量，同時仍對該 adapter 提供 DP 保證",
+        "它把 LoRA 當成分詞器使用"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2025 年 3 月的稽核（arXiv:2503.06808）如何化解 canary-MIA 與訓練資料萃取之間的張力？",
+      "options": [
+        "它完全免除了 canary 的需要",
+        "它證明兩者衡量的是同一個性質",
+        "它證明 DP-SGD 沒有必要",
+        "它指出兩者衡量的是不同的東西：對插入的 canary 做 MIA 會低估記憶程度，因為 canary 並非針對「最容易被萃取」而真正影響隱私的那類範例最佳化過"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "PMixED（arXiv:2403.15638）提供了什麼作為 DP 訓練的替代方案？",
+      "options": [
+        "一種給 Renyi DP 用的新 accountant",
+        "推論階段的差分隱私：對下一個 token 的機率分布做專家混合並加入聚合雜訊，完全避開 DP 訓練",
+        "一種只靠 epsilon-delta accounting 就能算出 epsilon 的方法",
+        "一種更快的 DP-SGD 變體"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "什麼是 Differential Privacy Reversal via LLM Feedback 攻擊？",
+      "options": [
+        "一種針對分詞器熵值的攻擊",
+        "一種對抗 canary 插入的反制措施",
+        "把 DP 訓練過的模型的信心分數當成 oracle 來重新識別個體，即使輸出本身並未直接洩漏資訊",
+        "一種把 epsilon 重設為零的方法"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "23-sre-for-ai",
+  "title": "SRE for AI — Multi-Agent Incident Response, Runbooks, Predictive Detection",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課建議 AI SRE 採用什麼樣的多代理程式架構？",
+      "options": [
+        "由主管代理程式把事故拆成子查詢，交給專責的日誌、指標與 runbook 代理程式，再彙整後呈交人類",
+        "單一巨型代理程式包辦所有事情",
+        "從三個代理程式中隨機挑一個",
+        "兩個代理程式串接，不設主管"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課認為哪一組自動修復動作是安全的？",
+      "options": [
+        "修改 IAM 政策",
+        "變更資料庫",
+        "重新設計服務拓撲",
+        "重啟 pod、回退某一次特定部署、在預先核准的範圍內調整資源池規模、開啟預先核准的功能旗標"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "NeuBird Hawkeye 如何用對抗式評測濾掉幻覺出來的根因？",
+      "options": [
+        "一律採用信心分數較高的模型答案",
+        "用同一個模型對同一份輸入跑兩次",
+        "兩個模型獨立分析同一起事故；結論一致代表高信心，不一致就連同兩種假設一起升級給人類",
+        "使用 GAN 式訓練"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "營運記憶在 AI SRE 中解決什麼問題？",
+      "options": [
+        "人員流動造成的口耳知識流失 — runbook 與事後檢討存放在向量資料庫，代理程式在每次事故時檢索",
+        "網路出向流量過濾",
+        "推論 pod 的冷啟動",
+        "token 成本歸屬"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課引用 MIT 2025 年的哪項結果來說明事故前預測？",
+      "options": [
+        "預測問題至今無解",
+        "100% 的預測率，提前 1 秒",
+        "結合日誌、GPU 溫度與 API 錯誤模式，可提前 10-15 分鐘預測出 89% 的中斷",
+        "10% 的預測率且沒有提前量"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課強調預測式偵測有什麼營運上的限制？",
+      "options": [
+        "預測可以取代 runbook",
+        "沒有接上動作的預測只是儀表板 — 營運上真正的問題是這個預測要觸發什麼動作（預先排空、呼叫值班、自動擴縮）",
+        "預測絕對不該接上任何動作",
+        "預測永遠是準確的"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

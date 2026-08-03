@@ -1,0 +1,90 @@
+{
+  "lesson": "13-langgraph-stateful-graphs",
+  "title": "Stateful Graph Orchestration — Durable Execution and Checkpoints",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "LangGraph 把什麼當成代理程式的核心單位？",
+      "options": [
+        "向量索引",
+        "一台具備型別化狀態、函式節點與條件邊的狀態機",
+        "單一的工具註冊表",
+        "一次自由形式的 LLM 呼叫"
+      ],
+      "correct": 1,
+      "explanation": "LangGraph 把代理程式建模成狀態圖：節點是純函式，邊是轉移，狀態有型別且不可變。"
+    },
+    {
+      "stage": "pre",
+      "question": "持久化執行（durable execution）解決的是什麼問題？",
+      "options": [
+        "降低推論成本",
+        "更快產生嵌入",
+        "一段 40 步的執行失敗時，能以精確狀態從第 38 步續跑，而不必從頭來過",
+        "在不同供應商之間轉換"
+      ],
+      "correct": 2,
+      "explanation": "每個節點之後都做檢查點，讓執行環境能從最後一個成功的步驟續跑。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不是 LangGraph 支援的三種拓撲之一？",
+      "options": [
+        "Gradient ring",
+        "Hierarchical（巢狀子圖）",
+        "Supervisor",
+        "Swarm（點對點）"
+      ],
+      "correct": 0,
+      "explanation": "三種拓撲是 supervisor、swarm 與 hierarchical。Gradient ring 不是 LangGraph 的拓撲。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼節點必須是確定性的，續跑才能乾淨運作？",
+      "options": [
+        "這是 GIL 的要求",
+        "確定性可以降低 token 成本",
+        "續跑假設相同輸入會產生相同的狀態更新；隨機種子、系統時間與外部 API 都必須被記錄下來",
+        "供應商規定必須具備確定性"
+      ],
+      "correct": 2,
+      "explanation": "如果節點依賴未被記錄的非確定性，續跑就無法重建該步驟之後的狀態。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是條件邊？",
+      "options": [
+        "帶有 TTL 的邊",
+        "由一個以狀態為輸入的函式選出的邊，用來讓圖分支",
+        "只在 GPU 上執行的邊",
+        "以訓練損失加權的邊"
+      ],
+      "correct": 1,
+      "explanation": "條件邊依狀態分支；過度使用會讓整張圖難以推敲。"
+    },
+    {
+      "stage": "post",
+      "question": "檢查點存得太少會出什麼問題？",
+      "options": [
+        "磁碟會被塞滿",
+        "圖無法抵達 END",
+        "工具狀態與記憶寫入無法復原；完整狀態都必須序列化",
+        "模型產生的回答會變短"
+      ],
+      "correct": 2,
+      "explanation": "只對對話輪次做檢查點，會讓工具狀態與記憶寫入落在續跑能觸及的範圍之外。"
+    },
+    {
+      "stage": "post",
+      "question": "Human-in-the-loop 在 LangGraph 的設計中位於何處？",
+      "options": [
+        "在關鍵節點之前暫停，把序列化狀態呈現給人審閱，接受修改後續跑；checkpointer 讓這件事很便宜",
+        "只在 START 與 END",
+        "透過另一個供應商 API",
+        "必須 fork 整個執行環境"
+      ],
+      "correct": 0,
+      "explanation": "因為狀態在節點之間本來就已序列化，人工審查與編輯自然就是一種暫停後續跑的模式。"
+    }
+  ]
+}

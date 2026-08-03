@@ -1,0 +1,66 @@
+{
+  "lesson": "14-model-context-protocol",
+  "title": "Model Context Protocol",
+  "questions": [
+    {
+      "stage": "post",
+      "question": "一個 MCP server 對外暴露哪三種基元？",
+      "options": [
+        "Agents、skills、workflows",
+        "Endpoints、webhooks、queues",
+        "Functions、types、classes",
+        "Tools、resources、prompts"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "MCP 使用哪種傳輸格式？",
+      "options": [
+        "搭配 protobuf 的 gRPC",
+        "JSON-RPC 2.0",
+        "搭配 OpenAPI 的 REST",
+        "走 HTTP 的 GraphQL"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪一個 metadata 欄位表示某個 tool 會變更狀態、應要求人工核准？",
+      "options": [
+        "destructiveHint: true",
+        "readonly: false",
+        "mutating: true",
+        "requiresAuth: true"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "2025-06-18 版取代先前僅支援 SSE 之遠端傳輸的是哪種傳輸方式？",
+      "options": [
+        "gRPC 雙向串流",
+        "僅限 WebSocket",
+        "Streamable HTTP",
+        "WebTransport"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候該把一個 tool 拆成獨立的 MCP server，而不是留在行程內？",
+      "options": [
+        "當它被兩個以上的 host 呼叫，且是唯讀／可快取的",
+        "永遠不用；MCP 只適合本機開發",
+        "當它每天被呼叫少於 10 次",
+        "當它回傳超過 1KB 的資料"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

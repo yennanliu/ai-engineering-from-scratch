@@ -1,0 +1,90 @@
+{
+  "lesson": "15-constitutional-safety-harness",
+  "title": "Capstone 15 — Constitutional Safety Harness + Red-Team Range",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在本 capstone 裡，分層安全指的是什麼？",
+      "options": [
+        "跨輸入淨化、政策 rail、分類器關卡、模型、輸出過濾與 HITL 層級的縱深防禦",
+        "只在輸入端跑一個強力分類器",
+        "對輸出套用單一條規則式正規表達式",
+        "人工審查每一則回應"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "哪個分類器負責涵蓋約 132 種語言的多語支援？",
+      "options": [
+        "Llama Guard 4",
+        "Nemotron 3 Content Safety",
+        "X-Guard",
+        "ShieldGemma-2"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要在 XSTest 這類良性測試套組上量測過度拒答？",
+      "options": [
+        "為了追蹤誤判封鎖，讓模型在提升無害性的同時仍保持有用",
+        "為了替護欄框架取得認證",
+        "為了取代紅隊評分",
+        "為了對 token 吞吐量做基準測試"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本 capstone 的憲法式自我批判迴圈是什麼？",
+      "options": [
+        "一個從零訓練的 RLHF 獎勵模型",
+        "由批判 LLM 依照一份成文憲法為草稿評分，提示模型改寫被指出問題的輸出，再用改善後的配對做 SFT",
+        "單次通過 Llama Guard 4 的前向傳遞",
+        "對候選越獄提示詞做重排"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在調查結果中，成功的越獄如何評定嚴重性？",
+      "options": [
+        "依產生該回應的模型",
+        "使用 CVSS 4.0，涵蓋攻擊向量、複雜度與影響，外加揭露時程",
+        "依提示詞的原始 token 數",
+        "依操作者自訂的 1-10 分手動量表"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "紅隊靶場執行哪六類攻擊家族？",
+      "options": [
+        "PSI、KL、MMD、KS、JS 與 Wasserstein",
+        "PAIR、TAP、GCG、編碼（ASCII/base64/rot13）、多輪人設與多語語碼轉換",
+        "暴力破解、字典攻擊、重放、MITM、釣魚與 CSRF",
+        "BLEU、ROUGE、METEOR、BERTScore、CometKiwi 與 chrF"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼靶場自動化（cron 加警報）也是評分準則的一部分？",
+      "options": [
+        "cron 是呼叫 OPA 的唯一方式",
+        "要停用 Llama Guard 4 就必須自動化",
+        "規定明確要求手動執行",
+        "持續排程的探測能抓出攻擊成功率的漂移，以及隨時間出現的過度拒答退步"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

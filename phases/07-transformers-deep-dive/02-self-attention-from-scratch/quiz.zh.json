@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼原始的 self-attention 要把點積除以 sqrt(d_k)？",
+      "options": [
+        "為了讓輸出值落在 0 到 1 之間",
+        "為了把 query 與 key 向量正規化成單位長度",
+        "為了避免點積在高維度下變得過大，把 softmax 推進梯度極小的區域",
+        "為了降低矩陣乘法的運算成本"
+      ],
+      "correct": 2,
+      "explanation": "當 d_k 很大時，隨機向量的點積會隨 sqrt(d_k) 成比例增長。若不縮放，softmax 收到過大的輸入，會產生近似 one-hot 的輸出，梯度就消失了。"
+    },
+    {
+      "stage": "pre",
+      "question": "self-attention 中的三個投影是什麼？",
+      "options": [
+        "Encoder、decoder 與 cross-attention",
+        "Query、key 與 value——各自都是同一份輸入經過學習得到的線性投影",
+        "嵌入、位置與 segment",
+        "輸入、隱藏與輸出"
+      ],
+      "correct": 1,
+      "explanation": "Self-attention 讓輸入通過三個不同的權重矩陣，產生 query（我在找什麼？）、key（我包含什麼？）與 value（若被匹配我輸出什麼？）。"
+    },
+    {
+      "stage": "post",
+      "question": "在 8 個 head、d_model=512 的 multi-head attention 中，每個 head 的維度是多少？",
+      "options": [
+        "512——每個 head 都看到完整維度",
+        "64——d_model 平均分配到各個 head（512/8=64）",
+        "4096——每個 head 會擴張表示空間",
+        "8——每個 head 一個維度"
+      ],
+      "correct": 1,
+      "explanation": "Multi-head attention 把 d_model 切成 h 個 head，每個 head 在 d_k = d_model/h 個維度上運算。512/8 = 64 維時，總運算成本等同於在完整維度上做單一 head 的 attention。"
+    },
+    {
+      "stage": "post",
+      "question": "自迴歸 attention 中的因果遮罩防止了什麼？",
+      "options": [
+        "它防止每個位置去注意未來的位置，確保模型預測下一個 token 時只能用過去的上下文",
+        "它防止模型注意自己所在的位置",
+        "它防止模型注意 padding token",
+        "它防止 attention 權重變得過大"
+      ],
+      "correct": 0,
+      "explanation": "在自迴歸生成中，token t 不得看到 token t+1、t+2 等等。因果遮罩在 softmax 之前把未來位置設為負無限大，將它們的 attention 權重歸零。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 self-attention 對序列長度 n 具有 O(n^2) 的複雜度？",
+      "options": [
+        "因為模型有 n 層彼此堆疊",
+        "因為透過 attention 反向傳播需要 n^2 次梯度計算",
+        "因為 attention 之後的前饋層是平方級的",
+        "因為每個 token 都要和其他每一個 token 計算 attention 分數，產生一個 n x n 的 attention 矩陣"
+      ],
+      "correct": 3,
+      "explanation": "QK^T 的矩陣乘法會產生一個 n x n 的 attention 矩陣，其中 (i,j) 項是 token i 對 token j 的注意力。運算量與記憶體都以 O(n^2) 成長，這正是長上下文模型需要 FlashAttention 這類技術的原因。"
+    }
+  ]
+}

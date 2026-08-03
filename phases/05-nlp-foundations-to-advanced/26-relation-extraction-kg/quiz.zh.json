@@ -1,0 +1,102 @@
+{
+  "lesson": "26-relation-extraction-kg",
+  "title": "Relation Extraction & Knowledge Graph Construction",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "知識圖譜的最小單位是什麼？",
+      "options": [
+        "一個 token",
+        "一個 POS 標記",
+        "一個（主體、關係、客體）三元組",
+        "一個句子"
+      ],
+      "correct": 2,
+      "explanation": "知識圖譜以（s, r, o）三元組儲存資訊；三元組彙整起來就構成圖譜。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 2026 年的關係抽取中，AEVS 代表什麼？",
+      "options": [
+        "Aggregated Entity-Value Schema",
+        "Async Entity Validation Service",
+        "Auto-Encoder Vector Search",
+        "Anchor-Extraction-Verification-Supplement：錨定文字片段、抽取三元組、對照原文驗證、補足覆蓋範圍"
+      ],
+      "correct": 3,
+      "explanation": "AEVS 是 2026 年用於有根據關係抽取的幻覺緩解框架。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼每個三元組都必須帶有來源出處（文件 id 加上片段位置）？",
+      "options": [
+        "SPARQL 要求提供出處",
+        "出處能加快抽取速度",
+        "出處會改變本體論",
+        "出處讓你能稽核三元組，並剔除片段位置對不上原文的幻覺內容"
+      ],
+      "correct": 3,
+      "explanation": "出處讓稽核成為可能，也是 AEVS 式幻覺偵測的核心。"
+    },
+    {
+      "stage": "check",
+      "question": "關係的正規化（canonicalization）做的是什麼？",
+      "options": [
+        "加入嵌入",
+        "移除三元組",
+        "把表層動詞片語（例如 'was born in'、'is a native of'）對應到固定的屬性 id，使圖譜可被查詢",
+        "翻譯文件"
+      ],
+      "correct": 2,
+      "explanation": "正規化把各種改寫說法收斂成標準的知識圖譜屬性 id。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼關係抽取通常需要先做指代消解（coreference resolution）？",
+      "options": [
+        "像 'he founded Apple' 這樣的代名詞必須先解析成具名實體，才能抽取三元組",
+        "指代消解會統一大小寫",
+        "指代消解提供位置資訊",
+        "指代消解會加入嵌入"
+      ],
+      "correct": 0,
+      "explanation": "沒有指代消解，關係抽取會把關係掛在代名詞上，而不是背後真正的具名實體。"
+    },
+    {
+      "stage": "post",
+      "question": "哪個做法是用 open IE 的召回率換取圖譜的可查詢性？",
+      "options": [
+        "隨機抽樣三元組",
+        "只用嵌入建構的圖譜",
+        "在併入知識圖譜前，把 open-IE 關係對應到封閉本體論（例如 Wikidata 屬性）",
+        "略過 NER"
+      ],
+      "correct": 2,
+      "explanation": "封閉本體論讓圖譜可被查詢；正規化這一步在下游會把成本賺回來。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼許多正式環境的知識圖譜會使用時間限定詞（起始／結束時間）？",
+      "options": [
+        "RDF 規定要有",
+        "為了移除 NIL 實體",
+        "讓 SPARQL 更快",
+        "許多關係有時間界限（雇主、配偶、職位）；限定詞可避免會過期的「永遠為真」宣稱"
+      ],
+      "correct": 3,
+      "explanation": "有時間界限的關係需要限定詞（例如 Wikidata 的 P580/P582），否則事實會在無聲無息中過期。"
+    },
+    {
+      "stage": "post",
+      "question": "REBEL 是什麼？",
+      "options": [
+        "一個分詞器",
+        "一個指代消解模型",
+        "一個 seq2seq 關係抽取器，輸出的三元組已經使用 Wikidata 屬性 id",
+        "一個向量資料庫"
+      ],
+      "correct": 2,
+      "explanation": "REBEL（Babelscape）是以遠距監督的 Wikidata 三元組訓練而成的 seq2seq 關係抽取模型。"
+    }
+  ]
+}

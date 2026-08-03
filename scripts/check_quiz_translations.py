@@ -92,9 +92,17 @@ def check_pair(en_path: Path, zh_path: Path, lang: str) -> list[dict]:
         if len(zh_q["options"]) != len(en_q["options"]):
             add("Q006", f"{where}: {len(zh_q['options'])} options, quiz.json has {len(en_q['options'])}")
 
-        texts = [zh_q["question"], zh_q["explanation"], *zh_q["options"]]
-        if any(not isinstance(t, str) or not t.strip() for t in texts):
-            add("Q007", f"{where}: empty or non-string prose")
+        # 524 English questions across 85 lessons ship an empty explanation.
+        # A translation mirrors its source, so "empty" is only a defect where
+        # the English side has prose to translate.
+        pairs = [("question", zh_q["question"], en_q["question"]),
+                 ("explanation", zh_q["explanation"], en_q["explanation"])]
+        pairs += [(f"option {k}", z, e)
+                  for k, (z, e) in enumerate(zip(zh_q["options"], en_q["options"]))]
+        blank = [name for name, zt, et in pairs
+                 if not isinstance(zt, str) or (str(et).strip() and not zt.strip())]
+        if blank:
+            add("Q007", f"{where}: {', '.join(blank)} empty but the English is not")
             continue
 
         if lang == "zh" and not CJK.search(zh_q["question"]):

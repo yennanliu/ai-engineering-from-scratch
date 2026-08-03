@@ -1,0 +1,78 @@
+{
+  "lesson": "37-loading-pretrained-weights",
+  "title": "Loading Pretrained Weights",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "載入器為什麼需要一份名稱對照表？",
+      "options": [
+        "公開發布的 GPT-2 權重使用 wte、wpe、h.N.attn.c_attn 這類名稱，本地模型用的是 tok_embed、pos_embed、blocks.N.attn.qkv；載入器負責把一邊翻譯成另一邊",
+        "safetensors 檔案是加密的",
+        "預訓練張量與本地參數的名稱是一樣的",
+        "torch 規定要有"
+      ],
+      "correct": 0,
+      "explanation": "兩套命名慣例來自不同的歷史；對照表就是一個依層數展開的字典。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是 conv1d 轉置，哪些張量需要它？",
+      "options": [
+        "所有權重張量",
+        "公開發布的 GPT-2 以 tensorflow conv1d 排列方式儲存 c_attn、c_proj 與 c_fc 的權重，那正是 nn.Linear.weight 所需形狀的轉置；載入器在指派時對這些張量呼叫 .t()",
+        "只有嵌入",
+        "只有 LayerNorm 的 scale"
+      ],
+      "correct": 1,
+      "explanation": "有三個字尾需要轉置；bias 與 LayerNorm 的形狀本來就是對的。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 LM head 不在 safetensors 檔案裡？",
+      "options": [
+        "它太大了",
+        "它從另一個檔案載入",
+        "它在執行期由 logit 算出來",
+        "權重綁定：LM head 與 token 嵌入（wte）共用同一份儲存，所以載入 wte 後再把 lm_head.weight 別名到 tok_embed.weight，就重建出這個 head"
+      ],
+      "correct": 3,
+      "explanation": "在 wte 就位後設定 lm_head.weight = tok_embed.weight 可還原這個別名；改用複製則會讓參數量翻倍。"
+    },
+    {
+      "stage": "check",
+      "question": "形狀不符時載入器會怎麼做？",
+      "options": [
+        "把較小的張量補齊",
+        "讓行程崩潰",
+        "把不符記錄到 LoadReport.shape_mismatch 並拒絕指派，讓本地參數保持原樣",
+        "把較大的張量截斷"
+      ],
+      "correct": 2,
+      "explanation": "載入到一半的模型是製造無聲失敗的機器；拒絕指派能讓報告保持誠實。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼示範用的是樁替身資料，而不是真的下載 GPT-2？",
+      "options": [
+        "真實檔案不是 safetensors 格式",
+        "真實權重是加密的",
+        "示範必須能離線且快速執行；樁替身採用與預訓練完全相同的命名慣例，所以載入器走的程式碼路徑一模一樣，換成真實檔案對載入器毫無影響",
+        "safetensors 無法儲存大型張量"
+      ],
+      "correct": 2,
+      "explanation": "相同的程式碼路徑、較小的酬載；載入器在兩者上都能運作。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼要在載入前後各生成一次樣本？",
+      "options": [
+        "為了量測推論速度",
+        "為了設定隨機種子",
+        "如果載入後的樣本與載入前完全相同，代表這次載入沒有改變模型，也就是對照表無聲地漏掉了每一個張量",
+        "為了預熱 GPU 快取"
+      ],
+      "correct": 2,
+      "explanation": "健全性生成是最便宜的關卡：樣本指紋若沒有變化，就暴露出一次 LoadReport 摘要本身抓不到的失敗載入。"
+    }
+  ]
+}

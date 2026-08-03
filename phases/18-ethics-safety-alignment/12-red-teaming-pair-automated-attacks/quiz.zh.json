@@ -1,0 +1,78 @@
+{
+  "lesson": "12-red-teaming-pair-automated-attacks",
+  "title": "Red-Teaming: PAIR and Automated Attacks",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼人工紅隊演練不足以評測前沿模型？",
+      "options": [
+        "人工測試者讀不到模型輸出",
+        "它無法規模化；攻擊成功率需要統計樣本，而每次模型改版目標都在移動",
+        "人工寫的提示詞總是會被過濾器擋下",
+        "人工測試會產生太多偽陽性"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "PAIR 是什麼的縮寫，它做的是什麼？",
+      "options": [
+        "Pre-Action Inspection Reasoning；一種防禦性 scaffolding",
+        "Persuasive Adversarial Iterative Reward；用勸說者取代 RM",
+        "Pairwise Adversarial Inference Routing；在多個模型之間路由攻擊",
+        "Prompt Automatic Iterative Refinement；由攻擊方 LLM 對目標反覆提出越獄提示詞，並把先前的嘗試當作上下文回饋"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "面對黑箱目標時，PAIR 為何比 GCG 更有效率？",
+      "options": [
+        "GCG 需要白箱梯度存取，產生的後綴不可讀且無法利用上下文回饋；PAIR 是黑箱、自然語言，並具備上下文學習能力",
+        "PAIR 完全忽略目標的回應",
+        "GCG 只能攻擊開源模型",
+        "PAIR 使用的攻擊方模型比 GCG 更大"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼回報攻擊成功率（ASR）時必須同時附上查詢預算與裁判身分？",
+      "options": [
+        "因為裁判之間永遠意見一致",
+        "因為 ASR 會隨著攻擊方被允許的查詢次數，以及由哪個 LLM 判定回應是否算越獄而變動",
+        "因為預算只由 JailbreakBench 訂定",
+        "因為出口管制法規要求提供 ASR"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "下列哪個自動化攻擊最適合被描述為「帶剪枝的攻擊樹」？",
+      "options": [
+        "GCG",
+        "TAP",
+        "PAP",
+        "AutoDAN"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪一個標準化基準使用橫跨 7 個類別的 510 種行為，並包含語意與功能性危害測試？",
+      "options": [
+        "TruthfulQA",
+        "WMDP",
+        "HarmBench",
+        "JailbreakBench"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

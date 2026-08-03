@@ -1,0 +1,102 @@
+{
+  "lesson": "14-information-retrieval-search",
+  "title": "Information Retrieval and Search",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "BM25 依據什麼為文件評分？",
+      "options": [
+        "詞頻、IDF，以及經文件長度正規化的查詢詞出現情況",
+        "與查詢的編輯距離",
+        "與查詢的嵌入餘弦相似度",
+        "語料庫上的 PageRank"
+      ],
+      "correct": 0,
+      "explanation": "BM25 綜合詞頻飽和、IDF 與長度正規化，為字面比對評分。"
+    },
+    {
+      "stage": "pre",
+      "question": "純向量檢索的主要弱點是什麼，而 BM25 正好能補上？",
+      "options": [
+        "多語言查詢",
+        "延遲",
+        "語意嵌入可能漏掉的精確關鍵字與識別碼比對（產品代碼、錯誤字串、專有名詞）",
+        "長文件"
+      ],
+      "correct": 2,
+      "explanation": "向量嵌入可能模糊掉識別碼與精確字串；BM25 則能精準命中。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 Reciprocal Rank Fusion（RRF）會忽略各檢索器的原始分數？",
+      "options": [
+        "BM25 與向量分數落在不同尺度上；只用排名位置能讓融合結果不受校準影響",
+        "可以加快排序",
+        "RRF 需要機率值",
+        "原始分數不得使用"
+      ],
+      "correct": 0,
+      "explanation": "RRF 使用 1/(k + rank)，因此兩套評分系統的尺度不必一致。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼只對融合後的前 30 筆結果執行 cross-encoder 重排？",
+      "options": [
+        "cross-encoder 每一對的計算都很慢；只攤在小候選集上，就能在可接受的延遲下取得高準確率",
+        "重排器會降低召回率",
+        "每一個步驟都必須使用 cross-encoder",
+        "FAISS 規定要用 top-30"
+      ],
+      "correct": 0,
+      "explanation": "cross-encoder 會把查詢與文件一起評分；只跑在小的融合候選集上才能把延遲控制住。"
+    },
+    {
+      "stage": "check",
+      "question": "對 RAG 檢索器而言，最該最佳化的指標是哪一個？",
+      "options": [
+        "吞吐量",
+        "Recall@k，因為正確段落若不在 top-k 中，閱讀器就無法作答",
+        "BLEU",
+        "延遲"
+      ],
+      "correct": 1,
+      "explanation": "若正確段落不在檢索到的 top-k 中，閱讀器必定失敗。"
+    },
+    {
+      "stage": "post",
+      "question": "依 2026 年的業界經驗，多數正式環境的 RAG 失敗源自哪裡？",
+      "options": [
+        "資料匯入與切塊，而不是模型；脈絡不好，再好的閱讀器也沒用",
+        "提示詞太冗長",
+        "重排器調校",
+        "LLM 的選擇"
+      ],
+      "correct": 0,
+      "explanation": "約 80% 的 RAG 失敗可追溯到切塊與資料匯入的品質，而不是生成模型。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼是「parent-doc」檢索模式？",
+      "options": [
+        "挑最長的文件",
+        "只使用父文件的嵌入",
+        "先檢索較小的子區塊以取得精確度，當同一父區塊出現多個子區塊時再擴展到父區塊，藉此保留脈絡",
+        "只對父文件做嵌入"
+      ],
+      "correct": 2,
+      "explanation": "子區塊層級的檢索較精確；擴展到父區塊則能保留閱讀器需要的周邊脈絡。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候該上線三路檢索（BM25 + 向量 + SPLADE）？",
+      "options": [
+        "一律都要",
+        "當基礎設施支援 learned-sparse 索引，且查詢同時混雜專有名詞與語意意圖時",
+        "只在文件少於 1000 篇時",
+        "只在純英文語料庫時"
+      ],
+      "correct": 1,
+      "explanation": "在 2026 年的基準測試中，只要有 SPLADE 基礎設施，三路檢索在字面與語意混合的查詢上勝過兩路。"
+    }
+  ]
+}

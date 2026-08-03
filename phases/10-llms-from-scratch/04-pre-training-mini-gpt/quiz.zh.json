@@ -1,0 +1,62 @@
+[
+  {
+    "question": "GPT 在預訓練時使用什麼訓練目標？",
+    "options": [
+      "句子分類",
+      "下一個 token 預測：給定先前的 token，預測下一個",
+      "圖文對齊",
+      "遮罩語言建模（預測被遮住的 token）"
+    ],
+    "correct": 1,
+    "explanation": "GPT 是以下一個 token 預測訓練的因果（自迴歸）語言模型。給定 token [t1, t2, ..., tn]，它學會預測 tn+1。損失是預測與實際下一個 token 之間的交叉熵。",
+    "stage": "pre"
+  },
+  {
+    "question": "GPT-2 Small（124M）有多少 transformer 層、attention head 與嵌入維度？",
+    "options": [
+      "24 層、16 個 head、1024 維",
+      "6 層、6 個 head、512 維",
+      "48 層、25 個 head、1600 維",
+      "12 層、12 個 head、768 維"
+    ],
+    "correct": 3,
+    "explanation": "GPT-2 Small 有 12 層 transformer、每層 12 個 attention head，以及 768 維的嵌入。這個架構有 1.24 億個參數，可以在單張 GPU 上花幾小時訓練完成。",
+    "stage": "pre"
+  },
+  {
+    "question": "因果 attention 遮罩在 GPT 中的作用是什麼？",
+    "options": [
+      "它防止每個 token 去注意未來的 token，確保模型預測時只能用過去的上下文",
+      "它減少訓練時的記憶體用量",
+      "它遮掉信心不足的 attention 分數",
+      "它防止去注意 padding token"
+    ],
+    "correct": 0,
+    "explanation": "因果遮罩是一個三角矩陣，在 softmax 之前把未來位置設為負無限大。位置 5 的 token 可以注意位置 1 到 5，但不能注意 6 以後。這確保模型由左至右生成 token。",
+    "stage": "post"
+  },
+  {
+    "question": "在文字生成中，temperature 控制的是什麼？",
+    "options": [
+      "token 選取的隨機程度：temperature 越低輸出越趨於確定，越高則越多樣",
+      "生成的速度",
+      "生成的 token 數量",
+      "模型的信心門檻"
+    ],
+    "correct": 0,
+    "explanation": "Temperature 在 softmax 之前對 logit 做除法。Temperature=0.1 會讓分布非常尖銳（幾乎是確定性的）。Temperature=1.0 就是訓練時的分布。Temperature 大於 1.0 會把分布壓平，提高隨機性。",
+    "stage": "post"
+  },
+  {
+    "question": "為什麼預訓練所需的算力遠遠多於微調？",
+    "options": [
+      "預訓練要從零開始處理數兆個 token 來學習通用的語言樣式，微調則是在數千筆範例上調整一個已具備能力的模型",
+      "預訓練使用不同的架構",
+      "預訓練使用更大的批次大小",
+      "微調不使用梯度"
+    ],
+    "correct": 0,
+    "explanation": "預訓練是從隨機權重出發，在數兆個 token 上建立起所有語言知識。微調則從這些已學得的權重出發，在小得多的資料集（數千到數百萬筆範例）上調整它們。",
+    "stage": "post"
+  }
+]

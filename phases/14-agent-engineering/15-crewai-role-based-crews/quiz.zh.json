@@ -1,0 +1,90 @@
+{
+  "lesson": "15-crewai-role-based-crews",
+  "title": "Role-Based Agent Teams — Roles, Tasks, Processes",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "CrewAI 的四個基本元件是什麼？",
+      "options": [
+        "Tool、Prompt、Model、Memory",
+        "Agent、Task、Crew、Process",
+        "Node、Edge、Reducer、Checkpointer",
+        "Actor、Message、Inbox、Runtime"
+      ],
+      "correct": 1,
+      "explanation": "Agent、Task、Crew 與 Process 就是那四個基本元件。"
+    },
+    {
+      "stage": "pre",
+      "question": "依 CrewAI 官方文件，正式環境建議從什麼開始？",
+      "options": [
+        "Sequential process",
+        "Flow",
+        "Crew",
+        "Hierarchical process"
+      ],
+      "correct": 1,
+      "explanation": "文件建議正式環境的應用從 Flow 開始；等自主性值得那份成本時，再把 Crew 當成子步驟折進來。"
+    },
+    {
+      "stage": "check",
+      "question": "Crew 與 Flow 的差別是什麼？",
+      "options": [
+        "Flow 裡沒有代理程式",
+        "Crew 要付費，Flow 免費",
+        "Crew 是自主、由 LLM 驅動的；Flow 是事件驅動、由程式碼掌握，確定且可測試",
+        "Crew 只能跑在 GPU 上"
+      ],
+      "correct": 2,
+      "explanation": "Crew 以自主性為先；Flow 以確定性為先。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不是 CrewAI 內建的四種記憶型別之一？",
+      "options": [
+        "Quantized",
+        "Entity",
+        "Long-term",
+        "Short-term"
+      ],
+      "correct": 0,
+      "explanation": "四種是 short-term、long-term、entity 與 contextual。Quantized memory 不是 CrewAI 的概念。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是 backstory 膨脹，課程建議怎麼處理？",
+      "options": [
+        "兩千字的代理程式 backstory 會擠掉上下文預算；把它寫精簡",
+        "存了太多 crew；把舊的封存起來",
+        "Bedrock 呼叫太慢；換一個區域",
+        "工具太多；刪掉一些"
+      ],
+      "correct": 0,
+      "explanation": "Backstory 會形塑語氣與判斷，但寫得過長就會吃掉上下文。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候值得選 Hierarchical process 而不是 Sequential？",
+      "options": [
+        "當你有 4 個以上的專才代理程式，需要一個 manager Agent 在它們之間分派時",
+        "任何時候都值得",
+        "當你只有一個任務時",
+        "當你完全沒有工具時"
+      ],
+      "correct": 0,
+      "explanation": "Hierarchical 多了一個 manager Agent；只有在多個專才需要動態分派時才划算。"
+    },
+    {
+      "stage": "post",
+      "question": "課程為什麼提醒不要在正式環境直接用自由形式的 Crew？",
+      "options": [
+        "輸出變異度高，而且沒有 Flow 包起來時除錯很痛苦",
+        "Crew 沒有官方支援",
+        "Crew 比 Flow 貴",
+        "Crew 沒有記憶功能"
+      ],
+      "correct": 0,
+      "explanation": "Crew 的自主性讓正式環境的重播與稽核很痛苦；要上線時用 Flow 包起來。"
+    }
+  ]
+}

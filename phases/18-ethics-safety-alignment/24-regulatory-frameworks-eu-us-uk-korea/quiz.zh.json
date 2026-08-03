@@ -1,0 +1,78 @@
+{
+  "lesson": "24-regulatory-frameworks-eu-us-uk-korea",
+  "title": "Regulatory Frameworks - EU, US, UK, Korea",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "EU AI Act 於何時生效，最先適用的是哪一類？",
+      "options": [
+        "2025 年 8 月；所有類別同時適用",
+        "2024 年 1 月；高風險系統當天即適用",
+        "2024 年 8 月；禁止性做法與 AI 素養規定自 2025 年 2 月 2 日起適用",
+        "2026 年 8 月；生效日只適用 GPAI"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "自 2026 年 8 月 2 日起適用的 EU AI Act 最高罰款是多少？",
+      "options": [
+        "最高 500 萬歐元或全球營業額的 1%",
+        "最高 100 萬歐元或全球營業額的 0.1%",
+        "最高 1500 萬歐元或全球營業額的 3%",
+        "沒有上限"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "GPAI Code of Practice（2025 年 7 月 10 日）由哪三個章節組成？",
+      "options": [
+        "能力、控制、合規",
+        "透明度、著作權、安全與資安",
+        "隱私、偏誤、浮水印",
+        "訓練、推論、部署"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2025 年 2 月英國 AISI 更名為「AI Security Institute」代表什麼訊號？",
+      "options": [
+        "範圍收斂到前沿能力的資安風險，捨去演算法偏誤與言論自由的框架",
+        "英國關閉前沿模型評測業務",
+        "與 EU AI Office 合併",
+        "擴張到演算法偏誤領域"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "美國 CAISI 更名（2025 年 6 月）代表什麼政策方向？",
+      "options": [
+        "強制要求前沿模型開源釋出",
+        "與 FDA 合併",
+        "轉向「促進成長的 AI 政策」，強調標準制定與創新支持，並降低對部署前評測的重視",
+        "更嚴格的部署前安全評測"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "韓國《AI 基本法》（2026 年 1 月生效）最主要的義務是什麼？",
+      "options": [
+        "原封不動地採用 EU AI Act",
+        "全面禁止外國 AI 供應商",
+        "所有生成式模型都必須開放權重",
+        "第 12 條在 MSIT 之下設立 AISI，並要求高影響力與生成式 AI 設置在地代表、進行風險評估與採取安全措施"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

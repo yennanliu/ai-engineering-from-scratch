@@ -1,0 +1,90 @@
+{
+  "lesson": "16-openai-agents-sdk",
+  "title": "OpenAI Agents SDK: Handoffs, Guardrails, Tracing",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "OpenAI Agents SDK 的五個基本元件是什麼？",
+      "options": [
+        "Plan、Worker、Solver、Evaluator、Reflector",
+        "Tool、Prompt、Model、Memory、Trace",
+        "Agent、Handoff、Guardrail、Session、Tracing",
+        "Node、Edge、Reducer、Checkpointer、Subgraph"
+      ],
+      "correct": 2,
+      "explanation": "這個 SDK 就是由這五個基本元件組成。"
+    },
+    {
+      "stage": "pre",
+      "question": "模型眼中的 handoff 長什麼樣子？",
+      "options": [
+        "一個特殊 token",
+        "一則 system message",
+        "一個自訂的 HTTP 端點",
+        "一個名為 transfer_to_<agent_name> 的工具"
+      ],
+      "correct": 3,
+      "explanation": "Handoff 是以工具的形式暴露出來，名稱形狀為 transfer_to_<agent>。"
+    },
+    {
+      "stage": "check",
+      "question": "這個 SDK 內建哪三種護欄？",
+      "options": [
+        "硬性、軟性與盡力而為護欄",
+        "前置、後置與行內護欄",
+        "輸入、輸出與工具護欄",
+        "靜態、動態與聯邦式護欄"
+      ],
+      "correct": 2,
+      "explanation": "分別是輸入（第一個代理程式）、輸出（最後一個代理程式）與工具（每個 function tool）護欄。"
+    },
+    {
+      "stage": "check",
+      "question": "平行護欄與阻塞護欄的差別是什麼？",
+      "options": [
+        "平行護欄與主 LLM 同時跑（延遲較低，但被觸發時浪費 token）；阻塞護欄先跑（被觸發時不浪費 token）",
+        "阻塞護欄只能作用在輸出上",
+        "平行護欄一定比較貴",
+        "阻塞護欄是非同步的；平行護欄是同步的"
+      ],
+      "correct": 0,
+      "explanation": "平行護欄以被觸發時浪費的 token 換取延遲；阻塞護欄省下 token 但增加延遲。"
+    },
+    {
+      "stage": "check",
+      "question": "這個 SDK 的 tracing 如何啟用？",
+      "options": [
+        "只能在託管的儀表板上開啟",
+        "預設關閉；要逐一為代理程式啟用",
+        "只能透過 OpenTelemetry collector",
+        "預設開啟；用 OPENAI_AGENTS_DISABLE_TRACING=1 退出"
+      ],
+      "correct": 3,
+      "explanation": "LLM、工具、handoff 與護欄的 span 預設就會發出；用一個環境變數即可關閉。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼是 handoff 漂移，課程建議如何緩解？",
+      "options": [
+        "代理程式 A 交給 B，B 又交回 A，形成迴圈；加上一個 hop 計數器",
+        "Session 溢位；把舊的封存起來",
+        "Tracing 落後；降低 span 量",
+        "護欄失去同步；重新訓練"
+      ],
+      "correct": 0,
+      "explanation": "hop 計數器會在轉交鏈無限循環之前先設上限。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼內建工具是護欄的缺口？",
+      "options": [
+        "它們不支援 handoff",
+        "工具護欄只在 function tool 上觸發；內建工具（檔案讀取、網頁擷取）需要另外一層政策",
+        "它們無法被 trace",
+        "它們比 function tool 慢"
+      ],
+      "correct": 1,
+      "explanation": "逐一工具的護欄只涵蓋 function tool；內建工具需要獨立的政策層。"
+    }
+  ]
+}

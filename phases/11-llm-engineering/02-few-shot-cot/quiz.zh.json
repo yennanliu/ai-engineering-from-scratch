@@ -1,0 +1,62 @@
+[
+  {
+    "question": "zero-shot 與 few-shot 提示的關鍵差異是什麼？",
+    "options": [
+      "zero-shot 只給指令；few-shot 會在實際查詢之前附上輸入與輸出的示範範例",
+      "zero-shot 不使用 system prompt",
+      "few-shot 使用不同的模型",
+      "zero-shot 比較快"
+    ],
+    "correct": 0,
+    "explanation": "few-shot 提示會包含做過一遍的範例（示範），向模型展示期望的模式。這就像先示範怎麼填表，再請對方填自己那一份。",
+    "stage": "pre"
+  },
+  {
+    "question": "「Chain of Thought」提示做的是什麼？",
+    "options": [
+      "它指示模型在給出最終答案之前先寫出中間推理步驟，藉此提升多步驟問題的準確率",
+      "它讓回應變得更長",
+      "它把多次 API 呼叫串接起來",
+      "它把多個模型依序串連起來"
+    ],
+    "correct": 0,
+    "explanation": "CoT 提示（例如「Let's think step by step」）等於給模型一張「草稿紙」來推演問題。在 GSM8K 數學題上，光是這一招就把 GPT-4o 的準確率從 78% 提升到 91%。",
+    "stage": "pre"
+  },
+  {
+    "question": "Tree-of-Thought 與 Chain-of-Thought 有什麼不同？",
+    "options": [
+      "它平行探索多條推理路徑，並評估哪一條導向最好的答案",
+      "它用樹狀資料結構來儲存",
+      "它使用不同的模型",
+      "它只是比較長的 chain of thought"
+    ],
+    "correct": 0,
+    "explanation": "CoT 只走單一條推理路徑。Tree-of-Thought 會產生多條候選路徑，加以評估（可能就用 LLM 本身評估），再選出最好的一條。這在第一條推理路徑可能出錯的問題上很有幫助。",
+    "stage": "post"
+  },
+  {
+    "question": "挑選 few-shot 範例時，最重要的是什麼？",
+    "options": [
+      "使用最短的範例",
+      "挑選涵蓋不同情況、並示範出你要的確切格式與推理模式的多樣化範例",
+      "範例用得越多越好",
+      "使用測試集裡的範例"
+    ],
+    "correct": 1,
+    "explanation": "範例的品質勝過數量。3 到 5 個涵蓋不同邊界情況、格式良好的多樣化範例，比 20 個重複又浪費上下文視窗 token 的範例更能教會模型那個模式。",
+    "stage": "post"
+  },
+  {
+    "question": "既然有沒有 CoT，模型擁有的知識都一樣，為什麼 CoT 提示還能提升準確率？",
+    "options": [
+      "它耗用更多算力",
+      "它啟動了模型隱藏的能力",
+      "它改變了模型權重",
+      "生成中間 token 為最終答案建立了更大的有效脈絡，讓模型能以自己的推理為條件"
+    ],
+    "correct": 3,
+    "explanation": "沒有 CoT 時，模型必須在一個 token 內直接跳到答案。有 CoT 時，每個中間步驟都是模型在下一步會據以條件化的 token。模型等於是「想出聲來」，一步步堆疊到答案。",
+    "stage": "post"
+  }
+]

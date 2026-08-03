@@ -1,0 +1,90 @@
+{
+  "lesson": "03-reflexion-verbal-rl",
+  "title": "Reflexion: Verbal Reinforcement Learning",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Reflexion 取代了標準強化學習中的什麼？",
+      "options": [
+        "以參數式記憶取代情節式記憶",
+        "以在多次試驗之間保存的自然語言反思取代梯度更新",
+        "以隨機搜尋取代策略網路",
+        "以固定獎勵取代獎勵塑形"
+      ],
+      "correct": 1,
+      "explanation": "Reflexion 用情節式記憶中的自然語言反思取代權重更新。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪三個元件構成一套 Reflexion 系統？",
+      "options": [
+        "Planner、Worker、Solver",
+        "Selector、Expander、Backpropagator",
+        "Generator、Critic、Optimizer",
+        "Actor、Evaluator、Self-Reflector"
+      ],
+      "correct": 3,
+      "explanation": "Reflexion 把代理程式拆成執行軌跡的 Actor、為軌跡評分的 Evaluator，以及寫下經驗教訓的 Self-Reflector。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一類 evaluator 使用像單元測試或已知正確答案這樣的外部二元訊號？",
+      "options": [
+        "啟發式",
+        "純量式",
+        "自我評估式",
+        "投票式"
+      ],
+      "correct": 1,
+      "explanation": "純量式 evaluator 從標準答案讀取通過／失敗訊號（ALFWorld 的成功判定、HumanEval 的測試）。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼自我評估是比純量回饋更弱的訊號？",
+      "options": [
+        "自己評判自己的模型沒有外部依據，因此可能替自己的答案蓋章放行",
+        "它計算起來比較慢",
+        "它一定需要更大的模型",
+        "它無法在 tools 上執行"
+      ],
+      "correct": 0,
+      "explanation": "自我評估缺少外部檢查，因此一個自信滿滿的幻覺也能拿到高分；要搭配以 tool 為依據的驗證。"
+    },
+    {
+      "stage": "check",
+      "question": "本課列出的哪一種情況是 Reflexion 幫不上忙的？",
+      "options": [
+        "像網路斷線這種外部的暫時性故障",
+        "HotpotQA 的多跳問題",
+        "測試可以評分的程式碼生成",
+        "ALFWorld 導航任務"
+      ],
+      "correct": 0,
+      "explanation": "對外部的暫時性中斷做反思，產出的反思對日後的執行毫無幫助。"
+    },
+    {
+      "stage": "post",
+      "question": "在 Reflexion 模式中，什麼是記憶腐化（memory rot）？",
+      "options": [
+        "行程重啟時弄丟反思內容",
+        "反思提示詞超出上下文視窗",
+        "反思內容被供應商加密",
+        "情節式緩衝區塞滿過時或錯誤的反思，拖慢或偏誤了日後的試驗"
+      ],
+      "correct": 3,
+      "explanation": "累積的陳舊或錯誤反思會讓行為退化；用壓實（compaction）或 TTL 來緩解。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種正式環境的做法最能對應本課的 Reflexion？",
+      "options": [
+        "Claude Code 把 CLAUDE.md 的經驗教訓前置到日後的 session",
+        "Anthropic 的 prompt caching",
+        "Cursor 的套用編輯流程",
+        "OpenAI 的 batch API"
+      ],
+      "correct": 0,
+      "explanation": "CLAUDE.md 的經驗教訓、pro-workflow 的 learn-rule，以及 Letta 的 sleep-time compute，都是把情節式反思緩衝區外部化的做法。"
+    }
+  ]
+}

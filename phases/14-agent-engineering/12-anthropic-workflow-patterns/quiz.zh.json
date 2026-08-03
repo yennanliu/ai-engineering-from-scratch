@@ -1,0 +1,90 @@
+{
+  "lesson": "12-anthropic-workflow-patterns",
+  "title": "Anthropic's Workflow Patterns: Simple Over Complex",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Anthropic 如何區分 workflow 與 agent？",
+      "options": [
+        "Workflow 是工程師擁有的預先定義圖；agent 則由模型自己決定工具的走向",
+        "Workflow 無狀態；agent 有狀態",
+        "Workflow 跑在 CPU 上；agent 需要 GPU",
+        "Workflow 用嵌入；agent 用工具"
+      ],
+      "correct": 0,
+      "explanation": "Workflow 是工程師擁有的預先定義程式路徑；agent 則是由模型擁有那張圖。"
+    },
+    {
+      "stage": "pre",
+      "question": "支撐這五種模式的 augmented LLM 具備哪三項能力？",
+      "options": [
+        "搜尋（檢索）、工具（動作）、記憶（持久化）",
+        "向量、KV、圖",
+        "規劃、執行、反思",
+        "嵌入、微調、RAG"
+      ],
+      "correct": 0,
+      "explanation": "最小單位就是一個接上檢索、工具與記憶的 LLM。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不是 Anthropic 五種 workflow 模式之一？",
+      "options": [
+        "Evaluator-optimizer",
+        "梯度蒸餾",
+        "Prompt chaining",
+        "Routing"
+      ],
+      "correct": 1,
+      "explanation": "五種模式是 prompt chaining、routing、parallelization、orchestrator-workers 與 evaluator-optimizer。梯度蒸餾是訓練領域的概念。"
+    },
+    {
+      "stage": "check",
+      "question": "Parallelization 有哪兩種形態？",
+      "options": [
+        "同步與非同步",
+        "有狀態與無狀態",
+        "熱與冷",
+        "Sectioning（切成不同分塊）與 voting（同一提示詞跑 N 次後彙整）"
+      ],
+      "correct": 3,
+      "explanation": "Parallelization 分為 sectioning 或 voting；兩者都會扇出 N 次呼叫再彙整結果。"
+    },
+    {
+      "stage": "check",
+      "question": "Self-Refine 是哪一種 workflow 模式的一般化？",
+      "options": [
+        "Orchestrator-workers",
+        "Evaluator-optimizer",
+        "Prompt chaining",
+        "Routing"
+      ],
+      "correct": 1,
+      "explanation": "Evaluator-optimizer 是 Anthropic 對 Self-Refine／CRITIC 這類迭代模式的稱呼。"
+    },
+    {
+      "stage": "post",
+      "question": "依課程所述，workflow 在什麼情況下勝過 agent？",
+      "options": [
+        "永遠都勝過",
+        "只有在 GPU 上",
+        "在可預測、成本受限或合規受限，且整張圖可以列舉與稽核的任務上",
+        "只有在聊天場景"
+      ],
+      "correct": 2,
+      "explanation": "Workflow 更便宜、更好除錯，也可稽核；當步驟是已知的就該選它。"
+    },
+    {
+      "stage": "post",
+      "question": "課程建議的預設起點是什麼？",
+      "options": [
+        "一套多代理程式框架",
+        "先微調模型",
+        "自己寫一套 MCTS",
+        "直接呼叫 API；只有當持久狀態、actor 並行或角色樣板化值得那份成本時才加框架"
+      ],
+      "correct": 3,
+      "explanation": "Schluntz 與 Zhang 的建議：從簡單開始，只有在有正當理由時才增加框架複雜度。"
+    }
+  ]
+}

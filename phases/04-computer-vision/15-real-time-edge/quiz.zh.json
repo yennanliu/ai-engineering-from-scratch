@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "你為模型做基準測試，回報「在 4090 上平均每張影像 12ms」。少了什麼？",
+      "options": [
+        "資料集名稱",
+        "模型大小",
+        "什麼都不缺；這已經是完整的基準測試",
+        "百分位數（p50/p95/p99）、warmup 紀律，以及 CUDA 同步；只給平均值會藏起長尾延遲，而且可能量到的是 kernel 派送而非 kernel 執行"
+      ],
+      "correct": 3,
+      "explanation": "生產環境的延遲以百分位數衡量，因為即時系統是敗在長尾而不是平均值。沒有 warmup，JIT 編譯會讓最初幾次測量虛高。沒有 torch.cuda.synchronize，GPU kernel 啟動會在 kernel 完成前就返回，於是你量到的是派送而不是執行。這三件事都要做對，數字才有意義。"
+    },
+    {
+      "stage": "pre",
+      "question": "FLOPs 與裝置上的延遲並非完全相關。為什麼？",
+      "options": [
+        "不同運算對硬體的親和度不同；depthwise 卷積的 FLOPs 可能較低，但在 GPU 上受記憶體頻寬限制，而密集卷積能有效使用 Tensor Core。記憶體頻寬、kernel 啟動額外開銷與快取行為也會在原始 FLOPs 之外左右延遲",
+        "FLOPs 計數器壞了",
+        "FLOPs 忽略批次大小",
+        "PyTorch 的 FLOPs 算錯了"
+      ],
+      "correct": 0,
+      "explanation": "FLOPs 只是廉價的代理指標。實際的牆鐘延遲取決於運算與硬體強項的契合程度：密集矩陣乘法能吃滿 Tensor Core；depthwise 卷積卡在記憶體頻寬；注意力卡在與序列長度平方成正比的記憶體讀取。做架構搜尋時 FLOPs 有用；做部署決策時要在目標裝置上實測。"
+    },
+    {
+      "stage": "post",
+      "question": "訓練後靜態 INT8 量化在 ImageNet 等級的視覺模型上通常會損失多少準確率？",
+      "options": [
+        "永遠是 0；它是無損的",
+        "20 個百分點以上；無法使用",
+        "5-10 個百分點",
+        "校準得當時是 0.1-1 個百分點；融合了 batch norm 的卷積模型在 INT8 下特別穩定"
+      ],
+      "correct": 3,
+      "explanation": "對校準良好的視覺模型做靜態 PTQ，損失介於不到一個百分點到約 1 個百分點之間。更大的損失來源是（a）校準資料不足、（b）量化帶有極端離群值的啟動值（用 per-channel 量化或裁切修正）、（c）未融合的 BatchNorm 層。處理好這些之後，INT8 幾乎是免費的。"
+    },
+    {
+      "stage": "post",
+      "question": "你的行動裝置 App 需要一個小於 10MB、延遲低於 10ms 的視覺模型。你選哪個骨幹網路？",
+      "options": [
+        "ResNet-50",
+        "ConvNeXt-Large",
+        "ViT-Base",
+        "量化到 INT8 的 MobileNetV3-Small 或 EfficientNet-Lite-B0；兩者都針對這個預算設計，而且能乾淨地編譯到 TFLite / Core ML"
+      ],
+      "correct": 3,
+      "explanation": "2026 年出貨的行動視覺模型仍以 MobileNetV3 與 EfficientNet-Lite 系列為主，因為它們就是為這個預算設計的：depthwise 卷積、h-swish、squeeze-excite，從第一天就考慮量化。ResNet-50 與 ViT-Base 在 FP32 下超過 100MB、INT8 下超過 25MB，還沒量延遲就先爆掉大小預算。"
+    },
+    {
+      "stage": "post",
+      "question": "你把 PyTorch 模型以 opset 17 匯出成 ONNX，結果失敗並顯示「Unsupported operator」。最可能的原因是什麼？",
+      "options": [
+        "模型參數太多",
+        "輸入形狀錯了",
+        "ONNX 函式庫太舊",
+        "（1）沒有 ONNX 對應的自訂 op；（2）追蹤無法捕捉的非決定性控制流路徑；（3）在 Python 中隱含、但在 ONNX 沒有對等寫法的張量與純量互動。修法：換掉該 op、對控制流使用 `torch.jit.script`，或升級 opset"
+      ],
+      "correct": 3,
+      "explanation": "ONNX 匯出預設是用追蹤（tracing），所以任何追蹤捕捉不到的東西 — 執行期控制流、Python 層的分支、自訂 CUDA op — 都會失敗。多數失敗是單一節點沒有 ONNX 對應（通常是某個小的自訂 op，或是呼叫 torch.special.*）。解法不外乎換掉該 op、改用 `torch.jit.script`，或換到有這個 op 的較新 opset。"
+    }
+  ]
+}

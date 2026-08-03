@@ -1,0 +1,66 @@
+{
+  "lesson": "15-prompt-caching",
+  "title": "Prompt Caching and Context Caching",
+  "questions": [
+    {
+      "stage": "post",
+      "question": "相對於基礎輸入費率，Anthropic 對快取讀取給予多少折扣？",
+      "options": [
+        "折抵 25%",
+        "折抵 90%",
+        "折抵 75%",
+        "折抵 50%"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼動態時間戳必須放在快取斷點之下，而不是之上？",
+      "options": [
+        "Anthropic 明文禁止在快取區塊中放時間戳",
+        "時間戳會混淆分詞器",
+        "它們比靜態文字花更多 token",
+        "快取只在前綴逐位元組相同時才命中；會變動的時間戳會讓它之後的一切都對不上"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "OpenAI 的 prompt caching 是如何設定的？",
+      "options": [
+        "一個以專案為單位切換的系統層級旗標",
+        "自動前綴比對，無須任何設定",
+        "一個由你建立並引用的 CachedContent API",
+        "明確的 cache_control 標記"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "以 Anthropic 而言，1 小時的延長 TTL 相對於 5 分鐘的預設值，寫入溢價是多少？",
+      "options": [
+        "寫入溢價的 4 倍",
+        "寫入溢價的 2 倍（比基準高 50%）",
+        "沒有寫入溢價",
+        "相同"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "要打平 Anthropic 25% 的寫入溢價，需要重複使用幾次？",
+      "options": [
+        "5",
+        "10",
+        "1",
+        "2"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

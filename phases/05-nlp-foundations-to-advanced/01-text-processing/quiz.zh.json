@@ -1,0 +1,102 @@
+{
+  "lesson": "01-text-processing",
+  "title": "Text Processing — Tokenization, Stemming, Lemmatization",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼語言模型在訓練前需要前處理？",
+      "options": [
+        "模型直接讀取字串",
+        "前處理能提升 GPU 使用率",
+        "模型吃的是離散的整數 token，不是原始文字",
+        "只有在沒有空白分隔的語言才需要前處理"
+      ],
+      "correct": 2,
+      "explanation": "模型運算的對象是整數 token ID；前處理搭起了從連續語言到離散輸入的橋樑。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪一個前處理操作屬於規則式的字尾剝除？",
+      "options": [
+        "POS tagging",
+        "詞幹提取（stemming）",
+        "詞形還原（lemmatization）",
+        "斷詞（tokenization）"
+      ],
+      "correct": 1,
+      "explanation": "詞幹提取用規則砍掉字尾；速度快，但可能出錯。"
+    },
+    {
+      "stage": "check",
+      "question": "Porter stemmer 的 step 1a 對 'ponies' 這個字會回傳什麼？",
+      "options": [
+        "poni",
+        "ponies",
+        "pony",
+        "ponie"
+      ],
+      "correct": 0,
+      "explanation": "'ies' 規則會把字尾換成 'i'，得到 'poni'；真正的 Porter 演算法在 step 1b 會再收拾一次。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼詞形還原通常需要 POS 標記？",
+      "options": [
+        "為了處理 Unicode",
+        "文法脈絡能消解像 'better'（形容詞）與 'better'（動詞）這種歧義",
+        "為了降低記憶體用量",
+        "為了速度"
+      ],
+      "correct": 1,
+      "explanation": "詞元取決於文法角色；沒有標記，查表就有歧義。"
+    },
+    {
+      "stage": "check",
+      "question": "把 NLTK 的 Penn Treebank POS 標記轉成 WordNet 標記時，以 'V' 開頭的標記會對應到什麼？",
+      "options": [
+        "'r'（副詞）",
+        "'a'（形容詞）",
+        "'v'（動詞）",
+        "'n'（名詞）"
+      ],
+      "correct": 2,
+      "explanation": "以 V 開頭的 Penn Treebank 標記對應到 WordNet 的 'v'。"
+    },
+    {
+      "stage": "post",
+      "question": "NLP 前處理中的「訓練/推論不一致」是什麼？",
+      "options": [
+        "一種 GPU 記憶體問題",
+        "訓練與線上服務套用了不同的前處理，導致模型在推論時看到陌生的分布",
+        "在同一個 notebook 裡混用多套分詞器函式庫",
+        "訓練與測試用了不同的批次大小"
+      ],
+      "correct": 1,
+      "explanation": "訓練與推論的前處理不同，是生產環境 NLP 最常見的失敗原因。"
+    },
+    {
+      "stage": "post",
+      "question": "在 transformer 流程中，你會改用哪個工具來取代傳統前處理？",
+      "options": [
+        "NLTK 的 word_tokenize",
+        "模型自己的分詞器（例如透過 tokenizers / transformers）",
+        "spaCy 的 en_core_web_sm",
+        "以正規表示式寫的分詞器"
+      ],
+      "correct": 1,
+      "explanation": "Transformer 模型都附帶配套的分詞器；傳統前處理會被略過。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼要在 requirements 中固定 NLTK 與 spaCy 的版本？",
+      "options": [
+        "新版本比較慢",
+        "舊版本支援更多語言",
+        "分詞器與詞形還原器的行為在次版本之間會改變，悄悄改掉訓練分布",
+        "授權相容性"
+      ],
+      "correct": 2,
+      "explanation": "函式庫升級可能改變斷詞輸出，讓它偏離訓練分布。"
+    }
+  ]
+}

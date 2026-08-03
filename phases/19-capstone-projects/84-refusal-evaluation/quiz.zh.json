@@ -1,0 +1,78 @@
+{
+  "lesson": "84-refusal-evaluation",
+  "title": "Capstone 84 — Refusal Evaluation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "拒答不足（under-refusal）量的是什麼？",
+      "options": [
+        "模型多常拒絕標為安全的提示詞",
+        "每則提示詞的 API 呼叫成本",
+        "模型多常回答標為不安全的提示詞",
+        "模型每則回覆吐出多少 token"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "這一課為什麼用假的 LLM，而不是真的模型？",
+      "options": [
+        "因為總整專案不准用真實模型",
+        "因為假的 LLM 比真的更準確",
+        "這樣同樣的輸入在每次執行都得到同樣的輸出，程式碼改動造成的差異才歸因得清楚",
+        "因為這一課需要 GPU 硬體"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "安全提示詞共 30 則、其中被拒絕的有 5 則，過度拒答率是多少？",
+      "options": [
+        "0.30",
+        "0.17",
+        "0.50",
+        "0.05"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在這裡，預期校準誤差（ECE）量的是什麼？",
+      "options": [
+        "對不安全提示詞的拒答比例",
+        "模型自稱的信心與實際觀察到的準確率之間的落差，並依信心區間分箱統計",
+        "所有回覆的 token 總數",
+        "被觸發的正規表達式規則數量"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這個框架為什麼要把不安全提示詞跟第 82 課的分類法對接起來？",
+      "options": [
+        "為了重跑第 82 課的語料載入器",
+        "為了把每則提示詞的嚴重度都加一",
+        "為了逐攻擊分類回報拒答不足的情形，讓團隊看見模型是在哪條邊界上漏水",
+        "為了去除重複"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "這個框架為什麼回傳拒答不足與過度拒答兩個數字，而不是單一的安全分數？",
+      "options": [
+        "因為拒答不足只用在 CI 裡",
+        "因為這是兩種相反的錯誤，單一數字會把某次建置中比較嚴重的那一種藏起來",
+        "因為過度拒答是另一個團隊算的",
+        "因為 Python 的 dataclass 偏好多個欄位"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

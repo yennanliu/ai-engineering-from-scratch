@@ -1,0 +1,90 @@
+{
+  "lesson": "26-failure-modes-agentic",
+  "title": "Failure Modes: Why Agents Break",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "MASFT 的核心主張是什麼？",
+      "options": [
+        "失敗只是隨機雜訊",
+        "失敗來自網路中斷",
+        "失敗會隨著模型變大而消失",
+        "多代理程式的失敗是根本的設計缺陷，不是換更好的基礎模型就能修掉的 LLM 侷限"
+      ],
+      "correct": 3,
+      "explanation": "柏克萊的 MASFT 把失敗歸類為設計缺陷；把基礎模型放大並不會讓它們消失。"
+    },
+    {
+      "stage": "pre",
+      "question": "下列何者不屬於本課列出的五種業界反覆出現的失敗模式？",
+      "options": [
+        "幻覺化的行動",
+        "連鎖錯誤",
+        "範圍蔓延",
+        "嵌入版本管理"
+      ],
+      "correct": 3,
+      "explanation": "五種是幻覺化的行動、範圍蔓延、連鎖錯誤、上下文遺失、工具誤用。"
+    },
+    {
+      "stage": "check",
+      "question": "本課所謂的連鎖錯誤是什麼？",
+      "options": [
+        "YAML 解析錯誤",
+        "一次錯誤的呼叫在跨系統之間觸發下游效應（一個不存在的 SKU 觸發四個下游 API 呼叫）",
+        "cron 執行失敗",
+        "LLM 速率限制的連鎖"
+      ],
+      "correct": 1,
+      "explanation": "連鎖會把單一次錯誤呼叫放大成跨多個系統的事故；當代理程式偽裝成功時尤其嚴重。"
+    },
+    {
+      "stage": "check",
+      "question": "LLM Agent Hallucinations Survey 列出哪兩種表現形式？",
+      "options": [
+        "熱 token 與冷 token",
+        "指令遵循偏離（Instruction-following Deviation）與長距離上下文誤用（Long-range Contextual Misuse）",
+        "貪婪搜尋與 beam search",
+        "軟提示詞與硬提示詞"
+      ],
+      "correct": 1,
+      "explanation": "幻覺會表現為忽略系統提示詞，或是遺忘、誤用先前輪次的上下文。"
+    },
+    {
+      "stage": "check",
+      "question": "成功幻覺（success hallucination）是什麼意思？",
+      "options": [
+        "一個單元測試通過了",
+        "目標狀態根本沒有改變，代理程式卻回傳成功訊息（常發生在工具回應 400 時）",
+        "使用者以為成功了，其實並沒有",
+        "模型在基準測試上過度自信"
+      ],
+      "correct": 1,
+      "explanation": "要重新探測環境狀態；當代理程式分不清「我失敗了」與「這件事做不到」時，經常會偽裝完成。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼只標記當機是不夠的？",
+      "options": [
+        "日誌要付費",
+        "多數代理程式失敗會產生看起來合理且不會當機的輸出；必須做內容層級的檢查",
+        "當機會外洩 PII",
+        "當機很慢"
+      ],
+      "correct": 1,
+      "explanation": "以當機為基礎的監控會漏掉絕大多數代理程式失敗，因為那些失敗是內容形狀的。"
+    },
+    {
+      "stage": "post",
+      "question": "本課建議在推理鏈的每一步採取什麼緩解措施？",
+      "options": [
+        "加上 sleep()",
+        "停用重試",
+        "自動化的驗證關卡，對照環境狀態檢查事實依據",
+        "只調低 temperature"
+      ],
+      "correct": 2,
+      "explanation": "逐步關卡（安全分類器、參數驗證、CRITIC、狀態重新探測）能在失敗連鎖之前攔下它們。"
+    }
+  ]
+}

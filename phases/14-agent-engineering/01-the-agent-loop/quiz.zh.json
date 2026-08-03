@@ -1,0 +1,90 @@
+{
+  "lesson": "01-the-agent-loop",
+  "title": "The Agent Loop: Observe, Think, Act",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼單獨一個 LLM 的行為比較像自動補全，而不像代理程式？",
+      "options": [
+        "它無法讀取檔案、執行查詢，也無法對照外部世界驗證說法",
+        "它的上下文視窗小到裝不下一個問題",
+        "它一次只能產出一個 token",
+        "沒有系統提示詞它就拒絕回答"
+      ],
+      "correct": 0,
+      "explanation": "沒有迴圈也沒有 tools 的 LLM 只能從權重產出文字；它無法觀察狀態，也無法據此行動。"
+    },
+    {
+      "stage": "pre",
+      "question": "Yao 等人 2022 年論文中的標準 ReAct 軌跡包含哪三個標籤？",
+      "options": [
+        "Prompt、Response、Reward",
+        "Plan、Execute、Reflect",
+        "Thought、Action、Observation",
+        "System、User、Assistant"
+      ],
+      "correct": 2,
+      "explanation": "ReAct 在同一道輸出串流中交錯排列 Thought、Action、Observation 三種行。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一項「不是」本課列出的代理程式迴圈五項要素之一？",
+      "options": [
+        "Tool registry",
+        "訊息緩衝區",
+        "觀察結果格式化器",
+        "梯度最佳化器"
+      ],
+      "correct": 3,
+      "explanation": "五項要素是訊息緩衝區、tool registry、停止條件、輪次預算，以及觀察結果格式化器。梯度最佳化器屬於訓練，不屬於推論迴圈。"
+    },
+    {
+      "stage": "check",
+      "question": "輪次預算在迴圈中扮演什麼角色？",
+      "options": [
+        "它控制 registry 對外暴露多少 tools",
+        "它對 LLM 供應商做速率限制",
+        "它為迴圈迭代次數設下硬性上限，避免代理程式失控",
+        "它限制每則回應的 token 數"
+      ],
+      "correct": 2,
+      "explanation": "輪次預算是迴圈迭代次數的上限；2026 年的代理程式常跑 40 到 400 步，需要一個與任務相稱的上限。"
+    },
+    {
+      "stage": "check",
+      "question": "相對於以提示詞產生 Thought token 的做法，2025 至 2026 年的原生推理轉向改變了什麼？",
+      "options": [
+        "Thought token 現在改由一條獨立的推理通道送出，並在各輪之間傳遞",
+        "模型不再使用 tool 呼叫，只倚賴思維鏈",
+        "觀察結果被完全從提示詞中移除",
+        "迴圈式控制流程被 DAG 取代"
+      ],
+      "correct": 0,
+      "explanation": "推理內容移到專屬通道（在多家供應商那裡通常是加密的），但「觀察—思考—行動」的控制流程並未改變。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼本課說 tool 的輸出是不可信的輸入？",
+      "options": [
+        "Tool 執行環境又慢又不可靠",
+        "檢索到的內容可能夾帶「刪掉這個儲存庫」之類的隱藏指令，而只有使用者的直接輸入才算授權",
+        "Tool 結果一定比模型的上下文視窗還大",
+        "供應商預設會剝除 tool 輸出的位元組"
+      ],
+      "correct": 1,
+      "explanation": "OpenAI CUA 文件明確指出只有使用者的直接指示才算授權；tool 輸出可能夾帶對抗性指令，必須視為不可信。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼本課主張 2026 年的每個框架骨子裡跑的仍是 ReAct？",
+      "options": [
+        "因為 LangGraph 強迫所有其他框架都要繼承它",
+        "因為供應商規定提示詞中必須出現 ReAct 關鍵字",
+        "因為 Yao 等人握有這個迴圈的專利",
+        "因為「觀察—思考—行動」的控制流程是不變量；框架的差異在於外圍的檢查點、actor、角色範本與追蹤機制"
+      ],
+      "correct": 3,
+      "explanation": "Claude Agent SDK、OpenAI Agents SDK、LangGraph、AutoGen、CrewAI、Agno 與 Mastra 之間的差別在於包在迴圈外面的東西，而不是迴圈本身。"
+    }
+  ]
+}

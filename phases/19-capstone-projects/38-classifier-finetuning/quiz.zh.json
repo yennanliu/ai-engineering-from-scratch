@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/38-classifier-finetuning",
+  "title": "Classifier Fine-Tuning by Head Swap",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "閱讀前：某個預訓練語言模型的主體有 5M 個參數，輸出 head 投影到 30K 的詞彙表。你想要一個二分類器。哪一個是最站得住腳的第一步？",
+      "options": [
+        "凍結 head，只訓練主體。",
+        "丟掉主體，用這 800 筆標註資料從零訓練一個新的 transformer。",
+        "保留原本的 head，但把除了兩個以外的輸出 logit 全部遮蔽。",
+        "只把 head 換成 2 類的線性層，之後再決定要不要訓練主體。"
+      ],
+      "correct": 3,
+      "explanation": "主體是昂貴的部分，而且編碼了預訓練得到的有用結構。先換掉 head。要不要凍結主體是另一個決定，取決於資料量與領域偏移。"
+    },
+    {
+      "stage": "check",
+      "question": "這一課為什麼採用以 attention mask 加權的平均池化，而不是沿著序列軸直接取平均？",
+      "options": [
+        "直接取平均會忽略批次維度。",
+        "依照慣例，平均池化即使沒有 padding 也必須遮蔽。",
+        "對 transformer 而言直接取平均在數學上無定義。",
+        "padding 位置會貢獻無關的隱藏狀態，把池化後的向量拉向零。"
+      ],
+      "correct": 3,
+      "explanation": "padding token 不帶訊號，但主體仍然會為它們產生隱藏狀態。沒有遮蔽時，padding 位置會汙染池化後的表示，在批次補齊到最長樣本、序列又短的情況下尤其明顯。"
+    },
+    {
+      "stage": "check",
+      "question": "在 `train_classifier` 中，最佳化器是用 `[p for p in model.parameters() if p.requires_grad]` 建構的。這個寫法確保了什麼？",
+      "options": [
+        "Adam 的建構子要求這樣寫。",
+        "它告訴 PyTorch 仍要對凍結的參數做 autograd。",
+        "主體凍結時，它會無聲地忽略 head。",
+        "它只用可訓練的子集組成參數群組，所以只訓練 head 與完整微調兩種情況共用同一條程式碼路徑。"
+      ],
+      "correct": 3,
+      "explanation": "最佳化器只更新參數清單裡的參數。用 `requires_grad` 過濾後，同一個訓練函式就能服務兩種模式；切換的開關是那次凍結呼叫，不是訓練迴圈。"
+    },
+    {
+      "stage": "check",
+      "question": "垃圾郵件類別的精確率是 0.9、召回率是 0.6。F1 是多少？",
+      "options": [
+        "0.30",
+        "0.50",
+        "0.75",
+        "0.72"
+      ],
+      "correct": 3,
+      "explanation": "F1 是精確率與召回率的調和平均：2 * 0.9 * 0.6 / (0.9 + 0.6) = 1.08 / 1.5 = 0.72。"
+    },
+    {
+      "stage": "post",
+      "question": "你用與只訓練 head 相同的學習率改做完整微調，F1 從 0.90 崩到 0.55。最可能的原因是什麼？",
+      "options": [
+        "PyTorch 在完整微調時會無聲地停用梯度。",
+        "主體參數需要比 head 更小的學習率。",
+        "交叉熵損失對二分類問題無定義。",
+        "Adam 與分類目標不相容。"
+      ],
+      "correct": 1,
+      "explanation": "預訓練主體通常需要比全新 head 更小的學習率。常見做法是兩個參數群組：head 用高學習率，主體用較小的學習率。兩者共用同一個學習率會摧毀預訓練訊號。"
+    },
+    {
+      "stage": "post",
+      "question": "團隊想部署這個分類器，並問你要怎麼記錄生產用檢查點是由哪一種模式訓練出來的。哪一項產物能可重現地回答這個問題？",
+      "options": [
+        "最終的損失值，因為只訓練 head 的損失一定比完整微調高。",
+        "`TrainReport` 裡的 `trainable` 計數，它在兩種模式間相差好幾個數量級。",
+        "混淆矩陣，它能唯一辨識出訓練模式。",
+        "精確率、召回率、F1 三元組。"
+      ],
+      "correct": 1,
+      "explanation": "`trainable` 記錄的是訓練期間收到梯度的參數數量。只訓練 head 大約是 `hidden * num_classes` 的量級；完整微調則是整個模型。這個數字就是稽核軌跡。"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "lesson": "27-prompt-injection-defense",
+  "title": "Prompt Injection and the PVE Defense",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "什麼是間接提示詞注入？",
+      "options": [
+        "模型誤點",
+        "使用者直接輸入「忽略所有規則」",
+        "藏在代理程式檢索到的資料中的指令（網頁、PDF、電子郵件、記憶筆記），在攝入當下覆寫掉開發者的提示詞",
+        "系統提示詞裡的錯字"
+      ],
+      "correct": 2,
+      "explanation": "Greshake 等人提出間接提示詞注入這個名詞：攻擊者可控的檢索內容夾帶了指令。"
+    },
+    {
+      "stage": "pre",
+      "question": "本課說處理檢索到的提示詞等同於什麼？",
+      "options": [
+        "一次靜態分析",
+        "在代理程式的工具使用面上執行任意程式碼",
+        "言論自由",
+        "一次純函式呼叫"
+      ],
+      "correct": 1,
+      "explanation": "Greshake 的說法：檢索來的指令可以觸及代理程式有權存取的任何工具。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不屬於那五種已被實證的攻擊類別？",
+      "options": [
+        "持久性記憶投毒",
+        "快取失效",
+        "資料竊取",
+        "蠕蟲式擴散"
+      ],
+      "correct": 1,
+      "explanation": "五種是資料竊取、蠕蟲式擴散、持久性記憶投毒、生態系汙染、任意工具使用。"
+    },
+    {
+      "stage": "check",
+      "question": "PVE 代表什麼？",
+      "options": [
+        "Pre-Vectorize-Embed",
+        "Prompt-Validator-Executor：在昂貴的主模型提交之前，先由一個便宜快速的驗證器檢查每一次工具呼叫",
+        "Provider-Verifier-Encoder",
+        "Plan-Verify-Execute，一種 HTN 方言"
+      ],
+      "correct": 1,
+      "explanation": "PVE 在主模型提交之前，用便宜的驗證器包住每一次工具呼叫。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼「系統提示詞寫著忽略不受信任的指令」並不足夠？",
+      "options": [
+        "它太短了",
+        "那是指令遵循而不是強制執行；只要注入的內容夠有說服力，模型仍可能被覆寫",
+        "供應商會把它移除",
+        "它是加密的"
+      ],
+      "correct": 1,
+      "explanation": "真正的防禦需要來源標記、允許清單、逐步安全檢查以及 PVE 式的驗證，而不只是靠提示詞。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼是對檢索記憶的過度信任？",
+      "options": [
+        "載入了錯誤的模型",
+        "昨天的代理程式寫下一則被投毒的記憶筆記；今天的代理程式讀到它，於是再次執行了那個注入",
+        "忘記整理索引",
+        "快取太積極"
+      ],
+      "correct": 1,
+      "explanation": "持久性記憶投毒的意思是：只要記憶被當成可信來源，注入就會跨 session 存活下來。"
+    },
+    {
+      "stage": "post",
+      "question": "本課建議為每一份內容附上什麼中繼資料？",
+      "options": [
+        "token 數",
+        "只要時間戳記",
+        "一把加密金鑰",
+        "來源標記：user_message、tool_output 或 retrieved；驗證器會拒絕檢索內容中的指令"
+      ],
+      "correct": 3,
+      "explanation": "來源標記讓驗證器能依照內容的信任等級來對待它。"
+    }
+  ]
+}

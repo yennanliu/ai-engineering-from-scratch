@@ -1,0 +1,78 @@
+{
+  "lesson": "15-batch-apis",
+  "title": "Batch APIs — the 50% Discount as Industry Standard",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "2026 年 OpenAI、Anthropic 與 Google 的批次 API 共通提供的是什麼？",
+      "options": [
+        "九折折扣，7 天完成",
+        "五折折扣，24 小時完成",
+        "九折折扣，1 小時完成",
+        "低於 1k token 免費"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在本課的框架下，「24 小時完成」實際上保證了什麼？",
+      "options": [
+        "24h 是快取的 TTL",
+        "供應商承諾在 24 小時內回覆，典型 P50 約落在 2-6 小時",
+        "批次一定要跑滿 24 小時",
+        "只有低於 1k 個請求的批次才符合資格"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在共用系統提示詞的工作負載上，把批次與快取輸入疊加後，相對於同步未快取會如何改變帳單？",
+      "options": [
+        "只有模型跑在 Vertex 上才有幫助",
+        "可以降到同步未快取基準的大約 10%",
+        "成本會增加 50%",
+        "沒有影響，因為快取本來就是自動的"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2026 年在內容管線與離線標註上，哪一條工作負載分流路線是錯誤的預設？",
+      "options": [
+        "批次與快取的混合作法",
+        "互動式，因為聽起來很急",
+        "批次，因為使用者感覺不到 24 小時的延遲",
+        "搭配非同步佇列的半互動式"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "跨供應商的輸出 schema 陷阱是什麼？",
+      "options": [
+        "所有供應商都使用相同的 OpenAI JSONL 格式",
+        "各家的批次檔案格式不同（OpenAI JSONL、Anthropic JSONL、Vertex BigQuery／GCS），所以可攜的客戶端需要為每家寫轉接層",
+        "Vertex 只接受 Parquet",
+        "Anthropic 不支援 JSONL"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "依本課所述，把工作負載分流到批次最簡單的判斷準則是什麼？",
+      "options": [
+        "提示詞低於 1k token 就走批次",
+        "如果使用者不會察覺 24 小時後才交付，就一律走批次（並疊上快取）",
+        "只有在 gateway 要求時才走批次",
+        "有用到工具就走批次"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

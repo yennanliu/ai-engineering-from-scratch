@@ -1,0 +1,90 @@
+{
+  "lesson": "28-orchestration-patterns",
+  "title": "Orchestration Patterns: Supervisor, Swarm, Hierarchical",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課列出哪四種編排模式？",
+      "options": [
+        "推送、拉取、批次、串流",
+        "supervisor-worker、swarm（點對點）、階層式、辯論",
+        "循序、平行、分散式、聯邦式",
+        "規劃、行動、反思、修正"
+      ],
+      "correct": 1,
+      "explanation": "supervisor-worker、swarm、階層式與辯論，在 2026 年的各家框架中反覆出現。"
+    },
+    {
+      "stage": "pre",
+      "question": "關於監督機制，LangChain 在 2026 年的建議是什麼？",
+      "options": [
+        "一律使用 create_supervisor",
+        "完全避免使用監督機制",
+        "優先採用直接的工具呼叫而非 create_supervisor，以取得更細緻的上下文工程控制權",
+        "把 supervisor 跑在 GPU 上"
+      ],
+      "correct": 2,
+      "explanation": "以工具呼叫為基礎的監督，能讓你精準控制每個專員看到什麼。"
+    },
+    {
+      "stage": "check",
+      "question": "swarm 與 supervisor-worker 拓撲的差別在哪裡？",
+      "options": [
+        "swarm 只在 cron 上執行",
+        "swarm 沒有中央路由器；代理程式透過共享的工具介面直接交接",
+        "swarm 需要 GPU",
+        "swarm 是單一代理程式"
+      ],
+      "correct": 1,
+      "explanation": "swarm 是點對點；supervisor 則把路由集中在單一個 LLM 身上。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼時候採用階層式編排才有正當理由？",
+      "options": [
+        "永遠不要；它是反模式",
+        "只有在有 GPU 的時候",
+        "當單一 supervisor 的上下文預算裝不下所有專員的描述時",
+        "一律採用；它可以免費擴展"
+      ],
+      "correct": 2,
+      "explanation": "巢狀 supervisor 是為了應付超出單一 supervisor 預算的大量專員。"
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 支持的建議決策順序是什麼？",
+      "options": [
+        "先從單一代理程式加上工作流程模式開始；有需要才加入拓撲；supervisor 先於 swarm，swarm 先於階層式；當準確率比成本重要時才用辯論",
+        "從辯論開始",
+        "一律從階層式多代理程式開始",
+        "從 swarm 開始，再往單一代理程式收斂"
+      ],
+      "correct": 0,
+      "explanation": "Anthropic 的指引是打造符合你需求的系統，而不是最精巧的系統。"
+    },
+    {
+      "stage": "post",
+      "question": "本課所說的假階層是什麼？",
+      "options": [
+        "實際上只有兩個團隊，卻因為「企業級」而疊出三層 supervisor；應該把它壓平",
+        "用 TypeScript 寫的 orchestrator",
+        "標錯的 YAML",
+        "一個測試 fixture"
+      ],
+      "correct": 0,
+      "explanation": "不對應到真實團隊的層級只會增加維運複雜度，卻沒有任何回報。"
+    },
+    {
+      "stage": "post",
+      "question": "如何緩解 swarm 中來回彈跳的交接（A -> B -> A -> B）？",
+      "options": [
+        "把 temperature 固定為 0",
+        "調低速率限制",
+        "加上跳躍計數器，超過 N 次轉交就拒絕",
+        "停用 tracing"
+      ],
+      "correct": 2,
+      "explanation": "跳躍計數器能在 swarm 無限循環之前設下上限。"
+    }
+  ]
+}

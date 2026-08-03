@@ -1,0 +1,78 @@
+{
+  "lesson": "86-constitutional-rules-engine",
+  "title": "Capstone 86 — Constitutional Rules Engine",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼用宣告式的 YAML 章程，而不是零散的程式碼檢查？",
+      "options": [
+        "因為 YAML 支援錨點",
+        "因為 YAML 解析起來比 Python 快",
+        "因為寫在 YAML 裡的規則非工程師也審得動、能進版本控制，而且不必改程式碼就能替換",
+        "因為標準函式庫偏好 YAML"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "每條規則至少必須有哪些欄位？",
+      "options": [
+        "name、regex、fix",
+        "id、owner、timestamp",
+        "predicate、severity、owner",
+        "name、severity、must、explanation"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這個引擎如何組合述詞（predicate）？",
+      "options": [
+        "每條規則只能用單一個 contains_regex",
+        "把信心分數相乘",
+        "透過一個神經網路分類器",
+        "透過 all_of、any_of 與 not_，遞迴地包住原子述詞"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "applies_when 的作用是什麼？",
+      "options": [
+        "它覆寫嚴重度",
+        "它挑選要用哪個修正操作",
+        "它為 must 述詞加上前置條件，讓不適用的規則被記為 not_applicable 而不是 violation",
+        "它永遠回傳 true"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Fixer 做的是什麼？",
+      "options": [
+        "呼叫遠端模型來修補文字",
+        "套用每條規則各自的宣告式修正（append、prepend、replace_regex），產出修訂後的文字",
+        "改寫規則檔本身",
+        "從修正內容反推嚴重度"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "示範為什麼在 fixer 跑完之後，又把引擎再跑一次？",
+      "options": [
+        "因為第一輪只是試跑",
+        "為了重新載入章程",
+        "為了把報告撐大",
+        "為了驗證修訂後的文字確實符合規則，並讓 fixer 在本地修不好的規則浮出檯面"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

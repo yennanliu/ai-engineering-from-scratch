@@ -1,0 +1,78 @@
+{
+  "lesson": "13-many-shot-jailbreaking",
+  "title": "Many-Shot Jailbreaking",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "many-shot jailbreaking（MSJ）利用的是上下文視窗的哪一項特性？",
+      "options": [
+        "分詞器在 Unicode 字元上的歧義",
+        "極長的上下文視窗，容得下在目標查詢前塞進數百輪偽造的、順從有害要求的 user-assistant 對話",
+        "位置嵌入在超過 2048 個 token 後開始旋轉",
+        "滑動視窗注意力把系統提示詞截掉"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 MSJ 中，攻擊成功率（ASR）如何隨 shot 數量變化？",
+      "options": [
+        "在 100 shots 處呈階梯函式",
+        "斜率為負的線性關係",
+        "邏輯斯型，在 50% 處趨於平緩",
+        "隨 shot 數呈冪律；不會趨於平緩，會持續攀升"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 MSJ 與良性的上下文學習（ICL）共用同一套機制？",
+      "options": [
+        "兩者都繞過分詞",
+        "兩者都依賴 RLHF",
+        "兩者都需要一個隱藏的 scratchpad",
+        "兩者都仰賴模型從上下文範例中抽取任務結構，再把它套用到查詢上"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "MSJ 的核心防禦兩難是什麼？",
+      "options": [
+        "防禦必須對回應的每一個 token 執行",
+        "防禦需要 GPU 叢集",
+        "防禦必須在取樣溫度為零時施加",
+        "壓抑模型從長上下文中抽取模式的能力，也會一併廢掉良性的上下文學習；防禦必須區分有害與良性的模式"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在測試設定下，Anthropic 以分類器修改提示詞的防禦把 MSJ 攻擊成功率從多少降到多少？",
+      "options": [
+        "從 30% 降到 25%",
+        "從 99% 降到 50%",
+        "從 61% 降到 2%",
+        "它反而提高了 ASR"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "MSJ 與 PAIR（第 12 課）如何交互作用？",
+      "options": [
+        "MSJ 可與 PAIR 組合：先用 PAIR 找出攻擊結構，再用大量 shots 填滿它，可達到比單獨使用任一種更高的 ASR",
+        "PAIR 能中和 MSJ",
+        "兩者互斥",
+        "PAIR 只對閉源模型有效"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

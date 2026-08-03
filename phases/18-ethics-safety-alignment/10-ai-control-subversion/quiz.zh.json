@@ -1,0 +1,78 @@
+{
+  "lesson": "10-ai-control-subversion",
+  "title": "AI Control - Safety Despite Subversion",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "下列何者最能說明對齊（alignment）與 AI 控制（control）的差別？",
+      "options": [
+        "兩者是同義詞",
+        "控制談的是硬體，對齊談的是軟體",
+        "對齊問的是 U 是否值得信任；控制問的是在不信任 U 的前提下能否安全地使用它",
+        "控制替換損失函式，對齊則更換最佳化器"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "AI 控制的威脅模型假設了什麼？",
+      "options": [
+        "U 是不受信任的強模型，T 是受信任的弱模型，H 是額度有限、受信任的人力",
+        "只有 U 存在",
+        "U 與 T 都是對抗性的",
+        "U、T、H 這三種資源全都受信任"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Untrusted Monitoring 中有哪個關鍵風險是 Trusted Editing 可以避開的？",
+      "options": [
+        "T 無法編輯文字",
+        "硬體資源競爭",
+        "U 的兩個實例可能串通或共享先驗，因此協定必須把預算花在抗串通上",
+        "人類無法被稽核"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Greenblatt 等人（ICML 2024）的程式碼後門任務上，Trusted Editing 相對於 Untrusted Monitoring 達成了什麼？",
+      "options": [
+        "它只在人力預算為零時勝出",
+        "兩者完全等價",
+        "它嚴格較差",
+        "它嚴格 Pareto 優勢：在每一個安全水準上都有更高的可用性"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "下列何者「不是」本課列出的控制三大根本極限之一？",
+      "options": [
+        "控制會順帶產生對齊的模型",
+        "受信任的弱模型終究會落後 U",
+        "若 U 能操縱 T 或推理出 H 的稽核分佈，控制在更高能力水準上可能失效",
+        "人力無法規模化"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Control Safety Case 主張的是什麼？",
+      "options": [
+        "U 值得信任",
+        "T 的能力強於 U",
+        "在對 U 做最壞情況假設下，部署協定能為不可接受結果的發生機率設下上界",
+        "模型通過了一次人工越獄測試"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

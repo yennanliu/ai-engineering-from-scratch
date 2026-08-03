@@ -1,0 +1,102 @@
+{
+  "lesson": "15-topic-modeling",
+  "title": "Topic Modeling — LDA and BERTopic",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "LDA 對每一篇文件做了什麼假設？",
+      "options": [
+        "每篇文件恰好屬於一個主題",
+        "文件就是句子",
+        "每篇文件是多個主題的混合；每個主題則是詞彙上的一個機率分布",
+        "文件與主題彼此獨立"
+      ],
+      "correct": 2,
+      "explanation": "LDA 的生成故事是混合成員式的：每篇文件有一個主題分布，每個主題有一個詞分布。"
+    },
+    {
+      "stage": "pre",
+      "question": "BERTopic 用什麼方式形成主題群集？",
+      "options": [
+        "先跑 BM25，再做 k-means",
+        "用 sentence transformer 編碼文件，以 UMAP 降維，再用 HDBSCAN 分群",
+        "端到端訓練一個 LSTM",
+        "直接在詞彙表上做 softmax"
+      ],
+      "correct": 1,
+      "explanation": "BERTopic = 嵌入 + UMAP + HDBSCAN，再用 class-based TF-IDF 取出主題詞。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 scikit-learn 的 LDA 需要原始計數（CountVectorizer）而不是 TF-IDF？",
+      "options": [
+        "LDA 無法處理浮點數",
+        "LDA 的機率模型定義在整數詞頻計數上；TF-IDF 會扭曲底層的分布",
+        "記憶體限制",
+        "TF-IDF 太慢"
+      ],
+      "correct": 1,
+      "explanation": "LDA 的概似函式假設輸入是計數；餵入 TF-IDF 值會違反模型假設。"
+    },
+    {
+      "stage": "check",
+      "question": "在 BERTopic 的輸出中，HDBSCAN 的 -1 標籤代表什麼？",
+      "options": [
+        "停用詞群集",
+        "離群群集，也就是這個以密度為基礎的演算法無法有把握歸類的文件",
+        "保留的類別",
+        "最大的主題"
+      ],
+      "correct": 1,
+      "explanation": "HDBSCAN 用 -1 標記未分群的點；在 BERTopic 中，這些是無法歸入任何主題的文件。"
+    },
+    {
+      "stage": "check",
+      "question": "主題模型評測常用的預設一致性指標是哪一個？",
+      "options": [
+        "BLEU",
+        "c_v coherence，對主題的高分詞彙以滑動視窗計算 NPMI",
+        "準確率",
+        "只看 perplexity"
+      ],
+      "correct": 1,
+      "explanation": "c_v coherence（Roder 等人，2015）是主題一致性的標準自動指標。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼情況下 LDA 通常比 BERTopic 更合適？",
+      "options": [
+        "當嵌入雜訊很多時",
+        "當你需要每篇文件只對應一個主題時",
+        "長文件，此時混合成員式的主題分布很有用，而嵌入模型會截斷輸入",
+        "在短推文上"
+      ],
+      "correct": 2,
+      "explanation": "長文件受惠於 LDA 的混合成員模型；BERT 編碼器則會截斷輸入。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 BERTopic 在短文本（推文、標題）上通常勝出？",
+      "options": [
+        "短文本的主題比較少",
+        "它支援更多語言",
+        "嵌入空間中的語意相似度能捕捉意義，而詞袋計數在此太過稀疏",
+        "它比較快"
+      ],
+      "correct": 2,
+      "explanation": "BERT 嵌入為短文本提供語意相似度，而詞彙重疊統計在此失效。"
+    },
+    {
+      "stage": "post",
+      "question": "LDA 有哪一種常見失效模式，是你該透過監控主題來發現的？",
+      "options": [
+        "與標註類別完全吻合的主題",
+        "文件數過少的主題",
+        "吸收了停用詞或極高頻詞的垃圾主題",
+        "加總為 1 的文件主題混合比例"
+      ],
+      "correct": 2,
+      "explanation": "LDA 可能產生吸收停用詞的垃圾主題；收緊 min_df/max_df 並過濾停用詞可以緩解。"
+    }
+  ]
+}

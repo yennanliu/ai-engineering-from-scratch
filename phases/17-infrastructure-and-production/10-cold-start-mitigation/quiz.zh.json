@@ -1,0 +1,78 @@
+{
+  "lesson": "10-cold-start-mitigation",
+  "title": "Cold Start Mitigation for Serverless LLMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在沒有任何緩解措施的全新節點上，70B 模型的冷啟動大致要多久？",
+      "options": [
+        "3-8 分鐘",
+        "超過 1 小時",
+        "不到 10 秒",
+        "30-60 秒"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課建議用哪項 AWS 端的功能預先植入容器映像，好讓第 2 步的映像拉取消失？",
+      "options": [
+        "由 EC2NodeClass 引用的 Bottlerocket 雙磁碟區架構",
+        "Spot fleet 配置",
+        "只用 EBS 磁碟區快照",
+        "ECS task definition"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Modal 的哪項功能最接近「幾秒內完成 GPU 熱開機」，做法是把載入後的狀態直接反序列化進 HBM？",
+      "options": [
+        "GPU 記憶體快照（檢查點）",
+        "NVMe 到 DRAM 的分層載入",
+        "Run:ai Model Streamer",
+        "即時遷移"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼即時遷移是在節點之間傳輸輸入 token，而不是傳 KV 快取？",
+      "options": [
+        "KV 快取有加密，無法搬移",
+        "GDPR 規定必須做即時遷移",
+        "輸入 token 的熵較大",
+        "在目的端重算 KV，比透過網路傳好幾 GB 的 KV 快取便宜"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪一層 serverless 做法是以直接的 GPU 成本換取可預期的就緒度，靠的是至少保持一個 replica 活著？",
+      "options": [
+        "分層載入",
+        "即時遷移",
+        "min_workers >= 1 的暖池",
+        "Bottlerocket 預先植入"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼本課說冷啟動緩解必須跨層堆疊，而不是挑一個工具就好？",
+      "options": [
+        "Modal 擁有整個技術堆疊",
+        "五個層次全都內建在 vLLM 裡",
+        "這是法規要求",
+        "沒有任何單一層次能消除所有步驟（節點配置、映像拉取、權重載入、引擎初始化）；層層堆疊才能逐步壓縮每一步"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

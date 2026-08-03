@@ -1,0 +1,78 @@
+{
+  "lesson": "18-vllm-production-stack-lmcache",
+  "title": "Production Serving Stack — KV Offloading and Cache-Aware Routing",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 vLLM 的部署中，LMCache 主要解決什麼問題？",
+      "options": [
+        "分詞器的 GIL 競爭",
+        "網路出口流量過濾",
+        "冷啟動時的映像拉取",
+        "HBM 中的 KV 快取壓力，導致請求被搶占並對相同前綴重新 prefill"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪個 vLLM API 引入了可插拔的 KV 快取後端？",
+      "options": [
+        "前綴快取旗標",
+        "vLLM v0.9.0 的 Connector API",
+        "PagedAttention v2",
+        "ChunkedPrefill API"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "vLLM 0.11.0（2026 年 1 月）在 KV 卸載路徑上加了什麼？",
+      "options": [
+        "移除 LMCache 支援",
+        "強制使用 FP8 KV 快取",
+        "非同步卸載路徑，讓引擎在常見情況下不必為卸載而阻塞",
+        "只保留同步卸載"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "什麼時候該選 LMCache 而非原生的 CPU 卸載？",
+      "options": [
+        "當你只在 CPU 上執行時",
+        "當多個引擎跨租戶、跨 LoRA 變體或在重複的 RAG 上下文之間共用前綴時，跨引擎重用才划得來",
+        "當單一引擎有 HBM 壓力但沒有前綴共用時",
+        "當你想完全停用 KV 快取時"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "當 KV 佔用量遠低於 HBM 容量時，LMCache 的效益會怎樣？",
+      "options": [
+        "LMCache 會自動停用",
+        "各種設定的表現與基準相當，還多出約 3-5% 的開銷，實際上沒有好處",
+        "引擎會崩潰",
+        "它仍然能讓吞吐量翻倍"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 LMCache 能與分離式服務（第 17 階段第 17 課）組合使用？",
+      "options": [
+        "從 prefill 傳到 decode 的 KV 會落進 LMCache；之後的查詢可以直接從 LMCache 取用並跳過 prefill，所以感知快取的路由器可以挑選本地快取或 LMCache 共享快取相符的引擎",
+        "不能——兩者互斥",
+        "因為 LMCache 取代了 NIXL",
+        "因為 LMCache 與引擎跑在同一顆 GPU 上"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

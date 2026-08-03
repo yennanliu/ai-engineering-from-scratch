@@ -1,0 +1,90 @@
+{
+  "lesson": "04-tree-of-thoughts-lats",
+  "title": "Tree of Thoughts and LATS: Deliberate Search",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼思維鏈在 Game of 24 上表現吃力？",
+      "options": [
+        "線性推進在早期某一步出錯時無法回溯，於是後續步驟不斷放大這個錯誤",
+        "CoT 需要一個 GPT-4 沒有的計算機 tool",
+        "模型不會做整數乘法",
+        "提示詞太短"
+      ],
+      "correct": 0,
+      "explanation": "沒有分支時，錯誤的早期子運算式會毒害整條鏈；論文測得 CoT 只有 4%。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 Tree of Thoughts 搜尋中，一個節點是什麼？",
+      "options": [
+        "一個在執行環境註冊的 tool",
+        "微調過程中的一次權重更新",
+        "模型產出的一個 token",
+        "一個連貫的中間步驟或想法，可展開出 K 個子節點"
+      ],
+      "correct": 3,
+      "explanation": "ToT 把推理視為一棵樹，每個節點都是一個中間想法，可以展開成 K 個子節點。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一項「不是」 LATS 交給 LLM 擔任的三個角色之一？",
+      "options": [
+        "在失敗時寫下反思的 self-reflector",
+        "在多次 rollout 之間更新模型權重的 optimizer",
+        "為部分軌跡評分的價值函式",
+        "提出下一步行動的策略"
+      ],
+      "correct": 1,
+      "explanation": "LATS 不使用梯度；LLM 的三個角色是策略、價值與 self-reflector。過程中沒有任何權重更新。"
+    },
+    {
+      "stage": "check",
+      "question": "說出本課列出的四個 MCTS 階段。",
+      "options": [
+        "Sample、Score、Sort、Submit",
+        "Plan、Execute、Reflect、Stop",
+        "Select、Expand、Simulate、Backpropagate",
+        "Search、Synthesize、Synthesize-Again、Stop"
+      ],
+      "correct": 2,
+      "explanation": "MCTS 每一次迭代依序進行 select、expand、simulate、backpropagate。"
+    },
+    {
+      "stage": "check",
+      "question": "在 UCT 中，探索常數 c 扮演什麼角色？",
+      "options": [
+        "它縮放價值估計值 Q",
+        "它設定樹的最大深度",
+        "它控制 rollout 的次數",
+        "它決定探索項 sqrt(ln N / n) 相對於利用項 Q 的權重"
+      ],
+      "correct": 3,
+      "explanation": "c 在利用（Q）與探索項之間取得平衡；要依任務調整。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候搜尋反而比單一軌跡更糟？",
+      "options": [
+        "只要 token 便宜就是",
+        "當任務是程式碼生成時",
+        "當任務有多個正確答案時",
+        "當 evaluator 有雜訊、而正確答案只有一個時，搜尋會收斂到一個分數漂亮的錯誤答案"
+      ],
+      "correct": 3,
+      "explanation": "有雜訊的價值函式加上唯一正確答案，正是搜尋會過度擬合雜訊的情境。"
+    },
+    {
+      "stage": "post",
+      "question": "在 Game of 24 上，ToT 相對於 CoT 大約要多編列多少 token 用量？",
+      "options": [
+        "100 到 1000 倍",
+        "比 CoT 更少，因為有剪枝",
+        "約 2 倍",
+        "約 10 倍"
+      ],
+      "correct": 0,
+      "explanation": "本課引用的數字是 ToT 在 Game of 24 上相對 CoT 有 100 到 1000 倍的 token 成本。"
+    }
+  ]
+}

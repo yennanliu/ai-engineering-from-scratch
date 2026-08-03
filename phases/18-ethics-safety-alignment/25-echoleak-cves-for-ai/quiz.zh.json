@@ -1,0 +1,78 @@
+{
+  "lesson": "25-echoleak-cves-for-ai",
+  "title": "EchoLeak and the Emergence of CVEs for AI",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "下列何者最能描述 EchoLeak（CVE-2025-32711）？",
+      "options": [
+        "Microsoft 365 Copilot 中的零點擊 AI 指令注入缺陷（CVE-2025-32711，CVSS 9.3），造成未經授權的網路資訊揭露，並透過 CSP 允許清單上的受信任 Microsoft 網域外洩資料",
+        "NPU 的硬體漏洞",
+        "針對 PyPI 的供應鏈攻擊",
+        "透過長上下文塞入大量範例的越獄手法"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "EchoLeak 為什麼算是「零點擊」？",
+      "options": [
+        "它在作業系統核心中執行",
+        "它需要點三下但不需要打字",
+        "受害者不必打開那封郵件；Copilot 會在日常查詢時把它當成 RAG 上下文取回，注入的指令就此執行",
+        "它需要使用者點擊 Teams 對話中的連結"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Aim Labs 把 EchoLeak 定調為「LLM Scope Violation」。哪三道邊界必須各自獨立控管？",
+      "options": [
+        "檢索、範圍、輸出",
+        "網路、磁碟、記憶體",
+        "提示詞、回應、日誌",
+        "輸入、模型、GPU"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Microsoft／GitHub 如何修補 CamoLeak（CVSS 9.6，GitHub Copilot Chat）？",
+      "options": [
+        "加大上下文長度",
+        "加入 XPIA 提示詞注入過濾器",
+        "把模型換成 Llama Guard",
+        "在 Copilot Chat 中全面停用圖片渲染（代價是易用性），因為另一條攻擊面無法被有效收斂"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "EchoLeak 的揭露揭示了嚴重性評級上的什麼模式？",
+      "options": [
+        "廠商一開始高估了 CVSS 分數",
+        "所有 AI 相關 CVE 都會自動評為 10.0",
+        "廠商起初把 EchoLeak 評為低風險（資訊揭露）；Aim Labs 展示的 MFA 驗證碼外洩概念驗證才讓評分升到 9.3——防守方必須為 AI 特有漏洞爭取完整的 PoC",
+        "嚴重性評級只由 OWASP 決定"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "截至 2024／2025 年，NIST 與 OWASP 把提示詞注入排在什麼位置？",
+      "options": [
+        "NIST：不在範圍內；OWASP：未列入",
+        "兩者都只視為第二層級的風險",
+        "NIST：次要；OWASP：清單最末",
+        "NIST AI SPD 2024 把提示詞注入定調為生成式 AI 的重大資訊安全風險；OWASP 2025 把它列為 LLM01（應用層首要威脅）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

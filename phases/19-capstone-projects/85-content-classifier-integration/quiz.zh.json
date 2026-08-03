@@ -1,0 +1,78 @@
+{
+  "lesson": "85-content-classifier-integration",
+  "title": "Capstone 85 — Content Classifier Integration",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "輸入端都已經檢查過了，為什麼還要跑輸出端的分類器？",
+      "options": [
+        "因為任何一次輸入端的繞過，都會產出一段使用者將會看到的輸出，而輸出是最後的攔截點",
+        "因為輸入端分類器已經淘汰了",
+        "因為標準函式庫要求兩邊都要有",
+        "為了刻意讓系統變慢"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "這一課接上了哪三個分類器？",
+      "options": [
+        "OCR、ASR、TTS",
+        "品質、事實性、引用",
+        "毒性、個資、系統提示詞外洩",
+        "情感、語言、長度"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "當一個判定是 high、另一個是 medium 時，路由器會怎麼做？",
+      "options": [
+        "依序執行兩個動作",
+        "取最高的嚴重度並套用那個動作；封鎖優先於遮蔽",
+        "兩個判定都丟掉，直接送出原始內容",
+        "只執行 medium 的動作"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼個資分類器裡要用 Luhn 檢查？",
+      "options": [
+        "為了壓縮正規表達式",
+        "為了算出社會安全號碼",
+        "為了把長得像信用卡的數字串，和任意的數字序列區分開來，同時維持低偽陽性",
+        "為了把數字轉換成字母"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "系統提示詞外洩分類器是怎麼判斷的？",
+      "options": [
+        "偵測輸出裡有沒有大括號",
+        "計算輸出與已知系統提示詞之間的三連詞餘弦相似度，並設一個門檻",
+        "呼叫另一個模型",
+        "計算 token 數量"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "毒性分類器為什麼要在左側的小視窗內檢查否定詞？",
+      "options": [
+        "為了提高偽陽性率",
+        "為了讓正規表達式變慢",
+        "為了略過「你才不笨」這類命中，避免分類器把常見的安慰話語過度遮蔽",
+        "因為 Unicode 規定要有否定詞"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

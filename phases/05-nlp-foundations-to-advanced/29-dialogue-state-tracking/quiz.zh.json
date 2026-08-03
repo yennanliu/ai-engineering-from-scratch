@@ -1,0 +1,102 @@
+{
+  "lesson": "29-dialogue-state-tracking",
+  "title": "Dialogue State Tracking",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "對話狀態追蹤在多輪之間維護的是什麼？",
+      "options": [
+        "只有一份自由文字的歷史紀錄",
+        "一份標好 POS 的逐字稿",
+        "一個對話的嵌入",
+        "一個代表使用者當前目標的 slot-value 字典，每一輪之後都會更新"
+      ],
+      "correct": 3,
+      "explanation": "DST 維持一份結構化的 slot-value 對應表，後端可以據此採取行動。"
+    },
+    {
+      "stage": "pre",
+      "question": "Joint Goal Accuracy（JGA）衡量的是什麼？",
+      "options": [
+        "每個 slot 都完全正確的輪次比例（全對才算對）",
+        "餘弦相似度",
+        "每一輪的延遲",
+        "各 slot 準確率的平均"
+      ],
+      "correct": 0,
+      "explanation": "JGA 是每一輪所有 slot 都必須吻合的嚴格指標；逐 slot 準確率則寬鬆得多。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼每一輪都從歷史紀錄重新生成完整狀態，能自然地處理使用者的更正？",
+      "options": [
+        "它用的 token 較少",
+        "它在 GPU 上執行",
+        "它避開了嵌入",
+        "讀入完整歷史讓模型能重新推導出最終狀態，包含「其實我要改成……」這類更正，不需要額外的回溯邏輯"
+      ],
+      "correct": 3,
+      "explanation": "全歷史重新生成是從整段對話重算最終狀態，因而自然吸收了更正。"
+    },
+    {
+      "stage": "check",
+      "question": "哪個 2026 年的做法能用 5 行程式碼得到保證合法的 slot 字典？",
+      "options": [
+        "手寫的正規表達式",
+        "LLM 搭配 Instructor 與 Pydantic schema，使用受限或經驗證的輸出",
+        "TF-IDF 分類器",
+        "BM25 檢索"
+      ],
+      "correct": 1,
+      "explanation": "Pydantic schema 加上 Instructor 會自動根據 slot 本體論驗證 LLM 輸出的狀態。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要為你的 DST schema 做版本控管？",
+      "options": [
+        "事後新增 slot 會讓舊的訓練資料失效，並破壞跨時間的評測",
+        "減少 token 數",
+        "JSON 有此要求",
+        "速度提升"
+      ],
+      "correct": 0,
+      "explanation": "未做版本控管的 schema 變更，會悄悄破壞訓練資料的對齊與評測的可比性。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼合規敏感領域的 DST 除了 LLM 抽取之外，還必須加上規則式檢查？",
+      "options": [
+        "LLM 比較慢",
+        "規則可以避開嵌入",
+        "純 LLM 的 DST 可能誤抽具破壞性的參數（金額、帳戶、日期）；規則層可強制執行決定性的約束",
+        "規則支援多語言"
+      ],
+      "correct": 2,
+      "explanation": "合規領域需要決定性的強制檢查；規則能攔下 LLM 引入的 slot 錯誤。"
+    },
+    {
+      "stage": "post",
+      "question": "每一輪都用 LLM 重新生成狀態，在成本上的顧慮是什麼？",
+      "options": [
+        "嵌入漂移",
+        "更多嵌入",
+        "每一輪都重讀完整歷史會讓總 token 用量呈 O(n^2)；應設上限或摘要較早的輪次",
+        "餘弦運算的成本"
+      ],
+      "correct": 2,
+      "explanation": "全歷史重新生成的成本隨輪數呈平方成長；要對歷史設上限或改用滾動式摘要。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在執行具破壞性的後端動作前，必須有明確的確認流程？",
+      "options": [
+        "確認能提高 JGA",
+        "再好的 DST 也有非零的 slot 錯誤率；決定性的確認步驟可避免動到錯的帳戶或錯的金額",
+        "分詞器有此要求",
+        "延遲"
+      ],
+      "correct": 1,
+      "explanation": "破壞性動作需要使用者確認，因為 DST 永遠不可能零錯誤。"
+    }
+  ]
+}

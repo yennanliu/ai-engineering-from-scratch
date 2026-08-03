@@ -1,0 +1,102 @@
+{
+  "lesson": "13-question-answering",
+  "title": "Question Answering Systems",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "抽取式 QA 預測的是什麼？",
+      "options": [
+        "答案片段在給定段落中的起始與結束 token 索引",
+        "檢索到的段落 ID",
+        "一段生成的自然語言答案",
+        "只有信心分數"
+      ],
+      "correct": 0,
+      "explanation": "抽取式 QA 輸出段落中包含答案的那一段片段。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪兩個元件構成一條基本的 RAG 流程？",
+      "options": [
+        "分詞器與詞性標註器",
+        "共同訓練的編碼器與解碼器",
+        "重排器與翻譯器",
+        "檢索器（找出相關段落）與閱讀器（從中抽取或生成答案）"
+      ],
+      "correct": 3,
+      "explanation": "RAG = 檢索器（找出相關脈絡）加上閱讀器（依據脈絡作答）。"
+    },
+    {
+      "stage": "check",
+      "question": "在 SQuAD 上，Exact Match（EM）衡量什麼？",
+      "options": [
+        "token 層級的 F1",
+        "預測在正規化（轉小寫、去除標點、移除冠詞）後是否與參考答案完全相同",
+        "編輯距離",
+        "逐詞重疊率"
+      ],
+      "correct": 1,
+      "explanation": "EM 是在定義好的正規化步驟後做嚴格相等比對；部分正確得零分。"
+    },
+    {
+      "stage": "check",
+      "question": "deepset/roberta-base-squad2 相較於 SQuAD 1.1 模型多了什麼？",
+      "options": [
+        "更大的上下文視窗",
+        "多語言支援",
+        "跨語言檢索",
+        "以無法回答的問題訓練，因此模型能預測空答案"
+      ],
+      "correct": 3,
+      "explanation": "SQuAD 2.0 包含無法回答的題目；以它訓練的模型能預測「無答案」。"
+    },
+    {
+      "stage": "check",
+      "question": "RAGAS 的哪一個面向專門針對幻覺？",
+      "options": [
+        "Context precision",
+        "Answer relevance",
+        "Faithfulness，以答案主張與檢索脈絡之間的 NLI 蘊涵來衡量",
+        "Context recall"
+      ],
+      "correct": 2,
+      "explanation": "Faithfulness 透過 NLI 蘊涵，逐一檢查答案中的每個主張是否有檢索脈絡支持。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼應該先量測檢索召回率，再評估閱讀器的準確率？",
+      "options": [
+        "閱讀器的延遲取決於它",
+        "若正確段落不在 top-k 之中，閱讀器再好也不可能答對",
+        "召回率決定 ROUGE",
+        "transformers 套件要求如此"
+      ],
+      "correct": 1,
+      "explanation": "缺少正確段落時閱讀器無法作答；檢索召回率是閱讀器表現的上限。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種提示詞模式能降低 RAG 生成的幻覺？",
+      "options": [
+        "移除問題",
+        "放入更多段落",
+        "要求模型發揮創意",
+        "告訴模型只能依據提供的脈絡作答，脈絡不足時回覆「我不知道」"
+      ],
+      "correct": 3,
+      "explanation": "明確要求依據脈絡作答並允許拒答，可大幅降低幻覺率。"
+    },
+    {
+      "stage": "post",
+      "question": "在 2026 年，什麼情況下抽取式 QA 仍優於生成式 RAG？",
+      "options": [
+        "法律、醫療、稽核等受監管領域，必須逐字引用權威來源",
+        "開放領域的常識問答",
+        "對話式 QA",
+        "多語言支援"
+      ],
+      "correct": 0,
+      "explanation": "抽取式 QA 提供權威語料庫的逐字引文，這正是合規場景所要求的。"
+    }
+  ]
+}

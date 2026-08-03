@@ -1,0 +1,62 @@
+[
+  {
+    "question": "LLM 推論的兩個階段是什麼？",
+    "options": [
+      "前向與反向",
+      "編碼與解碼",
+      "訓練與評測",
+      "prefill（平行處理提示詞，受算力限制）與 decode（一次生成一個 token，受記憶體限制）"
+    ],
+    "correct": 3,
+    "explanation": "prefill 平行處理所有提示詞 token（受算力限制）。decode 以自迴歸方式一次生成一個 token（受載入模型權重的記憶體頻寬限制）。不同的最佳化手法各自針對其中一個階段。",
+    "stage": "pre"
+  },
+  {
+    "question": "在自迴歸生成的過程中，KV-cache 消除了什麼？",
+    "options": [
+      "嵌入查表",
+      "對 attention mask 的需求",
+      "softmax 計算",
+      "每個生成步驟都要為所有先前的 token 重複計算 key 與 value 向量的浪費"
+    ],
+    "correct": 3,
+    "explanation": "沒有 KV-cache 時，生成第 N 個 token 需要重新計算前面 N-1 個 token 的 attention key 與 value。KV-cache 把這些向量存起來，因此每個新 token 只需計算自己的 K 與 V，每一步省下 O(N) 的計算量。",
+    "stage": "pre"
+  },
+  {
+    "question": "什麼是 continuous batching，它為什麼能提升吞吐量？",
+    "options": [
+      "跨多個模型做批次處理",
+      "使用更大的批次大小",
+      "把所有請求放進一個大批次一起處理",
+      "在執行中的批次裡動態加入與移除請求，而不是等整個批次全部跑完"
+    ],
+    "correct": 3,
+    "explanation": "在靜態批次中，短請求會佔住自己的批次位置，直到最長的請求結束。continuous batching 會立刻用新請求填補已完成的位置，讓 GPU 保持忙碌並提升整體吞吐量。",
+    "stage": "post"
+  },
+  {
+    "question": "PagedAttention（vLLM 採用）解決了什麼問題？",
+    "options": [
+      "它提升分詞速度",
+      "它縮小模型體積",
+      "它像虛擬記憶體一樣以固定大小的區塊管理 KV-cache 記憶體，消除變動長度序列造成的碎片化",
+      "它加速 attention 的計算"
+    ],
+    "correct": 2,
+    "explanation": "變動長度序列的 KV-cache 會造成記憶體碎片化（配置之間浪費掉的空隙）。PagedAttention 以固定區塊配置 KV-cache，並用頁表對應它們，就像作業系統的虛擬記憶體。",
+    "stage": "post"
+  },
+  {
+    "question": "什麼是 speculative decoding？",
+    "options": [
+      "用一個小的 draft 模型提出多個 token，再由大模型平行驗證，藉此加快生成速度",
+      "預測使用者想要哪些 token",
+      "生成多個回應再挑出最好的",
+      "快取經常生成的序列"
+    ],
+    "correct": 0,
+    "explanation": "一個又小又快的模型生成 N 個候選 token。大模型在單次前向傳遞中平行驗證這 N 個。如果有 K 個被接受，你就在大約 1 個大模型步驟的時間內生成了 K 個 token。",
+    "stage": "post"
+  }
+]

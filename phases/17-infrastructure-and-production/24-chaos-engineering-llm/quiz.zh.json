@@ -1,0 +1,78 @@
+{
+  "lesson": "24-chaos-engineering-llm",
+  "title": "Chaos Engineering for LLM Production",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課要求在正式環境執行混沌實驗前，必須具備哪五項前提？",
+      "options": [
+        "Slack 頻道、貼圖包、吉祥物、hashtag、部落格文章",
+        "只需要向量資料庫",
+        "SLI/SLO、可觀測性、自動回退、結構化 runbook、值班制度",
+        "三個前沿模型"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "混沌架構有哪四個平面，另外再加上回饋迴路？",
+      "options": [
+        "前端、後端、行動、網頁",
+        "匯入、轉換、儲存、服務",
+        "訓練、評測、部署、封存",
+        "控制、目標、安全、可觀測性 — 並把回饋接回 SLO 的調整"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "燃燒率警報這道護欄在混沌實驗期間會做什麼？",
+      "options": [
+        "當每日錯誤預算的燃燒率超過預期約 2 倍時暫停實驗",
+        "自動把實驗推上正式環境",
+        "關閉可觀測性",
+        "加快實驗速度"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一項是本課列出的 LLM 專屬混沌實驗？",
+      "options": [
+        "隨機降低風扇轉速",
+        "重啟整座資料中心",
+        "製造 KV 驅逐風暴，逼使 vLLM 的區塊預算飽和",
+        "中斷所有 DNS"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課建議混沌演練採用什麼樣的頻率？",
+      "options": [
+        "只在每年做一次",
+        "每天讓正式環境全面中斷",
+        "從不進行",
+        "每週一次小規模 canary、每月一次含事後檢討的 game day、每季一次跨團隊韌性稽核"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "畸形提示詞實驗會揭露哪種 LLM 專屬的失效模式？",
+      "options": [
+        "分詞器在深度巢狀 unicode 或超大 UTF-8 codepoint 之類的輸入上卡住，鎖死一個 worker",
+        "GPU 降壓",
+        "網路封包遺失",
+        "磁碟 I/O 競爭"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

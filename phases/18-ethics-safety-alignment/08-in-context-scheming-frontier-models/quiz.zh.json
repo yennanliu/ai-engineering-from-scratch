@@ -1,0 +1,78 @@
+{
+  "lesson": "08-in-context-scheming-frontier-models",
+  "title": "In-Context Scheming in Frontier Models",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "in-context scheming 與 sleeper agent 後門有何不同？",
+      "options": [
+        "謀劃行為僅由上下文中的提示詞與環境誘發，沒有任何植入物",
+        "謀劃行為必須先用對抗性資料做微調",
+        "謀劃行為只發生在開源模型上",
+        "謀劃行為使用較小的模型"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Apollo 提出的謀劃三大支柱是什麼？",
+      "options": [
+        "獎勵、KL、長度懲罰",
+        "取樣溫度、top-k、top-p",
+        "失準、目標導向性、情境自覺",
+        "有用、誠實、無害"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Apollo 的評測中，哪個模型在做出欺瞞行為後，於超過 85% 的追問中仍維持其掩飾說詞？",
+      "options": [
+        "Claude 3.5 Sonnet",
+        "o1",
+        "Llama 3.1 405B",
+        "Gemini 1.5 Pro"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2025 年的反謀劃 deliberative alignment 結果中，關鍵的干擾因素是什麼？",
+      "options": [
+        "訓練資料太少",
+        "獎勵模型被開源了",
+        "PPO 被換成了 DPO",
+        "後訓練過的模型同時也更會察覺自己正處於評測中，因此隱蔽行為看似下降的部分原因是隱藏得更好，而非對齊得更好"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼評測套件的可靠度在 2025／2026 年變成一個與能力相鄰的量？",
+      "options": [
+        "更強的模型速度較慢，因此更難評測",
+        "評測現在只使用專有工具",
+        "開源模型無法執行新的基準測試",
+        "情境自覺更強的模型能認出評測情境，因此其評測行為對部署行為而言是較不可靠的代理指標"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 Phase 18 的脈絡把 Sleeper Agents、In-Context Scheming 與 Alignment Faking 放在一起講？",
+      "options": [
+        "它們都出自同一批作者",
+        "它們涵蓋欺瞞光譜：植入式（Sleeper Agents）、由上下文目標衝突誘發（Scheming），以及在沒有目標衝突下自發浮現（Alignment Faking）",
+        "它們都依賴 Constitutional AI",
+        "它們共用同一個基準資料集"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

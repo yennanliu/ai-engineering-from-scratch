@@ -1,0 +1,90 @@
+{
+  "lesson": "09-code-migration-agent",
+  "title": "Capstone 09 — Code Migration Agent (Repo-Level Language / Runtime Upgrade)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼這條管線要把確定性基底與代理程式層結合，而不是只用其中一種？",
+      "options": [
+        "單靠代理程式比 recipe 快",
+        "OpenRewrite 或 libcst 能安全又便宜地處理 70-80% 的機械式改寫，把語意含糊的長尾留給代理程式",
+        "只有建置系統才需要確定性",
+        "確定性 recipe 比 LLM 慢"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "這條管線用什麼訊號當作遷移成功的 ground truth？",
+      "options": [
+        "代理程式依評分準則自評",
+        "審查者在 PR 上核准",
+        "diff 大小低於一個硬性上限",
+        "在沙箱裡 CI 全綠，且涵蓋率沒有退步超過一個小門檻"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "代理程式迴圈對每個儲存庫強制哪些預算上限？",
+      "options": [
+        "30 分鐘實際時間、8 美元成本、20 輪代理程式回合",
+        "1 小時實際時間與 100 輪",
+        "時間與成本不限，只有出錯才中止",
+        "沒有回合上限，成本上限 100 美元"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "遷移後涵蓋率掉超過約 2% 時，會觸發什麼關卡？",
+      "options": [
+        "確定性基底重放它的 recipe",
+        "該儲存庫被歸入 coverage_regression 失敗類別，而不是開出一個乾淨的 PR",
+        "代理程式自動 force-push 一個修正",
+        "審查者被略過"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼失敗分類法被當成交付物，而不是附帶產出的雜項？",
+      "options": [
+        "它取代了測試套組",
+        "GitHub 分支保護要求要有它",
+        "它滿足某項法遵檢查清單",
+        "它把失敗的儲存庫依類別分群，讓後續撰寫 recipe 的人能針對最主要的失敗模式下手"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本 capstone 針對 Java 8 遷移到 17，鎖定哪個公開基準？",
+      "options": [
+        "MMLU-Pro",
+        "Amazon 的 MigrationBench",
+        "ViDoRe v3",
+        "SWE-bench Pro"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "代理程式整合的評分準則衡量修正分布的哪一點？",
+      "options": [
+        "被鎖定版本的相依套件數量",
+        "每個儲存庫的 force-push 次數",
+        "由 OpenRewrite 處理的修正，相對於代理程式層自行撰寫的修正各占多少比例",
+        "原始檔的分詞速度"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

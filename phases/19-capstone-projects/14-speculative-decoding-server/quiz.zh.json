@@ -1,0 +1,90 @@
+{
+  "lesson": "14-speculative-decoding-server",
+  "title": "Capstone 14 — Speculative-Decoding Inference Server",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "推測解碼背後的雙層機制是什麼？",
+      "options": [
+        "兩個目標模型逐 token 輪流",
+        "一個嵌入模型加一個合成器",
+        "一個檢索快取加一個重排器",
+        "由 draft 模型提出 k 個候選 token；目標模型一次驗證完"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "EAGLE-3 做到了什麼 ngram draft 做不到的事？",
+      "options": [
+        "它完全不需要分詞",
+        "它只在 CPU 上執行",
+        "它用目標模型的隱藏狀態訓練 draft head，換得更高的 acceptance rate",
+        "它取代了目標模型"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 p99 尾端延遲要在批次大小 1、8 與 32 下都回報？",
+      "options": [
+        "穩定狀態的每秒 token 數會掩蓋一件事：被拒絕時的驗證回合比一般解碼還貴",
+        "vLLM 無法服務小於 8 的批次大小",
+        "p99 只在批次大小 32 時才重要",
+        "尾端延遲與批次大小無關"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼流量分布一改變，acceptance rate 就會漂移？",
+      "options": [
+        "draft 的對齊程度取決於輸入分布：ShareGPT、程式碼與領域資料觸發的模式各不相同",
+        "作業系統排程器會重新洗牌 GPU 記憶體",
+        "量化方式會在執行期改變",
+        "vLLM 每小時輪換模型"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這個部署依哪個 Kubernetes HPA 訊號擴縮？",
+      "options": [
+        "磁碟 IOPS",
+        "CPU 使用率",
+        "推論請求的佇列等待時間",
+        "叢集 autoscaler 的節點數"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "相較於序列式的 EAGLE-3，P-EAGLE 多了什麼？",
+      "options": [
+        "把權重量化到 FP4",
+        "移除目標模型",
+        "跨一棵 draft 分支樹平行推測，並在單次目標模型回合中一併驗證",
+        "自動的資料集策展"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "評分準則要求相對於非推測解碼基準線達到什麼吞吐量目標？",
+      "options": [
+        "在兩個模型上、品質對等的前提下至少 2.5 倍",
+        "只要高於基準線就好",
+        "品質對等下約 1.1 倍",
+        "不論品質如何，剛好 10 倍吞吐量"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

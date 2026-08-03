@@ -1,0 +1,90 @@
+{
+  "lesson": "11-llm-observability-dashboard",
+  "title": "Capstone 11 — LLM Observability & Eval Dashboard",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Langfuse、Phoenix 與 OpenLLMetry 共同收斂到哪一套資料匯入 schema？",
+      "options": [
+        "Prometheus exposition 格式",
+        "透過 OTLP HTTP 傳送的 OpenTelemetry GenAI 語意慣例",
+        "各家廠商自訂的專有 JSON",
+        "純 CSV 日誌檔"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼儲存層要把 ClickHouse 與 Postgres 分開？",
+      "options": [
+        "兩者可互換，隨機挑一個即可",
+        "Postgres 匯入 span 比較快",
+        "ClickHouse 負責對 span 做欄式分析，Postgres 則保存使用者、工作階段與應用程式的中繼資料",
+        "ClickHouse 無法儲存字串"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "OpenTelemetry Collector 裡的 tail-sampling 處理器做什麼？",
+      "options": [
+        "在一條 trace 結束後才決定是否保留，用的規則像是保留錯誤、對成功的抽樣",
+        "把舊的 trace 重放進 Postgres",
+        "無條件串流每一個位元組",
+        "截斷低於 100ms 的 span"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這個儀表板如何偵測跨週的漂移？",
+      "options": [
+        "計算不重複的 trace ID 數量",
+        "對彙整後的提示詞嵌入計算 PSI 或 KL 散度，並觀察評測分數趨勢",
+        "人工用肉眼盯儀表板",
+        "讀取最新一次部署的時間戳"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "針對注入的 PII 外洩迴歸，這份交付物的 MTTR 目標是多少？",
+      "options": [
+        "1 小時以內",
+        "24 小時以內",
+        "從 bug 部署到 Slack 警報 5 分鐘以內",
+        "在下一輪 on-call 輪班之內"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "要達到 trace 覆蓋率的評分準則，必須有哪些 SDK 家族產出標準的 GenAI span？",
+      "options": [
+        "只有 OpenAI 與 Anthropic",
+        "任何一個 SDK 就夠了",
+        "只有 vLLM",
+        "至少六個：OpenAI、Anthropic、Google GenAI、LangChain、LlamaIndex 與 vLLM"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "評測結果如何連回原本的 LLM 呼叫？",
+      "options": [
+        "放進一張不含 trace ID 的獨立 Postgres 資料表",
+        "每晚寄出一份 CSV",
+        "只用 Slack 訊息",
+        "評測 span 以父 trace 的子節點形式寫入 ClickHouse"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

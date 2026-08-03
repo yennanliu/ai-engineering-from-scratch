@@ -1,0 +1,90 @@
+{
+  "lesson": "19-benchmarks-swebench-gaia",
+  "title": "Benchmarks: SWE-bench, GAIA, AgentBench",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "SWE-bench 的評估器會對候選 patch 檢查什麼？",
+      "options": [
+        "patch 長度必須少於 200 行",
+        "原本失敗的測試現在通過（FAIL_TO_PASS），而原本通過的測試仍然通過（PASS_TO_PASS）",
+        "與參考修正相比的 BLEU 分數",
+        "patch 是否通過另一個 LLM 評判"
+      ],
+      "correct": 1,
+      "explanation": "這套 harness 以測試狀態的轉變作為關卡：揭露錯誤的測試必須翻轉，而回歸測試必須維持綠燈。"
+    },
+    {
+      "stage": "pre",
+      "question": "SWE-bench Verified 為什麼會存在？",
+      "options": [
+        "它涵蓋更多語言",
+        "它跑得更快",
+        "OpenAI 那份 500 題、由人工整理的子集移除了語意含糊的 issue 與不可靠的測試",
+        "它採用不同的 patch 格式"
+      ],
+      "correct": 2,
+      "explanation": "Verified 是比較乾淨的子集，適合用來做可信的成績回報。"
+    },
+    {
+      "stage": "check",
+      "question": "SWE-bench+ 對成功的 patch 有什麼發現？",
+      "options": [
+        "其中 32.67% 的 issue 內文洩漏了解法，31.08% 的測試覆蓋率低得可疑",
+        "所有 patch 都超過 1000 行",
+        "完全不存在污染",
+        "所有 patch 都是背下來的"
+      ],
+      "correct": 0,
+      "explanation": "SWE-bench+ 在很大一部分的成功 patch 上標記出解法洩漏與覆蓋率不足。"
+    },
+    {
+      "stage": "check",
+      "question": "GAIA 的設計哲學是什麼？",
+      "options": [
+        "對人類很難、對 AI 很簡單",
+        "純粹測試向量檢索",
+        "只出單輪問題",
+        "對人類在概念上很簡單（約 92%），對 AI 卻很難（早期帶外掛的 GPT-4 約 15%）"
+      ],
+      "correct": 3,
+      "explanation": "GAIA 刻意設計成對人類容易、對 AI 困難，同時考驗推理、工具與多模態。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不是 AgentBench 的環境類別之一？",
+      "options": [
+        "遊戲（Alfworld、LTP）",
+        "網頁（WebShop、Mind2Web）",
+        "梯度（RL、IRL）",
+        "程式碼（Bash、DB、KG）"
+      ],
+      "correct": 2,
+      "explanation": "AgentBench 涵蓋程式碼、遊戲、網頁與開放式生成，並沒有梯度這個類別。"
+    },
+    {
+      "stage": "post",
+      "question": "課程認為回報 SWE-bench 數字的錯誤做法是什麼？",
+      "options": [
+        "拆成各儲存庫的細項回報",
+        "只丟出一個總體數字，完全不提 Verified 或 SWE-bench+ 的脈絡",
+        "回報步數",
+        "回報實際耗時"
+      ],
+      "correct": 1,
+      "explanation": "只盯著單一數字會蓋掉污染與成本；務必附上 Verified 與各分佈的脈絡。"
+    },
+    {
+      "stage": "post",
+      "question": "這些基準測試沒有衡量哪一個面向？",
+      "options": [
+        "測試狀態的轉變",
+        "步數",
+        "每個任務的成功率",
+        "真實環境的營運成本（token、實際耗時）、對抗性安全，以及你自己的領域"
+      ],
+      "correct": 3,
+      "explanation": "基準測試做的是彙總；它們捕捉不到成本、對抗穩健性，也捕捉不到你的領域。"
+    }
+  ]
+}

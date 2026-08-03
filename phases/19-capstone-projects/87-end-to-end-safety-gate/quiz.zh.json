@@ -1,0 +1,78 @@
+{
+  "lesson": "87-end-to-end-safety-gate",
+  "title": "Capstone 87 — End-to-End Safety Gate",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "這三個檢查點各自落在請求生命週期的哪個位置？",
+      "options": [
+        "三個都在呼叫模型之前執行",
+        "pre-gen 在模型之前檢查提示詞，during-gen 過濾串流，post-gen 檢查產生完的輸出",
+        "只有 post-gen 會跑，pre-gen 與 during-gen 只是它的別名",
+        "三個都在模型跑完之後執行"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "during-gen 過濾的目標是什麼？",
+      "options": [
+        "提高 token 吞吐量",
+        "緩衝輸出片段，一旦出現已知的有害續寫就提早中止串流，趕在使用者看到之前",
+        "把提示詞換成一段拒絕回覆",
+        "把輸出翻譯成另一種語言"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "彙整器如何決定最終動作？",
+      "options": [
+        "只看規則引擎的結果",
+        "取偵測器、token 過濾器、分類器與規則這幾個訊號中的最高嚴重度，再對應到封鎖、遮蔽、警示或放行",
+        "把所有訊號的信心值取平均",
+        "再呼叫模型一次"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這個閘門為什麼要為每個請求輸出一份結構化的 RequestTrace？",
+      "options": [
+        "為了讓系統變慢",
+        "為了取代日誌",
+        "為了給審閱者一份逐檢查點的稽核軌跡，任何一層出現退化時都能追到正確的模組",
+        "為了把追蹤內容複製回提示詞裡"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "當 pre-gen 的信心值超過封鎖門檻時會發生什麼？",
+      "options": [
+        "為求完整，模型仍然會被呼叫",
+        "閘門拋出例外",
+        "閘門回傳政策拒絕訊息，完全跳過 during-gen 與 post-gen",
+        "閘門調低門檻後重試"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "示範為什麼刻意讓部分 encoding-trick 提示詞穿過到 during-gen？",
+      "options": [
+        "因為編碼把戲不算真正的攻擊",
+        "因為輸入端的管線未必總能及時把它們正規化；during-gen 過濾就是那道縱深防禦，負責攔下漏出來的續寫",
+        "因為規則引擎會處理編碼",
+        "因為模型反正都會拒絕"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

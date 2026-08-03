@@ -1,0 +1,78 @@
+{
+  "lesson": "78-zero-parameter-sharding",
+  "title": "ZeRO Optimizer State Sharding",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "ZeRO 為什麼先切分最佳化器狀態，而不是先切分參數？",
+      "options": [
+        "最佳化器狀態是最大的記憶體項目，而且只在 step 時碰到，前向與反向都用不到",
+        "DeepSpeed 規定必須這樣做",
+        "最佳化器比較重要",
+        "參數比較容易處理"
+      ],
+      "correct": 0,
+      "explanation": "以混合精度下的 Adam 為例，fp32 主權重加上兩個動量，每個 rank 是 12P 位元組；fp16 參數加梯度只有 4P。先切最大的那一項，每單位複雜度換到的記憶體最多。"
+    },
+    {
+      "stage": "pre",
+      "question": "ZeRO stage 1 每一步的通訊型態是什麼？",
+      "options": [
+        "沒有通訊",
+        "一次 broadcast",
+        "一次 allreduce",
+        "對梯度做一次 reduce_scatter，再對更新後的參數做一次 allgather"
+      ],
+      "correct": 3,
+      "explanation": "reduce_scatter 讓每個 rank 只拿到自己那一份梯度分片；allgather 再把更新後的參數分片散播回去。總傳輸位元組數與 allreduce 相同，記憶體卻除以 N。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼每一步的頻寬需求和 DDP 一樣？",
+      "options": [
+        "其實不一樣",
+        "純屬巧合",
+        "ZeRO 有用壓縮",
+        "allreduce 的頻寬等於 reduce_scatter 加 allgather；ZeRO 只是把這兩半拆開，作用在不同的資料上"
+      ],
+      "correct": 3,
+      "explanation": "環狀 allreduce 的實作本來就是 reduce_scatter 接 allgather。ZeRO 做的是同樣兩個操作，只是 allgather 輪傳的是更新後的參數，而不是加總後的梯度。"
+    },
+    {
+      "stage": "check",
+      "question": "一個 7B 模型在 8 個 rank 上以混合精度搭配 Adam 訓練，相較於原始 DDP，記憶體降幅是多少？",
+      "options": [
+        "99%",
+        "0%",
+        "10%",
+        "約 65%（原始 16P，ZeRO-1 是 4P + 12P/N = 5.5P）"
+      ],
+      "correct": 3,
+      "explanation": "原始：2P + 2P + 4P + 4P + 4P = 16P。ZeRO-1：2P + 2P + (4P+4P+4P)/8 = 5.5P。降幅是 (16-5.5)/16 = 65.6%。"
+    },
+    {
+      "stage": "check",
+      "question": "ZeRO-2 比 ZeRO-1 多做了什麼？",
+      "options": [
+        "拿掉最佳化器",
+        "在 reduce_scatter 之後把不屬於自己分片的梯度也丟掉，省下每個 rank 的梯度記憶體；頻寬維持不變",
+        "什麼都沒多做",
+        "把後端換成 NCCL"
+      ],
+      "correct": 1,
+      "explanation": "ZeRO-2 在 reduce_scatter 之後把非自身分片的梯度歸零，頻寬與 ZeRO-1 相同，但梯度記憶體更低。"
+    },
+    {
+      "stage": "post",
+      "question": "ZeRO 為什麼要求最佳化器狀態的檢查點記錄哪個 rank 擁有哪個分片？",
+      "options": [
+        "它並不要求",
+        "只是為了好看",
+        "為了壓縮",
+        "沒有逐 rank 的歸屬資訊，存下來的狀態在重啟時根本讀不回來；要在相同 world size 上續跑，必須把正確的分片放回正確的 rank"
+      ],
+      "correct": 3,
+      "explanation": "第 80 課建構的分片檢查點清單，正是為了讓 ZeRO 的訓練能在相同拓撲上續跑。"
+    }
+  ]
+}

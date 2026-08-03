@@ -1,0 +1,78 @@
+{
+  "lesson": "16-model-routing",
+  "title": "Model Routing as a Cost-Reduction Primitive",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "模型串接（cascading）的核心概念是什麼？",
+      "options": [
+        "一律依隨機權重路由",
+        "平行跑兩個模型並平均輸出",
+        "每個請求都先跑最貴的模型",
+        "先跑便宜模型，只有在信心低或被拒答時才升級到前沿模型"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課列出哪四項訊號可用於路由決策？",
+      "options": [
+        "只看使用者方案等級",
+        "只看 token 數",
+        "任務分類、提示詞長度、與已知困難集合的嵌入相似度，以及第一輪產生的自我信心",
+        "GPU 溫度、風扇轉速、室內濕度、時間"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "串接式路由器預期的延遲樣貌是什麼？",
+      "options": [
+        "一定比預先路由更快",
+        "中位數延遲約 1.2 倍（便宜模型跑一次加上驗證），升級的請求約 2 倍（約占流量的 10%）",
+        "一定慢 10 倍",
+        "與前沿模型完全相同"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪種路由模式會在前端多加 5-10ms 延遲，但整體最快？",
+      "options": [
+        "串接",
+        "集成式路由",
+        "隨機 round-robin",
+        "用分類器做預先路由"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "路由中的便宜模型漂移是什麼？",
+      "options": [
+        "便宜模型變貴了",
+        "串接 100% 都落到前沿模型",
+        "便宜模型出現延遲漂移",
+        "任務分布變了，但訓練好的路由器還是把請求送給便宜模型，悄悄拉低品質"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課建議用哪種防護來抓出路由漂移？",
+      "options": [
+        "線上品質指標——每條路由的按讚／倒讚、對保留樣本做 LLM 評審、升級率、拒答率",
+        "只做每季一次的工程審查",
+        "只用離線評測集",
+        "在生產環境停用路由"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

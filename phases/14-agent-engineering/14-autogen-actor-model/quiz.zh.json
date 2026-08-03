@@ -1,0 +1,90 @@
+{
+  "lesson": "14-autogen-actor-model",
+  "title": "The Actor Model for Agents — Async Messages and Typed Runtimes",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 AutoGen v0.4 中，actor 之間唯一合法的互動方式是什麼？",
+      "options": [
+        "直接存取共用的 dict",
+        "互相竄改對方的提示詞",
+        "共用 SQL 交易",
+        "透過 inbox 交換非同步訊息；不共用記憶體"
+      ],
+      "correct": 3,
+      "explanation": "Actor 擁有私有狀態與一個 inbox；訊息是唯一的互動方式。"
+    },
+    {
+      "stage": "pre",
+      "question": "AutoGen v0.4 的三個 API 層是什麼？",
+      "options": [
+        "Core、AgentChat、Extensions",
+        "Frontend、Backend、Database",
+        "Tools、Models、Memory",
+        "Plan、Act、Reflect"
+      ],
+      "correct": 0,
+      "explanation": "Core 是底層的 actor 框架，AgentChat 是任務導向的高階 API，Extensions 則是各種整合。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼把投遞與處理解耦，就能得到故障隔離？",
+      "options": [
+        "執行環境會接住 B 的處理器故障而不讓 A 崩潰；A 的 send() 立刻回傳，從未阻塞",
+        "每個 actor 都跑在不同機器上",
+        "處理器都是純函式",
+        "執行環境會在故障時重啟作業系統"
+      ],
+      "correct": 0,
+      "explanation": "send() 把訊息放進收件者的 inbox 就回傳；處理器崩潰只影響那一個 actor。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一種 AgentChat 拓撲會依固定順序輪替代理程式？",
+      "options": [
+        "SelectorGroupChat",
+        "Magentic-One",
+        "RoundRobinGroupChat",
+        "Supervisor"
+      ],
+      "correct": 2,
+      "explanation": "RoundRobinGroupChat 是固定輪替；SelectorGroupChat 則用選擇器挑下一個。"
+    },
+    {
+      "stage": "check",
+      "question": "在這一課裡，Magentic-One 是什麼？",
+      "options": [
+        "建構在 AgentChat 之上，涵蓋網頁瀏覽、程式碼執行與檔案處理的參考多代理程式團隊",
+        "一個 OTel exporter",
+        "一個新的 LLM 模型",
+        "一種序列化格式"
+      ],
+      "correct": 0,
+      "explanation": "Magentic-One 是 Microsoft 用來展示 AgentChat API 的參考團隊。"
+    },
+    {
+      "stage": "post",
+      "question": "課程指出 AutoGen v0.4 在 2026 年初的狀態是什麼？",
+      "options": [
+        "已棄用並移除",
+        "已被 LangGraph 取代",
+        "剛剛才發布",
+        "穩定但進入維護模式；Microsoft Agent Framework 才是後續的發展路線"
+      ],
+      "correct": 3,
+      "explanation": "AutoGen v0.7.x 對研究用途來說是穩定的；活躍開發已轉往 Microsoft Agent Framework。"
+    },
+    {
+      "stage": "post",
+      "question": "AutoGen v0.4 預設發出哪一種可觀測性標準的資料？",
+      "options": [
+        "Datadog APM",
+        "只有 Prometheus metrics",
+        "依 OTel GenAI 語意慣例、帶有 gen_ai.* 屬性的 OpenTelemetry spans",
+        "StatsD"
+      ],
+      "correct": 2,
+      "explanation": "每則訊息都會發出一個 span；工具呼叫依 OTel GenAI 慣例帶有 gen_ai.* 屬性。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "23-watermarking-synthid-stable-signature-c2pa",
+  "title": "Watermarking - SynthID, Stable Signature, C2PA",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Kirchenbauer 式（SynthID-text）的 token 浮水印如何嵌入訊號？",
+      "options": [
+        "用公鑰加密輸出內容",
+        "在每個解碼步驟，對前 K 個 token 做雜湊以把詞彙表切成綠／紅兩組，並偏好從綠組抽樣；偵測時以 z-score 統計綠色 token 的數量",
+        "插入一段隱藏的 HTML 註解",
+        "修改提示詞範本"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "文字浮水印面對改寫時的主要限制是什麼？",
+      "options": [
+        "改寫只會影響影像浮水印",
+        "它們其實可以在改寫後存活",
+        "改寫會讓浮水印更強",
+        "改變用詞或改寫文字會破壞綠色 token 的統計訊號"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Stable Signature（Fernandez et al., ICCV 2023）做了什麼？",
+      "options": [
+        "在影像角落加上可見的浮水印",
+        "用私鑰簽署 metadata",
+        "在上傳時用 C2PA 簽署影像",
+        "微調 latent diffusion 的 decoder，讓每一張生成影像都帶有固定的嵌入訊息，並可從 latent 中偵測出來"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2024 年 5 月的「Stable Signature is Unstable」結果證明了什麼？",
+      "options": [
+        "該浮水印可被證明無法偽造",
+        "該浮水印需要 C2PA 才能運作",
+        "該浮水印只在 JPEG 壓縮下失效",
+        "生成後再對 decoder 做微調就能移除浮水印且保持影像品質，動搖了它的對抗式穩健性"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "C2PA metadata 與浮水印如何互補？",
+      "options": [
+        "C2PA 完全取代浮水印",
+        "metadata 可被剝除但帶有豐富的來源鏈；浮水印能在轉碼後存活但只能承載很少位元；兩者疊加才構成堪用的來源證明",
+        "浮水印是由與 C2PA 相同的金鑰簽署的",
+        "兩者可以互相替換"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼「沒有 SynthID 訊號」不能證明內容是真實的（出自人類之手）？",
+      "options": [
+        "因為 SynthID 是閉源的",
+        "因為 SynthID 對人類文字一定會產生誤判",
+        "因為 SynthID 只對啟用 SynthID 的模型的生成內容加浮水印；任何未使用 SynthID 的模型所產出的內容預設就沒有浮水印",
+        "因為 SynthID 只對 Gemini 的輸出有效"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

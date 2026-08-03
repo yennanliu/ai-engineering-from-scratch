@@ -1,0 +1,78 @@
+{
+  "lesson": "08-inference-metrics-goodput",
+  "title": "Inference Metrics — TTFT, TPOT, ITL, Goodput, P99",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "哪些環節主導 TTFT（首個 token 的時間）？",
+      "options": [
+        "讀取權重的磁碟 I/O",
+        "佇列等待時間、網路請求時間與 prefill 時間",
+        "分詞器的 GIL 開銷",
+        "只算 decode 的前向傳播時間"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課認為對產品而言真正重要的指標是哪一個？",
+      "options": [
+        "Goodput——同時滿足所有 SLO 條件的請求比例",
+        "以每秒 token 數計的總吞吐量",
+        "平均 ITL",
+        "GPU 工作週期占比"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼用平均值來呈現 LLM 延遲是錯的統計方式？",
+      "options": [
+        "LLM 延遲分布右偏；使用者經常碰到平均值掩蓋掉的 P99 離群值",
+        "串流回應根本無法計算平均值",
+        "平均值只適用於 prefill，不適用於 decode",
+        "GenAI-Perf 不支援平均值"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 GenAI-Perf 與 LLMPerf 對同一次執行算出的 TPOT 不一致？",
+      "options": [
+        "它們取樣的請求不同",
+        "GenAI-Perf 只能在 Blackwell 上執行",
+        "LLMPerf 用微秒，GenAI-Perf 用毫秒",
+        "GenAI-Perf 在計算 ITL 時排除 TTFT，LLMPerf 則納入，所以換個工具數字就變了"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "對於長輸出的請求（超過 500 個 token），主導端到端延遲的是哪個指標？",
+      "options": [
+        "網路回應時間",
+        "TPOT 乘上輸出長度",
+        "TTFT",
+        "冷啟動時間"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪一組最符合本課對 2026 年 70B 對話模型面向消費者的合理 SLO？",
+      "options": [
+        "只看 P50，不看更高的百分位數",
+        "TTFT P99 800 ms、TPOT P99 25 ms、輸出小於 300 個 token 時 E2E P99 3 s、goodput 大於等於 99%",
+        "TTFT P99 8s、TPOT P99 200ms、goodput 50%",
+        "平均 TTFT 10 ms、平均 TPOT 1 ms"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

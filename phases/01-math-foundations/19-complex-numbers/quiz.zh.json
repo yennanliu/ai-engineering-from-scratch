@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "虛數單位 i 的定義是什麼？",
+      "options": [
+        "i = -1",
+        "i^2 = -1",
+        "i^2 = 1",
+        "i = sqrt(2)"
+      ],
+      "correct": 1,
+      "explanation": "虛數單位 i 由 i^2 = -1 這個性質定義。它把實數線擴展成一個二維平面。幾何上，乘以 i 就是旋轉 90 度，連乘兩次（i^2）等於旋轉 180 度，也就是 -1。"
+    },
+    {
+      "stage": "pre",
+      "question": "Euler 公式 e^(i*theta) 等於什麼？",
+      "options": [
+        "cos(theta) + i*sin(theta)",
+        "sin(theta) + cos(theta)",
+        "i^theta",
+        "theta + i"
+      ],
+      "correct": 0,
+      "explanation": "Euler 公式指出 e^(i*theta) = cos(theta) + i*sin(theta)。它把複指數與三角函數連結起來，並顯示當 theta 變動時，e^(i*theta) 會沿著單位圓移動。"
+    },
+    {
+      "stage": "post",
+      "question": "(3 + 2i)(1 + 4i) 的結果是什麼？",
+      "options": [
+        "-5 + 14i",
+        "5 + 14i",
+        "3 + 8i",
+        "4 + 6i"
+      ],
+      "correct": 0,
+      "explanation": "用分配律展開：(3)(1) + (3)(4i) + (2i)(1) + (2i)(4i) = 3 + 12i + 2i + 8i^2 = 3 + 14i + 8(-1) = 3 + 14i - 8 = -5 + 14i。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 transformer 的 Rotary Position Embedding（RoPE）會用到複數？",
+      "options": [
+        "RoPE 用虛數來處理負的位置",
+        "複數把位置編碼壓縮得更小，佔用較少記憶體",
+        "attention 的 softmax 函式要求使用複數",
+        "把 query/key 向量乘上複數旋轉，就能把相對位置編碼成旋轉角度"
+      ],
+      "correct": 3,
+      "explanation": "RoPE 把 query 與 key 向量乘上複數旋轉矩陣 e^(i*m*theta)，其中 m 是位置。兩個 token 之間的相對位置變成一個旋轉角度，透過複數乘法，attention 自然對相對位置（而非絕對位置）敏感。"
+    },
+    {
+      "stage": "post",
+      "question": "N 次單位根是單位圓上 N 個等距分布的點。它們的總和是多少？",
+      "options": [
+        "1",
+        "N",
+        "N/2",
+        "0"
+      ],
+      "correct": 3,
+      "explanation": "N 個單位根是 e^(2*pi*i*k/N)，其中 k = 0, ..., N-1。它們對稱地分布在單位圓上，因此向量總和互相抵消為零。正是這個對稱性讓 DFT 可逆。"
+    }
+  ]
+}

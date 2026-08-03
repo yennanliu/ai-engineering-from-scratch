@@ -1,0 +1,78 @@
+{
+  "lesson": "25-security-secrets-audit",
+  "title": "Security — Secrets, API Key Rotation, Audit Logs, Guardrails",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "LLM 服務憑證在 2026 年的標準做法是什麼？",
+      "options": [
+        "為求快速，把 API key 寫死在設定檔裡",
+        "把 key 用電子郵件寄給每位工程師",
+        "把 key 放在 Slack 頻道裡",
+        "集中式 vault，由 AI gateway 在執行期透過 IAM 角色取用；在 vault 中輪替後，所有應用程式幾分鐘內就會跟上"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課建議 API key、vault root token 與 CI/CD 憑證採用什麼輪替頻率？",
+      "options": [
+        "90 天內輪替一次，盡可能自動化，人工執行時要留下紀錄並追蹤",
+        "只在外洩時輪替",
+        "從不輪替",
+        "每 5 年一次"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 PII 清洗要採用一致性 tokenization（Mesh 的做法）？",
+      "options": [
+        "它會把提示詞加密後才送給模型",
+        "這是 ISO 27001 的強制要求",
+        "同一個來源值會對應到同一個佔位符，因此 LLM 能在整份提示詞中保留程式碼與關聯語意",
+        "它比正規表示式更省記憶體"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課建議 LLM 服務子網路採取什麼樣的出向流量策略？",
+      "options": [
+        "只放行少數網域（api.openai.com、api.anthropic.com、向量資料庫、vault），其餘一律丟棄，並搭配只允許白名單的 DNS 解析器",
+        "封鎖所有出向流量，連供應商也不例外",
+        "允許 DNS 但封鎖 HTTP",
+        "允許所有對外流量"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "2026 年的 Vercel 供應鏈事件對 CI/CD 憑證帶來什麼教訓？",
+      "options": [
+        "CI/CD 憑證風險低，可以繼續放在 env 檔裡",
+        "CI/CD 機密不會被竊取",
+        "Vercel 並未受到影響",
+        "CI/CD 憑證等同於正式環境憑證 — 要存進 vault、權限收斂到最小、積極輪替"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課建議每次 LLM 呼叫都要保留哪些稽核日誌欄位？",
+      "options": [
+        "只要成本",
+        "時間戳記、使用者/租戶、提示詞雜湊（而非原文）、模型與版本、token 數、成本、回應雜湊、任何觸發的護欄",
+        "只要原始提示詞",
+        "只要回應"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

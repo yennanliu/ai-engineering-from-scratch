@@ -1,0 +1,78 @@
+{
+  "lesson": "26-model-system-dataset-cards",
+  "title": "Model, System, and Dataset Cards",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "下列何者最能描述 Mitchell et al.（2019）最初提出的 Model Card？",
+      "options": [
+        "只是一份模型檢查點的清單",
+        "一份具法律效力的監管合約",
+        "ML 模型的「營養標示」：訓練資料、預期用途、影響因素、指標、評測資料、分組量化分析、倫理考量與注意事項",
+        "一份 OpenAPI 規格"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Oreamuno et al.（2023）對 Hugging Face model card 中倫理考量的採用率有什麼發現？",
+      "options": [
+        "沒有任何一張 model card 寫了任何文字",
+        "約 0.3% 記載了倫理考量",
+        "約 80% 記載了倫理考量",
+        "所有 model card 都記載了倫理考量"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Pushkarna et al.（Google 2022）的 Data Cards 採用望遠／潛望／顯微三層分層，帶來什麼？",
+      "options": [
+        "一份 RLHF 之前的稽核檢查表",
+        "一個以望遠鏡為主題的視覺化函式庫",
+        "一種邊界物件的設計：同一份文件透過三種細節縮放層級，同時服務非專家、ML 實務者與稽核者",
+        "一個保護隱私的查詢介面"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "System Card 涵蓋了哪些 Model Card 沒有涵蓋的範圍？",
+      "options": [
+        "只有分詞器",
+        "端到端的 AI 系統：模型 + 安全機制堆疊 + 部署情境，包含資安能力、提示詞注入防護、資料外洩偵測、對齊與事件應變",
+        "只有提示詞範本",
+        "只有資料集"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Liang et al.（2024）對 model card 詳細程度與 Hugging Face 下載率的關係有什麼報告？",
+      "options": [
+        "只有倫理考量章節會影響下載量",
+        "越詳細反而降低下載率",
+        "以差異中的差異法衡量，詳細的 model card 讓實驗組在 HF 上的每週下載量比對照組提升 29.0%；採用壓力如今由市場驅動，不只來自合規",
+        "詳細程度對下載量沒有影響"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Laminator（Duddu et al. 2024）為文件工作帶來什麼貢獻？",
+      "options": [
+        "一套自動化的基準測試框架",
+        "透過硬體 TEE／密碼學簽章提供可驗證的聲明證明，讓卡片能夠攜帶主張的證據，而不只是主張本身",
+        "一個以 LLM 為基礎的摘要產生器",
+        "取代 Datasheets 標準的新標準"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

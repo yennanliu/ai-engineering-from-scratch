@@ -1,0 +1,90 @@
+{
+  "lesson": "11-planning-htn-and-evolutionary",
+  "title": "Planning with HTN and Evolutionary Search",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "相較於自由形式的 LLM 計畫，HTN 多提供了什麼？",
+      "options": [
+        "更好的嵌入",
+        "更便宜的推論",
+        "在強制執行 operator 的前置條件與效果時，具備可證明的正確性",
+        "更短的提示詞"
+      ],
+      "correct": 2,
+      "explanation": "HTN 的符號式 operator 帶有前置條件與效果，因結構本身而保證健全性。"
+    },
+    {
+      "stage": "pre",
+      "question": "AlphaEvolve 是為哪一類問題打造的？",
+      "options": [
+        "多輪對話記憶",
+        "自由形式的散文生成",
+        "向量搜尋排序",
+        "具備機器可檢查、確定性適應度函式的最佳化問題"
+      ],
+      "correct": 3,
+      "explanation": "演化式搜尋需要確定性的評估器；AlphaEvolve 鎖定存在這種評估器的領域。"
+    },
+    {
+      "stage": "check",
+      "question": "ChatHTN 如何在使用 LLM 的同時維持計畫的健全性？",
+      "options": [
+        "它改用向量資料庫",
+        "LLM 的建議只以候選分解的形式進入，並以 operator schema 驗證；正確性由符號層掌握",
+        "它並沒有維持；健全性只是盡力而為",
+        "它用 HTN 軌跡微調 LLM"
+      ],
+      "correct": 1,
+      "explanation": "LLM 擴充了 method 庫，但無法繞過 operator 的前置條件與效果。"
+    },
+    {
+      "stage": "check",
+      "question": "課程引用了 AlphaEvolve 的哪一項成果？",
+      "options": [
+        "56 年來首次改進 4x4 複數矩陣乘法的 Strassen 結果",
+        "首次證明 P=NP",
+        "在 HumanEval 上勝過 GPT-4",
+        "讓 Gemini 的推論加速 10 倍"
+      ],
+      "correct": 0,
+      "explanation": "AlphaEvolve 找到 4x4 複數矩陣乘法只需 48 次純量乘法，是 56 年來對 Strassen 的首次改進。"
+    },
+    {
+      "stage": "check",
+      "question": "HTN 中，哪個元素是帶有前置條件與效果、可直接執行的基本動作？",
+      "options": [
+        "State",
+        "Task",
+        "Method",
+        "Operator"
+      ],
+      "correct": 3,
+      "explanation": "Operator 是基本單位；method 負責分解複合任務；state 則是一組事實。"
+    },
+    {
+      "stage": "post",
+      "question": "對於缺少真正評估器的 AlphaEvolve，課程提出什麼警告？",
+      "options": [
+        "它很慢",
+        "它無法在 GPU 上執行",
+        "問 LLM 這段程式碼是不是比較好，並不算適應度函式；評估器必須確定且快速",
+        "它違反 Apache 2.0"
+      ],
+      "correct": 2,
+      "explanation": "沒有確定性的評估器，搜尋就沒有可以收斂的訊號。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候該改用 ReAct 或 ReWOO，而不是 HTN 或 AlphaEvolve？",
+      "options": [
+        "永遠不用；HTN 一律更好",
+        "當你不需要形式化健全性或機器可檢查的適應度時；大多數代理程式任務都落在這裡",
+        "當你有 GPU 叢集可用時",
+        "當延遲低於 100 ms 時"
+      ],
+      "correct": 1,
+      "explanation": "課程明確警告不要過度設計：大多數任務都不需要形式化規劃或演化式搜尋。"
+    }
+  ]
+}

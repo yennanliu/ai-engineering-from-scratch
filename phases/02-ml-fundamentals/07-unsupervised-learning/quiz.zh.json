@@ -1,0 +1,67 @@
+[
+  {
+    "id": "unsupervised-pre-1",
+    "stage": "pre",
+    "question": "非監督式學習與監督式學習的差別在哪裡？",
+    "options": [
+      "非監督式學習沒有標記好的輸出——演算法自行找出結構",
+      "非監督式學習總是能得到更好的結果",
+      "非監督式學習使用更多資料",
+      "非監督式學習只適用於文字資料"
+    ],
+    "correct": 0,
+    "explanation": "在非監督式學習中沒有標籤。演算法在沒有被告知正確輸出的情況下，自行發現資料中的模式、分群或結構。"
+  },
+  {
+    "id": "unsupervised-pre-2",
+    "stage": "pre",
+    "question": "K-Means 在訓練前需要你指定什麼？",
+    "options": [
+      "分群數量 K",
+      "精確的群中心",
+      "要使用的距離度量",
+      "每個資料點的標籤"
+    ],
+    "correct": 0,
+    "explanation": "K-Means 需要以分群數量 K 作為輸入。接著它反覆把點指派到最近的中心點，並重新計算中心點，直到收斂。"
+  },
+  {
+    "id": "unsupervised-post-1",
+    "stage": "post",
+    "question": "K-Means 在兩個交錯的半月形資料上失敗，DBSCAN 卻成功。為什麼？",
+    "options": [
+      "DBSCAN 在任何資料集上都勝過 K-Means",
+      "DBSCAN 使用的資料比 K-Means 多",
+      "DBSCAN 依密度找出分群，因此能發現任意形狀，而 K-Means 假設分群是球形的",
+      "K-Means 無法處理 2 維資料"
+    ],
+    "correct": 2,
+    "explanation": "K-Means 把點指派給最近的中心點，產生球形（凸）的分群。DBSCAN 從密集區域向外生長，只要群內由密度相連，任何形狀都能找出來。"
+  },
+  {
+    "id": "unsupervised-post-2",
+    "stage": "post",
+    "question": "輪廓係數（silhouette score）衡量的是什麼？",
+    "options": [
+      "找到的分群總數",
+      "每個點與自己所屬群的相似程度，相對於它與最近的另一個群的相似程度",
+      "分群演算法的速度",
+      "資料中離群值的百分比"
+    ],
+    "correct": 1,
+    "explanation": "輪廓係數 = (b - a) / max(a, b)，其中 a 是群內平均距離，b 是到最近群的平均距離。範圍從 -1（分錯群）到 +1（分群良好）。"
+  },
+  {
+    "id": "unsupervised-post-3",
+    "stage": "post",
+    "question": "高斯混合模型（GMM）在分群指派上與 K-Means 有何不同？",
+    "options": [
+      "GMM 採用硬性指派，每個點恰好屬於一個群",
+      "GMM 給出柔性（機率式）指派，每個點對每個群都有一個歸屬機率",
+      "GMM 只適用於一維資料",
+      "GMM 完全不使用中心點"
+    ],
+    "correct": 1,
+    "explanation": "K-Means 把每個點恰好指派給一個群（硬性）。GMM 則計算每個點屬於各個高斯成分的機率（柔性），而且能建模橢圓形、彼此重疊的分群。"
+  }
+]

@@ -1,0 +1,78 @@
+{
+  "lesson": "12-edge-inference",
+  "title": "Edge Inference — Apple Neural Engine, Qualcomm Hexagon, WebGPU/WebLLM, Jetson",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "依本課所述，讓行動裝置 LLM 推論比資料中心慢的核心限制是什麼？",
+      "options": [
+        "儲存空間容量",
+        "Wi-Fi 延遲",
+        "運算吞吐量",
+        "記憶體頻寬（行動 DRAM 為 50-90 GB/s，HBM3 則是 2-3 TB/s）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 Apple 的 Neural Engine 不會有 CPU 與 NPU 之間的複製開銷？",
+      "options": [
+        "Apple Silicon 採用統一記憶體——CPU 與 ANE 共用同一塊記憶體",
+        "它使用 PCIe 5.0",
+        "Core ML 會停用 KV 快取",
+        "它會在複製前把權重轉碼成 FP4"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在瀏覽器裡使用 WebGPU + WebLLM 時，本課建議哪種量化格式？",
+      "options": [
+        "GGUF Q4_K_M",
+        "NVFP4",
+        "FP8",
+        "透過 mlc_llm convert_weight 編譯的 Q4 MLC（q4f16_1）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課回報 2026 年 WebGPU 在行動端的涵蓋率大約多少？",
+      "options": [
+        "低於 10%",
+        "只有 iOS Safari",
+        "約 70-75%，Firefox Android 仍在追趕",
+        "所有瀏覽器都達 100%"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在一般手機上維持 128K 上下文並不實際？",
+      "options": [
+        "分詞器在超過 8K 時會失敗",
+        "模型權重加上 32K token 的 KV 快取，再加上作業系統的開銷，很容易就超過 8 GB 的 RAM 預算",
+        "WebGPU 把上下文上限鎖在 4K",
+        "iOS 禁止長上下文"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼語音被點名為邊緣推論的殺手級應用？",
+      "options": [
+        "語音模型不需要 KV 快取",
+        "語音模型一定塞得進 50 MB",
+        "語音代理程式對延遲很敏感（首個 token 要小於 500 ms），而本地推論可完全消除網路延遲",
+        "語音只能在 WebAssembly 中執行"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}
