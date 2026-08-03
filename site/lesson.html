@@ -1885,6 +1885,22 @@
         : 'rohitg00/ai-engineering-from-scratch';
       var REPO_TREE = 'https://github.com/' + REPO + '/tree/main/';
 
+      // i18n.js translates whole text nodes, so a string this file builds by
+      // concatenating a count or a name into it can never match a dictionary
+      // key. Those few strings carry {placeholders} instead: the key is looked
+      // up intact, then the values are substituted into the translation, which
+      // also lets a language reorder them. Everything else stays a plain
+      // literal and is picked up by the observer without help.
+      function t(s) {
+        return (window.I18N && window.I18N.t) ? window.I18N.t(s) : s;
+      }
+
+      function tf(s, vars) {
+        return t(s).replace(/\{(\w+)\}/g, function (whole, key) {
+          return Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : whole;
+        });
+      }
+
       if (typeof PHASES !== 'undefined') {
         for (var i = 0; i < PHASES.length; i++) {
           var p = PHASES[i];
@@ -3056,7 +3072,7 @@
       function buildQuizHtml(questions, id, title) {
         if (!questions.length) return '';
         var html = '<div class="quiz-section" id="quiz-' + id + '">';
-        html += '<div class="quiz-title">&#9989; ' + escapeHtml(title) + '</div>';
+        html += '<div class="quiz-title">&#9989; <span>' + escapeHtml(title) + '</span></div>';
         for (var qi = 0; qi < questions.length; qi++) {
           var q = questions[qi];
           var qid = id + '-q' + qi;
@@ -3132,7 +3148,7 @@
         }
         var scoreEl = section.querySelector('.quiz-score');
         if (scoreEl) {
-          scoreEl.textContent = correctCount + '/' + allQs.length + ' correct';
+          scoreEl.textContent = tf('{correct}/{total} correct', { correct: correctCount, total: allQs.length });
           scoreEl.style.display = 'block';
         }
       }
@@ -3472,7 +3488,7 @@
         var letters = ['A', 'B', 'C', 'D'];
         questions.forEach(function (q, qi) {
           html += '<div class="quiz-question" id="quiz-q-' + qi + '">';
-          html += '<div class="quiz-question-num">Question ' + (qi + 1) + ' of ' + questions.length + '</div>';
+          html += '<div class="quiz-question-num">' + escapeHtml(tf('Question {n} of {total}', { n: qi + 1, total: questions.length })) + '</div>';
           html += '<div class="quiz-question-text">' + escapeHtml(q.q) + '</div>';
           html += '<div class="quiz-options">';
           q.opts.forEach(function (opt, oi) {
@@ -3557,7 +3573,7 @@
         }
 
         var html = '<div class="ai-panel-header"><div class="ai-panel-icon">P</div><div class="ai-panel-title">Learning Path</div></div>';
-        html += '<div class="ai-panel-subtitle">Phase ' + String(phase.id).padStart(2, '0') + ': ' + escapeHtml(phase.name) + '</div>';
+        html += '<div class="ai-panel-subtitle">' + escapeHtml(tf('Phase {n}: {name}', { n: String(phase.id).padStart(2, '0'), name: t(phase.name) })) + '</div>';
 
         // Window: 2 before current + current + 2 after, cap at 5 visible.
         var windowSize = 5;
@@ -3570,7 +3586,7 @@
 
         html += '<div class="learning-timeline">';
         if (hiddenBefore > 0) {
-          html += '<span class="timeline-ellipsis" title="' + hiddenBefore + ' earlier lessons">&laquo; ' + hiddenBefore + '</span>';
+          html += '<span class="timeline-ellipsis" title="' + escapeAttr(tf('{n} earlier lessons', { n: hiddenBefore })) + '">&laquo; ' + hiddenBefore + '</span>';
           html += '<div class="timeline-line done"></div>';
         }
         visible.forEach(function (item, vIdx) {
@@ -3595,7 +3611,7 @@
         });
         if (hiddenAfter > 0) {
           html += '<div class="timeline-line"></div>';
-          html += '<span class="timeline-ellipsis" title="' + hiddenAfter + ' later lessons">' + hiddenAfter + ' &raquo;</span>';
+          html += '<span class="timeline-ellipsis" title="' + escapeAttr(tf('{n} later lessons', { n: hiddenAfter })) + '">' + hiddenAfter + ' &raquo;</span>';
         }
         html += '</div>';
 
@@ -3604,11 +3620,11 @@
         var pct = Math.round((completedCount / totalCount) * 100);
 
         html += '<div class="phase-progress-bar"><div class="phase-progress-fill" style="width:' + pct + '%"></div></div>';
-        html += '<div class="phase-progress-text">You\'ve completed ' + completedCount + ' of ' + totalCount + ' lessons in this phase</div>';
+        html += '<div class="phase-progress-text">' + escapeHtml(tf('You\'ve completed {done} of {total} lessons in this phase', { done: completedCount, total: totalCount })) + '</div>';
 
         if (completedCount >= totalCount && phaseIdx < PHASES.length - 1) {
           var nextPhase = PHASES[phaseIdx + 1];
-          html += '<div class="phase-complete-callout visible">Ready for Phase ' + String(nextPhase.id).padStart(2, '0') + ': ' + escapeHtml(nextPhase.name) + '</div>';
+          html += '<div class="phase-complete-callout visible">' + escapeHtml(tf('Ready for Phase {n}: {name}', { n: String(nextPhase.id).padStart(2, '0'), name: t(nextPhase.name) })) + '</div>';
         }
 
         panel.innerHTML = html;
@@ -3633,14 +3649,14 @@
         html += '<div class="continue-panel">';
 
         if (!next || !next.path) {
-          html += '<div class="phase-finished">\u2705 You finished this phase!</div>';
+          html += '<div class="phase-finished">\u2705 <span>You finished this phase!</span></div>';
         }
 
         html += '<div class="continue-links">';
 
         var phaseSlug = extractPhaseSlug(phase, phaseIdx);
         var firstLesson = phase.lessons[0] ? extractLessonSlug(phase.lessons[0], 0) : '';
-        html += '<a class="continue-link" href="lesson.html?path=phases/' + phaseSlug + '/' + firstLesson + '">Browse all Phase ' + String(phase.id).padStart(2, '0') + ' lessons</a>';
+        html += '<a class="continue-link" href="lesson.html?path=phases/' + phaseSlug + '/' + firstLesson + '">' + escapeHtml(tf('Browse all Phase {n} lessons', { n: String(phase.id).padStart(2, '0') })) + '</a>';
         html += '<a class="continue-link" href="catalog.html">Full course catalog</a>';
         html += '</div>';
 
