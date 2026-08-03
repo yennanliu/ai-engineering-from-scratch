@@ -1,0 +1,102 @@
+{
+  "lesson": "21-nli-textual-entailment",
+  "title": "Natural Language Inference — Textual Entailment",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "NLI 會為（前提, 假設）配對指派哪三種標籤？",
+      "options": [
+        "真／假／未知",
+        "因／果／無關",
+        "蘊涵／矛盾／中立",
+        "正面／負面／中立"
+      ],
+      "correct": 2,
+      "explanation": "NLI 是在蘊涵、矛盾與中立三者之間做三分類。"
+    },
+    {
+      "stage": "pre",
+      "question": "如何把 NLI 當成 zero-shot 文字分類器使用？",
+      "options": [
+        "透過提示一個 LLM",
+        "把每個候選標籤語言化成一個假設（例如「這段文字與運動有關」），再選出蘊涵分數最高的標籤",
+        "透過計算 TF-IDF",
+        "透過平均嵌入向量"
+      ],
+      "correct": 1,
+      "explanation": "把 NLI 當分類器的做法是將標籤轉成假設；模型選出蘊涵分數最高的那一個。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 NLI 可以當作 RAG 輸出的忠實度檢查？",
+      "options": [
+        "它很便宜",
+        "檢查檢索到的脈絡是否蘊涵答案中的每個主張，正是 NLI 訓練時的問題形式",
+        "它支援多語言",
+        "它使用分詞器"
+      ],
+      "correct": 1,
+      "explanation": "幻覺 = 答案中的主張無法由檢索脈絡蘊涵；NLI 直接量測蘊涵關係。"
+    },
+    {
+      "stage": "check",
+      "question": "只用假設的基準（hypothesis-only baseline）揭露了什麼？",
+      "options": [
+        "分詞器漂移",
+        "推論速度慢",
+        "多語言的落差",
+        "揭露出「單靠假設、不看前提就能預測標籤」的資料集，代表標籤外洩"
+      ],
+      "correct": 3,
+      "explanation": "SNLI 上偏高的 hypothesis-only 分數揭露了標註偽跡；這對除錯自己的資料很有用。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一個 NLI 模型家族在 2026 年的排行榜上居冠，成為標準主力？",
+      "options": [
+        "在 MNLI/FEVER/ANLI 上微調的 DeBERTa-v3 系列",
+        "原始的 Word2Vec",
+        "GPT-2",
+        "fastText"
+      ],
+      "correct": 0,
+      "explanation": "在 MNLI 與相關語料上微調的 DeBERTa-v3，是 2026 年開源 NLI 的主力。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼句子層級的 NLI 模型在文件長度的前提上準確率會下降？",
+      "options": [
+        "它們是在短前提上訓練的，難以處理跨句與多跳推論；以 DocNLI 調校過的模型才能應付較長的輸入",
+        "較大的輸入跑得比較慢",
+        "餘弦相似度會衰減",
+        "文件會觸發分詞器漂移"
+      ],
+      "correct": 0,
+      "explanation": "訓練分布不匹配：單句 NLI 模型在文件長度的輸入上會掉 20 個以上的 F1。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 zero-shot 準確率會因假設模板不同而擺盪 10 個百分點以上？",
+      "options": [
+        "模板會改變標籤集合",
+        "模型對措辭很敏感；例如「這段文字與 {label} 有關」和單獨的「{label}」會讓蘊涵機率改變",
+        "模板會改變分詞器的行為",
+        "模板會影響模型權重"
+      ],
+      "correct": 1,
+      "explanation": "模板的措辭會實質改變蘊涵分數；請在一個小的留出集上調整它。"
+    },
+    {
+      "stage": "post",
+      "question": "關於用 NLI 偵測幻覺，可以安全宣稱到什麼程度？",
+      "options": [
+        "它作為忠實度訊號能減少幻覺，但無法消除幻覺；要搭配檢索召回率與人工審查",
+        "它只在英文上有效",
+        "它能消除幻覺",
+        "它需要 LLM"
+      ],
+      "correct": 0,
+      "explanation": "NLI 是有用的訊號，但不是完整的解方；請搭配檢索指標與人工抽查。"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "lesson": "03-realtime-voice-assistant",
+  "title": "Capstone 03 — Real-Time Voice Assistant (ASR to LLM to TTS)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼語音代理程式不能靠串接三個阻塞式 REST 呼叫做出來？",
+      "options": [
+        "REST 端點有 30 秒的硬性逾時",
+        "REST 與 WebRTC 不相容",
+        "JSON 序列化對音訊資料來說太慢",
+        "要把端到端延遲壓在 800ms 以下，每一段都必須做管線化串流"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "在 VAD 之外，turn-detector 扮演什麼角色？",
+      "options": [
+        "把背景音樂混進輸出串流",
+        "在多人通話中判斷正在說話的是哪一位",
+        "讀取部分逐字稿，判斷使用者是否真的把話說完了",
+        "為代理程式訓練自訂的聲音複製模型"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "當使用者在代理程式回應到一半時開口，要讓插話（barge-in）感覺自然，必須發生什麼事？",
+      "options": [
+        "TTS 先把目前這句話講完再讓出",
+        "代理程式調高 TTS 音量以宣示優先權",
+        "立刻取消 TTS、丟棄剩餘的 LLM 輸出，並重新啟動 ASR",
+        "管線把使用者音訊緩衝起來，直到 TTS 結束"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼當某個工具耗時超過約 300ms 時，要送出「稍等一下，我查一下」這類簡短填充語？",
+      "options": [
+        "它會觸發備援的 ASR 模型",
+        "它避免出現靜默，讓對話不會在旁路工具執行期間卡住",
+        "它能改善下一句話的 WER",
+        "它會重設 WebRTC 的 jitter buffer"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "第一個音訊區塊必須在第一個 LLM token 之後大約多久內離開伺服器？",
+      "options": [
+        "200ms",
+        "800ms",
+        "2 秒",
+        "20ms"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪個指標直接衡量不當插話或過早判定對話結束？",
+      "options": [
+        "MOS",
+        "誤切斷率",
+        "採納率",
+        "WER"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在 3% 封包遺失率下，這個管線仰賴哪兩種自適應行為？",
+      "options": [
+        "換成更大的 LLM 並停用 TTS",
+        "保留部分逐字稿，並調高 VAD 的語音門檻",
+        "重啟 LiveKit room",
+        "退回使用 PSTN 音訊編解碼器"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

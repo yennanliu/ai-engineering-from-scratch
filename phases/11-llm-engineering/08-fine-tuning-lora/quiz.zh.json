@@ -1,0 +1,62 @@
+[
+  {
+    "question": "LoRA（Low-Rank Adaptation）背後的核心洞見是什麼？",
+    "options": [
+      "模型越小越好",
+      "微調時的權重更新具有很低的內在秩，因此可以用兩個小矩陣來近似，不必更新整個權重矩陣",
+      "大多數權重都不重要",
+      "微調只需要調最後一層"
+    ],
+    "correct": 1,
+    "explanation": "Aghajanyan 等人指出，微調的更新落在一個低維子空間中。LoRA 利用這一點，把更新表示成 W + BA，其中 B（d x r）與 A（r x d）的秩 r 很小，通常是 8 到 64。",
+    "stage": "pre"
+  },
+  {
+    "question": "相較於對一個 8B 模型做完整微調，LoRA 能省下多少記憶體？",
+    "options": [
+      "只省下磁碟空間",
+      "沒有節省",
+      "從約 56GB 降到約 6GB：只訓練不到 1% 的參數，基礎權重全部凍結",
+      "減少 50%"
+    ],
+    "correct": 2,
+    "explanation": "完整微調需要為全部 80 億參數保存梯度與最佳化器狀態（約 56GB）。LoRA 凍結基礎權重，只訓練 adapter 矩陣（rank 16 時約 8000 萬個參數），總共只需約 6GB。",
+    "stage": "pre"
+  },
+  {
+    "question": "QLoRA 是什麼？",
+    "options": [
+      "一種不同的微調演算法",
+      "套用在量化後激活值上的 LoRA",
+      "Quantized LoRA：基礎模型以 4-bit 精度載入，LoRA adapter 則以 16-bit 訓練，結合兩種技術各自的記憶體節省",
+      "一種比較快的 LoRA"
+    ],
+    "correct": 2,
+    "explanation": "QLoRA（Dettmers 等人）把凍結的基礎模型以 4-bit（NF4 量化）載入，同時以 FP16／BF16 訓練 LoRA adapter。這讓 7B 模型能在單張 6GB VRAM 的消費級 GPU 上完成微調。",
+    "stage": "post"
+  },
+  {
+    "question": "LoRA 裡的 rank 參數（r）控制的是什麼？",
+    "options": [
+      "學習率",
+      "訓練的 epoch 數",
+      "adapter 的容量：rank 越高能捕捉越複雜的調整，但也會用掉更多參數與記憶體",
+      "要微調的層數"
+    ],
+    "correct": 2,
+    "explanation": "rank r 決定 adapter 矩陣 A（r x d）與 B（d x r）的大小。rank 4 只訓練極少參數（又快又便宜）。rank 64 訓練較多參數（表達力更強）。大多數任務用 rank 8 到 32 就有很好的效果。",
+    "stage": "post"
+  },
+  {
+    "question": "把 LoRA 權重合併回基礎模型時會發生什麼事？",
+    "options": [
+      "無法合併",
+      "模型會變大",
+      "模型需要重新訓練",
+      "adapter 矩陣被加進基礎權重（W_merged = W_base + B*A），產生一個沒有推論額外開銷的標準模型"
+    ],
+    "correct": 3,
+    "explanation": "由於 LoRA 就是 W_base + B*A，你可以先把 B*A 算出來一次，再永久加到 W_base 上。合併後的模型與原模型架構相同、推論速度相同，也沒有 adapter 的額外開銷。",
+    "stage": "post"
+  }
+]

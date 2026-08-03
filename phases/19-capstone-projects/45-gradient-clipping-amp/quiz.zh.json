@@ -1,0 +1,78 @@
+{
+  "lesson": "45-gradient-clipping-amp",
+  "title": "Gradient Clipping and Mixed Precision",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "全域 L2 梯度裁剪解決了什麼問題？",
+      "options": [
+        "單一個壞批次可能讓梯度範數暴增好幾個數量級；裁剪替最壞情況的最佳化步長設下上界，讓一個批次無法重置數小時的學習成果",
+        "詞彙表漂移",
+        "訓練太慢",
+        "隨機重啟"
+      ],
+      "correct": 0,
+      "explanation": "裁剪是那條安全帶，讓有雜訊的批次無法毀掉損失曲線。"
+    },
+    {
+      "stage": "check",
+      "question": "在一個訓練步驟中，GradScaler 各項操作的正確順序是什麼？",
+      "options": [
+        "scaler.scale(loss).backward(); scaler.unscale_(optimizer); clip_grad_norm_; scaler.step(optimizer); scaler.update()",
+        "backward、step、scale、update",
+        "任何順序都行；scaler 內部會自行重排",
+        "step、scale、unscale、backward、update"
+      ],
+      "correct": 0,
+      "explanation": "在 unscale_ 與 step 之間，對未縮放的梯度做裁剪；update 則一律要執行。"
+    },
+    {
+      "stage": "check",
+      "question": "在被跳過的步驟上，scaler.update() 做了什麼？",
+      "options": [
+        "結束這次訓練",
+        "什麼也不做",
+        "把縮放因子減半並重置無 inf 的計數器；忘記在跳過路徑上呼叫它，正是造成「縮放因子從來沒變過」的那個 bug",
+        "把縮放因子加倍"
+      ],
+      "correct": 2,
+      "explanation": "scaler 會根據近期步驟中跳過與正常的比例來調整自己的因子。"
+    },
+    {
+      "stage": "check",
+      "question": "即使有了 GradScaler，為什麼仍需要檢查損失是否為有限值？",
+      "options": [
+        "因為 GradScaler 很慢",
+        "那只是裝飾用的",
+        "PyTorch 要求如此",
+        "GradScaler 處理的是反向傳遞的溢位，但非有限的損失產不出有用的梯度；在 backward 之前就跳過能省下算力，也避免汙染 scaler 的狀態"
+      ],
+      "correct": 3,
+      "explanation": "損失檢查涵蓋前向傳遞的失敗，scaler 涵蓋反向傳遞的失敗。"
+    },
+    {
+      "stage": "post",
+      "question": "滾動跳過率在生產環境中傳達什麼訊號？",
+      "options": [
+        "只要有跳過就一律呼叫值班",
+        "一次訓練出現寥寥幾次跳過是健康的；每個 epoch 數百次跳過（滾動比率大約超過 5 個百分點）則是硬警報，代表模型進入了 FP16 撐不住的區間",
+        "跳過率無關緊要",
+        "只在連續跳過時才呼叫值班"
+      ],
+      "correct": 1,
+      "explanation": "以比率為基礎的告警，抓得到偶發跳過告警抓不到的無聲失敗模式。"
+    },
+    {
+      "stage": "post",
+      "question": "跳過頻繁時，為什麼要把 FP16 autocast 換成 BF16？",
+      "options": [
+        "BF16 的指數範圍比 FP16 寬，很少需要損失縮放；同一個模型的跳過率通常會降到零",
+        "BF16 比較慢，所以跳得比較少",
+        "BF16 比較新",
+        "隨意的傳統"
+      ],
+      "correct": 0,
+      "explanation": "FP16 偏重尾數精度而犧牲範圍，BF16 則反過來取捨，等於整類溢位問題都被移除。"
+    }
+  ]
+}

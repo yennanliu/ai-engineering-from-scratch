@@ -1,0 +1,90 @@
+{
+  "lesson": "07-memory-virtual-context-memgpt",
+  "title": "Agent Memory — Virtual Context and Memory Paging",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "MemGPT 建立在哪一個作業系統的類比之上？",
+      "options": [
+        "虛擬記憶體：主上下文當 RAM、外部儲存當磁碟、記憶 tools 當換入換出",
+        "行程與執行緒",
+        "網路 socket",
+        "檔案描述符"
+      ],
+      "correct": 0,
+      "explanation": "MemGPT 把提示詞對應到 RAM、外部儲存對應到磁碟，記憶 tools 則對應到類似分頁錯誤的搬移動作。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼更大的上下文視窗無法完全解決記憶問題？",
+      "options": [
+        "模型會拒絕過長的輸入",
+        "長上下文完全不花錢",
+        "即使有 128k 視窗，溢位、注意力被稀釋，以及缺乏跨 session 持久化，仍然會咬人",
+        "供應商把上限壓在 4k token"
+      ],
+      "correct": 2,
+      "explanation": "Mem0 測得 128k 視窗的基線仍會漏掉某些事實，而一個帶外部記憶的 4k 代理程式反而抓得到；溢位、稀釋與持久化問題依舊存在。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一項「不是」 MemGPT 的標準記憶 tool？",
+      "options": [
+        "archival_memory_search",
+        "core_memory_append",
+        "conversation_search",
+        "gradient_memory_update"
+      ],
+      "correct": 3,
+      "explanation": "並不存在梯度記憶 tool；這組介面是 core／archival／conversation 相關的操作。"
+    },
+    {
+      "stage": "check",
+      "question": "MemGPT 中的中斷模式做了什麼？",
+      "options": [
+        "它在任何錯誤發生時中止整個代理程式的執行",
+        "代理程式在對話中途呼叫記憶 tool，執行環境執行它，結果再接進下一輪",
+        "它完全繞過上下文視窗",
+        "它觸發模型重新訓練"
+      ],
+      "correct": 1,
+      "explanation": "記憶即中斷：呼叫記憶 tool、執行環境去取、結果在下一輪以新的觀察結果回來（就像 Unix 的 read()）。"
+    },
+    {
+      "stage": "check",
+      "question": "MemGPT 在 2024 年演變成哪一套正式環境系統？",
+      "options": [
+        "Pinecone",
+        "Mem0",
+        "Zep",
+        "Letta"
+      ],
+      "correct": 3,
+      "explanation": "MemGPT 在 2024 年 9 月更名為 Letta；研究用的 cpacker/MemGPT 儲存庫仍然存在，作為起點。"
+    },
+    {
+      "stage": "post",
+      "question": "在這個脈絡下，什麼是記憶投毒？",
+      "options": [
+        "在 RAM 還夠用時卻從磁碟讀取",
+        "嵌入模型版本漂移",
+        "一個會毀損向量索引的錯誤",
+        "攻擊者的內容被存成一則記憶筆記，並在日後每次回想時被重新讀入"
+      ],
+      "correct": 3,
+      "explanation": "外部記憶就是被檢索回來的文字；只要攻擊者可觸及的內容落進記憶筆記，代理程式下一個 session 就會再把它讀進來。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼本課說正式環境的記憶系統都是 MemGPT 的變體？",
+      "options": [
+        "Letta、Mem0、Assistants threads 與 Claude Agent SDK 全都在跑兩層（或更多層）的分頁記憶模式；差別在於營運形態",
+        "它們共用權重",
+        "它們使用相同的向量資料庫",
+        "MemGPT 擁有商標"
+      ],
+      "correct": 0,
+      "explanation": "要依營運形態來挑選，而不是依模式；它們共用同一套 MemGPT 換入換出的骨架。"
+    }
+  ]
+}

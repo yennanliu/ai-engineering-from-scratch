@@ -1,0 +1,90 @@
+{
+  "lesson": "23-otel-genai-conventions",
+  "title": "OpenTelemetry GenAI Semantic Conventions",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 GenAI 慣例中，哪個 span 名稱代表一次代理程式執行？",
+      "options": [
+        "invoke_agent（可以在後面接上 gen_ai.agent.name）",
+        "agent.start",
+        "agent_loop",
+        "run_chain"
+      ],
+      "correct": 0,
+      "explanation": "invoke_agent 是標準名稱；有設定時，代理程式的名稱屬性會出現在 span 名稱裡。"
+    },
+    {
+      "stage": "pre",
+      "question": "GenAI SIG 定義了哪三類 span？",
+      "options": [
+        "Frontend、backend、db",
+        "Read、write、exec",
+        "延遲、錯誤、吞吐量",
+        "模型／客戶端、代理程式、工具"
+      ],
+      "correct": 3,
+      "explanation": "分別是模型／客戶端（LLM 呼叫）、代理程式（create／invoke）與工具（每次呼叫）。"
+    },
+    {
+      "stage": "check",
+      "question": "invoke_agent 這個 span 什麼時候用 CLIENT，什麼時候用 INTERNAL？",
+      "options": [
+        "永遠是 INTERNAL",
+        "只有 HTTPS 才用 CLIENT",
+        "永遠是 CLIENT",
+        "遠端的代理程式服務（OpenAI Assistants、Bedrock Agents）用 CLIENT；行程內的框架（LangChain、CrewAI、本機 ReAct）用 INTERNAL"
+      ],
+      "correct": 3,
+      "explanation": "遠端代理程式呼叫是 CLIENT；行程內的代理程式執行是 INTERNAL。"
+    },
+    {
+      "stage": "check",
+      "question": "內容擷取（輸入與輸出）的預設規則是什麼？",
+      "options": [
+        "預設全部擷取",
+        "instrumentation 預設不應擷取；要透過 gen_ai.* 屬性明確選擇加入",
+        "只在發生錯誤時擷取",
+        "只擷取輸出，永不擷取輸入"
+      ],
+      "correct": 1,
+      "explanation": "內容擷取預設關閉可以保護個資與機密；要開啟必須明確選擇加入。"
+    },
+    {
+      "stage": "check",
+      "question": "哪個屬性用來標示一次檢索所查詢的語料庫或資料存放區？",
+      "options": [
+        "gen_ai.data_source.id",
+        "gen_ai.provider.name",
+        "gen_ai.agent.name",
+        "gen_ai.request.model"
+      ],
+      "correct": 0,
+      "explanation": "gen_ai.data_source.id 標記檢索所命中的 RAG 語料庫或資料存放區。"
+    },
+    {
+      "stage": "post",
+      "question": "對於在正式環境中保存提示詞內容，課程建議怎麼做？",
+      "options": [
+        "把內容存在外部（S3、log 儲存），只在 span 上記下參照 ID",
+        "在每個 span 上以純文字擷取完整提示詞",
+        "把提示詞加密後放在 span 屬性裡",
+        "完全不要保存任何內容"
+      ],
+      "correct": 0,
+      "explanation": "外部儲存加上指標 ID，可以避免個資流進維運人員讀得到的 trace 裡。"
+    },
+    {
+      "stage": "post",
+      "question": "要如何選擇加入 GenAI 慣例的實驗性穩定預覽？",
+      "options": [
+        "購買授權",
+        "修改 OTel collector 設定",
+        "設定 OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental",
+        "從原始碼重新編譯 SDK"
+      ],
+      "correct": 2,
+      "explanation": "這個環境變數會釘住實驗性慣例，讓屬性不會被悄悄改名。"
+    }
+  ]
+}

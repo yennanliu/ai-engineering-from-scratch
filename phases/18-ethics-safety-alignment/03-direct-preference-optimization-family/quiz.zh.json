@@ -1,0 +1,78 @@
+{
+  "lesson": "03-direct-preference-optimization-family",
+  "title": "The Direct Preference Optimization Family",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 DPO 可以省去訓練一個顯式的獎勵模型？",
+      "options": [
+        "偏好資料本來就不需要純量獎勵",
+        "DPO 會在第二層最佳化迴圈中隱式地訓練自己的獎勵模型",
+        "RLHF 最佳解的封閉形式讓你能把獎勵寫成策略的對數比值，再代入 Bradley-Terry 損失",
+        "Bradley-Terry 偏好剛好對獎勵函式具有不變性"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "IPO（Azar 等人，2024）主要處理 DPO 的哪一個失效模式？",
+      "options": [
+        "必須使用成對資料",
+        "依賴參考策略",
+        "選中回應的長度偏誤",
+        "偏好機率極小時，隱式獎勵差距沒有上界"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "什麼情況下你會選 KTO 而不是 DPO？",
+      "options": [
+        "當你握有未配對的單一標籤（可取／不可取），而且想使用損失趨避的效用函式時",
+        "當你只有 margin 很大的成對資料時",
+        "當你必須保證隱式獎勵零漂移時",
+        "當你想完全移除 KL 懲罰時"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "相較於 DPO，哪一項性質是 SimPO 獨有的？",
+      "options": [
+        "它移除參考策略，並以序列長度對對數似然做正規化",
+        "它使用搭配 NLL 的 odds-ratio 損失",
+        "它捨棄 Bradley-Terry 的 log-sigmoid，改用恆等映射",
+        "它保留參考策略並加上 margin"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "BPO 針對的 DPO「選中回應退化」問題是什麼？",
+      "options": [
+        "選中回應在推論時被取樣到的機率很低",
+        "選中回應變得比被拒絕的回應更長",
+        "只要被拒絕回應的對數機率掉得更快，DPO 就可能連帶把選中回應的絕對對數機率壓低",
+        "選中回應不在參考策略的支撐集內"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Rafailov 等人（NeurIPS 2024）關於直接對齊演算法 scaling law 的研究顯示：",
+      "options": [
+        "DPO 會過度最佳化，但 IPO 與 SimPO 不會",
+        "DAA 在設計上就消除了 Goodhart 問題",
+        "成對資料超過 10 萬筆之後，過度最佳化就會消失",
+        "DAA 在黃金獎勵上呈現出與 Gao 等人相同的先攀頂再崩塌的過度最佳化形狀"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

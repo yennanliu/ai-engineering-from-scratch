@@ -1,0 +1,102 @@
+{
+  "lesson": "18-multilingual-nlp",
+  "title": "Multilingual NLP",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "zero-shot 跨語言遷移是什麼意思？",
+      "options": [
+        "不用翻譯模型就進行翻譯",
+        "以零次合併進行分詞",
+        "在一種來源語言上微調多語言模型，再到另一種語言上評測，且完全沒有目標語言的標籤",
+        "用零筆範例訓練"
+      ],
+      "correct": 2,
+      "explanation": "zero-shot 遷移：在來源語言上訓練，在目標語言上執行，過程沒有目標語言的監督訊號。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪一個模型家族是標準的 100 語言跨語言基準？",
+      "options": [
+        "GPT-2",
+        "GloVe",
+        "DistilBERT",
+        "XLM-R（例如 XLM-RoBERTa-base，270M）"
+      ],
+      "correct": 3,
+      "explanation": "XLM-R 是跨語言分類的標準 100 語言預訓練基準。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼以英文為來源語言，對非英文的目標未必能得到最好的遷移效果？",
+      "options": [
+        "英文的資料太少",
+        "語言相似度（類型學、書寫系統、構詞）能預測遷移品質；更相近的高資源來源語言可能勝過英文",
+        "英文使用 BPE",
+        "英文太短"
+      ],
+      "correct": 1,
+      "explanation": "類型學上相近的來源語言（例如以印地語遷移到印度語系目標）常勝過以英文作為微調來源。"
+    },
+    {
+      "stage": "check",
+      "question": "低資源語言的「fertility tax」是什麼？",
+      "options": [
+        "較小的模型訓練得比較慢",
+        "分詞器無法處理 Unicode",
+        "BPE 拒絕訓練",
+        "低資源語言的文字，每個詞會切成比英文更多的子詞，吃掉上下文視窗、延遲與模型容量"
+      ],
+      "correct": 3,
+      "explanation": "長尾語言的分詞 fertility 高得多，吃掉脈絡與訓練效率。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼需要逐語言評測，而不是看彙總後的準確率？",
+      "options": [
+        "彙總跑得比較快",
+        "彙總只適用於分類",
+        "彙總會忽略分詞",
+        "彙總數字會掩蓋長尾語言，多語言模型在那些語言上可能遠比平均值所暗示的更差"
+      ],
+      "correct": 3,
+      "explanation": "彙總準確率會遮蔽低資源語言的糟糕表現；逐語言分數才會把它揭露出來。"
+    },
+    {
+      "stage": "post",
+      "question": "用少量樣本調整多語言模型時，為什麼微調的學習率至關重要？",
+      "options": [
+        "過高的學習率會摧毀多語言的對齊，等於把模型退化成只會英文",
+        "較低的學習率會浪費 GPU",
+        "它會改變詞彙表",
+        "分詞器的要求"
+      ],
+      "correct": 0,
+      "explanation": "過大的學習率會讓共享表徵漂移；保守的學習率（約 2e-5）能保住跨語言結構。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一項緩解措施直接處理長尾書寫系統的分詞器 fertility 問題？",
+      "options": [
+        "略過停用詞",
+        "使用 byte-fallback（SentencePiece byte_fallback=True），或改用書寫系統覆蓋更廣的分詞器（例如 XLM-V）",
+        "增加訓練 epoch",
+        "降低批次大小"
+      ],
+      "correct": 1,
+      "explanation": "byte fallback 與詞彙表更廣的分詞器，能降低低資源書寫系統的 fertility 與 OOV。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候值得試著從頭訓練單語模型，而不是使用多語言模型？",
+      "options": [
+        "只有在翻譯任務時",
+        "只要分詞器是 BPE 就該這麼做",
+        "英文一律如此",
+        "當目標語言的資料足以訓練出勝過多語言基準的單語模型時；先實測，別直接假設"
+      ],
+      "correct": 3,
+      "explanation": "對高資源的目標語言而言，單語訓練有時會勝過多語言；用實測比較來決定。"
+    }
+  ]
+}

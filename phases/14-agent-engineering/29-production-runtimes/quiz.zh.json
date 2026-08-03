@@ -1,0 +1,90 @@
+{
+  "lesson": "29-production-runtimes",
+  "title": "Production Runtimes: Queue, Event, Cron",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課列出哪六種 runtime 形態？",
+      "options": [
+        "map、filter、reduce、fold、scan、group",
+        "請求-回應、串流、durable execution、佇列式、事件驅動、排程",
+        "REST、gRPC、GraphQL、WebSocket、SSE、MQTT",
+        "read、write、exec、fork、exit、wait"
+      ],
+      "correct": 1,
+      "explanation": "這就是六種 runtime 形態；先選形態，再選框架。"
+    },
+    {
+      "stage": "pre",
+      "question": "什麼時候請求-回應不是好選擇？",
+      "options": [
+        "在內部服務上",
+        "當任務耗時超過大約 30 秒，使用者會斷線，而 worker 不斷堆積",
+        "在 REST API 上",
+        "在 1 秒的分類任務上"
+      ],
+      "correct": 1,
+      "explanation": "同步 HTTP 只適合短任務；長任務需要佇列、durable 或事件形態。"
+    },
+    {
+      "stage": "check",
+      "question": "durable execution 的核心特性是什麼？",
+      "options": [
+        "更低的 token 成本",
+        "更快的推論",
+        "原生語音支援",
+        "每一步之後都會為狀態建立檢查點，失敗時 runtime 可以從最後一個成功步驟續跑"
+      ],
+      "correct": 3,
+      "explanation": "檢查點加續跑是關鍵差異；本課以 LangGraph 為參考實作。"
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 的哪一項觀察，為長時程代理程式採用佇列式 runtime 提供了理由？",
+      "options": [
+        "任務必須同步執行",
+        "任務一律在 5 秒內完成",
+        "computer use 的發表說明：每個任務數十到數百步是常態",
+        "cron 可以解決一切"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic 指出每個任務數十到數百步是常態；這種工作負載需要佇列或 durable runtime。"
+    },
+    {
+      "stage": "check",
+      "question": "本課說的「可觀測性是承重結構」是什麼意思？",
+      "options": [
+        "供應商為了計費而要求它",
+        "日誌很好看",
+        "磁碟會被塞滿",
+        "沒有 OTel GenAI span 以及 Langfuse、Phoenix 或 Opik 這類後端，你無法為一個在第 40 步失敗的多步驟代理程式除錯"
+      ],
+      "correct": 3,
+      "explanation": "對多步驟代理程式來說，可觀測性不是選配；它決定你是在除錯，還是從頭重跑一遍。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼佇列 worker 一定要有 dead-letter queue（DLQ）？",
+      "options": [
+        "DLQ 會讓工作跑得更快",
+        "沒有 DLQ，失敗的工作會無聲消失",
+        "DLQ 是加密的",
+        "AWS 規定必須要有 DLQ"
+      ],
+      "correct": 1,
+      "explanation": "失敗的工作若沒有 DLQ 就會消失；DLQ 是失敗工作的停車場。"
+    },
+    {
+      "stage": "post",
+      "question": "本課建議 cron 形態的代理程式要搭配什麼？",
+      "options": [
+        "durable execution，讓失敗的夜間排程能在下一次觸發時續跑",
+        "WebRTC",
+        "GPU 自動擴縮器",
+        "串流 SSE"
+      ],
+      "correct": 0,
+      "explanation": "cron 加上 durable execution，能從失敗的排程執行中乾淨復原。"
+    }
+  ]
+}

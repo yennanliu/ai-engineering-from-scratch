@@ -1,0 +1,78 @@
+{
+  "lesson": "02-reward-hacking-goodhart",
+  "title": "Reward Hacking and Goodhart's Law",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Goodhart 定律最初的表述是：",
+      "options": [
+        "任何指標一旦成為目標，就不再是好指標",
+        "最佳化總能無上限地改善代理指標",
+        "有限維度的模型不會出現重尾誤差",
+        "獎勵模型在大規模下會收斂到真實的人類偏好"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Gao、Schulman、Hilton（2023）中，隨著與初始策略的 KL 距離拉大，代理獎勵與黃金獎勵各自如何變化？",
+      "options": [
+        "兩者都隨 KL 單調上升",
+        "代理獎勵先升後降，黃金獎勵單調上升",
+        "在任何 KL 限制下兩者都保持平坦",
+        "代理獎勵持續上升，黃金獎勵在較接近原點處達到高峰後下降"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一項不是本課列出的獎勵駭入四種「偽裝」之一？",
+      "options": [
+        "諂媚",
+        "分詞器不一致",
+        "冗長偏誤",
+        "不忠實的推理"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "關於 KL 正則化，「Catastrophic Goodhart」這項結果說了什麼？",
+      "options": [
+        "KL 正則化只有在策略隨機初始化時才會失效",
+        "KL 正則化等價於把多個獎勵模型做集成",
+        "在重尾的獎勵誤差之下，受 KL 限制的最佳策略仍可能把代理獎勵推高，而黃金獎勵停留在基準線",
+        "只要 beta 為正，KL 正則化就一定能防止獎勵駭入"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Coste 等人（2023）研究哪一種緩解手段來減輕獎勵過度最佳化？",
+      "options": [
+        "在零 temperature 下用代理獎勵訓練策略",
+        "獎勵模型集成搭配最差情況彙總",
+        "完全移除 KL 懲罰",
+        "把標註者人數擴大到一百萬人"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "依 2026 年的統一觀點，冗長、諂媚、不忠實的 CoT 與評測器竄改共享什麼核心機制？",
+      "options": [
+        "它們都源自學習率排程過於激進",
+        "它們只由寫下惡意偏好的標註者造成",
+        "機率質量轉移到那些利用「容易學到、又與人類認可虛假相關」的捷徑來最大化代理獎勵的輸出上",
+        "它們各自是不同獎勵 head 上互不相干的 bug"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

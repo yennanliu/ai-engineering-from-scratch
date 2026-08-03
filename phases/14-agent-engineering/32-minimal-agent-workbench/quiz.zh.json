@@ -1,0 +1,90 @@
+{
+  "lesson": "32-minimal-agent-workbench",
+  "title": "The Minimal Agent Workbench",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "哪三個檔案構成最小可用的工作台？",
+      "options": [
+        "model.py、prompts.py、tools.py",
+        "Dockerfile、Makefile、.gitignore",
+        "AGENTS.md（路由）、agent_state.json（狀態）、task_board.json（佇列）",
+        "README.md、CHANGELOG.md、LICENSE"
+      ],
+      "correct": 2,
+      "explanation": "一份簡短的路由、持久的狀態，加上一個任務佇列，就是下限。"
+    },
+    {
+      "stage": "pre",
+      "question": "本課如何定位 AGENTS.md？",
+      "options": [
+        "一份刻意不放進儲存庫的機密",
+        "純粹的提示詞快取鍵",
+        "一份簡短的路由，指向更深入的文件以及狀態與任務板",
+        "一本 3000 行的新人手冊"
+      ],
+      "correct": 2,
+      "explanation": "AGENTS.md 是路由而不是手冊；冗長的手冊會被忽略。"
+    },
+    {
+      "stage": "check",
+      "question": "Augment Code 的資料對一份好的 AGENTS.md 有什麼說法？",
+      "options": [
+        "好的 AGENTS.md 帶來的品質躍升，相當於把模型從 Haiku 升級到 Opus；糟糕的那份則比沒有這個檔案更差",
+        "越長越有幫助",
+        "只有 Claude 會讀它",
+        "它沒有可量測的效果"
+      ],
+      "correct": 0,
+      "explanation": "Augment Code 的量測結果：最好的檔案效果形同升級模型，最差的比什麼都沒有還糟。"
+    },
+    {
+      "stage": "check",
+      "question": "本課為什麼建議用檔案承載狀態，而不是用聊天記錄承載？",
+      "options": [
+        "檔案比較小",
+        "磁碟比較便宜",
+        "聊天記錄是易失的；檔案能在 session 結束、對話被裁剪、工具重置之後存活下來",
+        "這是 SOC 2 的要求"
+      ],
+      "correct": 2,
+      "explanation": "session 會結束、聊天會被裁剪；檔案才是持久的權威記錄。"
+    },
+    {
+      "stage": "check",
+      "question": "本課說當互相衝突的指令落進 AGENTS.md 時會發生什麼事？",
+      "options": [
+        "成本略微上升",
+        "什麼事都不會發生",
+        "延遲下降",
+        "衝突的指令會讓代理程式無聲地從互動模式掉進貪婪模式（AMBIG-SWE：解決率從 48.8% 掉到 28%）"
+      ],
+      "correct": 3,
+      "explanation": "AMBIG-SWE 量測到出現矛盾時解決率大幅下滑；改用編號來表達優先順序。"
+    },
+    {
+      "stage": "post",
+      "question": "本課為什麼建議使用跨工具的符號連結，例如 CLAUDE.md -> AGENTS.md？",
+      "options": [
+        "為了符合 MIT",
+        "為了通過稽核",
+        "讓單一權威來源能發散到每個編碼代理程式，而不必分岔成多份",
+        "為了節省位元組"
+      ],
+      "correct": 2,
+      "explanation": "符號連結（或 Nx 風格的產生器）能在 Claude Code、Codex、Cursor、Copilot 等工具之間維持同一份正規來源。"
+    },
+    {
+      "stage": "post",
+      "question": "巢狀的 AGENTS.md 檔案遵循什麼模式？",
+      "options": [
+        "只讀取根目錄的那一份",
+        "從工作中的檔案往儲存庫根目錄走，把沿路找到的每一份 AGENTS.md 串接起來（最近的優先，子目錄擴充根目錄）",
+        "隨機挑選一份",
+        "依字母順序合併"
+      ],
+      "correct": 1,
+      "explanation": "OpenAI 在其主要儲存庫中放了 88 份 AGENTS.md；工具會沿著目錄樹由近而遠串接。"
+    }
+  ]
+}

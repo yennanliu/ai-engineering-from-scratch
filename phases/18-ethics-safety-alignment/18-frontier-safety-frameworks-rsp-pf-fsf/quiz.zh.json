@@ -1,0 +1,78 @@
+{
+  "lesson": "18-frontier-safety-frameworks-rsp-pf-fsf",
+  "title": "Frontier Safety Frameworks - RSP, PF, FSF",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Anthropic 的 ASL 分級架構是以什麼為藍本？",
+      "options": [
+        "歐盟 AI 法案的分類",
+        "生物安全等級（BSL）",
+        "網際網路 RFC 的分層",
+        "ITIL 的事件嚴重度分級"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "OpenAI Preparedness Framework v2 中，哪一項判準對應「危害發生得極快或無法挽回」？",
+      "options": [
+        "Net-new（全新）",
+        "Plausible（合理可能）",
+        "Measurable（可量測）",
+        "Instantaneous-or-irremediable（瞬時或不可挽回）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "DeepMind 的 FSF v3.0（2025 年 9 月）新增了哪一個 Critical Capability Level？",
+      "options": [
+        "有害操縱",
+        "資安 uplift",
+        "生物武器 uplift",
+        "ML 研發加速"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 2025 年之後的前沿安全框架中，什麼是「競爭者調整條款」？",
+      "options": [
+        "一項允許實驗室在同業未採取相當防護措施就發布時，降低自身安全要求的條文",
+        "一項出口管制豁免",
+        "一項模型卡揭露規定",
+        "一項 API 存取的定價規則"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "依本課的說法，安全論證（safety case）的三大標準支柱是什麼？",
+      "options": [
+        "有用、誠實、無害",
+        "監控、不可讀性、無能力",
+        "速度、準確率、成本",
+        "內部、外部、mesa"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Anthropic 的「Capability Thresholds」、OpenAI 的「High Capability thresholds」與 DeepMind 的「Critical Capability Levels」之間存在什麼樣的一致性？",
+      "options": [
+        "三者都沒有公開文件",
+        "結構上一致：都是分層的前沿能力門檻，並公開評測判準，儘管用語不同",
+        "用語與數值切點完全相同",
+        "三者使用完全相同的評測"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

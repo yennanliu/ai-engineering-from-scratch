@@ -1,0 +1,90 @@
+{
+  "lesson": "34-repo-memory-and-state",
+  "title": "Repo Memory and Durable State",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "決定一項資訊是否該進入儲存庫記憶的持久性測試是什麼？",
+      "options": [
+        "使用者有沒有把它標記為重要",
+        "三個月後在一次 CI 重跑中它是否還有用；有用就放儲存庫，沒用就當遙測",
+        "它是不是 JSON",
+        "它能不能塞進 4 kB"
+      ],
+      "correct": 1,
+      "explanation": "儲存庫記憶存放的是三個月後仍然有用的持久狀態；短暫的資料屬於遙測。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪個 schema 欄位承載代理程式的契約版本？",
+      "options": [
+        "schema_version",
+        "model_id",
+        "session_uuid",
+        "build_hash"
+      ],
+      "correct": 0,
+      "explanation": "schema_version 是整數形式的契約；管理器遇到未知版本會拒絕載入。"
+    },
+    {
+      "stage": "check",
+      "question": "原子寫入是怎麼運作的？",
+      "options": [
+        "在同一個目錄中 tempfile.mkstemp，寫入、fsync，再用 os.replace（原子重新命名）覆蓋目標",
+        "以 append-only 搭配 CRC",
+        "先加密再覆寫",
+        "先把目標檔案截斷再寫入"
+      ],
+      "correct": 0,
+      "explanation": "POSIX 與 Windows 上的原子重新命名，正是避免寫入中斷造成毀損的關鍵。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼非冪等的工具呼叫需要冪等鍵？",
+      "options": [
+        "若代理程式在工具呼叫之後、寫入檢查點之前當掉，可以安全重試；執行前先記錄呼叫 ID，重試時就跳過該呼叫",
+        "為了縮短輸出",
+        "為了計費",
+        "為了對日誌去重"
+      ],
+      "correct": 0,
+      "explanation": "pending_calls.jsonl 承載這些呼叫 ID；復原時會檢查並跳過已經執行過的工作。"
+    },
+    {
+      "stage": "check",
+      "question": "大型產出物（CSV、長篇逐字稿、生成的檔案）相對於狀態應該放在哪裡？",
+      "options": [
+        "串接成一份巨大的日誌",
+        "放進環境變數",
+        "內嵌在 agent_state.json 裡",
+        "放成獨立檔案（或物件儲存），狀態中只保留路徑，讓檢查點維持又小又快"
+      ],
+      "correct": 3,
+      "explanation": "獨立的產出物可以與狀態各自成長；檢查點的讀寫因此保持低成本。"
+    },
+    {
+      "stage": "post",
+      "question": "用 event sourcing 做稽核、用快照做續跑，可以換到什麼？",
+      "options": [
+        "能逐字重播代理程式的決策：先讀快照，再重播其後的事件；形狀與 Postgres WAL 相同",
+        "更快的推論",
+        "更低的磁碟用量",
+        "原生語音支援"
+      ],
+      "correct": 0,
+      "explanation": "每次變動都追加到 state.events.jsonl，定期快照到 state.json，續跑時重播快照時間戳之後的事件。"
+    },
+    {
+      "stage": "post",
+      "question": "本課說 schema_version 不相符時會發生什麼事？",
+      "options": [
+        "管理器會無聲地升級",
+        "狀態會被刪除",
+        "代理程式會重試",
+        "管理器會拒絕載入，直到 tools/migrate_state.py 裡的遷移腳本執行過為止"
+      ],
+      "correct": 3,
+      "explanation": "要嘛做 schema 遷移，要嘛拒絕載入；絕不無聲升級。"
+    }
+  ]
+}

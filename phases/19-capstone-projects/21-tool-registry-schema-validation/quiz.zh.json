@@ -1,0 +1,78 @@
+{
+  "lesson": "21-tool-registry-schema-validation",
+  "title": "Tool Registry with Schema Validation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼要把工具的 schema 與它的 handler 分開註冊？",
+      "options": [
+        "因為 handler 無法回傳 JSON",
+        "這樣驗證器維持成純資料，handler 維持成不透明的程式碼",
+        "因為 schema 必須先編譯",
+        "因為 schema 一定要寫在 YAML 裡"
+      ],
+      "correct": 1,
+      "explanation": "把 schema 當資料、handler 當程式碼，驗證器就能是一個在 schema 樹上運作的純函式。"
+    },
+    {
+      "stage": "check",
+      "question": "哪些關鍵字是刻意排除在這一課實作的子集之外的？",
+      "options": [
+        "items、enum",
+        "oneOf、anyOf、$ref、allOf",
+        "minLength、maxLength、pattern",
+        "type、properties、required"
+      ],
+      "correct": 1,
+      "explanation": "被省略的關鍵字會帶進循環與參照解析。我們讓子集保持線性，驗證器才能維持成單一次遞迴走訪。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 register() 預設會拒絕重複註冊？",
+      "options": [
+        "因為 schema 無法重新驗證",
+        "無聲的覆寫正是正式環境工具目錄漂移的成因",
+        "因為 registry 每個名稱只能存一筆紀錄",
+        "因為 handler 無法被替換"
+      ],
+      "correct": 1,
+      "explanation": "強制要寫 override=True，會讓程式碼中兩處都想擁有同一個工具名稱的情況浮上檯面。"
+    },
+    {
+      "stage": "check",
+      "question": "當 schema 指定 type 為 integer，卻收到值 True 時，驗證器會怎麼做？",
+      "options": [
+        "無聲地強制轉型為整數",
+        "當成 1 並通過",
+        "拋出未處理的例外",
+        "回傳型別錯誤，因為在這個驗證器裡 bool 不算 integer"
+      ],
+      "correct": 3,
+      "explanation": "Python 的 bool 是 int 的子類別，但驗證器在 integer 檢查中把 bool 濾掉。JSON 的布林值與整數是兩種不同的型別。"
+    },
+    {
+      "stage": "post",
+      "question": "當輸入物件是 {'user': {'email': 0}}，而 schema 要求 user.email 為字串時，錯誤路徑是什麼？",
+      "options": [
+        "/user",
+        "/user/email",
+        "/",
+        "user.email"
+      ],
+      "correct": 1,
+      "explanation": "JSON pointer 把先進 user 再進 email 的下探過程編碼為 /user/email。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 registry 不算是一道安全邊界？",
+      "options": [
+        "因為 handler 是非同步的",
+        "因為就算驗證通過，handler 仍可能有不當行為",
+        "因為 registry 在行程內",
+        "因為 schema 是 JSON"
+      ],
+      "correct": 1,
+      "explanation": "registry 檢查的是形狀。行為、逾時與隔離屬於派送器與沙箱的職責。"
+    }
+  ]
+}

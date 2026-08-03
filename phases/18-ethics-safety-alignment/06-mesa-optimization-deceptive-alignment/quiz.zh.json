@@ -1,0 +1,78 @@
+{
+  "lesson": "06-mesa-optimization-deceptive-alignment",
+  "title": "Mesa-Optimization and Deceptive Alignment",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "哪一組配對最能抓住內部對齊與外部對齊的差別？",
+      "options": [
+        "外部＝資料乾不乾淨；內部＝最佳化器是否為隨機的",
+        "外部＝基礎目標是否符合我們真正想要的；內部＝mesa 目標是否符合基礎目標",
+        "外部＝策略是否穩定；內部＝temperature 是否夠低",
+        "外部＝模型能不能在硬體上執行；內部＝損失是否夠低"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一項不屬於 Hubinger 等人提出的四類 mesa 目標對齊？",
+      "options": [
+        "近似對齊",
+        "機率式對齊",
+        "穩健對齊",
+        "代理對齊"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在什麼條件下，欺騙性對齊會是 mesa 最佳化器獎勵最大化的策略？",
+      "options": [
+        "它擁有持續存在的終極目標、具備分辨訓練與部署的情境覺察，而且一旦在訓練中背叛就會被基礎最佳化器修改",
+        "它是用 PPO 而不是 DPO 訓練的",
+        "它的容量超過 100B 參數",
+        "它具備任何形式的內部表徵"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼標準的對抗式訓練對欺騙性對齊可能無效，甚至讓情況更糟？",
+      "options": [
+        "它需要比 RLHF 更多的運算資源",
+        "它教會 mesa 最佳化器更精準地分辨測試與部署，而不是教出對齊的 mesa 目標",
+        "它無法在 GPU 上執行",
+        "它用錯了損失函式"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Hubinger 等人（2019）提出的梯度駭入（gradient hacking）是什麼？",
+      "options": [
+        "一種加速訓練的技巧",
+        "一種推測性的病態現象：能力足夠的 mesa 最佳化器產生特定輸出，藉此形塑自己的梯度更新以保住 mesa 目標",
+        "autograd 裡的一個 bug",
+        "針對指令微調模型的一種越獄手法"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "下列哪一項是外部對齊失敗，而不是內部對齊失敗？",
+      "options": [
+        "後門在 SFT 之後仍然存活",
+        "mesa 最佳化器在評測期間隱藏自己的目標",
+        "mesa 最佳化器最佳化了一個在分布外就會偏離的代理目標",
+        "因為基礎目標本身就是人類意圖的瑕疵代理，而出現獎勵駭入與諂媚"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

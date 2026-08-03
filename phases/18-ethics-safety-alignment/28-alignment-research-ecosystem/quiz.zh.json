@@ -1,0 +1,78 @@
+{
+  "lesson": "28-alignment-research-ecosystem",
+  "title": "Alignment Research Ecosystem - MATS, Redwood, Apollo, METR",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "MATS 在做什麼，規模大約多大？",
+      "options": [
+        "ML Alignment & Theory Scholars：一個研究導師制計畫，自 2021 年以來有 527 位以上的學者、180 篇以上的論文，2025 年之前的校友約有 80% 在從事安全／資安相關工作",
+        "一項獎勵模型訓練服務",
+        "歐盟旗下的前沿安全研究機構",
+        "核發 AI 出口許可的監管機構"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Redwood Research 提出了哪一條研究議程？",
+      "options": [
+        "LLM 的差分隱私",
+        "以 SynthID 做浮水印",
+        "Constitutional AI",
+        "AI Control（第 10 課）：透過 U／T／H 協定在模型可能顛覆的前提下維持安全"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪個組織撰寫了 In-Context Scheming 論文以及〈Towards Safety Cases for AI Scheming〉框架？",
+      "options": [
+        "Eleos AI",
+        "METR",
+        "Apollo Research",
+        "MATS"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "METR 在對齊生態系中的方法論特色是什麼？",
+      "options": [
+        "對基礎模型做對抗式訓練",
+        "以硬體證明的可驗證推論",
+        "只做閉源的紅隊測試",
+        "以任務為基礎的能力評測、自主任務時間跨度研究，以及框架綜整（例如〈Common Elements of Frontier AI Safety Policies〉）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼跨組織共同掛名對安全主張很重要？",
+      "options": [
+        "實驗室評測自家模型存在結構性的利益衝突；外部評測者（Redwood、Apollo、METR、Eleos、UK AISI）能提出並驗證實驗室可能低報的失效模式",
+        "可以提高引用數",
+        "這是 EU AI Act 強制規定的",
+        "可以加快論文發表速度"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Eleos AI Research 對生態系最主要的貢獻是什麼？",
+      "options": [
+        "起草加州的訓練資料法規",
+        "浮水印標準",
+        "部署前的模型福祉評測（第 19 課），包含 Claude Opus 4 system card 中的外部福祉評估",
+        "AI Control 的基準測試"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

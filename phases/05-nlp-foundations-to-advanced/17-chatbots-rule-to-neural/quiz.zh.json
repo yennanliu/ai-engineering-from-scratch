@@ -1,0 +1,102 @@
+{
+  "lesson": "17-chatbots-rule-to-neural",
+  "title": "Chatbots — Rule-Based to Neural to LLM Agents",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在規則式聊天機器人中，槽位填充（slot-filling）狀態機做什麼？",
+      "options": [
+        "挑出最通順的回覆",
+        "把使用者訊息轉成嵌入向量",
+        "追蹤哪些必要參數（日期、目的地、金額）仍然缺漏，並依序向使用者詢問",
+        "偵測反諷"
+      ],
+      "correct": 2,
+      "explanation": "槽位填充會反覆收集任務處理器所需的結構化參數。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼以檢索為基礎的對話能抵抗幻覺？",
+      "options": [
+        "它使用 BM25",
+        "它使用嵌入",
+        "它拒絕所有查詢",
+        "它從精選集合中回傳事先寫好的罐頭回覆，而不是生成新的文字"
+      ],
+      "correct": 3,
+      "explanation": "檢索呈現的是預先寫好的答案；沒有生成，就不會捏造內容。"
+    },
+    {
+      "stage": "check",
+      "question": "相較於單次 LLM 呼叫，LLM 代理程式迴圈的定義是什麼？",
+      "options": [
+        "一個控制器，交錯執行 LLM 呼叫與工具呼叫，直到模型回傳最終答案或用完步驟預算",
+        "使用 softmax",
+        "使用貪婪解碼",
+        "更大的上下文視窗"
+      ],
+      "correct": 0,
+      "explanation": "代理程式多了「規劃—行動—觀察」迴圈，包含工具呼叫與終止條件。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼混合式路由（規則 + 檢索 + LLM 代理程式）是 2026 年正式環境的預設做法？",
+      "options": [
+        "它可以避開嵌入",
+        "沒有單一架構能把所有請求都處理好；規則負責破壞性操作，檢索負責 FAQ，代理程式處理模糊的開放式查詢",
+        "它的維護成本比較低",
+        "它讓評測變得不必要"
+      ],
+      "correct": 1,
+      "explanation": "混合式系統以確定性規則處理有風險的操作，把 LLM 代理程式留給開放式查詢。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是 prompt injection？",
+      "options": [
+        "一種針對分詞器的攻擊",
+        "由使用者提供（直接）或由文件提供（間接）的文字，試圖覆寫系統提示詞或劫持代理程式的行為",
+        "只是 SQL injection 的一種變體",
+        "把 token 注入嵌入向量中"
+      ],
+      "correct": 1,
+      "explanation": "Prompt injection 透過使用者輸入或工具輸出中不可信的文字，改寫代理程式的行為。"
+    },
+    {
+      "stage": "post",
+      "question": "在 OWASP Top 10（LLM Apps 2025）中，被列為 LLM01 的風險是哪一項？",
+      "options": [
+        "SQL injection",
+        "存取控制失效",
+        "不安全的反序列化",
+        "Prompt injection（直接與間接）"
+      ],
+      "correct": 3,
+      "explanation": "在 OWASP LLM Apps Top 10（2025）中，prompt injection 排名 LLM01。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種緩解模式透過把規劃與執行分開，來降低間接 prompt injection？",
+      "options": [
+        "Plan-Verify-Execute：代理程式先規劃，對照計畫驗證每一個動作，再執行——避免工具輸出注入計畫外的新動作",
+        "縮短脈絡",
+        "調低 temperature",
+        "換更大的模型"
+      ],
+      "correct": 0,
+      "explanation": "PVE 會對照已議定的計畫檢查每一步，因此來自工具輸出的注入指令會被拒絕。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼即使在 LLM 代理程式系統中，破壞性操作（付款、刪除）仍必須走結構化流程？",
+      "options": [
+        "工具無法被呼叫",
+        "beam search 不安全",
+        "自信的捏造、prompt injection 與範圍蔓延，意味著 LLM 不能是不可逆副作用的唯一決定者",
+        "LLM 很慢"
+      ],
+      "correct": 2,
+      "explanation": "幻覺與注入讓純 LLM 代理程式執行不可逆操作變得不安全；必須要求確定性的確認流程。"
+    }
+  ]
+}

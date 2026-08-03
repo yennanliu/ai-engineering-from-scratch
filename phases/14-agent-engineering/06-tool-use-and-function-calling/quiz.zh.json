@@ -1,0 +1,90 @@
+{
+  "lesson": "06-tool-use-and-function-calling",
+  "title": "Tool Use and Function Calling",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Toolformer 用什麼訊號來決定是否保留一則候選的 tool 標註？",
+      "options": [
+        "tool 是否在 100 ms 內回傳",
+        "與人工標籤的一致程度",
+        "納入該 tool 結果後，周圍文字的 next-token 損失是否下降",
+        "tool 是否送出合法的 JSON"
+      ],
+      "correct": 2,
+      "explanation": "Toolformer 的自監督訊號會保留那些其 tool 結果能降低 next-token 損失的標註。"
+    },
+    {
+      "stage": "pre",
+      "question": "本課提到的 BFCL V4 組成比例是什麼？",
+      "options": [
+        "100% 單輪",
+        "50% live、50% 合成",
+        "33% agentic、33% 規劃、33% 反思",
+        "40% agentic、30% 多輪、10% live、10% non-live、10% 幻覺"
+      ],
+      "correct": 3,
+      "explanation": "BFCL V4 的權重是 40 agentic／30 多輪／10 live／10 non-live／10 幻覺。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼一個 tool 的描述具有關鍵承重作用？",
+      "options": [
+        "那是使用者在 UI 上看到的內容",
+        "模型靠它挑選正確的 tool；糟糕的描述是選錯 tool 這類失敗的頭號原因",
+        "JSON Schema 規定必須要有",
+        "它決定計費歸類"
+      ],
+      "correct": 1,
+      "explanation": "Tool 描述是模型挑選 tool 時的主要訊號；描述不佳會導致路由到錯的 tool。"
+    },
+    {
+      "stage": "check",
+      "question": "在平行 tool 呼叫中，tool_use_id 扮演什麼角色？",
+      "options": [
+        "它把每個 tool 結果和發出它的那次呼叫對應起來，讓亂序回傳的結果仍能正確歸位",
+        "它拿 API key 為該次呼叫做授權",
+        "它壓縮 JSON 酬載",
+        "它啟用快取"
+      ],
+      "correct": 0,
+      "explanation": "tool_use_id 是對應用的識別碼；把它們對調會讓結果送到錯誤的呼叫上。"
+    },
+    {
+      "stage": "check",
+      "question": "V3 的狀態式評測想抓出哪一類失敗？",
+      "options": [
+        "token 洩漏",
+        "Schema 版本漂移",
+        "tool 執行過慢",
+        "以 AST 比對看起來正確、卻讓 API 停在錯誤狀態的 tool 呼叫"
+      ],
+      "correct": 3,
+      "explanation": "狀態式評測檢查的是結果的 API 狀態（例如檔案是否真的建立了），而不是語法上的呼叫比對。"
+    },
+    {
+      "stage": "post",
+      "question": "下列哪一個 2026 年的問題「不在」本課列出的 function calling 未解問題之中？",
+      "options": [
+        "長時程的 tool 串接",
+        "token 層級的解碼速度",
+        "在眾多 tools 之間動態決策",
+        "跨輪次的記憶"
+      ],
+      "correct": 1,
+      "explanation": "未解問題是記憶、動態決策、長時程串接與幻覺偵測；解碼速度不在名單上。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼本課把通用的 run_shell(cmd) tool 稱為警訊？",
+      "options": [
+        "它無法平行呼叫",
+        "它擴大了沙箱邊界；像 git_status() 這類特定 tool 能限縮讀寫面與風險",
+        "它很慢",
+        "供應商會拒絕它"
+      ],
+      "correct": 1,
+      "explanation": "窄用途的 tool 能約束沙箱的暴露面；通用的 shell tool 等於把主機的完整暴露面全部交出去。"
+    }
+  ]
+}

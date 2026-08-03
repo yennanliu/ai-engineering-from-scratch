@@ -1,0 +1,90 @@
+{
+  "lesson": "20-agent-harness-loop-contract",
+  "title": "Agent Harness Loop Contract",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼要把 harness 迴圈建模成顯式的狀態機，而不是用一個帶旗標的 while 迴圈？",
+      "options": [
+        "這是模型唯一能呼叫的形式",
+        "這樣就不必寫測試",
+        "它讓 harness 能在單一處拒絕非法轉移，並依事件日誌重放工作階段",
+        "它在 CPython 上跑得比較快"
+      ],
+      "correct": 2,
+      "explanation": "狀態機把合法性規則集中在一個轉移函式裡。同一串輸入序列會重現同樣的狀態，這正是工作階段重放得以成立的原因。"
+    },
+    {
+      "stage": "pre",
+      "question": "迴圈裡的 pull point 代表什麼？",
+      "options": [
+        "每 N 秒觸發一次的計時器",
+        "迴圈交出控制權、等待呼叫方提供輸入的那個點",
+        "會修改 payload 的 hook 訂閱者",
+        "回傳工具名稱的模型呼叫"
+      ],
+      "correct": 1,
+      "explanation": "pull point 是回傳，不是例外。呼叫方取來 harness 要的東西，然後呼叫 resume()。"
+    },
+    {
+      "stage": "check",
+      "question": "哪個狀態是工具呼叫唯一合法的 pull point？",
+      "options": [
+        "PLANNING",
+        "AWAITING_TOOL",
+        "EXECUTING",
+        "REFLECTING"
+      ],
+      "correct": 1,
+      "explanation": "只有 AWAITING_TOOL 會產出工具的 pull point。當某個步驟需要工具時，EXECUTING 會轉移到它。"
+    },
+    {
+      "stage": "check",
+      "question": "當 hook 在 before_tool_call 裡拋出 HookAbort 時會發生什麼？",
+      "options": [
+        "該 hook 被解除註冊",
+        "這次工具呼叫被略過，on_error 觸發，迴圈進入 REFLECTING",
+        "工作階段立刻轉移到 DONE",
+        "預算被重設"
+      ],
+      "correct": 1,
+      "explanation": "HookAbort 取消進行中的工具派送，帶著中止原因觸發 on_error，然後繼續執行。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 hook 與事件要維持成兩件分開的事？",
+      "options": [
+        "因為事件型別是位元組，hook 是字串",
+        "hook 是命令式的，可以修改或中止。事件是觀測性的，只能追加。",
+        "因為稽核腳本禁止訂閱者",
+        "因為事件日誌無法儲存 dict"
+      ],
+      "correct": 1,
+      "explanation": "hook 改變行為。事件描述行為。把兩者混在一起會讓政策與遙測耦合，那正是我們要避開的 bug。"
+    },
+    {
+      "stage": "post",
+      "question": "當實際時間預算被用超時，下一個狀態是什麼？",
+      "options": [
+        "DONE——工作階段被終止",
+        "IDLE——回傳一個帶 budget_exceeded 原因的 pull point",
+        "PLANNING——草擬一份新的規劃",
+        "EXECUTING——迴圈重試"
+      ],
+      "correct": 1,
+      "explanation": "預算耗盡是一次讓出。harness 轉移到 IDLE，觸發 on_budget_exceeded，並回傳一個 PullRequest，讓呼叫方決定要延長還是收工。"
+    },
+    {
+      "stage": "post",
+      "question": "這一課為什麼把 planner 做成 stub，而不是實際呼叫模型？",
+      "options": [
+        "因為本機呼叫模型很慢",
+        "為了在綁上任何模型之前，讓迴圈契約可測試且具確定性",
+        "為了省 token",
+        "因為模型無法回傳工具呼叫"
+      ],
+      "correct": 1,
+      "explanation": "先把迴圈契約釘死，後續課程才能換上真正的 planner、registry 與派送器，而不必重新協商狀態機。"
+    }
+  ]
+}

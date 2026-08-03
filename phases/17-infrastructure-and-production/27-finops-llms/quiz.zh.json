@@ -1,0 +1,78 @@
+{
+  "lesson": "27-finops-llms",
+  "title": "FinOps for LLMs — Unit Economics and Multi-Tenant Attribution",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼傳統 FinOps 在 LLM 支出上會失靈？",
+      "options": [
+        "LLM 不花錢",
+        "雲端供應商拒絕逐項列出費用",
+        "LLM 帳單一律免費",
+        "成本是 token 交易而不是資源運行時間；標籤不會從 API 呼叫自動傳遞，你必須在呼叫點就打上使用者/任務/租戶"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課要求第一天就要埋設哪三個歸屬維度？",
+      "options": [
+        "供應商、模型、API 版本",
+        "地區、AZ、資料中心",
+        "每使用者（user_id）、每任務（task_id + route）、每租戶（tenant_id）",
+        "GPU、CPU、RAM"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "成本歸屬應該拆出哪四層 token？",
+      "options": [
+        "GPU、CPU、RAM、儲存",
+        "快取、模型、gateway、可觀測性",
+        "輸入、輸出、網路、磁碟",
+        "提示詞、工具、記憶、回應"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在管控階梯中，緊急停止（kill switch）的觸發條件是什麼？",
+      "options": [
+        "一分鐘內花費超過 $1",
+        "出現任何 5xx 回應",
+        "租戶支出相對基準線的 z-score > 4；自動暫停該租戶並呼叫值班人員",
+        "延遲 P50 > 2s"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課建議用哪個單位指標取代 $/M tokens？",
+      "options": [
+        "每秒成本",
+        "每 GPU 小時成本",
+        "每項產品成果的成本（例如每解決一張客服工單的成本、每產出一篇文章的成本、每完成一項代理程式任務的成本）",
+        "每個 gateway 的成本"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課認為成熟團隊使用的最高準確度歸屬模式是哪一種？",
+      "options": [
+        "只做標籤與彙總",
+        "以模型推估分攤",
+        "遙測接合 — 透過 trace ID 把追蹤資料與帳單接起來",
+        "抽樣後外推"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

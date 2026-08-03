@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Stable Diffusion 為什麼在 4x64x64 的潛在空間中執行 DDPM，而不是直接在 3x512x512 的像素影像上執行？",
+      "options": [
+        "為了讓推論具有決定性",
+        "潛在向量比較容易視覺化",
+        "潛在向量是 GPU 的原生輸出",
+        "在 16,384 個潛在值上訓練與取樣，比在 786,432 個像素上便宜約 48 倍；影像與潛在向量之間的轉換交給預訓練的 VAE，擴散模型只需建模結構化的潛在流形"
+      ],
+      "correct": 3,
+      "explanation": "潛在擴散是讓消費級 GPU 上的文字生圖變得可行的關鍵創新。VAE 在空間與通道資訊上壓縮了 48 倍。擴散模型因此能把全部的參數與計算預算投注在建模潛在流形上，而那正是使用者解碼後看到的部分。"
+    },
+    {
+      "stage": "pre",
+      "question": "classifier-free guidance（CFG）在推論時做了什麼？",
+      "options": [
+        "執行兩個各自獨立的模型並取平均",
+        "在測試時為模型加上一個分類頭",
+        "用同一個訓練過的模型同時預測條件的 eps_cond 與無條件的 eps_uncond，再以 eps = eps_uncond + w*(eps_cond - eps_uncond) 結合，放大對提示詞的貼合度",
+        "使用更大的排程器"
+      ],
+      "correct": 2,
+      "explanation": "CFG 在訓練時有 10% 的機率丟掉條件，讓同一組權重同時能產生條件與無條件的預測。推論時則用上述公式放大條件方向。guidance scale w 是調節提示詞貼合度與多樣性的標準旋鈕；SD 的預設值是 7.5。"
+    },
+    {
+      "stage": "post",
+      "question": "你把 SD 的預設排程器換成 DPM-Solver++ 2M Karras，並把 num_inference_steps 從 50 降到 20。預期結果是什麼？",
+      "options": [
+        "你還必須重新訓練模型",
+        "品質相當，時間大約減半；DPM-Solver++ 是二階 ODE 積分器，在相同樣本品質下比 DDIM 用更少步數收斂",
+        "品質更差且執行時間更長",
+        "數值不穩定"
+      ],
+      "correct": 1,
+      "explanation": "排程器與模型權重是解耦的。DPM-Solver++ 是高階求解器，約 20 步就能達到 DDIM 跑 50 步的品質。完全不需重新訓練，這在 2026 年已是正式環境的預設選擇。要降到 8 步以下，通常需要 LCM 或 Turbo 這類蒸餾／一致性模型變體。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 Stable Diffusion 流行用 LoRA 微調而不是完整微調？",
+      "options": [
+        "LoRA 預設就能產生更好的影像",
+        "LoRA 讓 860M 的基礎 U-Net 保持凍結，只在 attention 層插入極小的秩分解矩陣，因此在消費級硬體上幾分鐘就能完成一次微調，產出 10 到 50 MB 的 adapter，還能在推論時抽換或混用",
+        "diffusers 要求使用 LoRA",
+        "LoRA 能完全避免過度擬合"
+      ],
+      "correct": 1,
+      "explanation": "LoRA 的價值在訓練成本與散布方式。完整微調 SD 要更新 860M 以上的參數，需要 20 GB 以上的 VRAM。LoRA 只更新約 1 到 10M 個參數，6 到 8 GB 就夠。基礎模型維持不變，因此同一份 LoRA 能載入任何相容的檢查點，多個 LoRA 也可以疊加。CivitAI 的生態系整個都是 LoRA。"
+    },
+    {
+      "stage": "post",
+      "question": "你用 guidance_scale=15 生成同一個提示詞，看到顏色過飽和與燒印般的失真。發生了什麼事？",
+      "options": [
+        "CFG 會放大條件方向；超過大約 9 到 12 這個門檻後，放大會把預測推出 VAE 能乾淨解碼的流形之外，因而產生視覺失真。把 guidance 降到 7 到 9 可得到平衡的結果",
+        "seed 設錯了",
+        "模型壞了",
+        "VAE 需要重新訓練"
+      ],
+      "correct": 0,
+      "explanation": "CFG 的公式沒有上界：w 越大，預測就沿著 (eps_cond - eps_uncond) 走得越遠。超過某一點之後你就離開了訓練過的分布，VAE 解碼器會產生過飽和、色階斷裂的影像。正式環境的預設值是 7 到 8。有些較新的排程器支援 CFG 排程（在最後幾個時間步降低 w）來避開這個問題。"
+    }
+  ]
+}

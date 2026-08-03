@@ -1,0 +1,90 @@
+{
+  "lesson": "02-rag-over-codebase",
+  "title": "Capstone 02 — RAG over Codebase (Cross-Repo Semantic Search)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼直接對原始 chunk 做單純的 cosine 搜尋，不足以支撐跨儲存庫的程式碼檢索？",
+      "options": [
+        "向量索引無法儲存超過 1KB 的 payload",
+        "cosine 相似度在程式碼嵌入上沒有定義",
+        "嵌入模型不會把程式碼看成 token",
+        "它會被生成的程式碼、monorepo 重複內容以及很少被 import 的符號汙染結果"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "在匯入流程中，AST-aware chunking 是什麼意思？",
+      "options": [
+        "把程式碼切成固定 256 token 的視窗",
+        "儲存前先用 gzip 壓縮 chunk",
+        "在 tree-sitter 的節點邊界（例如函式與類別的範圍）切開",
+        "嵌入前先移除註解與空白"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在這個流程中，每個 chunk 會取得哪三種可檢索的形式？",
+      "options": [
+        "原始文字、gzip 與雜湊值",
+        "token ID、語法樹與呼叫圖",
+        "AST、IR 與 bytecode",
+        "密集嵌入、BM25 詞項，以及一段自然語言摘要"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在混合檢索步驟之後，cross-encoder reranker 扮演什麼角色？",
+      "options": [
+        "它把查詢與候選成對一起評分，準確率高於單靠 cosine",
+        "它改寫 chunk 以移除生成的程式碼",
+        "它用另一個模型重新嵌入查詢",
+        "它在送進合成階段前壓縮 chunk"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼合成器會拒絕沒有 (repo/path:start-end) 錨點的答案？",
+      "options": [
+        "引用忠實度是答案的守門條件，使用者才能逐條查證每個主張",
+        "向量資料庫的 schema 要求要有錨點",
+        "錨點可以降低合成呼叫的 token 成本",
+        "下游的 BM25 重排序需要錨點"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "要讓一次 50 個檔案的推送在 60 秒內完成增量重建索引，需要什麼做法？",
+      "options": [
+        "完全捨棄符號圖",
+        "丟掉 BM25 索引並從頭重建",
+        "每次 commit 都重新嵌入整個 200 萬行的語料",
+        "只重新嵌入文字有變動的 chunk，並重算受影響的符號邊"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪個指標衡量檢索到的主張是否能在原始碼中查證？",
+      "options": [
+        "引用忠實度",
+        "p95 查詢延遲",
+        "nDCG@10",
+        "MRR@10"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

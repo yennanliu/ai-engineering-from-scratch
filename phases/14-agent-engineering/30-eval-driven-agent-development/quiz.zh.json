@@ -1,0 +1,90 @@
+{
+  "lesson": "30-eval-driven-agent-development",
+  "title": "Eval-Driven Agent Development",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課點出哪三個評測層次？",
+      "options": [
+        "單元、整合、端到端",
+        "冒煙、迴歸、驗收",
+        "pre、check、post",
+        "靜態基準測試、自訂離線評測、線上生產評測"
+      ],
+      "correct": 3,
+      "explanation": "靜態（SWE-bench、GAIA）、自訂離線（LLM-judge、執行、軌跡）、線上（重播、告警、成本與延遲）。"
+    },
+    {
+      "stage": "pre",
+      "question": "Anthropic 建議的起點是什麼？",
+      "options": [
+        "從多代理程式辯論開始",
+        "從簡單的提示詞開始，用完整的評測把它們最佳化，只有在需要時才加入多步驟的代理程式系統",
+        "只用前沿模型開始",
+        "從階層式編排開始"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic 明確指出評測是驅動其他所有選擇的外層迴圈。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是 evaluator-optimizer 緊迴圈？",
+      "options": [
+        "提案者產生輸出，評估者評判，反覆修正直到評估者通過（Self-Refine 的一般化）",
+        "取樣、排序、去重",
+        "快取、重試、失敗",
+        "訓練、評測、部署"
+      ],
+      "correct": 0,
+      "explanation": "它就是 Self-Refine 的一般化：任何流程都可以包進提案、評判、修正的循環裡。"
+    },
+    {
+      "stage": "check",
+      "question": "2026 年關於評測該放在哪裡的最佳實務是什麼？",
+      "options": [
+        "完全由 QA 團隊擁有",
+        "只在每季執行一次",
+        "與程式碼放在一起，每個 PR 都在 CI 中執行，並用評測分數把關合併",
+        "只放在另一個廠商的儀表板上"
+      ],
+      "correct": 2,
+      "explanation": "與程式碼同置、由 CI 把關、持續追蹤退步，這是現行標準。"
+    },
+    {
+      "stage": "check",
+      "question": "本課為什麼警告不要使用缺乏事實依據的 LLM-judge？",
+      "options": [
+        "它違反 Apache 2.0",
+        "判官同樣會產生幻覺；要搭配 CRITIC 模式，讓判斷奠基在外部工具上",
+        "它太慢了",
+        "它只能在 GPU 上運作"
+      ],
+      "correct": 1,
+      "explanation": "CRITIC（第 5 課）同樣適用：以工具佐證的查證能讓判官保持誠實。"
+    },
+    {
+      "stage": "post",
+      "question": "過度擬合評測的危險是什麼？",
+      "options": [
+        "向量索引會碎片化",
+        "運算成本上升",
+        "延遲降得太低",
+        "為評測集做最佳化會偏離生產環境的實用性；要輪替測試案例"
+      ],
+      "correct": 3,
+      "explanation": "輪替評測集能讓最佳化方向與生產環境的現實保持一致。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼不穩定（flaky）的評測會造成問題？",
+      "options": [
+        "它們會超出上下文視窗",
+        "它們連不到資料庫",
+        "它們讓推論成本加倍",
+        "非確定性的案例會產生假警報；要固定亂數種子並快照狀態"
+      ],
+      "correct": 3,
+      "explanation": "不穩定會讓退步變得無法判讀；確定性（種子、狀態快照）是必要條件。"
+    }
+  ]
+}

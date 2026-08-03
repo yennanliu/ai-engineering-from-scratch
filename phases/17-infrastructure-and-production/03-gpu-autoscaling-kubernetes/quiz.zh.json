@@ -1,0 +1,78 @@
+{
+  "lesson": "03-gpu-autoscaling-kubernetes",
+  "title": "GPU Autoscaling on Kubernetes — Karpenter, KAI Scheduler, Gang Scheduling",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "HPA 預設通常用哪個訊號來擴縮，而這一課認為它對 vLLM 式的服務是壞掉的？",
+      "options": [
+        "P99 TTFT",
+        "DCGM_FI_DEV_GPU_UTIL 工作週期",
+        "佇列深度",
+        "KV cache 使用率"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "KAI Scheduler 的 gang scheduling 主要防止什麼問題？",
+      "options": [
+        "分詞器的 GIL 競爭",
+        "部分配置陷阱：8 張 GPU 中有 7 張閒置等待第 8 張",
+        "冷啟動延遲",
+        "GPU 記憶體碎片化"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 Karpenter 預設的 consolidationPolicy WhenEmptyOrUnderutilized 對推論 GPU 池很危險？",
+      "options": [
+        "它只會整併 spot 執行個體",
+        "它會讓 Karpenter 無法佈建新節點",
+        "它會為了搬移 pod 而終止正在執行的 GPU 節點，這會驅逐執行中的請求並重新載入權重",
+        "它在突發流量下拒絕擴增"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "相較於 Cluster Autoscaler，Karpenter 佈建一個 GPU 節點大約快多少？",
+      "options": [
+        "大約快 5%",
+        "一樣快",
+        "大約快 40%（約 45-60 秒 vs 約 90-120 秒）",
+        "大約慢 10 倍"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "對於分離式的 prefill／decode pod（Phase 17 · 17），這一課建議用哪些擴縮訊號？",
+      "options": [
+        "兩者都用 Cluster Autoscaler",
+        "用單一個以工作週期為訊號的 HPA 同時涵蓋兩類 pod",
+        "只做手動擴縮",
+        "prefill pod 用佇列深度，decode pod 用 KV cache 壓力，拆成各自角色的 HPA"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為了避免驅逐執行中的工作，這一課對推論 GPU 池建議哪個 Karpenter disruption 設定？",
+      "options": [
+        "一律使用 spot 執行個體且不做整併",
+        "完全停用 Karpenter",
+        "consolidationPolicy: WhenEmptyOrUnderutilized 搭配 consolidateAfter: 0s",
+        "consolidationPolicy: WhenEmpty 搭配 consolidateAfter: 1h"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

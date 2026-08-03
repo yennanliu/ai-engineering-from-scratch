@@ -1,0 +1,78 @@
+{
+  "lesson": "02-inference-platform-economics",
+  "title": "Inference Platform Economics — Fireworks, Together, Baseten, Modal, Replicate, Anyscale",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "這一課用哪三個市場區隔來組織 2026 年的推論供應商？",
+      "options": [
+        "單租戶、多租戶、地端",
+        "免費、付費、企業",
+        "開放原始碼、商業、混合",
+        "自研晶片、GPU 平台、API 優先的市集"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在大約多少的持續 GPU 使用率之上，按分鐘計費（Baseten、Modal）開始勝過按 token 計費（Fireworks、Together）？",
+      "options": [
+        "5%",
+        "90%",
+        "60%",
+        "30%"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪一個平台被描述為 Python 原生的 serverless，按秒計費，預熱後冷啟動 2-4 秒？",
+      "options": [
+        "Anyscale",
+        "Baseten",
+        "Fireworks",
+        "Modal"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Fireworks 在 LoRA 定價上值得注意的差異化是什麼？",
+      "options": [
+        "LoRA 請求需要另外簽一份專屬 GPU 合約",
+        "以 LoRA 提供服務的請求，按基礎模型的每 token 費率計價",
+        "以 LoRA 提供服務的請求比基礎模型貴",
+        "完全不支援 LoRA"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪個平台適合需要 SOC 2 Type II、符合 HIPAA 的態勢與專屬 GPU 的受監管醫療客戶？",
+      "options": [
+        "Together",
+        "Anyscale",
+        "Baseten",
+        "Replicate"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼這一課認為在平台這一層，自研引擎的宣稱大多只是行銷上的互相貶抑？",
+      "options": [
+        "自研引擎從來贏不過 vLLM",
+        "每 token 定價是唯一真正的差異化",
+        "vLLM 與 SGLang 大約佔了生產環境開放原始碼推論的 80%，所以平台的差異化更多來自開發體驗、成本歸因與 SLA，而不是引擎",
+        "所有自研引擎都是 TensorRT-LLM 的分支"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

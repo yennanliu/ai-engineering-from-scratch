@@ -1,0 +1,90 @@
+{
+  "lesson": "33-instructions-as-executable-constraints",
+  "title": "Agent Instructions as Executable Constraints",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "期望性規則與可操作規則的差別是什麼？",
+      "options": [
+        "期望性規則需要一位主管來監督",
+        "期望性規則沒有檢查方式（「小心一點」）；可操作規則帶著工作台可以實際執行的機器可檢查函式",
+        "期望性規則要付費，可操作規則免費",
+        "可操作規則比較長"
+      ],
+      "correct": 1,
+      "explanation": "可操作規則是可測試的；期望性規則只是願望。"
+    },
+    {
+      "stage": "pre",
+      "question": "本課用哪五個類別涵蓋大多數規則？",
+      "options": [
+        "規劃、行動、反思、修正、出貨",
+        "read、write、exec、fork、exit",
+        "low、medium、high、critical、fatal",
+        "啟動、禁止、完成定義、不確定性、核准"
+      ],
+      "correct": 3,
+      "explanation": "啟動、禁止、完成定義、不確定性處理、核准邊界，就是這五類。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一個嚴重性標籤會中止執行，並需要操作者手動放行？",
+      "options": [
+        "soft",
+        "warn",
+        "block",
+        "info"
+      ],
+      "correct": 2,
+      "explanation": "block 是硬性失敗；warn 只加註；info 只回報。"
+    },
+    {
+      "stage": "check",
+      "question": "本課為什麼建議在撰寫規則的當下就標上嚴重性？",
+      "options": [
+        "linter 要求這麼做",
+        "團隊早期會高估嚴重性，之後又在時程壓力下把它調弱；預先寫下嚴重性能逼出這個校準",
+        "在 markdown 裡看起來比較整齊",
+        "這樣可以節省 token"
+      ],
+      "correct": 1,
+      "explanation": "嚴重性的校準必須是刻意為之，而不是在壓力下事後補上。"
+    },
+    {
+      "stage": "check",
+      "question": "markdown 當來源、JSON 當快取這個模式在做什麼？",
+      "options": [
+        "取代 markdown",
+        "把規則加密",
+        "停用審查",
+        "agent-rules.md 是人工撰寫的檔案；agent-rules.lock.json 是由 pre-commit hook 重新產生的熱路徑快取（形狀等同 package.json 加 lock 檔）"
+      ],
+      "correct": 3,
+      "explanation": "markdown 保持可審查，JSON 解析則留在熱路徑之外。"
+    },
+    {
+      "stage": "post",
+      "question": "把規則到期當成一種強制機制是什麼意思？",
+      "options": [
+        "超過 24 小時的規則一律失敗關閉",
+        "每條規則都帶一個 expires_at（預設 90 天）；從未觸發過的規則會觸動季度審查，逼你為它辯護、調弱或刪除",
+        "規則會自動到期，不需要審查",
+        "快取滿了規則就會到期"
+      ],
+      "correct": 1,
+      "explanation": "Cloudflare 的資料顯示：有到期機制的規則集維持在 30 條以下，沒有的則膨脹到 80 條以上且多半沒用。"
+    },
+    {
+      "stage": "post",
+      "question": "規則與框架護欄之間是什麼關係？",
+      "options": [
+        "規則取代護欄",
+        "兩者只需要其中一個",
+        "護欄在執行期強制規則；規則集則是那些護欄所實作、人類可讀的契約",
+        "護欄是規則的替代方案"
+      ],
+      "correct": 2,
+      "explanation": "兩者都需要：執行期負責抓出違規，規則集則證明執行期做的是對的事。"
+    }
+  ]
+}

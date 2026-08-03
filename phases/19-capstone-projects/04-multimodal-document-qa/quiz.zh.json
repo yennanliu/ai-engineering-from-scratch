@@ -1,0 +1,90 @@
+{
+  "lesson": "04-multimodal-document-qa",
+  "title": "Capstone 04 — Multimodal Document QA (Vision-First PDF, Tables, Charts)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在財務 PDF 與科學論文上，為什麼 2026 年的前沿做法偏好視覺優先的 late interaction，而不是先 OCR 再處理文字？",
+      "options": [
+        "OCR 流程會弄壞旋轉的表格、密集的方程式與圖表影像，喪失一半的訊號",
+        "OCR 無法在 GPU 上執行",
+        "視覺模型每頁的成本比較便宜",
+        "OCR 比渲染還慢"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "在 ColPali 式的檢索中，late interaction 是什麼意思？",
+      "options": [
+        "每個查詢 token 都對每個 patch token 評分，再以 MaxSim 加總各 token 的最大值",
+        "嵌入是在使用者點擊搜尋結果後才計算",
+        "reranker 只對最後一個候選執行",
+        "嵌入延後到評測時才做"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "ColQwen 的嵌入每頁大約產生多少個 patch 向量，這造成什麼儲存問題？",
+      "options": [
+        "剛好 128 個向量，任何向量資料庫都放得下",
+        "每頁約 2048 個 patch 向量，原始儲存量相較單向量索引大幅膨脹",
+        "每頁 1 個向量，沒有儲存問題",
+        "16 個向量，儲存負擔可以忽略"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "DocPruner 在這個流程中做什麼？",
+      "options": [
+        "在匯入前移除重複的 PDF 頁面",
+        "壓縮多向量索引，只保留約 50% 的高訊號 patch，準確率損失可忽略",
+        "在證據區域周圍裁切邊界框",
+        "改寫查詢嵌入以取得更短的向量"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼某些頁面仍然要併入一條 OCR 文字通道？",
+      "options": [
+        "VLM 無法讀取 180 DPI 的影像",
+        "OCR 才是主要的檢索形式",
+        "它能改善 PDF 的渲染品質",
+        "方程式密集與表格繁多的頁面，在影像之外再有一條文字備援會更好"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "這個總結專案以哪個基準來評測視覺優先的檢索？",
+      "options": [
+        "ViDoRe v3",
+        "RewardBench-2",
+        "MMLU-Pro",
+        "SWE-bench Pro"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "評分標準所說的證據區域接地（evidence-region grounding）是什麼意思？",
+      "options": [
+        "p99 尾端的重排序延遲",
+        "每次查詢檢索到的頁數總量",
+        "被引用的邊界框中，實際含有答案片段的比例",
+        "DocPruner 達成的壓縮率"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

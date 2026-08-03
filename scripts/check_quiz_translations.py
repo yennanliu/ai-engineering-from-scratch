@@ -18,6 +18,9 @@ Rules
   Q008  question/option/explanation prose actually contains CJK (warning:
         an entry identical to English is usually an untranslated leftover,
         but a bare term like "PPO" legitimately stays as-is)
+  Q009  zh only: no Simplified-Chinese characters. The site ships 繁體中文;
+        a Simplified glyph reads as a different locale and is invisible in
+        review because the sentence around it is still correct Chinese.
 
 Usage
   python3 scripts/check_quiz_translations.py            # all languages found
@@ -38,6 +41,18 @@ REPO = Path(__file__).resolve().parent.parent
 PHASES = REPO / "phases"
 CJK = re.compile(r"[㐀-䶿一-鿿豈-﫿]")
 REQUIRED = ("question", "options", "correct", "explanation", "stage")
+
+# Simplified forms whose Traditional counterpart is a different character.
+# Deliberately not exhaustive: a full table would need a conversion library,
+# and `scripts/` is stdlib-only. This is the subset that actually turns up in
+# technical Chinese, which is where a slip would land.
+SIMPLIFIED = set(
+    "习计变语应处实现关键参数输错检类结构状态环执时题过统设开发优网络"
+    "训练据软质监权级验证们这为无与从对说线图书转换选项测试组织节边缘"
+    "压扩释义务响请块归约减轮询个么样点该库层内体载运难储丰别学会电门"
+    "问间长见觉记认识论读译负费资进远连适递还阶随险隐页顺预领频风飞马"
+    "缩锁银达"
+)
 
 
 def questions_of(doc):
@@ -107,6 +122,11 @@ def check_pair(en_path: Path, zh_path: Path, lang: str) -> list[dict]:
 
         if lang == "zh" and not CJK.search(zh_q["question"]):
             add("Q008", f"{where}: question has no CJK — untranslated?")
+
+        if lang == "zh":
+            bad = sorted(SIMPLIFIED.intersection("".join(zt for _, zt, _ in pairs)))
+            if bad:
+                add("Q009", f"{where}: Simplified characters {''.join(bad)}")
 
     return issues
 

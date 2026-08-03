@@ -1,0 +1,90 @@
+{
+  "lesson": "09-hybrid-memory-mem0",
+  "title": "Hybrid Memory: Vector + Graph + KV",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "KV 儲存最擅長處理哪一類查詢？",
+      "options": [
+        "共用同一個計費實體的多個客戶之間的可達性",
+        "以（user、type、entity）為鍵的直接事實查找",
+        "指定時間點有效的時序查詢",
+        "長篇對話上的語意相似度"
+      ],
+      "correct": 1,
+      "explanation": "KV 對精確鍵是 O(1)；向量負責相似度，圖負責關係。"
+    },
+    {
+      "stage": "pre",
+      "question": "Mem0 在每次 add() 時會平行寫入哪三種儲存？",
+      "options": [
+        "Postgres、Redis、ClickHouse",
+        "快取、佇列、日誌",
+        "嵌入、注意力、FFN",
+        "向量、KV、圖"
+      ],
+      "correct": 3,
+      "explanation": "Mem0 把每一次寫入都分送到向量、KV 與圖三種儲存。"
+    },
+    {
+      "stage": "check",
+      "question": "哪三個維度餵入 Mem0 的融合分數？",
+      "options": [
+        "信心度、perplexity、BLEU",
+        "精確率、召回率、F1",
+        "相關性、重要性、新近度",
+        "延遲、吞吐量、成本"
+      ],
+      "correct": 2,
+      "explanation": "分數是相關性、重要性與新近度的加權總和；權重要依產品調整。"
+    },
+    {
+      "stage": "check",
+      "question": "當一則新進事實與既有的邊互相牴觸時，Mem0g 會怎麼做？",
+      "options": [
+        "拋出例外",
+        "改寫 user_id",
+        "把既有的邊標記為失效但不刪除，讓時序查詢仍能走訪",
+        "刪掉那條邊"
+      ],
+      "correct": 2,
+      "explanation": "軟性失效保留了歷史，讓指定時間點有效的時序查詢仍然可行。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼本課建議依產品調整融合權重？",
+      "options": [
+        "Apache 2.0 有此規定",
+        "向量函式庫不接受相等的權重",
+        "聊天型代理程式由新近度主導，合規型代理程式由重要性主導，檢索型代理程式則由相關性主導",
+        "供應商有此要求"
+      ],
+      "correct": 2,
+      "explanation": "不同產品想在相關性／重要性／新近度上有不同偏重；一組權重不可能通吃。"
+    },
+    {
+      "stage": "post",
+      "question": "Mem0 使用的作用範圍分類是什麼？",
+      "options": [
+        "user、session、agent",
+        "本地、區域、全球",
+        "公開、私有、機密",
+        "讀取、寫入、管理"
+      ],
+      "correct": 0,
+      "explanation": "作用範圍分為 user（跨 session）、session（單一對話串）、agent（每個實例各自的狀態）。"
+    },
+    {
+      "stage": "post",
+      "question": "在這個模式中什麼是嵌入漂移，本課建議如何緩解？",
+      "options": [
+        "向量被加密了；輪替金鑰",
+        "嵌入 API 換了網址；固定一個網域",
+        "嵌入值把整數撐爆了；改用 float64",
+        "向量檢索品質隨語料庫成長而退化；定期為使用最頻繁的前 N 筆紀錄重新產生嵌入"
+      ],
+      "correct": 3,
+      "explanation": "定期為熱門紀錄重新產生嵌入，能在語料庫成長時維持穩定的檢索品質。"
+    }
+  ]
+}

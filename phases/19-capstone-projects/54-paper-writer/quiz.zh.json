@@ -1,0 +1,78 @@
+{
+  "lesson": "54-paper-writer",
+  "title": "Paper Writer",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼撰寫器要在寫出任何文字之前，先把章節、圖表與引用宣告為資料？",
+      "options": [
+        "因為 BibTeX 無法解析前向參照",
+        "因為 LaTeX 要求前向宣告",
+        "因為模型需要一段系統提示詞",
+        "因為結構就是契約：測試框架可以在生成文字之前先驗證完整性"
+      ],
+      "correct": 3,
+      "explanation": "結構優先讓測試框架能在呼叫文字產生器之前，先驗證唯一性、引用涵蓋率與圖表涵蓋率。骨架就是契約。"
+    },
+    {
+      "stage": "pre",
+      "question": "圖表注入步驟會從實驗清單產生什麼？",
+      "options": [
+        "一組 Figure 記錄，帶有穩定的 id，路徑正規化為論文目錄的相對位置",
+        "一份參考書目的存根",
+        "一份由產物編譯而成的 PDF",
+        "一段帶有圖表描述的模型提示詞"
+      ],
+      "correct": 0,
+      "explanation": "read_experiment_manifest 回傳 Figure 記錄。id 是決定性的，路徑經過正規化，圖說則來自清單。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一種驗證失敗會在寫出任何檔案之前拋出 PaperValidationError？",
+      "options": [
+        "摘要超過 200 字",
+        "作者人數是奇數",
+        "某個章節引用了參考書目中未宣告的鍵",
+        "某個圖表路徑在磁碟上不存在"
+      ],
+      "correct": 2,
+      "explanation": "缺漏的參考書目鍵、重複的圖表 id、空標題、空摘要，以及未知的圖表參照，都會拋出 PaperValidationError。磁碟上是否存在則不強制檢查，因為 LaTeX 編譯器稍後會把關。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼文字產生器是注入 PaperWriter 的可呼叫物件，而不是它身上的一個方法？",
+      "options": [
+        "因為測試可以換上決定性的 MockProseGenerator 來取代模型呼叫，而不必動到撰寫器",
+        "因為 LaTeX 需要一個 callback",
+        "因為 dataclass 無法持有狀態",
+        "因為 Python 不允許方法接受 Paper 作為引數"
+      ],
+      "correct": 0,
+      "explanation": "撰寫器把文字產生器當成相依項接進來。測試替換成 MockProseGenerator，正式環境替換成模型呼叫，撰寫器本身完全不變。"
+    },
+    {
+      "stage": "post",
+      "question": "PaperWriter.write 成功時會產出哪三個檔案？",
+      "options": [
+        "paper.tex、references.bib、manifest.json",
+        "manifest.json、prose.txt、paper.pdf",
+        "paper.tex、paper.pdf、references.bib",
+        "outline.json、paper.tex、figures.tar"
+      ],
+      "correct": 0,
+      "explanation": "paper.tex 是 LaTeX 原始碼，references.bib 是參考書目，manifest.json 則是批評迴圈接著要讀的結構化產物。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼清單檔是撰寫器契約的一部分，而不是只交出 LaTeX 檔就好？",
+      "options": [
+        "因為下游工具（批評器、儀表板）讀的是結構化清單，不是 LaTeX",
+        "因為 manifest.json 是 BibTeX 唯一接受的檔案",
+        "因為 LaTeX 太大無法解析",
+        "因為 LaTeX 編譯器會拒絕沒有型別的章節"
+      ],
+      "correct": 0,
+      "explanation": "清單檔是給下游階段的穩定介面。批評器與儀表板檢視的是 manifest.json。LaTeX 是給人看的產物，不是機器介面。"
+    }
+  ]
+}
