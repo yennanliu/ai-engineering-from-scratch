@@ -1,0 +1,78 @@
+{
+  "lesson": "28-self-hosted-serving-selection",
+  "title": "Self-Hosted Serving Selection — Matching Engine to Hardware and Scale",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課挑選哪個引擎作為開發筆電上一行指令就能跑起來的預設？",
+      "options": [
+        "llama.cpp",
+        "vLLM",
+        "TGI",
+        "Ollama"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2025 年發生什麼事，讓新專案的預設不再是 TGI？",
+      "options": [
+        "TGI 在 2025 年 12 月 11 日進入維護模式 — 之後只修 bug",
+        "TGI 取消了 CUDA 支援",
+        "TGI 調漲價格",
+        "TGI 被 Anthropic 收購"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪一種硬體限制會逼你選 llama.cpp 並排除 vLLM / TRT-LLM？",
+      "options": [
+        "只有 CPU（沒有加速器）",
+        "AMD MI300X",
+        "NVIDIA Hopper",
+        "Apple M4"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課認為哪個引擎憑著 RadixAttention 適合代理程式式的多輪與前綴密集工作負載？",
+      "options": [
+        "SGLang",
+        "Ollama",
+        "TGI",
+        "llama.cpp"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在同一份 GGUF 或 HF 權重上，本課建議什麼樣的開發到正式環境流程？",
+      "options": [
+        "全程都用 TGI",
+        "開發用 Ollama，正式環境也用 Ollama",
+        "開發用 Ollama、staging 用 llama.cpp、正式環境用 vLLM（前綴密集的工作負載則用 SGLang）",
+        "從頭到尾只用 TRT-LLM"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼不建議在共用的正式環境使用 Ollama？",
+      "options": [
+        "它無法載入 GGUF",
+        "它只能在 Windows 上執行",
+        "它是閉源的",
+        "Go 的 HTTP 序列化帶來額外開銷、並行管理比 vLLM 陽春，而且 OpenTelemetry 支援落後"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

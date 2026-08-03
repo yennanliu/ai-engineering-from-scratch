@@ -1,0 +1,102 @@
+{
+  "lesson": "12-text-summarization",
+  "title": "Text Summarization",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "抽取式摘要與生成式摘要在行為上的關鍵差異是什麼？",
+      "options": [
+        "抽取式只支援多語言",
+        "抽取式逐字回傳原文中的句子；生成式產生新的文字，可能出現幻覺",
+        "抽取式使用 TF-IDF；生成式使用 Word2Vec",
+        "抽取式比生成式慢"
+      ],
+      "correct": 1,
+      "explanation": "抽取式逐字擷取句子；生成式改寫內容，因此有幻覺風險。"
+    },
+    {
+      "stage": "pre",
+      "question": "ROUGE 衡量什麼？",
+      "options": [
+        "token 層級的 perplexity",
+        "嵌入相似度",
+        "系統摘要與參考摘要之間的 n-gram 與最長共同子序列重疊程度",
+        "閱讀時間"
+      ],
+      "correct": 2,
+      "explanation": "ROUGE-1/2/L 分別衡量 unigram、bigram 與 LCS 和參考摘要的重疊。"
+    },
+    {
+      "stage": "check",
+      "question": "TextRank 在抽取式摘要中如何為句子評分？",
+      "options": [
+        "在一張以句子相似度為邊權重的圖上執行 PageRank 式的迭代",
+        "用嵌入與問題的餘弦相似度",
+        "與參考摘要比較",
+        "用原始字數"
+      ],
+      "correct": 0,
+      "explanation": "TextRank 在句子相似度圖上執行 PageRank；連結最密集的句子分數最高。"
+    },
+    {
+      "stage": "check",
+      "question": "計算 ROUGE 時為什麼要啟用詞幹還原（stemming）？",
+      "options": [
+        "不做詞幹還原時，'running' 與 'run' 會算成不同 token，ROUGE 會低估真實的重疊",
+        "詞幹還原會正規化大小寫",
+        "rouge-score 套件強制要求",
+        "為了加快 ROUGE 計算"
+      ],
+      "correct": 0,
+      "explanation": "詞幹還原把形態變化合併起來，讓 ROUGE 認可語意等價的形式。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一項 2026 年的指標是專為透過 NLI 蘊涵偵測摘要幻覺而設計的？",
+      "options": [
+        "以來源與摘要主張之間的 NLI 為基礎的忠實度檢查（例如 FactCC 或 RAGAS faithfulness）",
+        "BLEU",
+        "chrF",
+        "ROUGE-L"
+      ],
+      "correct": 0,
+      "explanation": "以 NLI 為基礎的忠實度評分會標出摘要中無法由來源蘊涵的主張。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼與合規相關的內容偏好抽取式摘要？",
+      "options": [
+        "抽取式支援更長的輸出",
+        "輸出逐字取自原文，消除了生成式那一類的幻覺",
+        "它比較快",
+        "ROUGE 分數比較高"
+      ],
+      "correct": 1,
+      "explanation": "逐字擷取無法憑空捏造內容，這在事實性受法規監管的場景中很關鍵。"
+    },
+    {
+      "stage": "post",
+      "question": "下列哪一項是需要監控的生成式幻覺類型？",
+      "options": [
+        "過長的句子",
+        "實體置換（例如把 'John Smith' 寫成 'John Brown'）、數字漂移、極性反轉或憑空捏造事實",
+        "標點漂移",
+        "停用詞移除"
+      ],
+      "correct": 1,
+      "explanation": "實體置換、數字漂移、極性反轉與捏造事實，是生成式摘要的典型失效模式。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼情況下會選用 Pegasus 檢查點而不是 BART-large-CNN？",
+      "options": [
+        "評估 BLEU 時",
+        "需要抽取式輸出時",
+        "在科學論文摘要這類領域，Pegasus 的 gap-sentence 預訓練目標更為契合",
+        "輸入很短時"
+      ],
+      "correct": 2,
+      "explanation": "Pegasus 的 gap-sentence 目標在長文領域摘要（例如 pubmed）上表現出色。"
+    }
+  ]
+}

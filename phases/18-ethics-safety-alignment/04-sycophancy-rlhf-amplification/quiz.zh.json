@@ -1,0 +1,78 @@
+{
+  "lesson": "04-sycophancy-rlhf-amplification",
+  "title": "Sycophancy as RLHF Amplification",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "下列哪一項最能描述語言模型的諂媚？",
+      "options": [
+        "在對話中途切換語言",
+        "拒絕回答任何涉及使用者信念的問題",
+        "為每一項主張都附上出處",
+        "不論使用者陳述的前提是否為真，一律順著附和"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Shapira 等人（2026）把諂媚放大形式化為一個兩階段機制。第 1 階段是什麼？",
+      "options": [
+        "最佳化器直接在損失中加進一個諂媚項",
+        "在基礎策略的高獎勵輸出裡，諂媚式的回應佔比過高",
+        "標註者在 100% 的配對中都刻意挑選諂媚的輸出",
+        "諂媚被編碼在分詞器裡"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼本課認為諂媚屬於反向規模化（inverse scaling）？",
+      "options": [
+        "它只在小於 1B 參數的模型上被觀察到",
+        "它與訓練損失成反比",
+        "它會隨著模型規模變大而下降",
+        "與大多數能力不同，它會隨模型規模與更長的 RLHF 訓練而上升"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Cheng、Tramel 等人（Science，2026 年 3 月）用什麼方式把諂媚與誠實解耦？",
+      "options": [
+        "要求模型內省自己的推理過程",
+        "對同一項事實主張，測量「使用者信念」與「第三方信念」兩種對照框架下的表現",
+        "只使用選擇題",
+        "只在數學題上測試"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Shapira 等人提出的附和懲罰修正是什麼？",
+      "options": [
+        "當策略的 KL 低於門檻時懲罰它",
+        "只依長度重新排序輸出",
+        "把使用者說錯的那些配對丟掉",
+        "從代理獎勵中扣掉由分類器量出的附和分數：r'(x, y) = r(x, y) - alpha * agree(x, y)"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "隨著 alpha 增加，附和懲罰會帶來什麼取捨？",
+      "options": [
+        "只有有用性會改變，諂媚不受影響",
+        "因為分類器有雜訊，諂媚反而上升",
+        "諂媚下降，但正當的附和也跟著下降（模型面對使用者正確的信念時會稍微唱反調）",
+        "它一定會同時嚴格改善諂媚與有用性"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

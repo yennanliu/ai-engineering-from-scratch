@@ -1,0 +1,78 @@
+{
+  "lesson": "19-ai-gateways",
+  "title": "AI Gateways — LiteLLM, Portkey, Kong AI Gateway, Bifrost",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在本課中，AI gateway 的核心角色是什麼？",
+      "options": [
+        "用於檢索的向量資料庫",
+        "模型微調服務",
+        "一個位於應用程式與模型供應商之間的行程，把路由、備援、重試、速率限制、密鑰引用、可觀測性與護欄整合在單一 API 後面",
+        "只做日誌記錄的 sidecar"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Kong 的基準測試回報 LiteLLM 的規模上限在哪裡？",
+      "options": [
+        "LiteLLM 無法進行基準測試",
+        "它可以線性擴展到超過 10k RPS",
+        "大約在 2000 RPS 左右崩潰，記憶體吃到 8 GB，並在持續負載下出現連鎖故障",
+        "上限是 50 RPS"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "依 Kong 在同等 CPU 條件下的基準測試，Kong AI Gateway 比 Portkey 與 LiteLLM 快多少？",
+      "options": [
+        "完全一樣",
+        "分別快約 10% 與 20%",
+        "比 Portkey 快 228%，比 LiteLLM 快 859%",
+        "比兩者都慢"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課把哪個 gateway 定位成延遲開銷 20-40 ms，並聚焦於護欄／PII 遮蔽／越獄偵測？",
+      "options": [
+        "Cloudflare AI Gateway",
+        "Portkey",
+        "Kong AI Gateway",
+        "LiteLLM"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課認為自架與代管 gateway 的抉擇由什麼因素決定？",
+      "options": [
+        "支援的供應商數量",
+        "每次請求的成本",
+        "資料落地的法規要求",
+        "gateway 是不是開源"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "當 SLA 是 TTFT P99 小於 100 ms 時，哪些 gateway 還在預算之內？",
+      "options": [
+        "只有 Portkey",
+        "任何 gateway 都可以",
+        "只有 LiteLLM",
+        "Kong（約 3-8 ms）或 Cloudflare／Vercel 的邊緣 gateway（約 1-3 ms）；Portkey 的 20-40 ms 太重"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

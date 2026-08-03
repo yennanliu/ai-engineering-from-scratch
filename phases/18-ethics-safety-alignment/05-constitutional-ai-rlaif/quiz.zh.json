@@ -1,0 +1,78 @@
+{
+  "lesson": "05-constitutional-ai-rlaif",
+  "title": "Constitutional AI and RLAIF",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Constitutional AI 相較於標準 RLHF，核心的替換是什麼？",
+      "options": [
+        "它完全移除獎勵模型",
+        "它用合成提示詞取代真實提示詞",
+        "它把人類偏好標註者換成一個讀取原則清單的 AI 標註者",
+        "它用 DPO 取代 PPO"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Constitutional AI 的第一階段（SFT）做什麼？",
+      "options": [
+        "把標註者的評論分群，藉此產生合成的原則",
+        "先產生初始回應，依抽到的憲法原則自我批評，接著修訂，並把修訂版當成 SFT 的目標",
+        "用憲法推導出的獎勵執行 PPO",
+        "只用 AI 產生的偏好訓練獎勵模型"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "第二階段（RLAIF）做什麼？",
+      "options": [
+        "跳過 PPO，改用單一的監督式損失",
+        "用回饋模型產生的 AI 偏好訓練獎勵模型，再針對它執行 PPO",
+        "讓人類重新標註 SFT 的輸出",
+        "把憲法蒸餾進分詞器"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 於 2026 年 1 月公布的四層 Claude 憲法，層級順序為何？",
+      "options": [
+        "有用 > 廣義符合倫理 > 平台規則 > 避免災難",
+        "避免災難性後果 > 遵循 Anthropic 指引 > 廣義符合倫理 > 有用且坦誠",
+        "廣義符合倫理 > 有用 > 平台規則 > 避免災難",
+        "平台規則 > 避免災難 > 有用 > 廣義符合倫理"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "從 RLHF 換成 RLAIF，不見得能解決哪一個失效模式？",
+      "options": [
+        "標註者人力不足",
+        "標註者成本",
+        "獎勵駭入／Goodhart 定律",
+        "標註者心理狀態造成的不一致"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Constitutional Classifiers v1 與 v2（2026）之間最主要的變化是什麼？",
+      "options": [
+        "v2 把運算開銷從 1% 提高到 23.7%",
+        "v2 拿掉分類器，只靠憲法本身",
+        "v2 把運算開銷從 23.7% 降到約 1%，而攻擊成功率仍然很低",
+        "v2 只作用在輸入，不作用在輸出"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

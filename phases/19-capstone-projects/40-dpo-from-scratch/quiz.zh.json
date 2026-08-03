@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/40-dpo-from-scratch",
+  "title": "Direct Preference Optimization from Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "閱讀前：在 Bradley-Terry 偏好模型下，給定提示詞 x，人類偏好完成 y_w 勝過 y_l 的機率是 sigmoid(r(x, y_w) - r(x, y_l))。這意味著什麼？",
+      "options": [
+        "只有獎勵的差值有意義；任何同時加到 r(x, y_w) 與 r(x, y_l) 上的函式都會抵消。",
+        "你必須先擬合 r 才能訓練策略。",
+        "Bradley-Terry 需要一個不會消失的正規化常數 Z(x)。",
+        "sigmoid 與最大概似法不相容。"
+      ],
+      "correct": 0,
+      "explanation": "Bradley-Terry 偏好只取決於獎勵差值。兩個完成共有的東西都會抵消。這就是 DPO 能避開顯式獎勵模型的結構性原因：最佳策略公式中只與提示詞有關的那一項會被消掉。"
+    },
+    {
+      "stage": "check",
+      "question": "單一三元組的 DPO 損失是 -log sigmoid( beta * ( (logp_w_pol - logp_w_ref) - (logp_l_pol - logp_l_ref) ) )。如果 logp_w_pol = logp_w_ref 且 logp_l_pol = logp_l_ref，損失等於？",
+      "options": [
+        "beta。",
+        "-1。",
+        "log(2)。",
+        "0。"
+      ],
+      "correct": 2,
+      "explanation": "兩個差值都是零，所以 sigmoid 的引數是零、sigmoid 值是 0.5，而 -log(0.5) = log(2)。這正是策略完全沒有偏離參考模型時的損失。"
+    },
+    {
+      "stage": "check",
+      "question": "在 DPO 訓練期間，被選中完成在參考模型下的對數機率會隨著策略偏離而在各 epoch 之間變化。對或錯？",
+      "options": [
+        "對，但只在 beta 非零時。",
+        "錯，除非用 no_grad 明確停用梯度。",
+        "對：參考模型會隨著策略更新而漂移。",
+        "錯：參考模型是凍結的；參考對數機率算一次之後就重複使用。"
+      ],
+      "correct": 3,
+      "explanation": "參考模型在整個 DPO 過程中都是凍結的，參數永不更新。實作要嘛把參考對數機率快照一次，要嘛把參考模型的前向傳遞包在 no_grad 裡，並把它的參數設為 requires_grad=False。"
+    },
+    {
+      "stage": "check",
+      "question": "把 L_DPO 對 logp_w_pol（策略對被選中完成的對數機率）取梯度，其正負號是？",
+      "options": [
+        "正的（被選中的對數機率上升時損失也上升）。",
+        "零（損失與策略對數機率無關）。",
+        "不確定（取決於參考模型）。",
+        "負的（被選中的對數機率上升時損失下降）。"
+      ],
+      "correct": 3,
+      "explanation": "梯度是 -beta * (1 - sigmoid(z))，恆為非正。提高被選中完成的對數機率會降低損失，這正是我們要的訓練訊號。"
+    },
+    {
+      "stage": "post",
+      "question": "在你的替身資料上，DPO 損失有下降，但策略開始一律偏好較短的完成，連較短明明更差時也一樣。最可能的原因是？",
+      "options": [
+        "長度偏誤：較長的序列會累加更多對數機率項（每一項都是負的），所以對數機率總和在結構上就懲罰長度。",
+        "最佳化器用了錯的學習率。",
+        "參考模型沒有被正確凍結。",
+        "beta 太低。"
+      ],
+      "correct": 0,
+      "explanation": "對數機率總和偏向較短的序列，因為每多一個 token 就多加一個負的對數機率項。標準的修法是在訓練與評測時都以完成長度對對數機率做正規化。"
+    },
+    {
+      "stage": "post",
+      "question": "你想把 sigmoid 加 log 的損失換成 IPO 的變體 (z - 1)^2。這對訓練動態有什麼實際影響？",
+      "options": [
+        "它完全免除了對參考模型的需求。",
+        "它不像 sigmoid 損失那樣會飽和，在偏好標籤有雜訊時撐得比較好。",
+        "它不需要 beta 參數。",
+        "它在所有點上都與原式數學等價。"
+      ],
+      "correct": 1,
+      "explanation": "IPO 的平方損失不會像 sigmoid 那樣飽和，這在偏好標籤有雜訊、或部分三元組標錯時很有幫助。經驗上它能減少在小型偏好資料集上的過度最佳化。"
+    }
+  ]
+}

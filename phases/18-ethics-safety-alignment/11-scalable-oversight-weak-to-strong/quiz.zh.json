@@ -1,0 +1,78 @@
+{
+  "lesson": "11-scalable-oversight-weak-to-strong",
+  "title": "Scalable Oversight and Weak-to-Strong Generalization",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Superalignment 議程提出的核心問題是什麼？",
+      "options": [
+        "人類是否比獎勵模型更準確？",
+        "RLHF 能否擴展到超過 10 億參數？",
+        "較弱的監督者能否可靠地監督一個更強、且已對齊的模型？",
+        "對抗訓練能否移除所有後門？"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Burns 等人（2023）的 weak-to-strong 泛化研究中，實驗設定為何？",
+      "options": [
+        "只用合成資料訓練一個獎勵模型",
+        "兩個強模型互相辯論，由人類擔任裁判",
+        "用弱模型（GPT-2 等級）產生的標籤微調強模型（GPT-4 等級），再把其能力拿來對照強模型的監督式上限",
+        "用 GPT-4 的標籤微調 GPT-2"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Performance Gap Recovered（PGR）是如何定義的？",
+      "options": [
+        "（微調後 − 弱）／（上限 − 弱）",
+        "（弱 − 上限）／上限",
+        "微調後／上限",
+        "（上限 − 微調後）／弱"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "下列何者「不是」本課列出的可規模化監督機制？",
+      "options": [
+        "Recursive Reward Modeling",
+        "分詞器蒸餾",
+        "任務分解",
+        "Debate"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "可規模化監督與 W2SG 如何互補？",
+      "options": [
+        "兩者都需要白箱存取",
+        "兩者針對同一個指標",
+        "可規模化監督提升監督者實際訊號的品質；W2SG 則負責從監督者給出的任何不完美訊號中把落差補起來",
+        "兩者互斥"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "AI-safety-via-debate 機制的核心假設是什麼？",
+      "options": [
+        "找出一個有說服力的真答案，比找出一個有說服力的假答案更容易",
+        "辯論逐字稿總是比直接回答更短",
+        "裁判的能力強於辯論者",
+        "兩位辯論者永遠都說實話"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

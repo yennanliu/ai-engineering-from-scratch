@@ -1,0 +1,90 @@
+{
+  "lesson": "24-agent-observability-platforms",
+  "title": "Agent Observability: Langfuse, Phoenix, Opik",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 2025 年 6 月把原本的商業模組開源之後，Langfuse 採用哪一種授權條款？",
+      "options": [
+        "Apache 2.0",
+        "GPLv3",
+        "Elastic License 2.0",
+        "MIT"
+      ],
+      "correct": 3,
+      "explanation": "2025 年 6 月之後 Langfuse 全面採用 MIT，包含 LLM-as-a-judge、標註佇列、提示詞實驗與 Playground。"
+    },
+    {
+      "stage": "pre",
+      "question": "依照本課內容，Arize Phoenix 最強的地方是什麼？",
+      "options": [
+        "深度的代理程式專屬評測：trace 分群、異常偵測、RAG 檢索相關性、OpenInference 自動插樁",
+        "自動化的最佳化迴圈",
+        "提示詞版本管理",
+        "程式碼的靜態分析"
+      ],
+      "correct": 0,
+      "explanation": "Phoenix 聚焦在行為漂移與 RAG 評測，並提供 OpenInference 自動插樁。"
+    },
+    {
+      "stage": "check",
+      "question": "哪個平台把自動提示詞最佳化、護欄（PII 遮蔽、主題限制）與 LLM-judge 幻覺偵測結合在一起？",
+      "options": [
+        "Langfuse",
+        "Phoenix",
+        "Jaeger",
+        "Opik"
+      ],
+      "correct": 3,
+      "explanation": "Opik 的核心就是最佳化加護欄的迴圈。"
+    },
+    {
+      "stage": "check",
+      "question": "本課推薦哪個平台作為含提示詞管理的一站式方案？",
+      "options": [
+        "Opik",
+        "Datadog APM",
+        "Phoenix",
+        "Langfuse"
+      ],
+      "correct": 3,
+      "explanation": "Langfuse 端到端涵蓋 tracing、提示詞管理、評測與 session 重播。"
+    },
+    {
+      "stage": "check",
+      "question": "關於廠商自行發布的平台基準測試，本課怎麼說？",
+      "options": [
+        "它們具有決定性",
+        "把它們當成方向參考；用自己的語料實際量測",
+        "只有 Opik 的可信",
+        "OpenTelemetry 禁止使用它們"
+      ],
+      "correct": 1,
+      "explanation": "即使是文中引用的 Opik 與 Langfuse 之間 14 倍的差距，也應該先在自己的資料上量測再做決定。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼只做 tracing 而不做評測會被視為昂貴的日誌？",
+      "options": [
+        "供應商依 span 數收費",
+        "你看得到每次執行，卻沒有為它們評分，因此退步無從察覺，也無法二分定位",
+        "磁碟比 CPU 貴",
+        "span 無法重播"
+      ],
+      "correct": 1,
+      "explanation": "評測才是把 trace 轉成可行動品質訊號的東西。"
+    },
+    {
+      "stage": "post",
+      "question": "本課對自行打造的 LLM-judge 提出什麼警告？",
+      "options": [
+        "CRITIC 同樣適用：判官需要外部依據才能做事實查證，否則只會照單全收",
+        "它們必須跑在 GPU 上",
+        "Apache 2.0 禁止它們",
+        "它們只能在 TypeScript 中運作"
+      ],
+      "correct": 0,
+      "explanation": "少了外部工具佐證的查證，LLM-judge 會逐漸淪為照單全收（CRITIC，第 5 課）。"
+    }
+  ]
+}

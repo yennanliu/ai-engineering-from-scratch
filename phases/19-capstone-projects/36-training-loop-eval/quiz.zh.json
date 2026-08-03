@@ -1,0 +1,78 @@
+{
+  "lesson": "36-training-loop-eval",
+  "title": "Training Loop and Evaluation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼目標張量必須是輸入張量位移一格後的結果？",
+      "options": [
+        "交叉熵需要兩個完全相同的張量",
+        "這樣可以加速最佳化器",
+        "AdamW 要求如此",
+        "訓練目標是預測下一個 token：模型在每個位置都要預測接下來出現的那個 token；忘記位移等於訓練模型預測自己，學不到任何有用的東西"
+      ],
+      "correct": 3,
+      "explanation": "輸入是 token 0..T-1，目標是 token 1..T；損失是在攤平後的 (batch*seq, vocab) 與 (batch*seq,) 形狀上計算的。"
+    },
+    {
+      "stage": "pre",
+      "question": "evaluate_model 做了哪些訓練步驟沒有做的事？",
+      "options": [
+        "它在 no_grad 之下、且關閉 dropout，跑固定數量的驗證批次，回傳可重現的平均損失",
+        "它會改動模型權重",
+        "它會計算兩次梯度",
+        "它會執行最佳化器"
+      ],
+      "correct": 0,
+      "explanation": "留出驗證不需要梯度、不需要 dropout，並且要用固定的驗證資料切片，才能在多次執行間重現。"
+    },
+    {
+      "stage": "check",
+      "question": "AdamW 中哪些參數會套用權重衰減？",
+      "options": [
+        "矩陣形狀的張量（線性層權重、嵌入表）套用權重衰減；scale、shift 與 bias 張量的衰減設為零",
+        "只有 LayerNorm 的 scale",
+        "所有參數一視同仁",
+        "只有 LM head"
+      ],
+      "correct": 0,
+      "explanation": "對 LayerNorm 的 scale 施加衰減會把 scale 壓到零、破壞正規化；這種拆分是標準的生產環境做法。"
+    },
+    {
+      "stage": "check",
+      "question": "warmup 加 cosine 的排程從第 0 步到最後一步描出什麼形狀？",
+      "options": [
+        "階梯函式",
+        "常數",
+        "在 warmup_steps 內從零線性爬升到最大值，之後在剩餘步數中從最大值以 cosine 衰減到 min_lr",
+        "指數成長"
+      ],
+      "correct": 2,
+      "explanation": "warmup 讓最佳化器狀態先填充起來；cosine 衰減把步長逐漸縮小，讓最後階段細修權重。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要在 optimizer.step() 之前裁剪梯度範數？",
+      "options": [
+        "這樣就不需要 warmup 了",
+        "一個壞批次可能產生巨大梯度，抹掉數小時的訓練成果；裁剪到 max_norm=1.0 能讓最佳化器留在安全範圍內，又不扭曲正常的更新",
+        "它能加速矩陣乘法",
+        "它能降低記憶體用量"
+      ],
+      "correct": 1,
+      "explanation": "梯度裁剪是防止發散最便宜的保險；1.0 是在大多數設定下都撐得住的預設值。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼把每一步的紀錄寫成 JSONL，而不是 pickle 的狀態？",
+      "options": [
+        "最佳化器要求使用 JSONL",
+        "JSONL 訓練得比較快",
+        "JSONL 紀錄能跨重構存活、可以 grep、三十行就能畫圖，而且崩潰後仍在；pickle 的狀態則把你綁死在產生它的那套模組結構上",
+        "JSONL 佔用較少的 GPU 記憶體"
+      ],
+      "correct": 2,
+      "explanation": "任何崩潰都會留下可讀的產物；續訓時讀取最後一步；在其上疊工具也很容易。"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "lesson": "23-function-call-dispatcher",
+  "title": "Function Call Dispatcher",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼非冪等工具的逾時預設不重試？",
+      "options": [
+        "因為分派器無法量測非冪等的呼叫",
+        "因為非冪等的 handler 跑得比較快",
+        "因為冪等鍵很慢",
+        "因為該工具可能已經部分提交；重試會讓效果重複發生"
+      ],
+      "correct": 3,
+      "explanation": "重試一個在 4.9 秒逾時的 db.write，可能造成第二次寫入。除非 handler 告訴分派器這個呼叫可以安全重複，否則分派器拒絕重試。"
+    },
+    {
+      "stage": "pre",
+      "question": "冪等鍵去重是在防範什麼？",
+      "options": [
+        "Schema 驗證錯誤",
+        "在原始呼叫仍在進行中時觸發的重試",
+        "行程重啟",
+        "緩慢的網路"
+      ],
+      "correct": 1,
+      "explanation": "沒有去重的話，5 秒時的重試會和仍在等待的緩慢原始呼叫互相競爭。快取把兩者收斂成單一次 handler 呼叫。"
+    },
+    {
+      "stage": "check",
+      "question": "在這個分派器中，哪些錯誤種類符合重試資格？",
+      "options": [
+        "schema 與 not_found",
+        "timeout（若為冪等）與 transient",
+        "internal 與 budget_exceeded",
+        "全部都符合"
+      ],
+      "correct": 1,
+      "explanation": "Schema 與 not_found 是確定性的。Internal 掩蓋了未知的 handler 錯誤。Budget exceeded 是一種讓步。只有冪等工具的逾時與明確的 TransientError 會重試。"
+    },
+    {
+      "stage": "check",
+      "question": "包住 _run_with_retries 的號誌保護的是什麼？",
+      "options": [
+        "保護 handler 不受自己影響",
+        "保護後端不被 gather() 展開的過多同時呼叫壓垮",
+        "保護驗證器",
+        "保護重試計數器"
+      ],
+      "correct": 1,
+      "explanation": "沒有上限的話，四十個呼叫的 gather 會同時開出四十個分派。號誌為這波浪潮設下上限。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼冪等鍵由呼叫端推導，而不是由分派器推導？",
+      "options": [
+        "因為快取無法儲存字串",
+        "因為註冊表不會有這個鍵",
+        "因為只從引數推導的話，兩個語意不同但恰好共用引數的呼叫會發生碰撞",
+        "因為 Python 的雜湊值不穩定"
+      ],
+      "correct": 2,
+      "explanation": "呼叫端知道步驟 id、規劃器的意圖以及使用者是誰。光靠引數不足以構成安全去重所需的脈絡。"
+    },
+    {
+      "stage": "post",
+      "question": "分派時的 schema 失敗對應到哪個 JSON-RPC 錯誤碼？",
+      "options": [
+        "-32602",
+        "-32603",
+        "-32700",
+        "-32601"
+      ],
+      "correct": 0,
+      "explanation": "-32602 Invalid params。分派器在任何 handler 執行之前就回傳它。"
+    },
+    {
+      "stage": "post",
+      "question": "在冪等工具上持續逾時直到達到 max_attempts 之後，會回傳什麼？",
+      "options": [
+        "DispatchOk，但沒有結果",
+        "DispatchError，kind=timeout 且 attempts==max_attempts",
+        "拋出一個例外",
+        "DispatchError，kind=internal"
+      ],
+      "correct": 1,
+      "explanation": "分派器回傳一個具型別的錯誤封套。kind 反映最後一次的失敗模式，attempts 反映總共嘗試了幾次。"
+    }
+  ]
+}

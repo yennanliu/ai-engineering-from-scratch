@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/25-verification-gates-observation-budget",
+  "title": "Verification Gates and the Observation Budget",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "閱讀本課之前：以下哪一項最能說明為什麼 harness 需要一條確定性的關卡鏈，而不是以模型為裁判？",
+      "options": [
+        "模型太慢，無法在正式環境擔任裁判。",
+        "關卡鏈讓模型可以自己寫政策。",
+        "以模型為裁判一定會產生幻覺式的放行判定。",
+        "確定性讓拒絕原因可稽核，也讓整條鏈可重播。"
+      ],
+      "correct": 3,
+      "explanation": "稽核軌跡與可重現性是實務上的收穫。裁判模型也可以接進來，但結構性的關卡必須是確定性的，這樣判定才能被重現與審查。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼本課在關卡鏈中把 WhitelistGate 排在 BudgetGate 之前？",
+      "options": [
+        "BudgetGate 要等到至少呼叫過一個工具之後才能執行。",
+        "白名單拒絕的成本較低，先短路掉可以省去昂貴的帳本加總。",
+        "依慣例白名單必須永遠是最後一道關卡。",
+        "順序無所謂，因為 GateChain 會隨機化評估順序。"
+      ],
+      "correct": 1,
+      "explanation": "便宜的拒絕先跑。WhitelistGate 是 O(1) 的雜湊查找。BudgetGate 必須加總帳本。在白名單就短路，可以在呼叫結構上本來就不合法時省下那份工。"
+    },
+    {
+      "stage": "check",
+      "question": "一個 ObservationLedger 已記錄了 read_file 產生的 60 個 token 的觀察結果。接著 harness 拒絕了後續的一次呼叫。帳本會如何記錄這次拒絕？",
+      "options": [
+        "不記錄。帳本只記錄成功的觀察結果。",
+        "拒絕會以合成的 Observation 附加進去，並帶上拒絕者的名稱。",
+        "一列 token 數為零、標記為 refused 的 Observation。",
+        "一列 token 數為負、代表拒絕成本的 Observation。"
+      ],
+      "correct": 0,
+      "explanation": "帳本記錄的是模型看見過的觀察結果。一次拒絕產生的是 GateDecision，不是 Observation。拒絕次數存放在帳本旁邊，而不是帳本裡面。"
+    },
+    {
+      "stage": "check",
+      "question": "RecencyGate.window 設為 3。帳本的 latest_turn 是 5。一個新的 ToolCall 在第 10 輪抵達。會發生什麼事？",
+      "options": [
+        "關卡拒絕：間隔 5 超過視窗值 3。",
+        "關卡放行：這次呼叫就在最新的一輪上。",
+        "關卡放行：視窗套用在帳本大小上，不是輪次間隔。",
+        "關卡拋出例外，因為帳本已過時。"
+      ],
+      "correct": 0,
+      "explanation": "RecencyGate 拿 (call.turn - ledger.latest_turn) 與視窗比較。10 - 5 = 5，大於 3，所以關卡拒絕。"
+    },
+    {
+      "stage": "post",
+      "question": "你想加上一個單次呼叫的輸出上限（任何單一觀察結果都不得超過 8000 個 token）。這道關卡在鏈中邏輯上該放在哪裡？",
+      "options": [
+        "它不能做成關卡，因為大小要等工具執行完才知道。",
+        "放在 WhitelistGate 之前，因為大小是最便宜的檢查屬性。",
+        "放進 BudgetGate 裡面，讓各種上限可以組合。",
+        "放在 BudgetGate 之後，因為累計預算永遠優先。"
+      ],
+      "correct": 0,
+      "explanation": "在關卡評估的當下並不知道輸出大小。Harness 是在工具執行之後才套用上限，在模型看見之前把觀察結果截斷。關卡評估的是輸入，不是輸出。"
+    },
+    {
+      "stage": "post",
+      "question": "審查者要求你證明代理程式在整個工作階段中從未觸發過被拒絕的工具呼叫。你會指向哪一份產物？",
+      "options": [
+        "ObservationLedger 快照，它只包含成功的觀察結果。",
+        "pytest 的輸出，它記錄測試通過／失敗。",
+        "模型的對話逐字稿，它包含模型自己的陳述。",
+        "ChainOutcome 紀錄清單，它包含每一次呼叫的判定與拒絕原因。"
+      ],
+      "correct": 3,
+      "explanation": "ChainOutcome 紀錄帶有每次呼叫的判定與拒絕原因。帳本與逐字稿可以佐證，但可稽核的產物是關卡判定。"
+    }
+  ]
+}

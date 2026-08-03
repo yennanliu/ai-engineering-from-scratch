@@ -1,0 +1,90 @@
+{
+  "lesson": "17-claude-agent-sdk",
+  "title": "The Harness as a Library — Subagents and Session Store",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Anthropic Client SDK 與 Claude Agent SDK 的差別是什麼？",
+      "options": [
+        "Client SDK 是原始的 Messages API；Agent SDK 則是 Claude Code 那套 harness 形狀，內建工具、MCP、hooks、subagents 與 session store",
+        "兩者沒有差別",
+        "Client SDK 只支援 Python",
+        "Client SDK 要付費；Agent SDK 免費"
+      ],
+      "correct": 0,
+      "explanation": "Client SDK 給你迴圈的材料；Agent SDK 直接把迴圈組好給你。"
+    },
+    {
+      "stage": "pre",
+      "question": "文件記載的 subagent 兩大用途是什麼？",
+      "options": [
+        "身分驗證與授權",
+        "記錄與指標",
+        "快取與速率限制",
+        "平行化與上下文隔離"
+      ],
+      "correct": 3,
+      "explanation": "Subagent 可以並行跑獨立的工作，並藉由隔離上下文來保住主控端的上下文預算。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪個方法不屬於 session store 的介面？",
+      "options": [
+        "append",
+        "compile_prompt",
+        "load",
+        "list_subkeys"
+      ],
+      "correct": 1,
+      "explanation": "Session store 提供 append、load、list_sessions、delete 與 list_subkeys；compile_prompt 不是 session API。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不是 Claude Agent SDK 的生命週期 hook？",
+      "options": [
+        "PreEmbedding",
+        "PreToolUse",
+        "PostToolUse",
+        "PreCompact"
+      ],
+      "correct": 0,
+      "explanation": "Hooks 包含 PreToolUse、PostToolUse、SessionStart/End、UserPromptSubmit、PreCompact、Stop 與 Notification。PreEmbedding 不是 hook。"
+    },
+    {
+      "stage": "check",
+      "question": "trace context 如何在代理程式與 CLI 子行程之間傳遞？",
+      "options": [
+        "只能透過供應商的儀表板",
+        "透過檔案系統",
+        "只透過環境變數",
+        "透過傳進 CLI 子行程的 W3C trace context 標頭"
+      ],
+      "correct": 3,
+      "explanation": "呼叫端的 OTel span 會經由 W3C trace context 傳進 CLI 子行程，讓整個跨行程的執行成為同一條 trace。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼是 subagent 過度衍生，什麼時候會發生？",
+      "options": [
+        "衍生的 subagent 數量超過 CPU 核心數",
+        "在 SessionStart 之前就衍生",
+        "為 100 個極小任務衍生 100 個 subagent，讓額外開銷主導成本；應該改成批次處理",
+        "忘記關閉 subagent"
+      ],
+      "correct": 2,
+      "explanation": "Subagent 有額外開銷；小任務應該批次處理，而不是一個任務衍生一個。"
+    },
+    {
+      "stage": "post",
+      "question": "相較於自架的 SDK，Claude Managed Agents 是拿什麼換什麼？",
+      "options": [
+        "用 tracing 換串流",
+        "用工具換記憶",
+        "用延遲換成本",
+        "用控制權換託管的基礎設施（長時間非同步執行、內建提示詞快取、內建壓縮）"
+      ],
+      "correct": 3,
+      "explanation": "Managed Agents 是給長時間非同步工作的託管選項：控制權變少，維運面也變小。"
+    }
+  ]
+}

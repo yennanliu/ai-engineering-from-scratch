@@ -1,0 +1,78 @@
+{
+  "lesson": "20-shadow-canary-progressive",
+  "title": "Shadow Traffic, Canary Rollout, and Progressive Deployment for LLMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為 LLM 上線安排 shadow、canary 與 A/B 測試的正確順序是什麼？",
+      "options": [
+        "完全跳過 shadow",
+        "先 shadow（零影響比對），再 canary（線上流量漸進放量並設關卡），確認穩定後才對明顯不同的方案做 A/B",
+        "先 canary，再 shadow，最後 A/B",
+        "先 A/B，再 shadow，最後 canary"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課用哪五項指標作為 canary 放量的關卡？",
+      "options": [
+        "GPU 溫度、風扇轉速、佇列深度、成本、延遲",
+        "只看吞吐量",
+        "延遲百分位數、每次請求成本、錯誤／拒答率、輸出長度分布、使用者回饋率",
+        "只看離線評測的準確率"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課引用的數字中，LLM 在完全相同輸入下的多次執行準確率變異大約有多少？",
+      "options": [
+        "低於 0.1%",
+        "最高約 15%，成因是 GPU 浮點運算不具結合律再加上批次大小的變異",
+        "永遠是 50%",
+        "每次執行輸出都完全相同"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "依本課的框架，shadow 模式的用途是什麼？",
+      "options": [
+        "一次完整的品質測試，可以取代評測",
+        "一種冒煙測試，用來抓成本暴衝、長度倒退、拒答變化與硬錯誤——它不是品質保證",
+        "回滾機制的替代品",
+        "生產上線的最後一步"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "依本課所述，正確的回滾設計是什麼？",
+      "options": [
+        "手動 SSH 進每一個 pod",
+        "用新的模型 digest 重新部署，耗時數小時",
+        "翻轉一個策略旗標並在幾秒內把固定的模型 digest 還原——不必重新部署",
+        "等下一個發布窗口"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼成本會與延遲、品質並列為一道關卡？",
+      "options": [
+        "品質好 20% 的模型，每次呼叫可能貴上 3 倍；沒有成本關卡就上線會毀掉單位經濟效益",
+        "各家供應商的成本都一樣",
+        "每家供應商都會自動設定成本上限",
+        "成本是虛榮指標"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

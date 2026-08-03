@@ -1,0 +1,78 @@
+{
+  "lesson": "76-collective-ops-from-scratch",
+  "title": "Collective Ops From Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 N 個 rank 上對一個 T 位元組的張量做 ring allreduce，每個 rank 的頻寬成本是多少？",
+      "options": [
+        "N * T 位元組",
+        "T log2(N) 位元組",
+        "T 位元組",
+        "2T(N-1)/N 位元組"
+      ],
+      "correct": 3,
+      "explanation": "Ring allreduce 會把 N-1 塊大小為 T/N 的分塊搬移兩輪（先 reduce-scatter 再 allgather）；每個 rank 的總量是 2T(N-1)/N，與叢集大小無關。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼本課的佇列網格能誠實代表真實叢集上的 NCCL？",
+      "options": [
+        "它把歸約作業卸載到硬體",
+        "它跑在 CUDA 核心上",
+        "它實作了相同的線路模式（沿著環的有序點對點傳送），差別只在傳輸媒介",
+        "它會壓縮訊息"
+      ],
+      "correct": 2,
+      "explanation": "演算法的正確性取決於線路模式而非媒介；佇列環會暴露出與 NCCL ring allreduce 相同的競態形態與分塊排程。"
+    },
+    {
+      "stage": "check",
+      "question": "在 ring allreduce 的 reduce-scatter 前半段結束後，rank r 持有什麼？",
+      "options": [
+        "一個分塊（張量的 N 分之一）的歸約總和",
+        "兩個分塊的歸約總和",
+        "完整但尚未歸約的張量",
+        "什麼都沒有"
+      ],
+      "correct": 0,
+      "explanation": "reduce-scatter 會把某一個分塊的總和停放在某一個 rank 上；接著 allgather 那半段再把這些完成的分塊沿環輪轉一圈。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要用樹狀廣播，而不是從來源發出 N-1 次直接傳送？",
+      "options": [
+        "PyTorch 強制要用樹狀",
+        "直接傳送會掉封包",
+        "樹狀每一輪都讓持有者集合加倍；深度是 log2(N)，所以延遲以 log 而非 N 的規模成長",
+        "樹狀比較省記憶體"
+      ],
+      "correct": 2,
+      "explanation": "當每一跳的延遲是瓶頸時，log2(N) 跳數就成了主導因素；N-1 次循序傳送則要付這個延遲底線 N 次。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要用相同輸入對 torch.distributed 的 gloo 做驗證？",
+      "options": [
+        "gloo 比較快",
+        "gloo 是集合通訊語意的權威參考；輸出位元組完全相同，就證明你的演算法在上真實叢集之前已與規格一致",
+        "gloo 不需要任何設定",
+        "gloo 會自動寫出 JSONL"
+      ],
+      "correct": 1,
+      "explanation": "沒有參考基準的話，這個原語會一路看起來正確，直到真實訓練的第 10000 步；gloo 在 CPU 上提供位元組級相同的標準答案。"
+    },
+    {
+      "stage": "post",
+      "question": "樹狀 allreduce 在什麼情況下會勝過 ring allreduce？",
+      "options": [
+        "永遠都會",
+        "當訊息很大時",
+        "小訊息或高延遲連線時；在交叉點以下，log2(N) 的跳數會勝過 2T(N-1)/N 這個頻寬項",
+        "永遠不會"
+      ],
+      "correct": 2,
+      "explanation": "NCCL 在約 1 MB 以上選 ring、以下選 tree；交叉點取決於該叢集拓撲上的頻寬與延遲取捨。"
+    }
+  ]
+}

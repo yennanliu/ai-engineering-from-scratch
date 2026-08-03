@@ -1,0 +1,90 @@
+{
+  "lesson": "22-jsonrpc-stdio-transport",
+  "title": "JSON-RPC 2.0 over Newline-Delimited Stdio",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在傳輸線路上，JSON-RPC 的 notification 與 request 有什麼區別？",
+      "options": [
+        "Notification 省略 id 欄位；伺服器不得對其回應",
+        "jsonrpc 版本欄位不同",
+        "Notification 使用不同的 method 命名空間",
+        "Notification 被包在陣列裡"
+      ],
+      "correct": 0,
+      "explanation": "缺少 id 是唯一的標記。伺服器不會回應，因為沒有 id 可以用來對應。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼以換行分隔的 JSON 足以做為 stdio 的框架格式？",
+      "options": [
+        "因為 UTF-8 沒有換行位元組",
+        "因為規格強制規定如此",
+        "因為 pipe 保證換行的原子性",
+        "因為 JSON 不允許字串內出現未跳脫的字面換行，所以每個物件可以是一行"
+      ],
+      "correct": 3,
+      "explanation": "json.dumps 每個物件只輸出一行；字串內的字面換行會被跳脫。這讓 \\n 成為安全的紀錄分隔符。"
+    },
+    {
+      "stage": "check",
+      "question": "當 JSON 解析失敗時，傳輸層回傳哪個錯誤碼？",
+      "options": [
+        "-32600",
+        "-32700",
+        "-32603",
+        "-32601"
+      ],
+      "correct": 1,
+      "explanation": "-32700 是 Parse error。回應的 id 為 null，因為無法從中取出任何 id。"
+    },
+    {
+      "stage": "check",
+      "question": "如果 handler 拋出一個普通的 ValueError，傳輸層會回傳什麼？",
+      "options": [
+        "不會回傳；連線中斷",
+        "Invalid params（-32602）",
+        "Method not found（-32601）",
+        "Internal error（-32603），並在 data 中帶上例外的類別名稱"
+      ],
+      "correct": 3,
+      "explanation": "未對應的例外會以 -32603 呈現。data.exception 為客戶端保留了類別名稱。"
+    },
+    {
+      "stage": "check",
+      "question": "當一個 batch 只包含 notification 時，伺服器回傳什麼？",
+      "options": [
+        "什麼都沒有 —— 不寫出任何位元組",
+        "每個 notification 對應一個 null",
+        "一個空陣列",
+        "單一個 null 回應"
+      ],
+      "correct": 0,
+      "explanation": "規格規定：如果每一筆都是 notification，伺服器保持沉默。"
+    },
+    {
+      "stage": "post",
+      "question": "工作階段進行到一半時來了一行格式損壞的 JSON。後續的行會怎麼樣？",
+      "options": [
+        "它們會被緩衝，直到損壞的那一行重試成功",
+        "傳輸層寫出一個 -32700 回應，並繼續當作全新的一行讀取下一行",
+        "傳輸層關閉串流",
+        "它們全部以 -32600 被拒絕"
+      ],
+      "correct": 1,
+      "explanation": "框架層不能污染整條串流。一次解析錯誤只對應一個錯誤回應，迴圈繼續執行。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼傳輸層不直接查詢工具註冊表？",
+      "options": [
+        "為了讓傳輸層只保有 JSON-RPC 的形狀；由 handler 把傳輸層縫接到註冊表",
+        "因為註冊表是非同步的",
+        "因為註冊表持有機密資訊",
+        "因為傳輸層跑在不同的行程中"
+      ],
+      "correct": 0,
+      "explanation": "傳輸層負責說線路上的語言。分派器（下一課）才是傳輸層、註冊表與逾時三者交會的地方。"
+    }
+  ]
+}

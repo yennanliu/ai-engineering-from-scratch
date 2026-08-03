@@ -1,0 +1,90 @@
+{
+  "lesson": "31-agent-workbench-why-models-fail",
+  "title": "Agent Workbench Engineering: Why Capable Models Still Fail",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課認為代理程式在真實任務上失敗的根本原因是什麼？",
+      "options": [
+        "訓練資料過時",
+        "工作台（workbench）的失敗：模型周圍缺少必要的介面，而不是 LLM 的侷限",
+        "網路太慢",
+        "模型參數不足"
+      ],
+      "correct": 1,
+      "explanation": "模型並不是搞錯了 Python，而是搞錯了這份工作。缺席的是模型周圍的介面。"
+    },
+    {
+      "stage": "pre",
+      "question": "本課點名哪七種工作台介面？",
+      "options": [
+        "read、write、exec、fork、exit、wait、kill",
+        "規劃、行動、反思、修正、辯論、投票、出貨",
+        "指令、狀態、範圍、回饋、驗證、審查、交接",
+        "訓練、評測、部署、監控、再訓練、擴展、除役"
+      ],
+      "correct": 2,
+      "explanation": "七種介面是指令、狀態、範圍、回饋、驗證、審查、交接。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不屬於本課用來對應這些介面的八種分散式系統基本元件？",
+      "options": [
+        "worker",
+        "反向傳播",
+        "函式",
+        "trigger"
+      ],
+      "correct": 1,
+      "explanation": "八種基本元件是函式、worker、trigger、runtime、HTTP/RPC、佇列、session 持久化、授權策略。"
+    },
+    {
+      "stage": "check",
+      "question": "Vercel 回報的 harness 改動，把成功率從多少提升到多少？",
+      "options": [
+        "從 50% 到 70%，做法是加入 RAG",
+        "從 20% 到 60%",
+        "從 0% 到 100%，做法是換掉模型",
+        "從 80% 到 100%，做法是刪掉代理程式 80% 的工具"
+      ],
+      "correct": 3,
+      "explanation": "刪掉 80% 的工具，讓 Vercel 的代理程式成功率從 80% 提升到 100%。"
+    },
+    {
+      "stage": "check",
+      "question": "Terminal Bench 2.0 對模型與 harness 之間的關係展示了什麼？",
+      "options": [
+        "同一個模型只改 harness，就從三十名外躍升到第五名",
+        "排名完全由模型決定",
+        "只有 GPU 重要",
+        "改動 harness 沒有影響"
+      ],
+      "correct": 0,
+      "explanation": "LangChain 的 Anatomy of an Agent Harness：同一個模型、改動 harness、排名躍升 25 名以上。"
+    },
+    {
+      "stage": "post",
+      "question": "聽到新的 harness 詞彙時，本課建議怎麼做？",
+      "options": [
+        "拒絕它",
+        "等 OpenAI 把它標準化",
+        "原封不動地照單採用這套詞彙",
+        "先把它翻回基本元件（函式、worker、trigger、runtime、HTTP/RPC、佇列、持久化、策略）再決定是否採用"
+      ],
+      "correct": 3,
+      "explanation": "從基本元件推理，而不是從廠商的分類法；詞彙會變，工程不會。"
+    },
+    {
+      "stage": "post",
+      "question": "相對於工作台，聊天記錄處在什麼位置？",
+      "options": [
+        "聊天是權威記錄",
+        "聊天是易失的；儲存庫才是權威記錄",
+        "兩者等價",
+        "兩者都不重要"
+      ],
+      "correct": 1,
+      "explanation": "迴圈是在狀態檔案上閉合，不是在聊天記錄上。"
+    }
+  ]
+}

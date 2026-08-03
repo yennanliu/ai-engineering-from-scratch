@@ -1,0 +1,90 @@
+{
+  "lesson": "36-scope-contracts",
+  "title": "Scope Contracts and Task Boundaries",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼範圍蔓延被稱為最少被監控的失敗模式？",
+      "options": [
+        "它太罕見，不值得監控",
+        "測試會自動抓到它",
+        "它會讓代理程式大聲當掉",
+        "每一次改動在當下都有合理的理由；合起來卻構成一個與被審查內容不同的變更"
+      ],
+      "correct": 3,
+      "explanation": "代理程式會誠實地敘述每一步；無聲累積出來的總和才是蔓延。"
+    },
+    {
+      "stage": "pre",
+      "question": "本課稱哪個契約欄位是契約的一半？",
+      "options": [
+        "approvals_required",
+        "forbidden_files（負空間）",
+        "goal",
+        "task_id"
+      ],
+      "correct": 1,
+      "explanation": "沒有 forbidden_files 的契約並不完整；負空間就是契約的一半。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 allowed 與 forbidden 要用 glob 而不是原始路徑來釘住？",
+      "options": [
+        "glob 比較好加密",
+        "glob 比較快",
+        "原始路徑無法序列化成 JSON",
+        "真實的儲存庫會搬動檔案；glob 能在跨 session 的重構中存活下來"
+      ],
+      "correct": 3,
+      "explanation": "glob（app/**/*.py）能讓契約在重構之後依然有效。"
+    },
+    {
+      "stage": "check",
+      "question": "「違規預算」這個模式在做什麼？",
+      "options": [
+        "按違規次數收費",
+        "在預算之內把輕微的範圍越界當成警告；只有超出的部分才擋下合併，這正是一道能持續上線的關卡與一道會被關掉的關卡之間的差別",
+        "為模型呼叫限流",
+        "為代理程式設定每月預算"
+      ],
+      "correct": 1,
+      "explanation": "agent-guardrails 使用 violationBudget，讓這道關卡在日常流程中真的堪用。"
+    },
+    {
+      "stage": "check",
+      "question": "那位實踐 specsmaxxing 的工程師回報了什麼？",
+      "options": [
+        "延遲下降 90%",
+        "成本上升 5 倍",
+        "三週內在完全沒有更動代理程式的情況下，鑽牛角尖的比率從 52% 降到 21%；出力的是契約，不是模型",
+        "測試變慢了"
+      ],
+      "correct": 2,
+      "explanation": "在呼叫代理程式之前先用 YAML 寫下範圍契約，就讓鑽牛角尖的比率減半，而且沒有換過模型。"
+    },
+    {
+      "stage": "post",
+      "question": "多份契約合併的語意（最小權限）是什麼？",
+      "options": [
+        "最後一份契約勝出",
+        "allowed_files 取交集；forbidden_files 取聯集；time_budget 取最小值；approvals 累加；deny-all 一旦出現就固定生效；與 None 合併時以另一方為準",
+        "隨機決定平手",
+        "第一份契約勝出"
+      ],
+      "correct": 1,
+      "explanation": "最小權限式合併：允許取交集、禁止取聯集、時間取最嚴格、核准則累加。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼時間與網路預算也屬於契約的一部分？",
+      "options": [
+        "供應商有此要求",
+        "牆鐘時間與對外部主機的存取都是範圍的維度；光靠檔案 glob 是必要但不充分的",
+        "它們能讓 JSON 變小",
+        "Apache 2.0 有此規定"
+      ],
+      "correct": 1,
+      "explanation": "time_budget_minutes 與 network_egress 允許清單，是疊在檔案 glob 之上的範圍維度。"
+    }
+  ]
+}

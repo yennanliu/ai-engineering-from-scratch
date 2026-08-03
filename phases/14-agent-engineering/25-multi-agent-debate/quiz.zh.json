@@ -1,0 +1,90 @@
+{
+  "lesson": "25-multi-agent-debate",
+  "title": "Multi-Agent Debate and Collaboration",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Society of Minds 協定讓 N 個模型實例做什麼？",
+      "options": [
+        "各自獨立提出答案，接著在 R 輪中彼此閱讀並批評對方的提案，直到收斂",
+        "在共享的資料集上訓練",
+        "各自跑不同的基準測試",
+        "彼此議價"
+      ],
+      "correct": 0,
+      "explanation": "N 個提案者、R 輪、交叉批評、收斂，這就是 Du 等人提出的經典辯論流程。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼跨模型辯論（例如 ChatGPT + Bard）表現優於單一模型辯論？",
+      "options": [
+        "它比較便宜",
+        "不同廠商之間會議價",
+        "廠商之間共享權重",
+        "異質性降低了共同盲點，交叉批評因此能抓到更多錯誤"
+      ],
+      "correct": 3,
+      "explanation": "混用模型會帶來彼此獨立的錯誤分布，拉高辯論的上限。"
+    },
+    {
+      "stage": "check",
+      "question": "相較於全連接網狀拓撲，稀疏拓撲在 token 成本上的主要優勢是什麼？",
+      "options": [
+        "每個辯論者只讀取一部分同儕，批評操作次數下降，準確率往往仍能持平",
+        "它把 LLM 移除了",
+        "稀疏拓撲會讓輪數加倍",
+        "稀疏拓撲不需要模型"
+      ],
+      "correct": 0,
+      "explanation": "稀疏拓撲（星狀、環狀、輻輳式）在許多任務上能減少批評操作而不損失準確率。"
+    },
+    {
+      "stage": "check",
+      "question": "本課列出哪一種情況是辯論反而有害的？",
+      "options": [
+        "單純的事實查詢，因為查一次比辯論五次便宜",
+        "開放式推理",
+        "西洋棋走法的合法性",
+        "生成人物傳記"
+      ],
+      "correct": 0,
+      "explanation": "對延遲與成本敏感的瑣碎查詢，不會從 N x R 的辯論中獲益。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是收斂崩潰（convergence collapse）？",
+      "options": [
+        "行程當機",
+        "TLS 交握失敗",
+        "網路中斷",
+        "所有代理程式都收斂到第一個錯誤答案；以強制的異議輪次來緩解"
+      ],
+      "correct": 3,
+      "explanation": "過早對錯誤答案達成共識，可以靠強制第一輪提出互異提案來緩解。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼提示詞同質化會削弱辯論？",
+      "options": [
+        "它違反 Apache 2.0",
+        "它會繞過 supervisor",
+        "相同的提示詞會產生幾乎相同的答案，交叉批評的訊號因此消失",
+        "它耗用太多 token"
+      ],
+      "correct": 2,
+      "explanation": "多樣化的提示詞（最好再加上多樣化的模型）能讓提案分布保持寬廣。"
+    },
+    {
+      "stage": "post",
+      "question": "依本課所述，哪一種生產環境模式屬於辯論的變形？",
+      "options": [
+        "純粹單次的 RAG",
+        "向量索引",
+        "Anthropic 的 orchestrator-workers 加上綜整步驟",
+        "只有 cron 排程"
+      ],
+      "correct": 2,
+      "explanation": "orchestrator-workers 加上綜整，在生產環境中就是辯論形狀的模式。"
+    }
+  ]
+}

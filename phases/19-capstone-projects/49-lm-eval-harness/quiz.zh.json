@@ -1,0 +1,78 @@
+{
+  "lesson": "49-lm-eval-harness",
+  "title": "Language Model Evaluation Harness",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在這套 harness 的 JSONL 格式中，哪四個欄位定義了一則任務範例？",
+      "options": [
+        "id、prompt、targets、metric，外加一個可選的 extras 字典，用來放指標所需的附帶資料",
+        "name、score、payload、vendor",
+        "權重與偏置",
+        "input 與 output"
+      ],
+      "correct": 0,
+      "explanation": "那一行 JSONL 就是契約。extras 欄位讓 code_exec 指標能傳入 io_pairs，而不會汙染提示詞。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼指標函式的簽章是 (prediction, targets, extras) -> float？",
+      "options": [
+        "因為它回傳整數",
+        "因為它需要模型物件",
+        "這是能同時處理單一目標字串比對、多參考答案 rouge-l，以及帶附帶資料的 code_exec 的最小簽章，同時讓分數維持在可比較的 [0.0, 1.0] 範圍",
+        "隨意的選擇"
+      ],
+      "correct": 2,
+      "explanation": "落在 [0,1] 的浮點數，代表各任務分數與總分都是可解讀的平均值。extras 這個位置就是 code_exec 取得 io_pairs 的方式。"
+    },
+    {
+      "stage": "check",
+      "question": "code_exec 指標如何抵抗惡意的預測內容？",
+      "options": [
+        "它使用沙箱容器",
+        "它以一個被剝除過的 __builtins__ 字典來執行預測，讓命名空間只暴露少數幾個安全名稱；import 敘述會失敗，因為 importer 不在作用範圍內",
+        "它沒有抵抗",
+        "它會拒絕任何含有 def 的內容"
+      ],
+      "correct": 1,
+      "explanation": "這一課的安全命名空間把 builtins 削減到寥寥幾個名稱。測試會斷言 import os 拿到 0.0 分，而不是真的被執行。"
+    },
+    {
+      "stage": "check",
+      "question": "模型轉接層這層抽象替你買到什麼？",
+      "options": [
+        "它是整套 harness 中唯一與模型相關的程式碼；換掉轉接層指向新的供應商，任務、指標、執行器與排行榜格式都不用動",
+        "torch 要求如此",
+        "什麼也沒有",
+        "它讓模型跑得更快"
+      ],
+      "correct": 0,
+      "explanation": "這一課的 ToyAdapter 是個確定性的樣式比對器。真實供應商的 HttpAdapter 具備同樣的 generate(prompts) -> list[str] 介面。"
+    },
+    {
+      "stage": "check",
+      "question": "排行榜 JSON 為什麼要帶一個像 leaderboard.v1 的 schema 字串？",
+      "options": [
+        "讓日後格式變動時提升版本號，下游儀表板可以據此分派，而不會無聲地壞掉",
+        "它能壓縮檔案",
+        "為了 SEO",
+        "它是隨機的"
+      ],
+      "correct": 0,
+      "explanation": "跟第 47 課檢查點酬載用的是同一招。schema 欄位就是那個遷移掛勾。"
+    },
+    {
+      "stage": "post",
+      "question": "看排行榜時，overall_score 是怎麼算出來的？比較兩次執行時要注意什麼？",
+      "options": [
+        "隨機取樣",
+        "答對數量的總和",
+        "各任務分數（各自落在 [0,1]）的平均；比較時還要對分數有變動的任務逐例 diff 預測內容，因為單看分數會藏起究竟是哪些範例退步了",
+        "最高的任務分數"
+      ],
+      "correct": 2,
+      "explanation": "各任務平均值再取平均，等於讓每個任務權重相同。用 --include-per-example 把預測層級的證據留在分數旁邊，退步才看得見。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "43-hdf5-tokenized-corpus",
+  "title": "HDF5 Tokenized Corpus",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼把分詞後的語料存成可調整大小、分塊的 HDF5 資料集，而不是 JSONL？",
+      "options": [
+        "HDF5 的標誌比較小",
+        "JSONL 已經被淘汰",
+        "隨便的理由",
+        "HDF5 提供分塊、純整數、記憶體映射的讀取，具備 O(1) 隨機存取；JSONL 則逼著每次熱路徑讀取都要經過剖析器"
+      ],
+      "correct": 3,
+      "explanation": "資料載入器要的是一條可用切片定址的扁平 token 串流，HDF5 原生就提供這個。"
+    },
+    {
+      "stage": "check",
+      "question": "HDF5 的 chunk 大小相對於訓練器的 window_size，正確的設定原則是什麼？",
+      "options": [
+        "挑記憶體塞得下的最大 chunk",
+        "永遠設 chunk=1",
+        "把 chunk 設成 window_size 的倍數，讓每個樣本落在一或兩個 chunk 內，讀取維持與分頁快取對齊",
+        "把 chunk 設成等於文件長度"
+      ],
+      "correct": 2,
+      "explanation": "chunk 不對齊會讓吞吐量腰斬，因為每個樣本都跨在兩個 chunk 上而不是落在一個裡面。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 token_count 要存成 HDF5 屬性，而不是從資料集形狀推得？",
+      "options": [
+        "最後一個 chunk 可能只填了一部分；沒有這個明確屬性，讀取端會走過真正的結尾、進到補零的 token，模型於是學會預測零",
+        "讀形狀很慢",
+        "屬性是必填的",
+        "屬性比較好看"
+      ],
+      "correct": 0,
+      "explanation": "分塊配置有時會留下沒填滿的尾端槽位；這個屬性承載的是真相。"
+    },
+    {
+      "stage": "check",
+      "question": "寫入端在每次 resize 之前先把 token 緩衝到 chunk_size，達成了什麼？",
+      "options": [
+        "寫入是連續且與 chunk 對齊的，避開了逐個 token resize 所造成的碎片化",
+        "縮小詞彙表",
+        "加速 sha256",
+        "省下幾個 CPU 週期"
+      ],
+      "correct": 0,
+      "explanation": "先緩衝、再依 chunk 大小擴充，是讓 HDF5 chunk 在磁碟上保持連續的唯一辦法。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 swmr=True 是在讀取端開啟，而不是寫入端？",
+      "options": [
+        "為了安全性",
+        "隨意的偏好",
+        "為了效能",
+        "單寫多讀模式讓資料載入器的 worker 能安全共用檔案；寫入端不需要特別模式，因為它一個行程只寫一個分片"
+      ],
+      "correct": 3,
+      "explanation": "混用這兩種模式是造成「檔案被鎖住」失敗最常見的原因。"
+    },
+    {
+      "stage": "post",
+      "question": "邊界 token id 的存在是為了讓什麼變得明確？",
+      "options": [
+        "壓縮",
+        "詞彙表大小上限",
+        "隨機資料",
+        "打包後視窗內的文件邊界，讓模型不會被無聲地訓練在跨文件的串接上"
+      ],
+      "correct": 3,
+      "explanation": "沒有明確邊界，訓練器會把邊界當成雜訊學；有了它，邊界就成為可用的分隔符。"
+    }
+  ]
+}

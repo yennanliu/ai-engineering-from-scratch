@@ -1,0 +1,78 @@
+{
+  "lesson": "71-classical-metrics",
+  "title": "Classical Metrics",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼分詞器是在指標層而非執行器層決定的？",
+      "options": [
+        "分詞器與模型綁定，而執行器看不到模型",
+        "分詞器定義了什麼算是一次 token 匹配；換掉它就等於換掉了這個基準",
+        "不論選哪個分詞器，指標實作都是 O(n)",
+        "numpy 在匯入時就需要一個分詞器"
+      ],
+      "correct": 1,
+      "explanation": "BLEU 與 F1 對分詞方式很敏感。把分詞器綁在指標上能讓分數可重現，也讓你能明確指出規則。"
+    },
+    {
+      "stage": "pre",
+      "question": "修正後的 n-gram 精確率比一般 n-gram 精確率多做了什麼？",
+      "options": [
+        "它會用任一參考答案中出現的最大次數，來截斷每個候選 n-gram 的計數",
+        "它跑得比一般精確率快",
+        "它使用不同的對數底數",
+        "它回傳 0 到 100 而非 0 到 1 的值"
+      ],
+      "correct": 0,
+      "explanation": "以參考答案上限做截斷，可以阻止候選靠著反覆重複某個高精確率的詞來灌高分數。"
+    },
+    {
+      "stage": "check",
+      "question": "BLEU 為什麼要有簡短懲罰（brevity penalty）？",
+      "options": [
+        "長候選會讓幾何平均在數值上不穩定",
+        "簡短懲罰取代了 n-gram 計數上限",
+        "它用來補償加一平滑",
+        "沒有它的話，一個只對上幾個字的極短候選就能拿到高精確率與不合理的高 BLEU"
+      ],
+      "correct": 3,
+      "explanation": "光看精確率會獎勵短輸出。BP 用 exp(1 - r/c) 把比參考答案短的候選降權。"
+    },
+    {
+      "stage": "check",
+      "question": "ROUGE-L 比較的是什麼？",
+      "options": [
+        "候選與參考字串之間的 Levenshtein 距離",
+        "對任一參考 4-gram 的 4-gram 精確率",
+        "候選與參考 token 序列的最長共同子序列",
+        "字元層級的 Jaccard 指數"
+      ],
+      "correct": 2,
+      "explanation": "ROUGE-L 使用 LCS 長度，再算出精確率（LCS/候選長度）與召回率（LCS/參考長度），並以 F-beta 結合。"
+    },
+    {
+      "stage": "check",
+      "question": "token 層級的 F1 在哪一種情況下會回傳 1.0？",
+      "options": [
+        "當預測與目標剛好共用一個 token 時",
+        "當預測是目標的超集合，還多出一些雜訊時",
+        "當預測為空而目標非空時",
+        "當預測與目標兩者皆為空時"
+      ],
+      "correct": 3,
+      "explanation": "按慣例，空對空算完全匹配。任何非空目標搭配空預測都是 0.0。"
+    },
+    {
+      "stage": "post",
+      "question": "在 score 函式中，為什麼要以 metric_name 而非 category 來分派？",
+      "options": [
+        "執行器無法存取 category 欄位",
+        "這讓同一個類別能在不同任務使用不同指標，也讓分派器與指標無關",
+        "category 比 metric_name 更難驗證",
+        "metric_name 比 category 短"
+      ],
+      "correct": 1,
+      "explanation": "metric_name 才是契約。一個 summary 任務可以在某筆紀錄上用 rouge_l、另一筆用 bleu_4；分派器不需要在意。"
+    }
+  ]
+}

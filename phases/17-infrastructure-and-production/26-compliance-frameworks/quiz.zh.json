@@ -1,0 +1,78 @@
+{
+  "lesson": "26-compliance-frameworks",
+  "title": "Compliance — SOC 2, HIPAA, GDPR, PCI-DSS, EU AI Act, ISO 42001",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "EU AI Act 對高風險系統的執法從什麼時候開始？",
+      "options": [
+        "2024 年就已全面執法",
+        "2026 年 8 月 2 日",
+        "2025 年 2 月 2 日",
+        "2030 年 1 月 1 日"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "EU AI Act 定義了什麼樣的兩級罰款上限？",
+      "options": [
+        "任何違規最高 €100K",
+        "高風險系統義務最高 €15M 或全球年營業額的 3%（Art. 99(4)）；禁止的 AI 行為最高 €35M 或 7%（Art. 99(3)）",
+        "任何違規一律 €1M 定額",
+        "沒有財務罰款，只有下架命令"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼事後處理式的 PII 清理在 GDPR 上站不住腳？",
+      "options": [
+        "模型已經看過那些資料，所以在 LLM 呼叫之前於推論層即時去識別化，才是 2026 年站得住腳的標準做法",
+        "GDPR 完全禁止去識別化",
+        "在大規模下太慢",
+        "事後處理與即時處理沒有差別"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "SOC 2 Type I 與 Type II 在實務上的差別是什麼？",
+      "options": [
+        "Type I 需要 HIPAA BAA",
+        "Type I 比 Type II 更嚴格",
+        "Type I 證明控制措施已完成設計並文件化；Type II 證明控制措施在 6-12 個月間確實有效運作",
+        "Type II 只適用於新創公司"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "跨框架的控制措施對應想達成什麼？",
+      "options": [
+        "免除稽核",
+        "用 ISO 42001 取代所有框架",
+        "一套控制政策同時滿足多個框架的要求（例如存取記錄可對應到 ISO 27001 A.5.15-5.18、GDPR Art. 32、HIPAA §164.312(a)）",
+        "讓每個框架各自擁有更多獨立的控制措施"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課對 HIPAA + LLM 工作負載有什麼建議？",
+      "options": [
+        "只用地端模型，絕不使用託管服務",
+        "PHI 可以送給任何供應商；BAA 是選配",
+        "HIPAA 不適用於 LLM",
+        "沒有簽署 BAA 就絕不要把 PHI 送到外部 AI 服務；三大雲端業者與主要 LLM API 供應商都提供 BAA"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

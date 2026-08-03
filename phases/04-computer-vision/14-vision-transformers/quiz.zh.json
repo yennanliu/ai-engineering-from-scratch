@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "ViT 如何把一張影像變成 token 序列？",
+      "options": [
+        "用 kernel_size = stride = patch_size 的卷積把影像切成不重疊的區塊，並在同一個運算裡把每塊線性投影成 token 嵌入",
+        "把整張影像攤平成一個向量",
+        "先跑一個 CNN，用它的特徵圖當作 token",
+        "對像素強度排序"
+      ],
+      "correct": 0,
+      "explanation": "ViT 的第一層是一個 kernel_size = stride = 16 的卷積，把 224x224 的影像變成 14x14 個 16x16 區塊組成的網格，每塊投影到 dim=768。那一個卷積同時完成切塊與投影。結果是 196 個 token，標準 transformer 編碼器就能處理。"
+    },
+    {
+      "stage": "pre",
+      "question": "ViT 中的 [CLS] token 是什麼，為什麼需要它？",
+      "options": [
+        "缺失資料的佔位符",
+        "一個特殊的像素值",
+        "一個 dropout 遮罩",
+        "一個接在 token 序列前面的可學習向量；經過 N 層 transformer 後，它的輸出彙整了整張影像並餵給分類頭"
+      ],
+      "correct": 3,
+      "explanation": "ViT 沿用 BERT 的慣例：在區塊序列前接上一個可學習向量（CLS token）。自注意力讓每個 token 都能看到其他所有 token，所以 CLS token 會彙整所有區塊的全域資訊。分類器只讀 CLS 的輸出。另一種設計是對所有區塊 token 做平均池化（ConvNeXt 與許多 ViT 之後的模型採用）。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼原始 ViT 論文需要 JFT-300M 預訓練才能勝過 ResNet，而 DeiT 不用？",
+      "options": [
+        "DeiT 使用不同的注意力機制",
+        "ViT 論文是錯的",
+        "ViT 的歸納偏差比 CNN 弱；資料不夠就會過度擬合。DeiT 證明只要有強增強（RandAugment、Mixup、CutMix）、隨機深度，以及選用的 CNN 蒸餾，ViT 光靠 ImageNet-1k 就能訓練得很好",
+        "沒有 JFT-300M 的 ViT 是壞的"
+      ],
+      "correct": 2,
+      "explanation": "ViT 缺乏歸納偏差（沒有內建局部性，也沒有平移等變性），代表網路必須從資料中學會這些。用 100 萬張 ImageNet 影像很難；用 3 億張 JFT 影像就很容易。DeiT 以訓練配方的改良取代資料：大量增強、隨機深度，以及向 CNN 教師蒸餾，這些都補上了缺少的先驗。"
+    },
+    {
+      "stage": "post",
+      "question": "Pre-LayerNorm（`x = x + sublayer(LN(x))`）對上 post-LayerNorm（`x = LN(x + sublayer(x))`）— 現代 transformer 用哪一個，為什麼？",
+      "options": [
+        "Post-LN；它比較簡單",
+        "都不是；現代 transformer 不用 LayerNorm",
+        "Pre-LN；它不需要學習率 warmup 就能穩定訓練更深的網路，並避開 post-LN 在超過約 6 層後出現的梯度不穩定",
+        "兩者完全相同"
+      ],
+      "correct": 2,
+      "explanation": "Post-LN 是最初的 transformer（2017），超過 6-8 層後需要小心的 warmup 與較小的學習率。Pre-LN（Xiong et al., 2020；ViT、GPT-2 以後及所有現代 LLM 採用）在數值上更穩定：殘差流不必經過 LN 就能累積，而每個子層拿到的都是正規化過的輸入。所有超過 12 層的 transformer 都用 pre-LN。"
+    },
+    {
+      "stage": "post",
+      "question": "Swin Transformer 引入了視窗化注意力。它解決什麼問題？",
+      "options": [
+        "不支援 BatchNorm",
+        "過度擬合紋理",
+        "梯度消失",
+        "完整注意力的成本是 O((H*W)^2)；Swin 把注意力限制在 7x7 區塊的局部視窗內，把成本降到 O(H*W * window^2)。交替的區塊會把視窗位移半個視窗大小，資訊最終得以跨影像混合"
+      ],
+      "correct": 3,
+      "explanation": "一張 224x224 的影像用 4x4 區塊會有 56*56 = 3136 個 token；完整注意力每層是 3136^2 約 1000 萬組配對。Swin 只在 7x7 的視窗內做注意力，每個視窗是 49^2 = 2401 組配對（再乘上視窗數）。交替區塊中的位移視窗讓資訊在幾層之內跨視窗混合。這把類似 CNN 的局部性先驗帶回 transformer，又不必放棄注意力。"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "SAM 3 提出的 Promptable Concept Segmentation（PCS）是什麼？",
+      "options": [
+        "先偵測器後接 SAM 的多步驟串接",
+        "在單次前向傳遞中，分割由一個簡短名詞片語或影像範例所描述的概念的所有實例，回傳遮罩以及各自唯一的實例 ID",
+        "像傳統 SAM 那樣的視覺提示（點／框）分割",
+        "只做追蹤的模式"
+      ],
+      "correct": 1,
+      "explanation": "PCS 是 SAM 3 的招牌能力。你傳入「yellow school bus」或一張公車的影像範例；SAM 3 回傳每個符合的實例，各自帶有遮罩與唯一 ID，外加一個存在分數。傳統 SAM 每個實例都要一次提示；PCS 端到端地產出所有匹配。"
+    },
+    {
+      "stage": "pre",
+      "question": "既然 SAM 3 已經能做文字提示分割，2026 年為什麼還要保留解耦的偵測器 + SAM 2 流程（Grounded SAM 2）？",
+      "options": [
+        "SAM 3 只在雲端提供",
+        "Grounded SAM 2 永遠比較準",
+        "模組化 — 你可以針對不同領域、授權限制或門檻行為，換上不同的開放詞彙偵測器（DINO-X、Florence-2、Grounding DINO 1.5）；SAM 3 的架構是單體式的",
+        "SAM 3 不支援影片"
+      ],
+      "correct": 2,
+      "explanation": "Grounded SAM 2 是偵測器與 SAM 2 以凍結權重組合而成。那份模組化有時正好是你需要的 — 醫療影像偵測器、授權條款友善的偵測器，或嚴密的門檻控制。SAM 3 在常見用途上端到端更準，但比較難客製。2026 年兩者在生產環境都有各自的位置。"
+    },
+    {
+      "stage": "post",
+      "question": "SAM 3 的 presence head 產生什麼？",
+      "options": [
+        "一個純量機率，表示查詢的概念是否存在於影像中，與定位解耦；讓模型能乾淨地說「不存在」，並降低對缺席概念的誤報",
+        "候選邊界框的清單",
+        "追蹤用的記憶庫",
+        "最終的遮罩"
+      ],
+      "correct": 0,
+      "explanation": "presence head 把「這個東西在不在？」的判斷與「它在哪裡？」的判斷分開。一個被問就必須產出框的模型，容易對缺席的概念幻想出匹配。有了 presence head，SAM 3 可以乾淨地回傳零個偵測。這也改善了相近提示詞之間的辨別力（例如「穿白衣的球員」對上「穿紅衣的球員」）。"
+    },
+    {
+      "stage": "post",
+      "question": "SAM 3.1 Object Multiplex（2026 年 3 月）為追蹤引入了共享記憶體機制。它取代了什麼？",
+      "options": [
+        "逐實例各自獨立的記憶庫；Multiplex 把它們收攏成單一共享記憶體，搭配逐實例查詢，讓追蹤 N 個物件時大幅加快，同時維持準確率",
+        "整個 presence head",
+        "整個 SAM 2",
+        "ViT 骨幹網路"
+      ],
+      "correct": 0,
+      "explanation": "先前的 SAM 2 / SAM 3 追蹤為每個被追蹤實例維護一個記憶庫，成本隨物件數線性成長。Object Multiplex 改用單一共享記憶體，加上取出實例專屬特徵的逐實例查詢。多實例追蹤因此變得高效 — 這對人群與密集多物件場景是必要的。"
+    },
+    {
+      "stage": "post",
+      "question": "你需要在邊緣裝置上做即時的開放詞彙「偵測」（只要框，不要遮罩）。2026 年該選哪個模型家族？",
+      "options": [
+        "自組的 CLIP + 偵測器串接",
+        "SAM 3",
+        "Grounded SAM 2",
+        "YOLO-World（以及相關的即時開放詞彙偵測器）；SAM 3 會產生遮罩而且較重，YOLO-World 則是專為在邊緣硬體上以高 fps 輸出框而設計"
+      ],
+      "correct": 3,
+      "explanation": "YOLO-World 與類似模型（OV-DINO、LLMDet）是即時的開放詞彙偵測器。它們不產生遮罩，但在普通等級的 GPU 上以 640x640 能跑到 30-60 fps。當遮罩與追蹤重要時，SAM 3 才是正確選擇。工具的份量永遠要配合任務：只做偵測就不必背負遮罩的額外開銷。"
+    }
+  ]
+}

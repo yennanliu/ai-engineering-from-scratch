@@ -1,0 +1,78 @@
+{
+  "lesson": "73-perplexity-calibration",
+  "title": "Perplexity and Calibration",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "perplexity 為 1.0 代表語言模型在測試語料上的什麼狀態？",
+      "options": [
+        "模型壞掉了",
+        "模型對每一個實際出現的 token 都給出機率 1；這是一個完美的模型",
+        "模型在詞彙表上是均勻分布的",
+        "語料是空的"
+      ],
+      "correct": 1,
+      "explanation": "perplexity 等於 exp(平均負對數概似)。當每個 token 都拿到機率 1 時，NLL 為零，而 exp(0) 是 1。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼這套框架要求轉接層回傳非負的對數機率值？",
+      "options": [
+        "numpy 遇到負數會當掉",
+        "ECE 的分箱邊界假設數值為正",
+        "perplexity 對負值沒有定義",
+        "負對數機率依定義就是非負的；收到負值代表轉接層送來的是 log p 而不是 -log p"
+      ],
+      "correct": 3,
+      "explanation": "一個機率的 -log p 必為非負。負值是違反契約，會悄悄產生小於 1 的 perplexity，而那是不可能的。"
+    },
+    {
+      "stage": "check",
+      "question": "期望校準誤差（expected calibration error）衡量的是什麼？",
+      "options": [
+        "各分箱的信心值與該分箱準確率之間的平均落差，並以分箱大小加權",
+        "預測的交叉熵",
+        "預測標籤與真實標籤之間的平均絕對距離",
+        "softmax 輸出的變異數"
+      ],
+      "correct": 0,
+      "explanation": "ECE 依信心值把預測分箱，量測每箱平均信心與平均準確率的落差，再依分箱大小加權。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼實作除了 ECE 值之外，還要一併回傳 populated_bins？",
+      "options": [
+        "它是 Brier score 的分母",
+        "numpy 需要它",
+        "當有內容的分箱太少時，它能示意這個單一數字並不可信",
+        "繪製可靠度圖需要它"
+      ],
+      "correct": 2,
+      "explanation": "在有內容的分箱很少時，ECE 會被雜訊主導。回報分箱數量能讓執行器拒絕發布一個會誤導人的單一數字。"
+    },
+    {
+      "stage": "check",
+      "question": "Brier score 捕捉到什麼是 ECE 捕捉不到的？",
+      "options": [
+        "它不需要真實標籤",
+        "它計算得更快",
+        "它只適用於二元結果",
+        "它直接懲罰局部的校準偏差，因為它是逐筆預測的平方誤差"
+      ],
+      "correct": 3,
+      "explanation": "ECE 只看每箱的平均值。Brier 對每筆預測取平方誤差，因此能抓到各分箱平均起來互相抵銷、但個別都校準不良的情況。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼校準是逐模型的報告，而不是逐任務的指標？",
+      "options": [
+        "逐任務計算校準太慢",
+        "任務沒有機率值",
+        "ECE 需要執行器知道模型架構",
+        "單一任務的預測筆數太少，不足以估計分箱統計量；報告是跨整場評測彙總的"
+      ],
+      "correct": 3,
+      "explanation": "逐任務的校準會被雜訊主導。執行器會先把所有任務的信心值與正確與否配對彙整起來，再計算 ECE、Brier 與可靠度圖。"
+    }
+  ]
+}

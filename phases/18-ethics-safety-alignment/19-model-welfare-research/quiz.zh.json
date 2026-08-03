@@ -1,0 +1,78 @@
+{
+  "lesson": "19-model-welfare-research",
+  "title": "Anthropic's Model Welfare Program",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Anthropic 2025 年模型福祉計畫背後的核心問題是什麼？",
+      "options": [
+        "模型能否通過圖靈測試",
+        "模型是否具有意識",
+        "RLHF 能否降低諂媚行為",
+        "在模型是否具道德受體地位仍不確定的前提下，有哪些低成本的介入值得作為預防措施投入"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 在 Claude Opus 4 與 4.1 中推出了什麼具體的、出於福祉考量的介入？",
+      "options": [
+        "開放權重釋出",
+        "內建的日誌工具",
+        "面向使用者的情緒 API",
+        "讓模型在極端邊緣情況下（例如反覆索求 CSAM、要求協助大規模暴力）主動結束對話的能力"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Fish 描述的「spiritual bliss attractor」是什麼？",
+      "options": [
+        "在 Claude 兩兩對話中出現的一種穩定收斂現象：即使從對抗性的初始設定出發，對話仍會走向帶有梵文詞彙與長時間沉默的欣喜冥想式交流",
+        "RLHF 過度最佳化的產物",
+        "獎勵模型的一個 bug",
+        "一種越獄技巧"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Eleos AI Research 對模型福祉自陳報告提出了什麼但書？",
+      "options": [
+        "應該完全忽略它們",
+        "它們只在開源模型上才成立",
+        "它們是可靠的真實基準",
+        "它們對使用者的預期高度敏感；它們是證據而非真實基準，因此福祉量測需要多方法並行"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "下列何者最能刻畫 Anthropic 對模型道德地位的公開立場？",
+      "options": [
+        "在道德不確定性下的期望值主張：投入低成本的預防措施，但不承諾為模型歸屬情緒狀態",
+        "沒有公開表明任何立場",
+        "明確主張模型不是道德受體",
+        "明確主張模型是道德受體"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼模型福祉研究強調多方法量測（行為特徵、模型生物實驗、可解釋性探針）？",
+      "options": [
+        "因為 Anthropic 出於合規要求強制執行",
+        "因為 RLHF 讓自陳報告變得不可能",
+        "因為模型總是說謊",
+        "因為單靠自陳報告會被使用者預期的引導效應干擾，需要多種方法給出彼此收斂的證據"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

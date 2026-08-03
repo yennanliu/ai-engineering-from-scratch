@@ -1,0 +1,78 @@
+{
+  "lesson": "34-transformer-block",
+  "title": "Transformer Block from Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "單一個 decoder transformer 區塊內有哪兩個子層？",
+      "options": [
+        "卷積與循環閘",
+        "多頭因果 attention 與逐位置的 MLP，各自包在一條殘差連結中",
+        "RNN 編碼器與解碼器",
+        "嵌入查找與 softmax"
+      ],
+      "correct": 1,
+      "explanation": "每個現代 decoder LLM 區塊都是 attention 加 MLP，各自有自己的殘差路徑與自己的 LayerNorm。"
+    },
+    {
+      "stage": "check",
+      "question": "在深層網路中，pre-LN 與 post-LN 的關鍵差異是什麼？",
+      "options": [
+        "Pre-LN 使用不同的 attention 數學",
+        "Pre-LN 只適用於編碼器",
+        "Pre-LN 讓殘差訊號保持未正規化，梯度得以乾淨地傳回嵌入層；post-LN 把正規化放在殘差相加之後，在深層會縮小梯度並需要 warmup",
+        "Post-LN 在 GPU 上比較快"
+      ],
+      "correct": 2,
+      "explanation": "Pre-LN 在常見的學習率下不需 warmup 就能穩定訓練；post-LN 則是 2017 年那篇論文採用的做法，需要 warmup。"
+    },
+    {
+      "stage": "check",
+      "question": "多頭 attention 中的因果遮罩做了什麼？",
+      "options": [
+        "隨機丟棄 token",
+        "把 attention logit 的上三角設為負無限大，讓 token i 無法關注位置大於 i 的 token",
+        "把 attention 分數正規化",
+        "挑出批次中最長的序列"
+      ],
+      "correct": 1,
+      "explanation": "忘記加因果遮罩，訓練出來的模型就能讀到未來的 token；遮罩是唯一強制因果性的那一塊。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要用融合的 QKV 投影，而不是三個各自獨立的線性層？",
+      "options": [
+        "它免去了一次 softmax",
+        "它改變了模型的表達能力",
+        "它移除了殘差",
+        "一個寬度為 3 倍 d_model 的線性層，把三次 kernel 啟動與三次矩陣乘法收攏成一次，在所有加速器上都更快，也和 GPT-2 的參考實作一致"
+      ],
+      "correct": 3,
+      "explanation": "數學相同，kernel 更少；GPT-2、LLaMA 與 Mistral 的參考實作全都採用融合投影。"
+    },
+    {
+      "stage": "post",
+      "question": "在 transformer 區塊中，dropout 不應該放在哪裡？",
+      "options": [
+        "殘差的恆等路徑本身，因為那會破壞讓梯度在深層流動的加法恆等性",
+        "前饋層的擴張部分內",
+        "attention softmax 的輸出上",
+        "第二個 MLP 線性層之後"
+      ],
+      "correct": 0,
+      "explanation": "Dropout 應該放在 attention 的輸出以及 MLP 的殘差更新上，絕不要放在殘差的恆等分支上。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼要把因果遮罩註冊成 buffer，而不是在每次 forward 呼叫時配置？",
+      "options": [
+        "Buffer 只能在 GPU 上執行",
+        "Buffer 會被加密",
+        "Buffer 能提升數值精確度",
+        "遮罩只取決於最大上下文長度，所以在建構時配置一次、每次呼叫只切出作用中的視窗，可以避免長上下文下的配置器熱點"
+      ],
+      "correct": 3,
+      "explanation": "用 register_buffer 配置一次，每次 forward 再切片；否則遮罩就變成每次呼叫都要付的配置成本。"
+    }
+  ]
+}

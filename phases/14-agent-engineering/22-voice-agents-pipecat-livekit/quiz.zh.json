@@ -1,0 +1,90 @@
+{
+  "lesson": "22-voice-agents-pipecat-livekit",
+  "title": "Voice Agents: Pipecat and LiveKit",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Pipecat 的 pipeline 有哪兩個流動方向？",
+      "options": [
+        "讀取與寫入",
+        "熱與冷",
+        "入站與出站",
+        "DOWNSTREAM（從來源到終點）與 UPSTREAM（回饋、取消、barge-in）"
+      ],
+      "correct": 3,
+      "explanation": "Frame 沿著 downstream 從來源流向終點，並沿著 upstream 傳遞控制與取消。"
+    },
+    {
+      "stage": "pre",
+      "question": "Pipecat 標準的語音 pipeline 是什麼？",
+      "options": [
+        "VAD -> STT -> LLM -> TTS -> transport",
+        "Audio -> JSON -> SQL -> response",
+        "LLM -> embed -> retrieve -> answer",
+        "TTS -> STT -> LLM -> VAD"
+      ],
+      "correct": 0,
+      "explanation": "VAD 偵測語音活動，STT 轉成文字，LLM 產生回應，TTS 說出來，transport 負責送達。"
+    },
+    {
+      "stage": "check",
+      "question": "LiveKit Agents 提供哪兩種語音代理程式類別？",
+      "options": [
+        "BatchAgent 與 StreamAgent",
+        "TextAgent 與 SpeechAgent",
+        "MultimodalAgent（直接處理音訊）與 VoicePipelineAgent（STT／LLM／TTS 串接）",
+        "LocalAgent 與 CloudAgent"
+      ],
+      "correct": 2,
+      "explanation": "MultimodalAgent 直接處理音訊（Realtime 風格）；VoicePipelineAgent 走 STT -> LLM -> TTS，以取得文字層級的控制。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是 barge-in，又是怎麼處理的？",
+      "options": [
+        "LLM 成本暴衝；減少 token",
+        "使用者在代理程式說話時打斷；UPSTREAM 的取消 frame 會讓 TTS 在句子中途停下",
+        "Captcha 失敗；重試",
+        "供應商中斷；切換區域"
+      ],
+      "correct": 1,
+      "explanation": "Barge-in 就是使用者的打斷；Pipecat 用 UPSTREAM 取消乾淨地處理它。"
+    },
+    {
+      "stage": "check",
+      "question": "課程把哪個端到端延遲區間形容為頂級水準？",
+      "options": [
+        "約 450 到 600 ms",
+        "約 1500 ms",
+        "約 50 ms",
+        "約 5000 ms"
+      ],
+      "correct": 0,
+      "explanation": "頂級的組合落在約 450 到 600 ms；800 到 1200 ms 很常見；超過 1500 ms 就讓人覺得壞掉了。"
+    },
+    {
+      "stage": "post",
+      "question": "忽略 STT 的信心分數會出什麼問題？",
+      "options": [
+        "通話變便宜",
+        "延遲變好",
+        "TTS 變快",
+        "低信心的轉寫會被當成金科玉律餵給 LLM，產生錯誤答案；應該用信心分數設關卡或請使用者確認"
+      ],
+      "correct": 3,
+      "explanation": "把低信心的 STT 結果當成事實，是語音代理程式最常見的失敗模式之一。"
+    },
+    {
+      "stage": "post",
+      "question": "課程為什麼建議上線前先把各元件的延遲加總？",
+      "options": [
+        "WebRTC 規定必須量測延遲",
+        "每個元件都會加上 50 到 200 ms；總和決定了體驗會不會讓人覺得壞掉",
+        "供應商按延遲計費",
+        "這是為了滿足某項合規要求"
+      ],
+      "correct": 1,
+      "explanation": "上線前先把整條鏈（VAD + STT + LLM + TTS + transport）加總；目標值很緊。"
+    }
+  ]
+}

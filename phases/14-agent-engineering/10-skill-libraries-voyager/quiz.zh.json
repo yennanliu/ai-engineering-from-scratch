@@ -1,0 +1,90 @@
+{
+  "lesson": "10-skill-libraries-voyager",
+  "title": "Skill Libraries and Lifelong Learning (Voyager)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Voyager 把什麼當成動作空間？",
+      "options": [
+        "原始的 Minecraft 指令",
+        "強化學習的 Q 值",
+        "只有文字提示詞",
+        "可執行的程式碼（JavaScript 函式），會被儲存、檢索與組合"
+      ],
+      "correct": 3,
+      "explanation": "Voyager 的貢獻是讓程式碼成為動作：技能是程式，而不是原始指令。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪三個元件構成一個 Voyager 代理程式？",
+      "options": [
+        "檢索器、生成器、排序器",
+        "編碼器、解碼器、value head",
+        "自動課程、技能庫、迭代式提示",
+        "規劃器、執行器、評判器"
+      ],
+      "correct": 2,
+      "explanation": "Voyager 以自動課程、技能庫與迭代式提示三者來組織代理程式。"
+    },
+    {
+      "stage": "check",
+      "question": "一次技能執行嘗試可能回傳哪三種訊號？",
+      "options": [
+        "成功、錯誤（含 stack trace）、自我驗證失敗",
+        "通過、失敗、重試",
+        "Heartbeat、ack、nack",
+        "綠燈、黃燈、紅燈"
+      ],
+      "correct": 0,
+      "explanation": "Voyager 的迭代式提示機制，就是由這三種訊號回饋到下一個版本所驅動。"
+    },
+    {
+      "stage": "check",
+      "question": "自動課程如何挑選下一個任務？",
+      "options": [
+        "在動作空間上均勻隨機取樣",
+        "依環境狀態與技能存量，挑略高於目前能力的任務（探索的甜蜜點）",
+        "永遠挑目前最難的任務",
+        "只用使用者提供的清單"
+      ],
+      "correct": 1,
+      "explanation": "提議器瞄準略高於目前能力的任務，讓進度穩定推進。"
+    },
+    {
+      "stage": "check",
+      "question": "課程認為哪個 2026 年的產品最貼近 Voyager 的技能？",
+      "options": [
+        "Claude Agent SDK skills：具名、可檢索的程式碼，加上按需載入的指示",
+        "AWS Lambda layers",
+        "Pinecone 索引",
+        "OpenAI 微調"
+      ],
+      "correct": 0,
+      "explanation": "Agent SDK skills 符合 Voyager 具名、可檢索、可組合的程式碼模式。"
+    },
+    {
+      "stage": "post",
+      "question": "課程為什麼建議技能庫在寫入時做去重？",
+      "options": [
+        "沒有去重，同一個技能會以略有差異的描述被加入多次；檢索應該回傳單一的正規版本",
+        "供應商會拒絕重複項目",
+        "Git 會擋掉重複項目",
+        "磁碟很貴"
+      ],
+      "correct": 0,
+      "explanation": "近似重複的描述會收斂成單一正規技能，讓檢索保持乾淨。"
+    },
+    {
+      "stage": "post",
+      "question": "組合技能漂移（composed-skill drift）描述的是什麼問題？",
+      "options": [
+        "某個技能在 Python 升級後無法編譯",
+        "父技能悄悄用上了它從未測試過的精煉版子技能；解法是釘住技能版本",
+        "技能在儲存時被加密",
+        "檢索回傳空結果"
+      ],
+      "correct": 1,
+      "explanation": "沒有版本釘選，子技能的一次精煉就會悄悄改變父技能的行為。"
+    }
+  ]
+}

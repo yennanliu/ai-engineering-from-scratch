@@ -1,0 +1,78 @@
+{
+  "lesson": "13-llm-observability",
+  "title": "LLM Observability Stack Selection",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課如何劃分 2026 年的 LLM 可觀測性市場？",
+      "options": [
+        "開發平台（與評測／提示詞／session 綁在一起）對上 gateway／遙測工具",
+        "Python 對上 TypeScript",
+        "商用廠商對上開源",
+        "地端對上雲端"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本課把哪個工具定位成 MIT 授權的核心、自架方案完整、雲端免費方案每月 50K 事件？",
+      "options": [
+        "Phoenix",
+        "Arize AX",
+        "LangSmith",
+        "Langfuse"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "相對於 Datadog 這類單體式可觀測性堆疊，Arize AX 的主要規模宣稱是什麼？",
+      "options": [
+        "一定更貴",
+        "透過零複製的 Iceberg／Parquet 整合，在大規模下大約便宜 100 倍",
+        "每天 100 萬事件以下免費",
+        "便宜 10%"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "就可攜性而言，本課認為哪一層是錯誤的埋點層？",
+      "options": [
+        "在 HTTP／OpenAI SDK 層埋點",
+        "對成功請求以 5% 取樣",
+        "使用 OpenTelemetry GenAI 語意慣例",
+        "在你的代理程式框架內部埋點，因為這會把你綁死在那個框架上"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課指出哪套 OpenTelemetry 慣例是 2026 年各可觀測性工具之間的互通層？",
+      "options": [
+        "GenAI 語意慣例（gen_ai.system、gen_ai.request.model、gen_ai.usage.input_tokens）",
+        "OTel HTTP 語意慣例",
+        "OTel messaging 語意慣例",
+        "OTel database 語意慣例"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼本課主張保留完整 trace 在每天超過 100 萬請求後就撐不住？",
+      "options": [
+        "廠商會擋下來",
+        "Phoenix 只支援 100 萬筆 trace",
+        "保留資料的儲存成本比 LLM 呼叫本身還貴；團隊必須取樣（例如錯誤 100%、高成本 100%、成功 5%）",
+        "OpenTelemetry 對 trace 量設有上限"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

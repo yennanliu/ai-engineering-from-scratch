@@ -1,0 +1,78 @@
+{
+  "lesson": "27-data-provenance-training-governance",
+  "title": "Data Provenance and Training-Data Governance",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼訓練資料治理的合規時機在蒐集當下，而不是訓練之後？",
+      "options": [
+        "資料一旦進入模型權重，就不可能做精準的外科式抹除；從頭重新訓練是唯一完整的補救方式，而成本高到不可行",
+        "因為 GDPR 的被遺忘權不適用於 AI",
+        "因為監管機關不會稽核已部署的模型",
+        "因為 cookie 同意框架禁止蒐集後的使用"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "California AB 2013 要求開發者在資料集摘要中公布大約多少項法定項目？",
+      "options": [
+        "12",
+        "3",
+        "7",
+        "30"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "相對於 Gebru et al. 2018 的 datasheet 結構，AB 2013 的哪一項是新增的？",
+      "options": [
+        "資料集的來源或擁有者",
+        "資料蒐集的時間區間",
+        "系統是否使用、或是否持續使用合成資料生成",
+        "清理、處理或其他修改"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2025 年各國資料保護機關對「以公開的第一方內容訓練 LLM」形成的共同原則是什麼？",
+      "options": [
+        "任何情況下都禁止訓練",
+        "在提供退出機制與適當保護措施的前提下，正當利益可以作為使用公開第一方內容訓練的法律依據；不需要取得同意",
+        "一律需要使用者明示同意",
+        "只能使用合成資料"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "下列何者不是本課列出的、針對不可逆性問題的部分補救手段？",
+      "options": [
+        "遺忘學習（以 MIA 衡量的近似移除）",
+        "以影響函數定位並做選擇性更新",
+        "GDPR 強制規定的權重自動刪除",
+        "以微調壓制源自該資料的輸出"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Data Provenance Initiative 的〈Consent in Crisis〉（2024 年 7 月）有什麼發現？",
+      "options": [
+        "各類來源的同意率都很穩定",
+        "合成資料已完全取代網路資料",
+        "robots.txt 的限制逐年減少",
+        "出版方加上 robots.txt 限制的速度正在加快；可公開用於訓練的公共資源急速萎縮，2023 到 2024 年間約有 25% 的頂尖訓練來源新增了限制"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

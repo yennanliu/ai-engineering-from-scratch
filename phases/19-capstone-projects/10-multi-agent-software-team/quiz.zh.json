@@ -1,0 +1,90 @@
+{
+  "lesson": "10-multi-agent-software-team",
+  "title": "Capstone 10 — Multi-Agent Software Engineering Team",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼單一代理程式的 harness 就算有 200k token 的上下文，面對大型任務仍會撞到天花板？",
+      "options": [
+        "模型不支援 git",
+        "單一代理程式無法進行工具呼叫",
+        "上下文無法同時容納架構規劃、四份平行的程式碼切片、審查者評論與測試輸出",
+        "沙箱拒絕同時代管一個以上的行程"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "在這種工廠式編排裡，架構師角色負責什麼？",
+      "options": [
+        "在乾淨沙箱裡執行測試套組",
+        "讀懂 issue，產出一份帶有明確介面的子任務規劃",
+        "審查合併後的 diff 有沒有幻覺",
+        "在寫程式的代理程式意見相左時強制合併分支"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼每個 coder 都要有自己的 git worktree 加上一個 Daytona 沙箱？",
+      "options": [
+        "架構師需要 worktree ID",
+        "只有 Daytona 這個沙箱支援 SSH",
+        "隔離的工作樹讓 N 個 coder 平行實作子任務，不會互相踩到共用檔案",
+        "worktree 複製起來比分支快"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為了讓審查者保持公正，對它施加了什麼限制？",
+      "options": [
+        "它不能核准自己撰寫或提議的 diff",
+        "它只能在測試者簽核之後才執行",
+        "它必須核准自己讀過的每一份 diff",
+        "它必須和架構師使用同一個模型"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼評分準則要拿 token 效率跟單一代理程式基準線做比較？",
+      "options": [
+        "單一代理程式沒有可觀測性方案",
+        "角色邊界會增加摘要與交接的上下文，所以真正的問題是這座工廠在每一塊錢上是否划算",
+        "多代理程式一定比較便宜",
+        "token 成本與效能無關"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "事後檢討時，每一個失敗的 issue 會產出哪個產物？",
+      "options": [
+        "一份新的架構師規劃範本",
+        "一份更新後的 A2A 協定規格",
+        "一張交接失敗直方圖，指出是哪個角色邊界斷掉（規劃、合併、審查、測試）",
+        "一份 force-push 紀錄"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本 capstone 用哪個評測集來計算跨角色的 pass@1？",
+      "options": [
+        "HumanEval-Java",
+        "MigrationBench",
+        "MT-Bench-v2",
+        "SWE-bench Pro 的 50 題 issue 子集"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

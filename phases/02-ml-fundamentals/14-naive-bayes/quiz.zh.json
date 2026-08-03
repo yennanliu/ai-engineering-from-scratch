@@ -1,0 +1,67 @@
+[
+  {
+    "id": "nb-pre-1",
+    "stage": "pre",
+    "question": "Naive Bayes 中的「naive（天真）」假設是什麼？",
+    "options": [
+      "每個類別的先驗機率相等",
+      "在給定類別標籤的條件下，所有特徵彼此條件獨立",
+      "資料服從常態分布",
+      "模型沒有任何參數要學"
+    ],
+    "correct": 1,
+    "explanation": "Naive Bayes 假設在給定類別的條件下，每個特徵都與其他所有特徵獨立。這在數學上是錯的（例如 'machine' 與 'learning' 會共同出現），但實務上很有效。"
+  },
+  {
+    "id": "nb-pre-2",
+    "stage": "pre",
+    "question": "Laplace 平滑在 Naive Bayes 中防止了什麼？",
+    "options": [
+      "訓練時某個類別從未出現過的詞得到零機率",
+      "資料集的類別不平衡",
+      "在高維資料上訓練太慢",
+      "對大型資料集過度擬合"
+    ],
+    "correct": 0,
+    "explanation": "沒有平滑的話，一個從未出現在垃圾郵件訓練信件中的詞會得到 P(word|spam) = 0，不論其他證據多強，整個連乘積都會變成零。Laplace 平滑對每個計數加 1。"
+  },
+  {
+    "id": "nb-post-1",
+    "stage": "post",
+    "question": "天真的獨立性假設對文字而言顯然不成立。Naive Bayes 為什麼還是分類得不錯？",
+    "options": [
+      "它只在獨立性成立的極小詞彙表上才有效",
+      "它只有在特徵真正獨立時才有效",
+      "現代的實作其實偷偷拿掉了獨立性假設",
+      "分類只需要把類別排序排對，不需要正確的機率估計，而這個假設帶來的誤差很穩定，且對所有類別的影響相近"
+    ],
+    "correct": 3,
+    "explanation": "NB 需要的是把類別排序排對，而不是估出精確的機率。獨立性假設是高偏差、低變異的，在資料有限時很穩定。相關的特徵也會對正確的類別重複計算證據。"
+  },
+  {
+    "id": "nb-post-2",
+    "stage": "post",
+    "question": "什麼時候該用 Multinomial NB，什麼時候該用 Gaussian NB？",
+    "options": [
+      "Multinomial 用於詞數或詞頻特徵，Gaussian 用於連續的實數特徵",
+      "兩者可以互換——挑跑得快的用就好",
+      "Multinomial 用於二元資料，Gaussian 用於多類別問題",
+      "Multinomial 用於迴歸，Gaussian 用於分類"
+    ],
+    "correct": 0,
+    "explanation": "Multinomial NB 建模的是特徵計數（文字中的詞頻）。Gaussian NB 假設特徵服從常態分布，適合量測值或感測器讀數這類連續特徵。"
+  },
+  {
+    "id": "nb-post-3",
+    "stage": "post",
+    "question": "一封郵件中 'free' 出現兩次、'money' 出現一次。在使用對數機率的 Multinomial NB 中，垃圾郵件分數怎麼計算？",
+    "options": [
+      "P(spam) * P(free|spam) * P(money|spam)",
+      "log P(spam) * 2 * log P(free|spam)",
+      "log P(spam) + log P(free|spam) + log P(money|spam)",
+      "log P(spam) + 2 * log P(free|spam) + 1 * log P(money|spam)"
+    ],
+    "correct": 3,
+    "explanation": "Multinomial NB 把每個詞的似然取其出現次數次方後相乘。在對數空間中即為：log P(spam) + 2*log P(free|spam) + 1*log P(money|spam)。詞的計數扮演指數的角色。"
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "lesson": "03-word-embeddings-word2vec",
+  "title": "Word Embeddings — Word2Vec from Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "什麼是分布假說（distributional hypothesis）？",
+      "options": [
+        "所有詞都能嵌入到 300 維空間",
+        "高頻詞承載最多的意義",
+        "看一個詞跟哪些詞為伍，就能知道它的意思",
+        "詞在文件之間是均勻分布的"
+      ],
+      "correct": 2,
+      "explanation": "Firth（1957）的分布假說：相似的脈絡意味著相似的意義。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼在 Word2Vec 中直接對整個詞彙表做 softmax 不切實際？",
+      "options": [
+        "softmax 無法建模機率",
+        "softmax 沒有梯度",
+        "每個訓練步都要在 10 萬以上的詞彙上算 softmax，代價高到難以承受",
+        "它會造成梯度消失"
+      ],
+      "correct": 2,
+      "explanation": "全詞彙表 softmax 太昂貴；負採樣把它改寫成二元分類問題。"
+    },
+    {
+      "stage": "check",
+      "question": "skip-gram 與 CBOW 的差別是什麼？",
+      "options": [
+        "skip-gram 由中心詞預測脈絡詞；CBOW 由脈絡預測中心詞",
+        "skip-gram 由脈絡預測中心詞；CBOW 反過來",
+        "skip-gram 訓練深層網路；CBOW 是淺層的",
+        "skip-gram 用 bigram；CBOW 用 unigram"
+      ],
+      "correct": 0,
+      "explanation": "skip-gram：中心詞 -> 脈絡。CBOW：脈絡 -> 中心詞。"
+    },
+    {
+      "stage": "check",
+      "question": "在負採樣中，正樣本配對（中心詞、脈絡詞）的目標是什麼？",
+      "options": [
+        "讓它們的內積最小化",
+        "強迫它們正交",
+        "最大化 sigmoid(W[center] dot W'[context])，讓它接近 1",
+        "讓這兩個向量去相關"
+      ],
+      "correct": 2,
+      "explanation": "正樣本配對把 sigmoid 訓練到接近 1；採樣出來的負樣本則訓練到接近 0。"
+    },
+    {
+      "stage": "check",
+      "question": "Word2Vec 訓練完之後，哪一個權重矩陣會成為詞嵌入？",
+      "options": [
+        "訓練後另外做的一層投影",
+        "兩個相乘之後的結果",
+        "隱藏層到輸出層的 W' 矩陣",
+        "輸入層到隱藏層的 W 矩陣（中心詞查表）"
+      ],
+      "correct": 3,
+      "explanation": "中心詞查表 W 是標準的嵌入輸出；W' 通常被丟棄，或是平均進去。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 Word2Vec 處理不了一詞多義（例如 'bank'）？",
+      "options": [
+        "負採樣會丟掉罕見的詞義",
+        "它會忽略罕見詞",
+        "視窗大小太小",
+        "它為每個詞指派唯一一個靜態向量，所以 'river bank' 與 'financial bank' 共用同一個向量"
+      ],
+      "correct": 3,
+      "explanation": "靜態嵌入無法區分詞義；脈絡化嵌入（ELMo/BERT）解決了這一點。"
+    },
+    {
+      "stage": "post",
+      "question": "到了 2026 年，什麼情況下你仍然會選 Word2Vec 而不是 transformer？",
+      "options": [
+        "當對話品質很重要時",
+        "當你需要依脈絡消解歧義時",
+        "輕量、裝置端、特定領域的檢索場景，延遲預算只夠做一次查表",
+        "當輸入非常長時"
+      ],
+      "correct": 2,
+      "explanation": "在延遲預算極小、需要裝置端推論，或想快速訓練特定領域模型時，Word2Vec 勝出。"
+    },
+    {
+      "stage": "post",
+      "question": "是什麼讓著名的類比 'king - man + woman ~ queen' 成立？",
+      "options": [
+        "skip-gram 是在皇室詞彙上訓練的",
+        "向量算術捕捉到像「皇室」這種可跨性別遷移的線性方向",
+        "模型把皇室身分編碼成一個旗標位元",
+        "餘弦相似度對性別是不變的"
+      ],
+      "correct": 1,
+      "explanation": "嵌入空間中的方向編碼了關係性特徵，所以加減會產生有系統的位移。"
+    }
+  ]
+}

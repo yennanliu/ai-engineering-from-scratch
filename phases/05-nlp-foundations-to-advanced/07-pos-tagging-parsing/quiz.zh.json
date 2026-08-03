@@ -1,0 +1,102 @@
+{
+  "lesson": "07-pos-tagging-parsing",
+  "title": "POS Tagging and Syntactic Parsing",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "POS tagging 的目標是什麼？",
+      "options": [
+        "翻譯句子",
+        "偵測情感",
+        "抽取命名實體",
+        "為每個 token 指派一個文法類別（名詞、動詞等）"
+      ],
+      "correct": 3,
+      "explanation": "POS tagging 為每個 token 標上它的詞性。"
+    },
+    {
+      "stage": "pre",
+      "question": "跨語言工作預設使用哪一套標記集？",
+      "options": [
+        "Penn Treebank",
+        "CoNLL-2003",
+        "Stanford Dependencies",
+        "Universal Dependencies"
+      ],
+      "correct": 3,
+      "explanation": "Universal Dependencies 提供一套較粗、與語言無關的 17 個標記。"
+    },
+    {
+      "stage": "check",
+      "question": "bigram HMM 詞性標記器建模的是什麼？",
+      "options": [
+        "依存句法剖析",
+        "只有 P(tags)",
+        "P(標記 | 前一個標記) 的轉移機率，加上 P(詞 | 標記) 的發射機率，再用 Viterbi 解碼",
+        "嵌入之間的相似度"
+      ],
+      "correct": 2,
+      "explanation": "bigram HMM 使用標記轉移與詞的發射機率；Viterbi 找出機率最高的序列。"
+    },
+    {
+      "stage": "check",
+      "question": "Viterbi 演算法為 HMM 標記器計算出什麼？",
+      "options": [
+        "轉移矩陣",
+        "每個標記的邊際機率",
+        "只有前向機率",
+        "透過在標記格點上做動態規劃，找出唯一一條機率最高的標記序列"
+      ],
+      "correct": 3,
+      "explanation": "Viterbi 用 O(n * |T|^2) 的動態規劃找出 argmax 序列。"
+    },
+    {
+      "stage": "check",
+      "question": "依存句法剖析產生的是什麼？",
+      "options": [
+        "一棵由 NP/VP/PP 標籤構成的成分結構樹",
+        "一棵樹，其中每個詞有一個中心詞，以及一個帶標籤的文法關係",
+        "一條共指鏈",
+        "一段扁平的 BIO 序列"
+      ],
+      "correct": 1,
+      "explanation": "依存剖析給出每個詞的（中心詞、關係）邊；成分句法剖析給出巢狀的片語結構。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 PTB 詞性標記的準確率天花板大約在 97-98%？",
+      "options": [
+        "任何任務的模型都無法超過 98%",
+        "Universal Dependencies 的上限是 98%",
+        "人類標註者之間也只有約 97% 的一致率，所以超過約 98% 的模型可能是在對測試資料過度擬合",
+        "硬體限制"
+      ],
+      "correct": 2,
+      "explanation": "標註者之間的歧異限制了可達到的準確率；數字非常高往往是過度擬合的訊號。"
+    },
+    {
+      "stage": "post",
+      "question": "到了 2026 年，POS tagging 在 LLM 流程中為什麼仍然重要？",
+      "options": [
+        "斷詞時必須用到",
+        "詞形還原、面向式情感分析、查詢拆解、結構化輸出驗證與跨語言遷移，都還在吃 POS 或依存剖析的結果",
+        "它取代了 transformer",
+        "沒有它 LLM 就跑不起來"
+      ],
+      "correct": 1,
+      "explanation": "即使散文是由 LLM 生成，POS 與依存剖析仍餵給許多下游的結構化任務。"
+    },
+    {
+      "stage": "post",
+      "question": "在多數生產環境的 POS / 剖析任務中，你應該選用哪個函式庫？",
+      "options": [
+        "scikit-learn",
+        "spaCy（若要頂尖準確率或更廣的語言涵蓋，則用 stanza/trankit）",
+        "NumPy",
+        "自己手刻一個剖析器"
+      ],
+      "correct": 1,
+      "explanation": "spaCy 提供快速且達生產水準的 POS 與依存剖析器；stanza/trankit 涵蓋的語言更廣。"
+    }
+  ]
+}

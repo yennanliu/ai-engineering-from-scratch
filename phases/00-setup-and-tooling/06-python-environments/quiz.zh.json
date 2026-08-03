@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "虛擬環境解決了什麼問題？",
+      "options": [
+        "提供一個管理 Python 腳本的圖形介面",
+        "隔離專案相依，讓不同專案能使用不同的套件版本",
+        "自動把套件更新到最新版",
+        "最佳化直譯器，讓 Python 程式跑得更快"
+      ],
+      "correct": 1,
+      "explanation": "虛擬環境讓每個專案擁有自己一套獨立的套件。少了它，為某個專案裝 PyTorch 2.4 就會覆蓋掉另一個專案需要的 PyTorch 2.1。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 Python 相依管理的語境裡，lockfile 是什麼？",
+      "options": [
+        "一個鎖定 Python 直譯器版本的檔案",
+        "一個把專案相依加密起來的檔案",
+        "一個防止其他人編輯你程式碼的檔案",
+        "一個把每個套件都釘在確切版本、以確保安裝可重現的檔案"
+      ],
+      "correct": 3,
+      "explanation": "lockfile 記錄每個套件（包含間接相依）的確切版本，讓任何人依它安裝都會得到一模一樣的套件組合，確保可重現性。"
+    },
+    {
+      "stage": "post",
+      "question": "要怎麼確認你的 pip 與 python 指令用的是虛擬環境，而不是系統的 Python？",
+      "options": [
+        "執行 python --check-env 來確認",
+        "執行 pip --version 看版本號",
+        "執行 which python，確認它指向 .venv/bin/python 而不是 /usr/bin/python",
+        "看終端機的背景顏色有沒有變"
+      ],
+      "correct": 2,
+      "explanation": "which python（Windows 上是 where python）會顯示直譯器的完整路徑。如果它指向 .venv/bin/python，就代表你在虛擬環境裡。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在同一個環境裡混用 pip 與 conda 會有問題？",
+      "options": [
+        "pip 套件與 conda 的 Python 直譯器不相容",
+        "pip 的安裝會破壞 conda 的相依追蹤，造成難以除錯的衝突",
+        "它會讓每個套件佔用的磁碟空間加倍",
+        "conda 無法安裝 pip 已經裝過的套件"
+      ],
+      "correct": 1,
+      "explanation": "conda 有自己的相依求解器。pip 安裝會繞過它，於是 conda 不再掌握環境的真實狀態，接著就是一堆難以化解的相依衝突。"
+    },
+    {
+      "stage": "post",
+      "question": "你有 NVIDIA GPU，PyTorch 卻回報「CUDA not available」，最可能的原因是什麼？",
+      "options": [
+        "安裝的 PyTorch 所帶的 CUDA 版本與你的 GPU 驅動程式不相容",
+        "你的 GPU 不支援 CUDA",
+        "你忘了匯入 torch.cuda 模組",
+        "虛擬環境無法存取 GPU 硬體"
+      ],
+      "correct": 0,
+      "explanation": "PyTorch 釋出的版本會綁定特定 CUDA 版本編譯的繫結。如果 PyTorch 的 CUDA 版本高於驅動程式支援的 CUDA 版本，CUDA 就會顯示為不可用。用 nvidia-smi 與 torch.version.cuda 對照檢查。"
+    }
+  ]
+}

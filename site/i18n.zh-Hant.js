@@ -94,6 +94,7 @@ window.I18N_ZH_HANT = {
   'Colophon': '版本說明',
   'The entire curriculum is on GitHub. Clone it, fork it, learn at your own pace. No paywall, no signup. Every lesson has runnable code in Python, TypeScript, Rust, or Julia, depending on what fits the concept best.':
     '整套課程都放在 GitHub 上。你可以複製、分支，按自己的步調學習。沒有付費牆，不用註冊。每個單元都有可執行的程式碼，視概念最適合哪種語言而定，可能是 Python、TypeScript、Rust 或 Julia。',
+  'Copy': '複製',
   'Copy command': '複製指令',
   'Copied!': '已複製！',
 
@@ -206,17 +207,257 @@ window.I18N_ZH_HANT = {
     '已載入單元的 Markdown，但渲染失敗。詳細資訊請看瀏覽器主控台。',
   'Lesson temporarily unavailable': '單元暫時無法載入',
   'Lesson not found': '找不到這個單元',
+  'Could not load the lesson at': '無法載入這個單元：',
+  'right now. Try reloading the page.': '，請重新整理頁面再試一次。',
+  'Could not fetch the lesson at': '無法取得這個單元：',
+  '. It may not have been written yet.': '。這個單元可能還沒寫。',
+  'Add ?path=phases/01-math-foundations/01-linear-algebra-intuition to the URL.':
+    '請在網址後面加上 ?path=phases/01-math-foundations/01-linear-algebra-intuition。',
+  'Read it on GitHub': '在 GitHub 上閱讀',
+  'Back to Home': '回到首頁',
+  'Expand': '放大',
+  'Rendering diagram...': '正在繪製圖解…',
+  'Diagram could not be rendered.': '無法繪製這張圖解。',
+  '🎯 Learning Objectives': '🎯 學習目標',
+  '💫 Lab Challenge': '💫 實作挑戰',
+  '← Previous': '← 上一課',
+  'Next →': '下一課 →',
+
+  /* ── Lesson page: bottom panels ────────────────────────────────── */
+  'What This Lesson Ships': '這個單元交付什麼',
+  'Prompts, skills, and artifacts you can use right now': '可以立刻拿來用的提示詞、技能與產出',
+  'Loading outputs...': '正在載入產出…',
+  'Loading description...': '正在載入說明…',
+  'View on GitHub': '在 GitHub 上檢視',
+  'Install': '安裝',
   'Prompt': '提示詞',
   'Skill': '技能',
   'Output': '產出',
   'Paste into Claude, Cursor, Codex, OpenClaw, Hermes, or any agent that reads prompts':
     '貼進 Claude、Cursor、Codex、OpenClaw、Hermes，或任何讀取提示詞的代理程式',
+  'Run the Code': '執行程式碼',
+  'Executable files from this lesson': '這個單元可以執行的檔案',
+  'Loading code files...': '正在載入程式碼檔案…',
+  /* 'Copy command' / 'Copied!' are shared with the catalog page, above. */
+  'Learning Path': '學習路徑',
+  'Phase {n}: {name}': '階段 {n}：{name}',
+  '{n} earlier lessons': '前面還有 {n} 個單元',
+  '{n} later lessons': '後面還有 {n} 個單元',
+  'You\'ve completed {done} of {total} lessons in this phase':
+    '這個階段共 {total} 個單元，你已完成 {done} 個',
+  'Ready for Phase {n}: {name}': '可以進入階段 {n}：{name} 了',
+  'Continue Learning': '繼續學習',
+  'You finished this phase!': '你完成這個階段了！',
+  'Browse all Phase {n} lessons': '瀏覽階段 {n} 的所有單元',
+  'Full course catalog': '完整課程目錄',
+  'Run': '執行',
+  'in Claude, Cursor, Codex, OpenClaw, Hermes, or any agent with the curriculum skills installed for a personalized learning path':
+    '，在 Claude、Cursor、Codex、OpenClaw、Hermes，或任何已安裝本課程技能的代理程式中皆可，取得專屬於你的學習路徑',
+
+  /* ── Lesson page: quizzes ──────────────────────────────────────── */
   'Pre-Lesson Check': '課前檢核',
   'Mid-Lesson Check': '課中檢核',
   'Post-Lesson Quiz': '課後測驗',
+  'Quiz': '測驗',
+  'Test Your Understanding': '檢驗你的理解',
+  'Loading questions...': '正在載入題目…',
+  'Did you get it?': '你都學會了嗎？',
+  'Question {n} of {total}': '第 {n} 題，共 {total} 題',
+  'Complete all questions to see your score': '答完所有題目就會顯示分數',
+  '{correct}/{total} correct': '答對 {correct}/{total}',
   'Perfect score!': '滿分！',
   'Great work!': '表現很好！',
   'Keep studying!': '繼續加油！',
+  'Want a deeper quiz? Run': '想要更深入的測驗？執行',
+  'in Claude, Cursor, Codex, OpenClaw, Hermes, or any agent with the curriculum skills installed':
+    '，在 Claude、Cursor、Codex、OpenClaw、Hermes，或任何已安裝本課程技能的代理程式中皆可',
+
+  /* ── Lesson page: built-in fallback quiz bank ──────────────────────
+   * lesson.html ships these questions for lessons whose quiz.json has no
+   * usable post-lesson questions, picked by keyword in the lesson path.
+   * They are literals in the page, so they translate here; the per-lesson
+   * quiz.json questions are fetched at runtime and are still English.  */
+  'What does a dot product measure between two vectors?': '內積衡量兩個向量之間的什麼？',
+  'Their sum': '它們的總和',
+  'How aligned they are': '它們的方向有多一致',
+  'Their cross product': '它們的外積',
+  'The distance between them': '它們之間的距離',
+  'The dot product measures the similarity or alignment between two vectors. When it is zero, the vectors are orthogonal.':
+    '內積衡量兩個向量的相似度，也就是方向有多一致。內積為零時，兩個向量正交。',
+  'What does the gradient of a function point toward?': '一個函式的梯度指向哪裡？',
+  'The minimum': '最小值',
+  'The steepest ascent': '上升最陡的方向',
+  'The nearest saddle point': '最近的鞍點',
+  'A random direction': '一個隨機方向',
+  'The gradient always points in the direction of steepest increase. Gradient descent moves opposite to the gradient to find minima.':
+    '梯度永遠指向上升最陡的方向。梯度下降則往梯度的反方向走，藉此找到極小值。',
+  'A matrix with shape (3, 5) multiplied by (5, 2) produces what shape?':
+    '形狀 (3, 5) 的矩陣乘上形狀 (5, 2) 的矩陣，結果是什麼形狀？',
+  'Matrix multiplication: (m, n) x (n, p) = (m, p). So (3, 5) x (5, 2) = (3, 2).':
+    '矩陣乘法：(m, n) x (n, p) = (m, p)。所以 (3, 5) x (5, 2) = (3, 2)。',
+
+  'What is the purpose of a loss function in machine learning?': '在機器學習裡，損失函式的用途是什麼？',
+  'To generate data': '產生資料',
+  'To measure how wrong predictions are': '衡量預測錯得有多離譜',
+  'To select features': '挑選特徵',
+  'To split data': '切分資料',
+  'A loss function quantifies the difference between predicted and actual values. The optimizer minimizes this value during training.':
+    '損失函式把預測值與真實值之間的差距量化。訓練時，最佳化器就是在最小化這個值。',
+  'Why do we split data into train and test sets?': '為什麼要把資料切成訓練集與測試集？',
+  'To save memory': '節省記憶體',
+  'To evaluate generalization on unseen data': '在沒看過的資料上評估泛化能力',
+  'To make training faster': '讓訓練更快',
+  'To reduce the dataset size': '縮小資料集',
+  'The test set acts as unseen data, revealing whether the model memorized training data or learned generalizable patterns.':
+    '測試集扮演「沒看過的資料」，用來看出模型究竟是背下了訓練資料，還是真的學到可以泛化的規律。',
+  'What does overfitting mean?': '過度擬合（overfitting）是什麼意思？',
+  'The model is too simple': '模型太簡單',
+  'The model memorizes training data but fails on new data': '模型背下了訓練資料，卻在新資料上失準',
+  'The model trains too slowly': '模型訓練太慢',
+  'The loss is too low': '損失值太低',
+  'Overfitting occurs when a model performs well on training data but poorly on new data because it learned noise rather than signal.':
+    '模型在訓練資料上表現很好、在新資料上卻很差，就是過度擬合：它學到的是雜訊，不是訊號。',
+
+  'What does backpropagation compute?': '反向傳播算的是什麼？',
+  'Forward predictions': '前向預測',
+  'The gradient of the loss with respect to each weight': '損失對每個權重的梯度',
+  'The learning rate': '學習率',
+  'New training data': '新的訓練資料',
+  'Backpropagation uses the chain rule to compute how much each weight contributed to the error, then adjusts weights accordingly.':
+    '反向傳播用連鎖律算出每個權重對誤差貢獻了多少，再據此調整權重。',
+  'Why do neural networks need non-linear activation functions?': '神經網路為什麼需要非線性的激活函式？',
+  'To speed up training': '加快訓練速度',
+  'Without them, stacking layers is equivalent to a single linear layer':
+    '少了它們，疊再多層也等同於一層線性層',
+  'To reduce memory usage': '減少記憶體用量',
+  'To normalize outputs': '正規化輸出',
+  'Without non-linearities, any composition of linear layers collapses to a single linear transformation. Activations like ReLU let the network learn complex patterns.':
+    '沒有非線性，線性層怎麼疊都會塌縮成單一個線性轉換。ReLU 這類激活函式才讓網路學得到複雜的模式。',
+  'What does the learning rate control?': '學習率控制的是什麼？',
+  'How many epochs to train': '要訓練幾個 epoch',
+  'The size of each weight update step': '每次權重更新的步伐大小',
+  'The number of layers': '層數',
+  'The batch size': '批次大小',
+  'The learning rate scales the gradient update. Too large causes divergence, too small causes slow or stuck training.':
+    '學習率會縮放梯度更新量。太大會發散，太小則訓練緩慢甚至卡住。',
+
+  'What does self-attention allow a transformer to do?': '自注意力讓 Transformer 能做到什麼？',
+  'Process tokens in order': '依序處理 token',
+  'Weight the importance of every token relative to every other token':
+    '衡量每個 token 相對於其他所有 token 的重要性',
+  'Reduce vocabulary size': '縮減詞彙表大小',
+  'Compress the model': '壓縮模型',
+  'Self-attention computes pairwise relevance scores across all positions, allowing the model to relate distant tokens without recurrence.':
+    '自注意力會計算所有位置兩兩之間的相關性分數，讓模型不必靠遞迴就能連結相距很遠的 token。',
+  'Why do LLMs use tokenizers instead of raw characters?': 'LLM 為什麼用分詞器，而不是直接吃原始字元？',
+  'Characters are too large': '字元太大',
+  'Tokens compress frequent patterns into single units, reducing sequence length':
+    'token 把常見的模式壓成單一單位，縮短序列長度',
+  'Tokenizers are faster to train': '分詞器訓練得比較快',
+  'Characters cannot be embedded': '字元沒辦法做嵌入',
+  'Subword tokenizers like BPE balance vocabulary size against sequence length, making common words single tokens while handling rare words as pieces.':
+    'BPE 這類子詞分詞器在詞彙表大小與序列長度之間取得平衡：常見字自成一個 token，罕見字則拆成片段處理。',
+  'What is the key difference between pre-training and fine-tuning?': '預訓練與微調最關鍵的差別是什麼？',
+  'Pre-training uses labeled data': '預訓練用的是有標註的資料',
+  'Pre-training learns general language; fine-tuning adapts to a specific task':
+    '預訓練學的是通用語言，微調則是針對特定任務做調適',
+  'Fine-tuning uses more data': '微調用的資料比較多',
+  'There is no difference': '兩者沒有差別',
+  'Pre-training learns language patterns from massive unlabeled text. Fine-tuning takes that foundation and specializes it on smaller, task-specific data.':
+    '預訓練從海量未標註文字裡學語言規律；微調則拿這個基礎，在較小的任務專屬資料上做專門化。',
+
+  'What is the core idea behind RAG?': 'RAG 的核心想法是什麼？',
+  'Training a larger model': '訓練更大的模型',
+  'Retrieving relevant context before generating a response': '在生成回覆之前，先檢索相關的上下文',
+  'Using more GPUs': '用更多 GPU',
+  'Reducing model size': '縮小模型',
+  'RAG (Retrieval-Augmented Generation) grounds LLM responses in retrieved documents, reducing hallucination and enabling knowledge updates without retraining.':
+    'RAG（檢索增強生成）讓 LLM 的回覆有檢索到的文件當依據，既降低幻覺，也能不重新訓練就更新知識。',
+  'What do embedding models produce?': '嵌入模型產出的是什麼？',
+  'Text summaries': '文字摘要',
+  'Dense vector representations of text': '文字的稠密向量表示',
+  'Token counts': 'token 數量',
+  'Grammar corrections': '文法修正',
+  'Embedding models map text into fixed-dimensional vectors where semantic similarity corresponds to geometric proximity.':
+    '嵌入模型把文字映射到固定維度的向量空間，語意上的相似對應到幾何上的相近。',
+  'Why use cosine similarity for comparing embeddings?': '比較嵌入向量時，為什麼用餘弦相似度？',
+  'It is the only metric': '因為只有這一種度量',
+  'It measures angular similarity regardless of vector magnitude': '它衡量夾角相似度，不受向量長度影響',
+  'It is faster than dot product': '它比內積快',
+  'It works with integers only': '它只能用在整數上',
+  'Cosine similarity normalizes for magnitude, focusing on direction. Two texts about the same topic will have high cosine similarity regardless of length.':
+    '餘弦相似度把長度正規化掉，只看方向。兩段講同一主題的文字，不管長短，餘弦相似度都會很高。',
+
+  'What distinguishes an AI agent from a simple chatbot?': 'AI 代理程式和單純的聊天機器人差在哪裡？',
+  'Agents are faster': '代理程式比較快',
+  'Agents can take actions and use tools autonomously': '代理程式能自主採取行動、使用工具',
+  'Agents use bigger models': '代理程式用比較大的模型',
+  'Agents have a loop: observe, decide, act. They can call tools, read files, search the web, and chain multiple steps to complete complex tasks.':
+    '代理程式有一個迴圈：觀察、決策、行動。它能呼叫工具、讀檔案、搜尋網路，並串起多個步驟來完成複雜任務。',
+  'What is MCP (Model Context Protocol)?': 'MCP（Model Context Protocol）是什麼？',
+  'A model training format': '一種模型訓練格式',
+  'A standardized protocol for connecting AI models to tools and data sources':
+    '一套把 AI 模型接上工具與資料來源的標準化協定',
+  'A compression algorithm': '一種壓縮演算法',
+  'A testing framework': '一套測試框架',
+  'MCP provides a universal interface between AI assistants and external tools/data, replacing one-off integrations with a standard protocol.':
+    'MCP 在 AI 助理與外部工具／資料之間提供通用介面，用一套標準協定取代各自為政的一次性整合。',
+  'Why is tool-use important for LLMs?': '工具使用對 LLM 為什麼重要？',
+  'It reduces cost': '它能降低成本',
+  'It lets LLMs access real-time information and take actions beyond text generation':
+    '它讓 LLM 取得即時資訊，並做出生成文字以外的行動',
+  'It makes responses shorter': '它讓回覆變短',
+  'It removes hallucinations entirely': '它能完全消除幻覺',
+  'Tools extend LLMs beyond their training data cutoff, enabling real-time lookups, calculations, code execution, and interaction with external systems.':
+    '工具把 LLM 推到訓練資料截止日之外，讓它能即時查詢、計算、執行程式碼，並與外部系統互動。',
+
+  'Why are evals critical for production AI systems?': '為什麼評測對生產環境的 AI 系統至關重要？',
+  'To save money': '為了省錢',
+  'To measure performance objectively before and after changes': '為了在改動前後客觀衡量表現',
+  'To make the model bigger': '為了把模型變大',
+  'Evals are optional': '評測可有可無',
+  'Evals are the tests of AI engineering. Without them, you cannot know if a change improved or regressed quality. They should run on every code change.':
+    '評測就是 AI 工程的測試。沒有評測，你無從得知一次改動是提升還是拉低了品質。每次改程式碼都該跑一次。',
+  'What does "alignment" mean in AI safety?': '在 AI 安全裡，「對齊」（alignment）是什麼意思？',
+  'Aligning text on screen': '把畫面上的文字對齊',
+  'Ensuring AI systems act according to human intentions and values': '確保 AI 系統依照人類的意圖與價值觀行事',
+  'Making models faster': '讓模型更快',
+  'Using the same training data': '使用相同的訓練資料',
+  'Alignment ensures that as AI systems become more capable, they remain helpful, honest, and harmless, acting in accordance with human goals.':
+    '對齊確保 AI 系統在能力愈來愈強的同時，依然有用、誠實、無害，並且順著人類的目標行事。',
+  'What is a guardrail in the context of deployed LLMs?': '在已上線的 LLM 情境中，護欄（guardrail）是什麼？',
+  'A physical barrier': '一道實體屏障',
+  'A check that prevents harmful, off-topic, or policy-violating outputs':
+    '一道檢查機制，攔下有害、離題或違反政策的輸出',
+  'A backup model': '一個備援模型',
+  'A caching layer': '一層快取',
+  'Guardrails filter inputs and outputs at runtime, catching toxicity, prompt injection, PII leaks, and other risks before they reach the user.':
+    '護欄在執行期過濾輸入與輸出，在毒性內容、提示詞注入、個資外洩等風險送到使用者面前之前就攔下來。',
+
+  'What does "from scratch" mean in this course?': '這門課說的「from scratch」是什麼意思？',
+  'Using no computer': '完全不用電腦',
+  'Building each concept by implementing it yourself, not just reading theory':
+    '每個概念都親手實作一遍，而不是只讀理論',
+  'Starting from assembly language': '從組合語言開始寫',
+  'Only using pen and paper': '只用紙筆',
+  'This course follows a Build-Use-Ship methodology: first understand by building it, then apply it, then ship it as a real artifact.':
+    '這門課依循 Build-Use-Ship 的方法：先親手做出來以理解它，再拿它來用，最後把它交付成真正的產出。',
+  'Why does this course combine math, ML, and engineering?': '這門課為什麼要把數學、機器學習與工程綁在一起？',
+  'To make it longer': '為了讓課程變長',
+  'Because real AI engineering requires all three to build production systems':
+    '因為真正的 AI 工程要打造生產系統，三者缺一不可',
+  'Math is just for fun': '數學只是好玩',
+  'Engineering is optional': '工程可有可無',
+  'Production AI systems require mathematical foundations (for understanding), ML knowledge (for modeling), and engineering skills (for deployment and reliability).':
+    '生產級的 AI 系統需要數學基礎（用來理解）、機器學習知識（用來建模），以及工程能力（用來部署與確保可靠度）。',
+  'What is the "Ship" step in the Build-Use-Ship framework?': 'Build-Use-Ship 架構裡的「Ship」這一步是什麼？',
+  'Mailing physical goods': '寄送實體商品',
+  'Creating a reusable artifact like a prompt, skill, or tool from what you learned':
+    '把學到的東西做成可重複使用的產出，例如提示詞、技能或工具',
+  'Publishing a paper': '發表一篇論文',
+  'Deleting your code': '把程式碼刪掉',
+  'The Ship step turns your learning into something tangible: a prompt, skill file, MCP tool, or CLI utility that others (or future you) can use immediately.':
+    'Ship 這一步把你學到的東西變成看得見的成果：一段提示詞、一個技能檔、一個 MCP 工具，或一支 CLI 小工具，讓別人（或未來的你）馬上就能用。',
 
   /* ── Lesson types and metadata values ──────────────────────────── */
   'Build': '實作',

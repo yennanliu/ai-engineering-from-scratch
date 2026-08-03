@@ -1,0 +1,90 @@
+{
+  "lesson": "07-end-to-end-fine-tuning-pipeline",
+  "title": "Capstone 07 — End-to-End Fine-Tuning Pipeline (Data to SFT to DPO to Serve)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "資料準備階段的汙染檢查是在防範什麼？",
+      "options": [
+        "SFT 與 DPO 階段之間的分詞器漂移",
+        "MMLU-Pro、MT-Bench-v2 等公開基準的測試集洩漏到訓練資料裡",
+        "訓練與服務之間的 GPU 驅動程式不一致",
+        "各版 llama.cpp 之間的 GGUF 版本落差"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼這條管線要先 SFT 再接 DPO（或 GRPO），而不是只用 DPO？",
+      "options": [
+        "DPO 無法在量化權重上執行",
+        "Axolotl 沒有實作 DPO",
+        "SFT 用有標註的完成內容建立領域行為，DPO 或 GRPO 則以偏好配對或可驗證獎勵來對齊模型",
+        "DPO 需要另一種基礎模型架構"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "EAGLE-3 為 vLLM 服務階段帶來什麼？",
+      "options": [
+        "工具呼叫的 OPA 政策",
+        "自動的資料去重步驟",
+        "新的提示詞快取層",
+        "預測後續 N 個 token 的 draft head；目標模型一次驗證完，帶來 2-3 倍吞吐量"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪個指標回報推測解碼的 draft 與目標模型對齊得有多好？",
+      "options": [
+        "Acceptance rate",
+        "Perplexity",
+        "PSI",
+        "Coverage delta"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這條管線為了部署彈性而交付的三種量化格式是哪些？",
+      "options": [
+        "GPTQ-INT4-Marlin、AWQ-INT4 與 GGUF-Q4_K_M",
+        "FP32、FP16、BF16",
+        "只有 INT8，但跨三種執行環境",
+        "ONNX、CoreML、TFLite"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本 capstone 的 2026 模型卡遵循哪個框架的慣例？",
+      "options": [
+        "只用 HuggingFace YAML front-matter",
+        "OpenAI 的模型卡格式",
+        "Datasheets for Datasets",
+        "Model Openness Framework（MOF）2026 範本，涵蓋資料、訓練、評測、安全、授權與可重現性"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "服務副本用哪個 HPA 指標自動擴縮？",
+      "options": [
+        "GPU 溫度",
+        "CPU 使用率",
+        "佇列等待時間",
+        "網路對外流量位元組數"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

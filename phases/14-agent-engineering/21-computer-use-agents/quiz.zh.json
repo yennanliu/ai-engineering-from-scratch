@@ -1,0 +1,90 @@
+{
+  "lesson": "21-computer-use-agents",
+  "title": "Computer Use: Claude, OpenAI CUA, Gemini",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Claude computer use 吃什麼輸入，又輸出什麼？",
+      "options": [
+        "輸入截圖（以視覺為基礎），輸出鍵盤與滑鼠指令",
+        "輸入無障礙樹，輸出鍵盤與滑鼠指令",
+        "輸入 DOM XML，輸出 JavaScript",
+        "輸入 JSON，輸出 SQL"
+      ],
+      "correct": 0,
+      "explanation": "Claude 讀的是像素，發出的是鍵盤與滑鼠動作；完全不用作業系統的無障礙 API。"
+    },
+    {
+      "stage": "pre",
+      "question": "Gemini 2.5 Computer Use 最具特色的安全機制是什麼？",
+      "options": [
+        "一個逐步驟的安全服務，會在執行前評估每個動作並拒絕不安全的動作",
+        "預設為唯讀模式",
+        "寫死的 WAF 規則",
+        "強制的 CAPTCHA"
+      ],
+      "correct": 0,
+      "explanation": "Gemini 2.5 Computer Use 把逐步驟的安全分類器當成定義性的功能。"
+    },
+    {
+      "stage": "check",
+      "question": "課程認為在這三個模型上，哪些內容都算是不可信輸入？",
+      "options": [
+        "沒有；所有東西都可信",
+        "只有 HTTPS 回應",
+        "截圖、DOM 文字、工具輸出、PDF 內容，以及任何被檢索回來的東西",
+        "只有 PDF 內容"
+      ],
+      "correct": 2,
+      "explanation": "只有使用者的直接指示才構成授權；其餘一切都不可信。"
+    },
+    {
+      "stage": "check",
+      "question": "課程引用了 OpenAI CUA 發布當時的哪些 OSWorld／WebArena 數字？",
+      "options": [
+        "當時並未公布數字",
+        "OSWorld 99%，WebArena 99%",
+        "OSWorld 0%，WebArena 0%",
+        "OSWorld 38.1%、WebArena 58.1%、WebVoyager 87%"
+      ],
+      "correct": 3,
+      "explanation": "那些就是發布時所引用的數字。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪個防禦模式不在 2026 年的共識清單中？",
+      "options": [
+        "導覽目標的允許清單／封鎖清單",
+        "逐步驟的安全分類器",
+        "敏感動作交由人類確認",
+        "為了省時間自動點掉所有對話框"
+      ],
+      "correct": 3,
+      "explanation": "自動點掉對話框正好與安全相反；課程建議的是明確確認。"
+    },
+    {
+      "stage": "post",
+      "question": "課程強調針對 computer-use 代理程式的主要攻擊是什麼？",
+      "options": [
+        "網路斷線",
+        "作業系統更新延遲",
+        "畫面繪製太慢",
+        "惡意網頁或 PDF 把指令藏在被檢索的內容裡，讓模型把它當成使用者的意圖"
+      ],
+      "correct": 3,
+      "explanation": "把截圖或 DOM 文字當成授權，正是典型的間接提示詞注入失誤。"
+    },
+    {
+      "stage": "post",
+      "question": "課程具體建議在什麼時候需要人工確認？",
+      "options": [
+        "永遠不需要",
+        "在登入、購買、刪除檔案這類敏感動作上",
+        "只有模型主動詢問時",
+        "在唯讀的頁面導覽上"
+      ],
+      "correct": 1,
+      "explanation": "敏感動作（動到錢、暴露資料、新增登入）都需要明確的人工確認。"
+    }
+  ]
+}

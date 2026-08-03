@@ -1,0 +1,62 @@
+[
+  {
+    "question": "PyTorch 中的 autograd 是什麼？",
+    "options": [
+      "模型壓縮工具",
+      "自動微分引擎，會記錄運算並計算梯度，不需要手寫 backward 實作",
+      "超參數調校框架",
+      "資料載入函式庫"
+    ],
+    "correct": 1,
+    "explanation": "PyTorch 的 autograd 在前向計算時建立計算圖，當你呼叫 .backward() 時自動計算梯度。這讓你不必在每個模組中手動實作 backward()。",
+    "stage": "pre"
+  },
+  {
+    "question": "torch.no_grad() 做什麼？什麼時候該用它？",
+    "options": [
+      "它可以防止過度擬合",
+      "它會啟用 GPU 加速",
+      "它會在推論時關閉梯度追蹤，在不需要訓練時節省記憶體與計算",
+      "它會凍結模型的所有權重"
+    ],
+    "correct": 2,
+    "explanation": "推論時不需要梯度。torch.no_grad() 關閉梯度追蹤，省下儲存計算圖所需的記憶體，也加快計算速度。",
+    "stage": "pre"
+  },
+  {
+    "question": "nn.Linear(784, 256) 在 PyTorch 中會建立什麼？",
+    "options": [
+      "批次正規化層",
+      "ReLU 激活層",
+      "p=784/256 的 dropout 層",
+      "全連接層，權重矩陣形狀為 (256, 784)，偏置向量形狀為 (256,)"
+    ],
+    "correct": 3,
+    "explanation": "nn.Linear(in_features, out_features) 會建立一個計算 y = x @ W^T + b 的層，其中 W 形狀為 (256, 784)、b 形狀為 (256,)。這相當於你從零打造的 Layer 類別的 PyTorch 版本。",
+    "stage": "post"
+  },
+  {
+    "question": "哪一個 PyTorch 方法會為計算圖中所有參數計算梯度？",
+    "options": [
+      "optimizer.step()",
+      "loss.backward()",
+      "model.forward()",
+      "optimizer.zero_grad()"
+    ],
+    "correct": 1,
+    "explanation": "loss.backward() 會反向走訪計算圖，為每個需要梯度的參數 p 計算 dL/dp。接著 optimizer.step() 用這些梯度更新參數。",
+    "stage": "post"
+  },
+  {
+    "question": "為什麼 PyTorch 的訓練迴圈比純 Python 的迷你框架快上許多？",
+    "options": [
+      "PyTorch 使用較小的資料型別",
+      "PyTorch 使用不同的演算法",
+      "PyTorch 跳過反向傳播",
+      "PyTorch 把運算當成最佳化過的 C++/CUDA kernel 在 GPU 上執行，純 Python 迴圈則是一次直譯一個運算"
+    ],
+    "correct": 3,
+    "explanation": "PyTorch 把矩陣運算交給高度最佳化的 C++ 與 CUDA kernel，在 GPU 上大規模平行執行。純 Python 則是循序執行迴圈，每個運算都要付出直譯器的額外開銷。",
+    "stage": "post"
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "lesson": "04-glove-fasttext-subword",
+  "title": "GloVe, FastText, and Subword Embeddings",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "相較於 Word2Vec，GloVe 的貢獻是什麼？",
+      "options": [
+        "更深的神經網路",
+        "子詞 n-gram 嵌入",
+        "以加權損失直接分解詞與詞的共現矩陣",
+        "位元組層級的斷詞"
+      ],
+      "correct": 2,
+      "explanation": "GloVe 用一個經過細心加權的對數損失，去分解全域共現矩陣。"
+    },
+    {
+      "stage": "pre",
+      "question": "FastText 解決了什麼 Word2Vec 與 GloVe 解決不了的問題？",
+      "options": [
+        "降低訓練成本",
+        "跨語言遷移",
+        "一詞多義的消歧",
+        "透過組合字元 n-gram，為沒見過的詞產生向量"
+      ],
+      "correct": 3,
+      "explanation": "FastText 用一個詞的子詞 n-gram 組出它的詞向量，所以 OOV 詞也能拿到合理的向量。"
+    },
+    {
+      "stage": "check",
+      "question": "在 GloVe 中，加權函式 f(x) = (x/x_max)^alpha 扮演什麼角色？",
+      "options": [
+        "挑選負樣本",
+        "把向量正規化成單位長度",
+        "隨機初始化權重",
+        "降低極高頻配對的權重，讓它們不會主宰損失"
+      ],
+      "correct": 3,
+      "explanation": "這個加權避免像 (the, and) 這種無所不在的共現主宰訓練。"
+    },
+    {
+      "stage": "check",
+      "question": "BPE 的合併步驟如何挑選下一組要合併的配對？",
+      "options": [
+        "隨機挑一組",
+        "字典序最前面的那組",
+        "整個語料中出現次數最多的相鄰 token 配對",
+        "IDF 最高的那組"
+      ],
+      "correct": 2,
+      "explanation": "BPE 反覆合併出現次數最多的相鄰配對。"
+    },
+    {
+      "stage": "check",
+      "question": "GPT-2 為什麼採用位元組層級的 BPE？",
+      "options": [
+        "256 個位元組構成的基礎詞彙表能涵蓋任何輸入，徹底消除 out-of-vocabulary",
+        "位元組比字元訓練得更快",
+        "位元組會隱含地保留大小寫",
+        "位元組 BPE 不需要訓練合併規則"
+      ],
+      "correct": 0,
+      "explanation": "從 256 個位元組起步，代表任何 UTF-8 字串都能被斷詞；不存在 OOV。"
+    },
+    {
+      "stage": "post",
+      "question": "微調預訓練 transformer 時，你應該使用哪個分詞器？",
+      "options": [
+        "永遠用位元組層級 BPE",
+        "永遠用 SentencePiece",
+        "詞彙表最大的那一個",
+        "模型隨附的那個分詞器；不匹配會破壞嵌入"
+      ],
+      "correct": 3,
+      "explanation": "分詞器與模型不匹配會無聲地破壞輸入；永遠讓模型搭配它隨附的分詞器。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候你會選 FastText 而不是 GloVe 來取得預訓練詞向量？",
+      "options": [
+        "當你需要 50 維的模型時",
+        "當延遲要求最嚴苛時",
+        "當語料非常小時",
+        "處理構詞豐富的語言，或是新造詞與拼字錯誤頻繁的領域時"
+      ],
+      "correct": 3,
+      "explanation": "FastText 的子詞組合能處理 GloVe 應付不了的詞形變化、新造詞與拼字錯誤。"
+    },
+    {
+      "stage": "post",
+      "question": "WordPiece、BPE 與 SentencePiece 的詞彙表是以什麼單位為基礎？",
+      "options": [
+        "句子",
+        "完整的詞",
+        "段落",
+        "比詞更小的子詞片段（字元、n-gram，或學到的合併結果）"
+      ],
+      "correct": 3,
+      "explanation": "這三者都是子詞分詞器；差別在於合併或片段的學習方式，而不在於是否為子詞。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/29-end-to-end-coding-task-demo",
+  "title": "End-to-End Coding Agent on the Harness",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "閱讀本課之前：為什麼這個端到端示範用一個確定性的政策取代 LLM？",
+      "options": [
+        "在程式撰寫任務上，確定性政策永遠勝過 LLM。",
+        "本課負擔不起推論成本。",
+        "LLM 太慢，無法在測試中執行。",
+        "本課要測的是 harness；政策才是那個可替換的接縫。"
+      ],
+      "correct": 3,
+      "explanation": "Harness 的契約並不在乎政策是 LLM 還是狀態機。拿掉 LLM 就拿掉了網路與變異性，讓本課變成一個可重現的整合測試。"
+    },
+    {
+      "stage": "check",
+      "question": "代理程式的狀態機有五個狀態。在正常流程中，它們的執行順序為何？",
+      "options": [
+        "RUN_TESTS -> SURVEY -> INSPECT -> FIX -> VERIFY。",
+        "SURVEY -> RUN_TESTS -> INSPECT -> FIX -> VERIFY。",
+        "SURVEY -> FIX -> VERIFY -> RUN_TESTS -> INSPECT。",
+        "SURVEY -> INSPECT -> FIX -> RUN_TESTS -> VERIFY。"
+      ],
+      "correct": 1,
+      "explanation": "代理程式先勘查專案，執行測試，檢視失敗的測試，修正錯誤，最後驗證。RUN_TESTS 排在 INSPECT 之前，因為測試失敗正是政策要讀取的訊號。"
+    },
+    {
+      "stage": "check",
+      "question": "隨附 fixture 的錯誤是 src/fizz.py 中的差一錯誤：寫成 range(1, n) 而非 range(1, n + 1)。政策在哪裡決定要套用修正？",
+      "options": [
+        "在 SURVEY 狀態中，透過讀取檔案標頭。",
+        "在狀態機之外，於關卡鏈中。",
+        "在 VERIFY 狀態中，於重新執行之後。",
+        "在 INSPECT 狀態中，於測試失敗已指出預期輸出之後。"
+      ],
+      "correct": 3,
+      "explanation": "INSPECT 是政策讀取失敗測試、得知預期形狀的地方。修正在那裡被識別出來，然後在下一個 FIX 狀態中寫入。"
+    },
+    {
+      "stage": "check",
+      "question": "每一次工具呼叫依序經過哪一串元件？",
+      "options": [
+        "ObservationLedger -> GateChain -> Sandbox -> SpanBuilder。",
+        "SpanBuilder -> GateChain -> Sandbox -> ObservationLedger。",
+        "GateChain -> SpanBuilder -> Sandbox -> ObservationLedger。",
+        "Sandbox -> GateChain -> SpanBuilder -> ObservationLedger。"
+      ],
+      "correct": 2,
+      "explanation": "先關卡（放行／拒絕），接著 span（讓拒絕也被記錄下來），第三是沙箱（只在放行時），最後是帳本（只在成功時）。本課的程式碼就是這樣接線的。"
+    },
+    {
+      "stage": "post",
+      "question": "你把確定性政策換成真正的 LLM。Harness 的哪個元件要改？",
+      "options": [
+        "沙箱必須用 seccomp 加固。",
+        "Prometheus 的呈現格式會變得不相容。",
+        "關卡鏈必須重寫以處理 LLM 的隨機性。",
+        "Harness 什麼都不用改；政策是唯一被替換的那一塊。"
+      ],
+      "correct": 3,
+      "explanation": "這正是本課的重點：harness 與政策無關。接縫是 next_action / observe 介面。LLM 從那裡插入，完全不必動到關卡、沙箱、帳本或 span。"
+    },
+    {
+      "stage": "post",
+      "question": "這個示範斷言代理程式會在少於 12 步之內解決 fixture。確定性政策用了 5 步。真正的 LLM 代理程式可能怎麼做，harness 又如何處理？",
+      "options": [
+        "LLM 無法在這個 harness 中執行。",
+        "LLM 也會用 5 步；harness 維持不變。",
+        "Harness 會靜默地放寬預算。",
+        "LLM 可能用掉更多步；step_budget 為迴圈設下界限，未解出的執行會以帶有 halted_reason 的失敗回報。"
+      ],
+      "correct": 3,
+      "explanation": "步驟預算是一個明確、確定性的停止準則。四處遊蕩的 LLM 會被設下上限，而報告會準確告訴你原因。"
+    }
+  ]
+}

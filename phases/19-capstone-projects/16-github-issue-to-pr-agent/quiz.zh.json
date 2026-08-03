@@ -1,0 +1,90 @@
+{
+  "lesson": "16-github-issue-to-pr-agent",
+  "title": "Capstone 16 — GitHub Issue-to-PR Autonomous Agent",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在正式環境中，這個非同步雲端寫程式代理程式是怎麼被觸發的？",
+      "options": [
+        "由 issue 標籤或 PR 留言觸發的 GitHub webhook，再派送到沙箱 worker",
+        "手動上傳檔案",
+        "SSH 進 VM 的長時間工作階段",
+        "定時對儲存庫執行的 cron 排程"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼這個代理程式必須用短效的 GitHub App 安裝 token，而不是個人存取 token？",
+      "options": [
+        "個人存取 token 無法開 PR",
+        "App token 給的是細緻、限定範圍、短效的憑證，適合逐任務啟動的 worker",
+        "App 可以完全避開 GitHub 的速率限制",
+        "App 需要的程式碼比 PAT 少"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪兩道防護能避免代理程式毀掉 main？",
+      "options": [
+        "在 worker 上停用 git",
+        "分支保護禁止直接推送或 force-push 到 main，而且該 App 不在豁免名單上",
+        "每次推送都要求輸入 captcha",
+        "clone 之前先把儲存庫加密"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 .github/workflows 的路徑範圍保護要在 worker 端強制，而不是靠 GitHub App 權限？",
+      "options": [
+        ".github/workflows 是虛擬路徑",
+        "GitHub App 權限不支援按路徑限定範圍，因此由 worker 對提出的 diff 做允許清單檢查才是正確的施行點",
+        "任何形式的路徑範圍限定都不可能做到",
+        "workflow 存放在儲存庫之外"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "代理程式迴圈結束後、開 PR 之前，會經過什麼把關？",
+      "options": [
+        "由審查者模型改寫 diff",
+        "PR 立刻開出，不做任何檢查",
+        "在沙箱裡跑完整 CI；計算涵蓋率差異；退步超過門檻的 PR 會被貼上 needs-review 標籤",
+        "把儲存庫 force-push 到 main"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "派送器對每個儲存庫每天強制哪些預算旋鈕？",
+      "options": [
+        "只有回合數上限",
+        "每個 PR 的美元上限，加上每個儲存庫每天的 PR 數上限",
+        "PR 數與成本都不限",
+        "只有實際時間上限"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "代理程式張貼的 PR 內文裡有什麼？",
+      "options": [
+        "理由、diff 摘要、trace URL、成本與回合數，讓審查者能稽核與追蹤",
+        "只有 diff",
+        "什麼都沒有；PR 內文是空的",
+        "只有自動產生的變更紀錄"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 2024 年之後的 SOTA 文字生圖模型（SD3、FLUX、Z-Image）把 U-Net 去噪器換成 Diffusion Transformer（DiT）？",
+      "options": [
+        "GPU 已經不再支援 U-Net",
+        "DiT 的擴展性比 U-Net 更可預測（適用與 LLM 相同的 scaling law），更能處理長距離空間相依以生成符合提示詞的結果，而且能透過交叉注意力或聯合注意力自然地與文字編碼器搭配",
+        "Transformer 比較好寫",
+        "DiT 的參數比較少"
+      ],
+      "correct": 1,
+      "explanation": "DiT 把 diffusion 當成另一種序列建模任務。它像語言模型一樣能擴展，避開了卷積可能限制長距離結構的固定歸納偏差，也能乾淨地整合 transformer 文字編碼器。2026 年所有 SOTA 模型 — SD3、FLUX.1、FLUX.2、SD4、Z-Image、Qwen-Image — 都是 DiT。"
+    },
+    {
+      "stage": "pre",
+      "question": "Rectified flow 訓練模型去預測資料與雜訊之間直線內插上的速度 `v = epsilon - x_0`。為什麼這能把取樣步數從 1000 降到 20？",
+      "options": [
+        "它需要更大的模型",
+        "學到的 ODE 比 DDPM 那條彎曲的 SDE 更接近直線，所以少步數的 Euler 積分就能產生準確的樣本；再搭配蒸餾就能得到 FLUX schnell 這種 1-4 步的版本",
+        "Euler 嚴格優於 DDIM",
+        "並沒有；rectified flow 一樣需要 1000 步"
+      ],
+      "correct": 1,
+      "explanation": "DDPM 的反向過程是一條隨機的彎曲路徑，需要很多小步。Rectified flow 定義的是直線內插；學到的速度沿軌跡近乎固定。積分一條近乎直線的 ODE 只要幾步。SD3 與 FLUX 在 20-30 步就能達到完整品質；schnell/turbo/LCM 再蒸餾到 1-4 步。"
+    },
+    {
+      "stage": "post",
+      "question": "MMDiT（SD3）使用兩組權重，一組給文字 token、一組給影像 token，並共享單一的聯合注意力層。為什麼？",
+      "options": [
+        "為了節省記憶體",
+        "文字與影像嵌入在概念上是不同的分布；分開的權重讓每個模態處理自己的表示，聯合注意力則讓它們互動；結果是比單一共享流更好的文字-影像對齊與提示詞遵循度",
+        "這是沿襲下來的舊設計",
+        "實際上只有影像 token 會通過注意力層"
+      ],
+      "correct": 1,
+      "explanation": "Stable Diffusion 3 的 MMDiT 保留各模態獨立的權重流，以保存文字與影像 token 不同的統計特性，再由一個聯合自注意力層讓兩者融合。這在結構上比串接後共用（SD1/2 的做法）更有表達力，實測也提升了提示詞遵循度與文字渲染。FLUX 進一步把它擴充成交替的 double-stream / single-stream 區塊以提高效率。"
+    },
+    {
+      "stage": "post",
+      "question": "在 DiT 區塊中，AdaLN-Zero 是什麼意思，為什麼有幫助？",
+      "options": [
+        "一種只在 50% 的時間套用的 LayerNorm",
+        "自適應 LayerNorm，其調變 MLP 初始化為零，所以整個區塊一開始等同於恆等映射；訓練再學出 scale/shift/gate，這讓極深的 diffusion transformer 穩定下來",
+        "epsilon 為零的 layer norm",
+        "平均值為零的 LayerNorm"
+      ],
+      "correct": 1,
+      "explanation": "AdaLN 從條件向量預測 scale、shift 與 gate。「Zero」是指 MLP 初始化為零，所以 gate 一開始是 0，區塊等同於恆等映射。梯度會慢慢把調變推離零，避免深層堆疊在訓練初期發散。它是 DiT 版的 ResNet 殘差零初始化，每個現代 diffusion transformer 都在用。"
+    },
+    {
+      "stage": "post",
+      "question": "FLUX.1-schnell 能在 4 步內產生一張影像。是哪個技術讓它做到的？",
+      "options": [
+        "更低精度的權重",
+        "更少的參數量",
+        "蒸餾 — schnell 是用對抗式／一致性式的目標，從一個慢速的多步教師訓練而來，讓 1-4 步去噪就能對上教師 20-30 步的輸出",
+        "與 FLUX.1-dev 不同的基礎架構"
+      ],
+      "correct": 2,
+      "explanation": "Schnell / Turbo / LCM 這些版本用的是步數蒸餾。少步數的學生學著去符合多步教師的輸出。基礎架構與參數量通常完全相同（FLUX.1-dev 與 schnell 都是 12B）。蒸餾才是讓一秒內推論變得實用的關鍵。這與 SDXL Turbo、SD Turbo 和 Latent Consistency Models 是同一個想法。"
+    }
+  ]
+}

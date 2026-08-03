@@ -1,0 +1,78 @@
+{
+  "lesson": "29-moderation-systems-openai-perspective-llamaguard",
+  "title": "Moderation Systems - OpenAI, Perspective, Llama Guard",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "OpenAI 的 omni-moderation-latest（2024）是什麼？",
+      "options": [
+        "一個 C2PA 浮水印端點",
+        "一個以 GPT-4o 為基礎的審核分類器，可在單次呼叫中同時處理文字與影像，回傳 13 個分類的回應結構（騷擾、仇恨、自我傷害、性、暴力、非法行為及其子分類），對多數開發者免費",
+        "一個 RLHF 獎勵模型",
+        "一個以推理為主的前沿模型"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不是 OpenAI Moderation 的主要頂層分類？",
+      "options": [
+        "election-interference",
+        "violence",
+        "self-harm",
+        "harassment"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2026 年標準審核模式的三層是什麼？",
+      "options": [
+        "輸入審核（生成前）、輸出審核（生成後）、自訂審核（領域規則）",
+        "望遠／潛望／顯微",
+        "探測器／偵測器／測試框架",
+        "分詞器／模型／還原器"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Perspective API（Google Jigsaw）主要是設計來評分什麼？",
+      "options": [
+        "使用者滿意度上的獎勵",
+        "推理品質",
+        "浮水印強度",
+        "毒性（含嚴重毒性、侮辱、髒話、威脅、身分攻擊等子面向），是 LLM 時代之前的內容審核基準"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "只做輸入端審核有什麼失效模式？",
+      "options": [
+        "它抓不到模型輸出端的失效或幻覺；編碼類攻擊（第 12 到 14 課）可以完全繞過輸入端分類器",
+        "它無法在 GPU 上執行",
+        "它一定會擋掉正當內容",
+        "它讓輸出端分類器變得不必要"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Azure Content Moderator 的淘汰時程與遷移目標是什麼？",
+      "options": [
+        "併入 Llama Guard 4",
+        "由 Perspective API 取代",
+        "2024 年 2 月宣布淘汰，2027 年 3 月 15 日終止服務；遷移目標是 Azure AI Content Safety（以 LLM 為基礎，與 Azure OpenAI 整合）",
+        "立即淘汰且沒有替代方案"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

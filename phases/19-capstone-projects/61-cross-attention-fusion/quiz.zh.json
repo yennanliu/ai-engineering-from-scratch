@@ -1,0 +1,78 @@
+{
+  "lesson": "61-cross-attention-fusion",
+  "title": "Cross-Attention Fusion",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在視覺語言模型中，早期融合與後期融合的實際差異是什麼？",
+      "options": [
+        "後期融合用掉更多記憶體",
+        "早期融合是不合法的",
+        "早期融合把影像與文字 token 串接成同一個序列；後期融合則讓兩者分開，在每個區塊透過 cross-attention 橋接",
+        "早期融合在實際執行時間上先跑"
+      ],
+      "correct": 2,
+      "explanation": "Chameleon 與 Emu3 屬於早期融合；Flamingo 與 BLIP-2 屬於後期融合。這個架構選擇會改變遮罩形狀與 KV 快取方式。"
+    },
+    {
+      "stage": "pre",
+      "question": "在同時具備 self-attention 與 cross-attention 的 decoder 區塊中，哪一個使用因果遮罩？",
+      "options": [
+        "兩者皆非",
+        "兩者皆是",
+        "只有 cross-attention",
+        "只有 self-attention；影像是完全可見的，而且 cross-attention 沒有時間順序"
+      ],
+      "correct": 3,
+      "explanation": "文字生成是自迴歸的，所以文字的 self-attention 是因果的。影像 token 在任何文字被解碼之前就全部可見。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 cross-attention 的 KV 快取每張影像只建一次？",
+      "options": [
+        "因為影像的 key 與 value 在文字解碼過程中不會改變，所以只投影一次記憶體、並在所有解碼步驟間重複使用 K 與 V，這就是推論加速的全部來源",
+        "這樣可以不用 GPU",
+        "PyTorch 要求快取",
+        "快取能省磁碟空間"
+      ],
+      "correct": 0,
+      "explanation": "視覺編碼器只跑一次，它的 KV 投影也只算一次。之後每個文字 token 都能免費重複使用這份快取。"
+    },
+    {
+      "stage": "check",
+      "question": "當文字長度 Nt=10、影像長度 Nv=197、hidden=256 時，cross-attention 的輸出形狀是什麼？",
+      "options": [
+        "(B, 10, 256)",
+        "(B, 207, 256)",
+        "(B, 10, 197)",
+        "(B, 197, 256)"
+      ],
+      "correct": 0,
+      "explanation": "Cross-attention 的輸出形狀跟隨 query 這一路，所以不論 key 有多長，輸出都是 (B, Nt, hidden)。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 cross-attention 不使用遮罩？",
+      "options": [
+        "遮罩總是會造成 NaN",
+        "遮罩太昂貴",
+        "影像在文字生成開始前就完全可見；每個文字位置都可以關注每一個區塊",
+        "PyTorch 不支援 cross 遮罩"
+      ],
+      "correct": 2,
+      "explanation": "影像區塊之間沒有時間順序，也沒有需要防範的資訊洩漏，所以 cross-attention 看得到整張影像。"
+    },
+    {
+      "stage": "post",
+      "question": "你會加上哪一項擴充來取回 Flamingo 風格的訓練穩定性？",
+      "options": [
+        "移除 FFN",
+        "在 cross-attention 的殘差上插入一個學習式 tanh 閘門，讓模型能從純文字的行為出發，再逐步長進影像那一路",
+        "拿掉 self-attention 層",
+        "只用一個 attention head"
+      ],
+      "correct": 1,
+      "explanation": "Flamingo 的 tanh 閘門從零開始，在初始化時還原成純文字行為，並給模型一條平順的坡道逐步進入 cross-attention。"
+    }
+  ]
+}

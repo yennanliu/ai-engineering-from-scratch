@@ -1,0 +1,78 @@
+{
+  "lesson": "58-vision-encoder-patches",
+  "title": "Vision Encoder Patches",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 Vision Transformer 使用區塊（patch），而不是一個像素餵一個 token？",
+      "options": [
+        "因為 PyTorch 規定要用區塊",
+        "因為一像素一 token 的序列會讓 attention 運算量以平方成長，在常見解析度下根本無法處理",
+        "因為區塊能改善影像品質",
+        "因為這樣可以不必用分詞器"
+      ],
+      "correct": 1,
+      "explanation": "一張 224x224 的影像有 150528 個像素 token。Attention 的成本與長度成平方關係，改用 16x16 分塊後序列縮到 196 個 token，模型才處理得動。"
+    },
+    {
+      "stage": "pre",
+      "question": "kernel = stride = patch_size 的 Conv2d 與「展平再線性投影」之間是什麼關係？",
+      "options": [
+        "Conv2d 加入了非線性",
+        "兩者產生不同的輸出",
+        "Conv2d 只是對每個區塊做同一個線性投影的更快寫法",
+        "展平再線性投影是不可能的"
+      ],
+      "correct": 2,
+      "explanation": "Conv2d 每個輸出位置都是把該區塊的像素與一個濾波器做內積，這與展平再線性投影完全相同。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼二維正弦位置嵌入是決定性的，而不是學習得來的？",
+      "options": [
+        "固定的 sin/cos 訊號能乾淨地內插到模型沒見過的網格上，在解析度改變時很有用",
+        "因為必須用隨機初始化",
+        "因為這樣省磁碟空間",
+        "因為學習式位置是不合法的"
+      ],
+      "correct": 0,
+      "explanation": "固定的正弦位置在不同解析度下都是決定性的，讓同一個編碼器能跑在未曾訓練過的輸入上。"
+    },
+    {
+      "stage": "check",
+      "question": "一張 224x224 的影像在 patch_size=16 且加上一個 CLS token 時，輸出序列長度是多少？",
+      "options": [
+        "224",
+        "256",
+        "196",
+        "197"
+      ],
+      "correct": 3,
+      "explanation": "224/16 = 14，所以 14x14 = 196 個區塊，再加上一個 CLS token，總共 197 個 token。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼重建（先 unfold 再 unflatten）是檢查區塊前端的有用健全性測試？",
+      "options": [
+        "它能加速推論",
+        "在不做投影的情況下，像素經過分塊展平再還原必須等於輸入；不相等就代表 unfold 的算式錯了",
+        "它能提升準確率",
+        "因為 ONNX 要求如此"
+      ],
+      "correct": 1,
+      "explanation": "不做投影時，分塊這一步是可逆的。如果來回轉換後出現偏移，就表示 unfold 的邏輯有錯，編碼器其餘部分也就不可靠。"
+    },
+    {
+      "stage": "post",
+      "question": "在這一課中，把學習式位置嵌入換成二維正弦版本會帶來什麼改變？",
+      "options": [
+        "什麼都不會改變",
+        "正弦位置會每一步隨機變動",
+        "學習式位置在固定解析度下能擬合得稍微好一點；正弦位置則不必重新訓練就能轉移到新解析度",
+        "正弦位置消耗更多參數"
+      ],
+      "correct": 2,
+      "explanation": "學習式位置在單一解析度下較有彈性。正弦位置零參數成本，而且能挺過解析度變動。"
+    }
+  ]
+}

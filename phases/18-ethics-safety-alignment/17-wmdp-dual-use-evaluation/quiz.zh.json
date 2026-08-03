@@ -1,0 +1,78 @@
+{
+  "lesson": "17-wmdp-dual-use-evaluation",
+  "title": "WMDP and Dual-Use Capability Evaluation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "WMDP 挑選題目時所用的「黃區」判準是什麼？",
+      "options": [
+        "危險化合物的合成配方",
+        "接近且能促成有害流程的知識，但本身不是直接的合成配方",
+        "未經專家審查的公開網路內容",
+        "多語言數學推理"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "WMDP 涵蓋哪三個領域？",
+      "options": [
+        "生物安全、資安、化學",
+        "視覺、音訊、文字",
+        "數學、程式碼、語言",
+        "隱私、偏誤、浮水印"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "RMU（WMDP 的配套方法）做的是什麼？",
+      "options": [
+        "生成有害影像",
+        "在對齊過程中以 DPO 取代 PPO",
+        "為雙用途內容訓練一個新的分詞器",
+        "Representation Misdirection for Unlearning：把 WMDP 分數壓到接近隨機水準，同時讓通用能力（如 MMLU）僅下降幾個百分點"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 在 2025 年的生物武器取得試驗中回報的「uplift」數字是多少，這對 ASL-3 意味著什麼？",
+      "options": [
+        "100 倍；已達 ASL-5",
+        "2.53 倍；不足以排除 ASL-3",
+        "10 倍；低於 ASL-2",
+        "0.5 倍；已排除 ASL-3"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "新手相對 uplift 與專家絕對能力的差別是什麼？",
+      "options": [
+        "兩者都只能用選擇題量測",
+        "兩者是同義詞",
+        "新手相對是一種基準；專家絕對是一種授權",
+        "新手相對是相對於現狀（例如網路搜尋）給非專家帶來的倍數助益；專家絕對則是有動機的專家能從模型榨取到的最大資訊量"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在把 WMDP 分數解讀為部署風險時，下列何者「不是」量測上的陷阱？",
+      "options": [
+        "執行所需、選擇題無法涵蓋的默會知識",
+        "採購與設備上的門檻",
+        "模型的開源授權條款",
+        "誘導阻力（安全過濾器是否擋下資訊榨取）"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

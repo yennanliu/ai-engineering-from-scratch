@@ -1,0 +1,102 @@
+{
+  "lesson": "20-structured-outputs-constrained-decoding",
+  "title": "Structured Outputs & Constrained Decoding",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼只靠提示詞說「回傳 JSON」在正式環境並不夠？",
+      "options": [
+        "提示詞太長",
+        "提示詞無法描述 schema",
+        "JSON 太冗長",
+        "前沿模型大多數時候會照做，但不是每次都會；那一小部分格式錯誤的輸出會弄壞下游的解析器"
+      ],
+      "correct": 3,
+      "explanation": "只靠提示詞取得結構，在前沿模型上約有 80% 的成功率；正式環境需要更硬的保證。"
+    },
+    {
+      "stage": "pre",
+      "question": "受限解碼在每一個生成步驟修改什麼？",
+      "options": [
+        "logit 向量，遮蔽掉會讓目標文法失效的 token，因此只可能取樣到合法的接續",
+        "訓練損失",
+        "分詞器",
+        "KV 快取"
+      ],
+      "correct": 0,
+      "explanation": "logit processor 會把不合法的 token 設為 -inf，讓 softmax 無法取樣到它們。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼受限解碼可能比自由生成更快？",
+      "options": [
+        "模型比較小",
+        "它完全避開 softmax",
+        "它省略反向傳播",
+        "已被決定的骨架 token（例如 '{\"name\": \"'）可以直接輸出而不必取樣，而且合法 token 的搜尋空間也縮小了"
+      ],
+      "correct": 3,
+      "explanation": "已決定的 token 不必取樣，合法 token 集合變小也降低了解碼成本。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一個 schema 設計選擇能避免模型過早下定論？",
+      "options": [
+        "把 'answer' 放在最前面",
+        "把推理欄位放在答案／決策欄位之前，讓模型先思考再下定論",
+        "使用更短的鍵名",
+        "使用 snake_case"
+      ],
+      "correct": 1,
+      "explanation": "欄位順序就是邏輯順序：把推理放前面，模型才能先思考再鎖定答案。"
+    },
+    {
+      "stage": "check",
+      "question": "以 FSM 為基礎的受限解碼工具（例如 Outlines）有什麼限制？",
+      "options": [
+        "它們只支援 enum",
+        "它們會把你綁死在 OpenAI 上",
+        "遞迴的 schema 必須攤平；真正遞迴的結構需要 XGrammar 這類以 CFG 為基礎的引擎",
+        "它們不具確定性"
+      ],
+      "correct": 2,
+      "explanation": "FSM 無法表達無界的遞迴；CFG 引擎才能處理。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼說 Instructor 並不修改 logits？",
+      "options": [
+        "Instructor 把 schema 格式化進提示詞，再解析輸出並重試；logit 遮蔽發生在伺服器端，或根本沒有發生",
+        "它會編輯提示詞",
+        "它使用梯度更新",
+        "Anthropic 的要求"
+      ],
+      "correct": 0,
+      "explanation": "Instructor 使用供應商端的結構化輸出，加上用戶端的驗證與重試，而不是 logit 遮蔽。"
+    },
+    {
+      "stage": "post",
+      "question": "像 date='YYYY-MM-DD' 這樣嚴格的 regex 會帶來什麼問題？",
+      "options": [
+        "它會讓 JSON 解析失敗",
+        "它拿掉了未知值的逃生口，於是模型會捏造一個日期，而不是回傳 null 或哨符值",
+        "它需要 CFG 支援",
+        "regex 很慢"
+      ],
+      "correct": 1,
+      "explanation": "過於嚴格的文法會逼模型憑空造值；務必為未知情況保留 null 或哨符值。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候該選 vLLM 的 guided decoding，而不是供應商的結構化輸出 API？",
+      "options": [
+        "只有在使用位元組層級 BPE 時",
+        "一律使用供應商的",
+        "自架推論的場景：你能控制模型，而且想要 logit 層級的保證、不必依賴重試",
+        "只在 schema 很小的時候"
+      ],
+      "correct": 2,
+      "explanation": "vLLM guided decoding 適合自架服務並提供 logit 層級的限制；供應商 API 則會把你綁在它們的技術堆疊上。"
+    }
+  ]
+}

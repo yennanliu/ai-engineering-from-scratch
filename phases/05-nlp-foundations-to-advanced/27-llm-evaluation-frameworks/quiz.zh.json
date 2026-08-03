@@ -1,0 +1,102 @@
+{
+  "lesson": "27-llm-evaluation-frameworks",
+  "title": "LLM Evaluation — RAGAS, DeepEval, G-Eval",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 Exact Match 與 token-F1 不足以評測現代 LLM 的輸出？",
+      "options": [
+        "它們不可微分",
+        "它們忽略語意等價；'June 29th, 2007' 與 'June 29, 2007' 明明都正確，EM 卻是 0 分",
+        "它們需要 GPU",
+        "它們太慢"
+      ],
+      "correct": 1,
+      "explanation": "Exact match 與 F1 無法辨識人類會判定為正確的改寫或格式差異。"
+    },
+    {
+      "stage": "pre",
+      "question": "RAGAS 的 faithfulness 指標衡量的是什麼？",
+      "options": [
+        "延遲",
+        "每秒 token 數",
+        "答案中的每一項主張是否能由檢索到的上下文透過 NLI 推導成立",
+        "檢索召回率"
+      ],
+      "correct": 2,
+      "explanation": "Faithfulness 用 NLI 蘊涵關係逐一檢查答案中的主張是否有檢索上下文支撐。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼在信任評分之前，必須先用人類標註校準評審模型？",
+      "options": [
+        "GDPR 有此要求",
+        "如果評審與人類標註的 Spearman 相關係數太低（例如低於 0.7），分數就只是雜訊而非訊號",
+        "校準能讓評審更快",
+        "校準是分詞層面的問題"
+      ],
+      "correct": 1,
+      "explanation": "沒有校準，你無法分辨評審分數反映的是品質還是模型偏誤。"
+    },
+    {
+      "stage": "check",
+      "question": "在 LLM-as-judge 的設定中，什麼是自我評測偏誤？",
+      "options": [
+        "評審在快取過的輸出上跑得比較快",
+        "評審會忽略系統提示詞",
+        "延遲較低",
+        "用同一個 LLM 家族來生成又來評審，會讓分數比獨立評審高出 10-20%"
+      ],
+      "correct": 3,
+      "explanation": "生成與評審同家族會讓分數被拉高；評審應改用不同模型家族。"
+    },
+    {
+      "stage": "check",
+      "question": "相較於單純的「打 0-1 分」提示詞，G-Eval 具體多了什麼？",
+      "options": [
+        "更大的上下文",
+        "一份明確的思維鏈評分標準，內含具名的評測步驟，因此分數更穩定",
+        "多語言評分",
+        "成本更低"
+      ],
+      "correct": 1,
+      "explanation": "G-Eval 結構化的評測步驟比自由形式的「幫它打分」提示詞產生更可靠的分數。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼只回報彙總後的平均分數很危險？",
+      "options": [
+        "彙總需要 GPU",
+        "彙總會忽略評審",
+        "彙總數值太大",
+        "0.85 的平均值可能藏著 5% 的災難性失敗；務必檢視最低分位的樣本"
+      ],
+      "correct": 3,
+      "explanation": "平均值會掩蓋尾端失敗；把最低的 10% 攤開來看，才抓得到高嚴重度問題。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼要在 CI 中鎖定評審模型與版本？",
+      "options": [
+        "Anthropic 有此要求",
+        "升級評審會改變每一項指標；評審沒凍結，跨時間的比較就失效",
+        "分詞器漂移",
+        "成本更低"
+      ],
+      "correct": 1,
+      "explanation": "評審一升級，指標基準就會悄悄位移；鎖定版本才能保有跨次執行的可比性。"
+    },
+    {
+      "stage": "post",
+      "question": "相對於 RAGAS，DeepEval 的定位是什麼？",
+      "options": [
+        "完全取代 RAGAS",
+        "DeepEval 是一個分詞器",
+        "DeepEval 是 LLM 版的 pytest（CI 關卡、G-Eval、幻覺指標）；RAGAS 專攻免參考答案的 RAG 監控",
+        "DeepEval 只有託管版本"
+      ],
+      "correct": 2,
+      "explanation": "DeepEval 定位在 CI/CD 迴歸測試；RAGAS 負責免參考答案的 RAG 監控。"
+    }
+  ]
+}

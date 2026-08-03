@@ -1,0 +1,78 @@
+{
+  "lesson": "44-cosine-lr-warmup",
+  "title": "Cosine LR with Linear Warmup",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 cosine 加 warmup 的排程從零起步，而不是從 lr_max 起步？",
+      "options": [
+        "隨意的傳統",
+        "因為在第零步用 lr_max 是不合法的",
+        "最初的上千次更新充滿雜訊；從零線性爬升到 lr_max，能在各項執行中的估計值穩定下來的同時，給最佳化器較小的有效步長",
+        "因為 Adam 要求如此"
+      ],
+      "correct": 2,
+      "explanation": "warmup 讓脆弱的早期更新維持小幅度；否則模型不是發散就是卡住不動。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼這個排程是實作成一個以 step 為變數的單一函式，而不是三段黏起來的區段？",
+      "options": [
+        "黏起來的排程在第一次改動 lr_max 時就會漏掉一個交界點；單一函式對所有步數都套用同一個封閉形式運算式，在 warmup 與總步數的端點都維持連續",
+        "linter 要求如此",
+        "隨意",
+        "單一函式比較短"
+      ],
+      "correct": 0,
+      "explanation": "lr(warmup_steps) 與 lr(total_steps) 的連續性，是從封閉形式直接得到的。"
+    },
+    {
+      "stage": "check",
+      "question": "排程在 step > total_steps 時會發生什麼？",
+      "options": [
+        "回傳 nan",
+        "拋出例外",
+        "繞回開頭",
+        "固定在 lr_min；排程不做外推，需要延長訓練的訓練器要明確調整 total_steps"
+      ],
+      "correct": 3,
+      "explanation": "固定的下限讓超跑的訓練器停在有文件記載的狀態，而不是直接崩潰。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要把梯度 L2 範數與學習率一起記錄？",
+      "options": [
+        "傳統",
+        "範數是訓練健康度的另一半：發散的訓練會先在範數上出現尖峰、之後才反映到損失；峰值太激進則表現為 warmup 結束後範數仍居高不下",
+        "這樣看起來好看",
+        "Adam 要求如此"
+      ],
+      "correct": 1,
+      "explanation": "一起記錄能讓病態的排程在執行當下就被看見，而不是事後才發現。"
+    },
+    {
+      "stage": "post",
+      "question": "生產環境為什麼要把 warmup_steps 設成 total_steps 的一個比例？",
+      "options": [
+        "分數比較乾淨",
+        "適合 2 萬步訓練的固定 warmup 步數，放到 2 億步的訓練裡幾乎等於沒有 warmup；用比例（典型是 1 到 3 個百分點）才能隨訓練長度縮放",
+        "硬體要求",
+        "隨意的偏好"
+      ],
+      "correct": 1,
+      "explanation": "絕對的 warmup 步數在不同訓練長度的尺度上會失準。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼生產環境常用非零的 lr_min？",
+      "options": [
+        "設在 lr_max 一成左右的下限，能讓最佳化器在長尾階段持續學習；lr_min 設為零會產生一條看起來漂亮的曲線，和一個還沒訓練完的模型",
+        "數值穩定性",
+        "向後相容",
+        "Adam 要求非零"
+      ],
+      "correct": 0,
+      "explanation": "排程的尾段正是後期細修落地的地方；把它歸零就浪費了那段訊號。"
+    }
+  ]
+}

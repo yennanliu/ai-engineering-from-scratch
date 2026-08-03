@@ -1,0 +1,62 @@
+[
+  {
+    "question": "一個 70 億參數的 FP16 模型，光是權重就需要多少 VRAM？",
+    "options": [
+      "14 GB",
+      "28 GB",
+      "7 GB",
+      "56 GB"
+    ],
+    "correct": 0,
+    "explanation": "FP16 的每個參數是 2 個位元組。70 億乘以 2 個位元組等於 14 GB。再加上 Adam 最佳化器狀態（2 份）與梯度，訓練所需的記憶體總量在計入 activation 之前大約是 56 GB。",
+    "stage": "pre"
+  },
+  {
+    "question": "分散式訓練中使用的三種平行化是什麼？",
+    "options": [
+      "批次平行、序列平行與 token 平行",
+      "前向平行、反向平行與最佳化器平行",
+      "資料平行、張量平行與管線平行",
+      "CPU、GPU 與 TPU 平行"
+    ],
+    "correct": 2,
+    "explanation": "資料平行在每張 GPU 上複製一份模型並切分資料。張量平行把個別層切開分散到多張 GPU。管線平行把模型的層分成數個階段，分散到多張 GPU。",
+    "stage": "pre"
+  },
+  {
+    "question": "FSDP（Fully Sharded Data Parallel）做了什麼是標準 DDP 沒做的？",
+    "options": [
+      "它使用不同的最佳化器",
+      "它處理資料更快",
+      "它支援更多 GPU",
+      "它把模型參數、梯度與最佳化器狀態切分（shard）到各張 GPU，而不是在每張上都複製完整模型"
+    ],
+    "correct": 3,
+    "explanation": "標準 DDP 在每張 GPU 上都複製整個模型（很浪費）。FSDP 把參數切分到各張 GPU，每張只持有一小部分。運算時才依需求聚集參數，用完就釋放。",
+    "stage": "post"
+  },
+  {
+    "question": "什麼是 DeepSpeed ZeRO Stage 3？",
+    "options": [
+      "一種學習率排程",
+      "它把最佳化器狀態、梯度以及模型參數都切分到各張 GPU，達到最高的記憶體效率",
+      "一種量化方法",
+      "一條資料前處理流程"
+    ],
+    "correct": 1,
+    "explanation": "ZeRO Stage 1 切分最佳化器狀態，Stage 2 再加上梯度切分，Stage 3 再加上參數切分。Stage 3 帶來最大的記憶體節省，讓遠超單張 GPU 記憶體的模型也能訓練。",
+    "stage": "post"
+  },
+  {
+    "question": "為什麼資料平行訓練中需要梯度同步？",
+    "options": [
+      "為了加快前向傳播",
+      "每張 GPU 在不同資料上計算梯度；跨 GPU 平均梯度可確保所有副本以相同方式更新",
+      "為了減少記憶體用量",
+      "為了防止過度擬合"
+    ],
+    "correct": 1,
+    "explanation": "在資料平行中，每張 GPU 處理不同的批次並算出不同的梯度。AllReduce 把這些梯度在所有 GPU 之間取平均，讓每個副本套用相同的更新並保持同步。",
+    "stage": "post"
+  }
+]

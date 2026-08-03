@@ -1,0 +1,78 @@
+{
+  "lesson": "68-rag-eval-precision-recall",
+  "title": "RAG Evaluation: Precision, Recall, MRR, nDCG, Faithfulness, Answer Relevance",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 recall@k 在正式環境的 RAG 中通常是最主要的檢索指標？",
+      "options": [
+        "召回率會忽略排序",
+        "OpenAPI 規格要求要有召回率",
+        "在 RAG 中召回率跟精確率是同一回事",
+        "生成階段可以丟掉不相關的切塊，但無法憑一段從未見過的切塊生出答案，所以漏掉正確切塊是代價更高的失敗"
+      ],
+      "correct": 3,
+      "explanation": "漏掉正確切塊的檢索器在下游無法補救；多餘的切塊只是浪費 token，很少會毒害答案。"
+    },
+    {
+      "stage": "pre",
+      "question": "MRR 計算的是什麼？",
+      "options": [
+        "答案的 token 數",
+        "餘弦相似度的幾何平均",
+        "第二篇相關文件排名的中位數",
+        "跨查詢取 1 / 第一篇相關文件的名次 的平均"
+      ],
+      "correct": 3,
+      "explanation": "MRR 由清單頂端主導：第 1 名貢獻 1.0，第 2 名貢獻 0.5，第 10 名貢獻 0.1。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼時候該改用 nDCG 而不是 recall@k？",
+      "options": [
+        "當檢索器不回傳分數時",
+        "當語料很小時",
+        "永遠不需要",
+        "當標準答案標籤帶有分級相關性（例如文件 A 是 3、文件 B 是 2、文件 C 是 1），而二元指標會丟失這些資訊時"
+      ],
+      "correct": 3,
+      "explanation": "nDCG 使用分級增益與位置折扣；召回率則把一切壓成二元。"
+    },
+    {
+      "stage": "check",
+      "question": "faithfulness 與 answer relevance 的差別是什麼？",
+      "options": [
+        "faithfulness 是檢索指標，relevance 是切塊器指標",
+        "它們是同一個指標的兩種名稱",
+        "faithfulness 量的是精確率，relevance 量的是召回率",
+        "faithfulness 問的是「答案是否有檢索到的脈絡作為依據」；answer relevance 問的是「答案是否回應了問題」"
+      ],
+      "correct": 3,
+      "explanation": "一個有依據但離題的答案，faithfulness 高而 relevance 低；一個切題但無依據的答案則 relevance 高而 faithfulness 低。"
+    },
+    {
+      "stage": "check",
+      "question": "某條流程的 recall@5 還不錯但 MRR 偏低。你該先調查哪一個階段？",
+      "options": [
+        "生成器",
+        "切塊器",
+        "語料匯入器",
+        "reranker，因為正確切塊已在前 k 名內卻沒排到最前面"
+      ],
+      "correct": 3,
+      "explanation": "recall@5 代表標準答案在前 5 名內；MRR 偏低代表它不在清單最前端。那正是重排階段的工作。"
+    },
+    {
+      "stage": "post",
+      "question": "是什麼樣的正式環境風險，讓一份凍結的 qrels 檔案隨時間變得危險？",
+      "options": [
+        "評測套件會佔用磁碟空間",
+        "嵌入向量會過期",
+        "檢索器過了六個月就會停止運作",
+        "qrels 腐化：語料會變，上一季還是標準答案的文件已不再是正確答案，指標卻仍以過期標籤來回報"
+      ],
+      "correct": 3,
+      "explanation": "安排每季一次的 qrels 檢視，否則隨著語料演變，你的指標量的會是錯的東西。"
+    }
+  ]
+}

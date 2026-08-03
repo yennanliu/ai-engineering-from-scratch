@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "float32 能表示的數值範圍大約是多少？",
+      "options": [
+        "+/- 1.8e308",
+        "+/- 3.4e38",
+        "+/- 1.0e10",
+        "+/- 65,504"
+      ],
+      "correct": 1,
+      "explanation": "float32 有 8 位元的指數，範圍大約是 +/- 3.4e38。float16 限制在 +/- 65,504，float64 則可達 +/- 1.8e308。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼在浮點運算中 0.1 + 0.2 不等於 0.3？",
+      "options": [
+        "CPU 的加法電路有 bug",
+        "0.1 與 0.2 無法用二進位浮點數精確表示",
+        "Python 會把所有小數四捨五入成整數",
+        "0.3 不是合法的浮點數"
+      ],
+      "correct": 1,
+      "explanation": "0.1 在二進位中是循環小數（就像十進位的 1/3）。float32 會截斷它，所以實際存下來的值大約是 0.100000001490116。累積的誤差讓總和與 0.3 有落差。"
+    },
+    {
+      "stage": "post",
+      "question": "在穩定版的 softmax 實作中，為什麼要先減掉 max(logits) 再取指數？",
+      "options": [
+        "它把 logits 正規化成平均值為零",
+        "它把 logits 從 float16 轉成 float32",
+        "它讓輸出的機率更均勻",
+        "它確保最大的指數為 0，藉此避免 exp() 溢位"
+      ],
+      "correct": 3,
+      "explanation": "減掉 max(logits) 之後最大值變成 0，而 exp(0) = 1 不可能溢位。其餘的值都是負的，指數結果都小於 1。機率在數學上與樸素版本完全相同。"
+    },
+    {
+      "stage": "post",
+      "question": "用中心差分做梯度檢查時，如果步長 h 太小（例如 1e-15）會發生什麼？",
+      "options": [
+        "近似結果變得更精確",
+        "梯度會自動變成零",
+        "災難性抵消會摧毀結果，因為 f(x+h) 與 f(x-h) 幾乎一模一樣",
+        "函式求值變得更快"
+      ],
+      "correct": 2,
+      "explanation": "當 h 極小時，f(x+h) 與 f(x-h) 只在最後幾位有效數字上有差別。相減會把前面的位數抵消掉，剩下的大多是捨入雜訊。常用的好數值是 h = 1e-5 到 1e-7。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼訓練神經網路時通常偏好 bfloat16 而不是 float16？",
+      "options": [
+        "bfloat16 比 float16 佔用更少記憶體",
+        "bfloat16 的指數範圍與 float32 相同，遇到大的激活值不會溢位，也就不需要 loss scaling",
+        "支援 bfloat16 的 GPU 架構比支援 float16 的多",
+        "bfloat16 有更多尾數位元，精度更好"
+      ],
+      "correct": 1,
+      "explanation": "bfloat16 有 8 個指數位元（與 float32 相同，範圍上看 3.4e38），float16 只有 5 個（最大約 65,504）。訓練過程中激活值與梯度可能超過 65,504，導致 float16 溢位。bfloat16 不需要 loss scaling 就能處理。"
+    }
+  ]
+}

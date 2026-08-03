@@ -1,0 +1,78 @@
+{
+  "lesson": "48-distributed-fsdp-ddp",
+  "title": "Distributed Data Parallel and FSDP from Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "從零打造 DDP 包裝層時，核心的兩個集合通訊操作是哪兩個？",
+      "options": [
+        "只有 reduce_scatter",
+        "barrier 與 barrier",
+        "send 與 recv",
+        "建構時的 broadcast，讓每個 rank 從相同的參數出發；以及 backward 之後的 all_reduce，讓每個 rank 最後拿到平均後的梯度"
+      ],
+      "correct": 3,
+      "explanation": "初始化時的 broadcast 讓各 rank 在第零步就同步。backward 之後的 all-reduce 則讓它們在之後的每一步都保持同步。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼這一課不需要 CUDA、在 CPU 上就能跑？",
+      "options": [
+        "它用的是模擬張量",
+        "它根本沒用到 torch.distributed",
+        "torch.distributed 內建 gloo 後端，能在一般 socket 上執行集合通訊，所以 CPU 上的 torch.multiprocessing worker 會組成真正的行程群組；換到 GPU 機器只需改裝置標記",
+        "它只是個樁替身"
+      ],
+      "correct": 2,
+      "explanation": "gloo 是 CPU 的集合通訊後端。同樣的呼叫點在 GPU 上換成 nccl 也能運作；API 表面完全相同。"
+    },
+    {
+      "stage": "check",
+      "question": "manual_all_reduce_matches_single_process 這個測試證明了什麼？",
+      "options": [
+        "CUDA 是不必要的",
+        "最佳化器會收斂",
+        "什麼也沒證明",
+        "把各 rank 的梯度加總再除以 world_size，可以還原出單一行程在串接後輸入上算出的梯度，誤差在浮點雜訊之內"
+      ],
+      "correct": 3,
+      "explanation": "在完整批次上取平均的交叉熵，等於各 rank 平均值的平均。先加總再相除就是正確的操作，這個測試把它攤開來看。"
+    },
+    {
+      "stage": "check",
+      "question": "這一課的 FSDP 草圖在每次前向傳遞時，對每個參數做了什麼？",
+      "options": [
+        "計算一個雜湊",
+        "重新初始化該參數",
+        "什麼也不做",
+        "把扁平化的參數補齊到 world_size 的倍數、切片、在每個 rank 上 all_gather 這些切片、丟掉補齊部分，並驗證重建結果與原張量相符"
+      ],
+      "correct": 3,
+      "explanation": "每個 rank 擁有每個參數的 1/world_size。gather 會為了運算重建出完整張量；生產級的 FSDP 會把 gather 與前一層的運算重疊起來。"
+    },
+    {
+      "stage": "check",
+      "question": "即使參數長度無法被 world_size 整除，為什麼 gloo 的 all_gather 仍要切成 world_size 份等大的分片？",
+      "options": [
+        "這樣網路比較快",
+        "隨意的選擇",
+        "這是個 bug",
+        "gloo 的 all_gather 要求每個 rank 的輸出張量大小相同，所以扁平參數會先向右補齊到 world_size 的倍數再切片，gather 之後再把補齊部分丟掉"
+      ],
+      "correct": 3,
+      "explanation": "gloo（以及 nccl）的 all_gather 要求輸出大小一致。補齊是最便宜的解法；這個草圖在事後把結果修剪回原本的長度。"
+    },
+    {
+      "stage": "post",
+      "question": "看示範輸出，各 rank 之間的 param_sum_spread 接近零告訴你什麼？",
+      "options": [
+        "沒有意義",
+        "每個 rank 在訓練結束時都停在相同的參數值上，代表建構時的 broadcast 與每次 backward 之後的 all-reduce 都正常運作；只要其中一項壞掉，這個離散度就會隨步數擴大",
+        "損失很低",
+        "網路很快"
+      ],
+      "correct": 1,
+      "explanation": "DDP 的不變式就是各 rank 的參數一致。離散度就是那份稽核；示範會斷言它維持在 1e-3 以下。"
+    }
+  ]
+}

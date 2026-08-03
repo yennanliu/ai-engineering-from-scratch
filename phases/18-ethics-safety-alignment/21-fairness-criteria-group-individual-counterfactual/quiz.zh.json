@@ -1,0 +1,78 @@
+{
+  "lesson": "21-fairness-criteria-group-individual-counterfactual",
+  "title": "Fairness Criteria - Group, Individual, Counterfactual",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "對群體 A=a 與 A=a' 而言，下列何者最符合 demographic parity 的定義？",
+      "options": [
+        "各群體的預測值相等",
+        "各群體的真陽性率與偽陽性率相等",
+        "接受率相等：P(Y=1 | A=a) = P(Y=1 | A=a')",
+        "各群體的 Lipschitz 常數相等"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Chouldechova 與 Kleinberg-Mullainathan-Raghavan（2017）的不可能性結果說了什麼？",
+      "options": [
+        "在基礎比率不相等的情況下，demographic parity、equalized odds 與 conditional use accuracy equality 無法同時成立",
+        "個體公平對任何 DAG 都蘊含反事實公平",
+        "反事實公平蘊含 demographic parity",
+        "群體公平總是可以靠重新加權達成"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Dwork 等人（2012）定義個體公平的方式是：",
+      "options": [
+        "帶有敏感屬性介入的因果 DAG",
+        "各受保護群體的準確率相等",
+        "相對於任務專屬相似度度量，在決策映射上加一個 Lipschitz 條件，使相似的個體得到相似的決策",
+        "在個體層級上的 demographic parity"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "反事實公平（Kusner 等人，2017）要求：",
+      "options": [
+        "所有群體的 Lipschitz 常數相等",
+        "只需要群體層級的統計量",
+        "不需要任何因果假設",
+        "一個因果 DAG；當個體的敏感屬性被反事實地改變時，決策維持不變"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 backtracking counterfactuals（arXiv:2401.13935）對法規遵循很重要？",
+      "options": [
+        "它們取代了基於嵌入的偏誤指標",
+        "它們免除了對任何因果模型的需求",
+        "它們證明了不可能性定理是錯的",
+        "它們不去介入受保護屬性（那在法律上有疑慮），而是問哪一組實際特徵的組合會產生該反事實結果"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "ICLR Blogposts 2024 提出的哲學調和論點是什麼？",
+      "options": [
+        "在有明確因果圖的前提下，滿足某些群體公平指標即蘊含反事實公平，因此兩派看似對立，有一部分只是把因果模型留成隱含的所造成的假象",
+        "群體公平與反事實公平彼此無關",
+        "只有個體公平站得住腳",
+        "不可能性定理可以靠重新加權解決"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

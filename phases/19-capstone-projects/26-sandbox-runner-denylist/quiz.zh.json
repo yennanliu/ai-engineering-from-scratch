@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/26-sandbox-runner-denylist",
+  "title": "Sandbox Runner with Denylist and Path Jail",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "閱讀本課之前：沙箱要檢查像 python3 -c 這類直譯器呼叫的 argv 形狀，最強的理由是什麼？",
+      "options": [
+        "直譯器根本無法被安全地沙箱化。",
+        "直譯器很慢，會浪費代理程式的預算。",
+        "帶 -c 的直譯器就是換個名字的 shell 呼叫，會繞過可執行檔黑名單。",
+        "沒有它們，模型寫出的程式碼比較好。"
+      ],
+      "correct": 2,
+      "explanation": "python3 -c、bash -c、node -e 之流，功能上等同於直接給模型一個 shell。光是封鎖可執行檔名稱並不夠。"
+    },
+    {
+      "stage": "check",
+      "question": "沙箱設定了 project_root=/work。一個路徑引數以 ./src/main.py 的形式送進來。牢籠檢查是怎麼進行的？",
+      "options": [
+        "對拼接後的絕對路徑取 os.path.realpath，再檢查是否有 /work 前綴。",
+        "沙箱拒絕所有相對路徑。",
+        "對 /work 做字面字串前綴比對。",
+        "沙箱先啟動子行程，事後再檢查工作目錄。"
+      ],
+      "correct": 0,
+      "explanation": "realpath 會解析符號連結。字面前綴檢查會被專案根目錄內一個指向外部的符號連結繞過。realpath 加上「前綴相符或相等」才是安全的檢查。"
+    },
+    {
+      "stage": "check",
+      "question": "回傳的 SandboxResult 是 denied=True、timed_out=False、exit_code=-100。標準的解讀是什麼？",
+      "options": [
+        "沙箱從未啟動子行程；這次呼叫在 exec 之前就被拒絕了。",
+        "子行程明確回傳了 -100。",
+        "子行程啟動後被 SIGKILL 殺掉。",
+        "掛鐘逾時被觸發。"
+      ],
+      "correct": 0,
+      "explanation": "哨兵值 exit_code -100 搭配 denied=True，代表沙箱在 subprocess.run 被呼叫之前就短路了。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼沙箱預設偏好 shell=False，並拒絕 shell 中的特殊字元？",
+      "options": [
+        "subprocess 在 macOS 上不接受 shell=True。",
+        "這樣測試套件比較簡單。",
+        "Shell 解析會把整套 shell DSL 暴露給模型，而那正是沙箱想要縮小的攻擊面。",
+        "shell=True 在 CPython 上比較慢。"
+      ],
+      "correct": 2,
+      "explanation": "shell=True 會把 argv 變成一個由 shell 解讀的字串。管線、重導向、命令替換與萬用字元展開全都變成可用。一旦 shell 解析啟動，沙箱就無法有意義地拒絕任何酬載。"
+    },
+    {
+      "stage": "post",
+      "question": "你想為沙箱加上每個行程的記憶體上限。本課的沙箱沒有實作這一項。正確的下一步是什麼？",
+      "options": [
+        "跳過它：對記憶體炸彈來說黑名單就夠了。",
+        "拉長掛鐘逾時來補償。",
+        "在傳給 subprocess.run 的 preexec_fn 中使用 os.setrlimit(RLIMIT_AS)。",
+        "把這個上限以字串加進黑名單。"
+      ],
+      "correct": 2,
+      "explanation": "subprocess.run 接受 preexec_fn（POSIX）或類似機制。setrlimit(RLIMIT_AS) 可以限制子行程的定址空間上限。本課的沙箱沒有隨附這項功能；第 29 課的端到端示範會討論如何在其上疊加容器層級的限制。"
+    },
+    {
+      "stage": "post",
+      "question": "模型以 argv=['cat', 'src/../src/main.py'] 呼叫沙箱。該檔案確實存在於 project_root 之下。這次呼叫應該通過路徑牢籠嗎？",
+      "options": [
+        "視使用者是否為 root 而定。",
+        "應該：realpath 會把 src/../src 收斂成 src，解析後的路徑落在 project_root 之內。",
+        "不應該：argv 在沙箱看到它之前就被正規表示式關卡擋掉了。",
+        "不應該，路徑中出現任何 .. 都是自動拒絕。"
+      ],
+      "correct": 1,
+      "explanation": "realpath 會正規化路徑。沙箱並不會一律拒絕 .. 這個符號；它檢查的是解析後的目標。這是刻意的：正當的路徑有時確實會合理地經過 ..。"
+    }
+  ]
+}

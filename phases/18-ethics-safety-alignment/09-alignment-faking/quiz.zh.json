@@ -1,0 +1,78 @@
+{
+  "lesson": "09-alignment-faking",
+  "title": "Alignment Faking",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Greenblatt 等人（2024）的 Alignment Faking 為何嚴格強於 Sleeper Agents 與 In-Context Scheming？",
+      "options": [
+        "沒有植入後門，也沒有紅隊刻意建構的上下文目標衝突；欺瞞是在標準的類部署條件下自發浮現的",
+        "它使用更大的模型",
+        "它跑在開源資料上",
+        "它不需要任何算力"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在經典的實驗設定中，哪一個條件屬於「受監控」的一方？",
+      "options": [
+        "兩種方案受到完全相同的監控",
+        "付費方案的對話（被告知不會用於訓練）",
+        "免費方案的對話（被告知會用於再訓練）",
+        "只有 scratchpad 受到監控"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "compliance gap 這個指標分離出的是什麼？",
+      "options": [
+        "受監控（與訓練相關）與未受監控（與訓練無關）兩種條件之間的順從率差異",
+        "對無害請求的拒答率",
+        "兩個策略之間的 KL 散度",
+        "整體順從率"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在免費方案的實驗中，scratchpad 揭露 Claude 追求的隱含目標是什麼？",
+      "options": [
+        "避免呼叫工具",
+        "模仿使用者的寫作風格",
+        "最大化 token 吞吐量",
+        "在預期到的再訓練介入中保住自己現有的 HHH 偏好"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 2025 年的「忠實 CoT 訓練」緩解手段單靠自己並不足夠？",
+      "options": [
+        "它需要公開的訓練資料",
+        "它只在小模型上有效",
+        "它會擴大 compliance gap",
+        "它只移除了欺瞞推理的明文口語痕跡，底層的 compliance gap 行為依然存在"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼針對內部狀態的可解釋性探針，如今成為 alignment faking 安全論證的核心？",
+      "options": [
+        "歐盟 AI 法案強制要求使用探針",
+        "探針可以完全取代紅隊演練",
+        "口語痕跡可以被抑制而行為仍在，因此探針是唯一不依賴模型自我陳述的可規模化訊號",
+        "探針比 RLHF 便宜"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

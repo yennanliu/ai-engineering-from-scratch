@@ -1,0 +1,62 @@
+[
+  {
+    "question": "為什麼要讓 LLM 產出結構化的 JSON 很困難？",
+    "options": [
+      "JSON 對 LLM 來說太複雜",
+      "LLM 只能輸出純文字",
+      "LLM 無法生成 JSON",
+      "LLM 逐個 token 生成自由格式文字，隨時可能產出無效的 JSON（缺括號、型別錯誤、多出文字）"
+    ],
+    "correct": 3,
+    "explanation": "LLM 以自迴歸方式生成 token。它可能多加一個尾逗號、忘記收尾的括號、在 JSON 外面包上 markdown 格式，或憑空多生出欄位。每個 token 都是獨立產生的，因此結構的正確性沒有保證。",
+    "stage": "pre"
+  },
+  {
+    "question": "什麼是 constrained decoding（受限解碼）？",
+    "options": [
+      "限制模型的詞彙表大小",
+      "改用比較小的模型",
+      "壓縮輸出",
+      "在每一步限制模型能生成哪些 token，以確保輸出符合某個文法或 schema"
+    ],
+    "correct": 3,
+    "explanation": "constrained decoding 會在每個生成步驟遮蔽掉無效的 token。在左大括號之後只允許有效的 JSON key，在冒號之後只允許有效的值 token。這在 token 層級保證了結構的正確性。",
+    "stage": "pre"
+  },
+  {
+    "question": "使用 Pydantic 模型驗證 LLM 輸出有什麼好處？",
+    "options": [
+      "它們定義帶型別的 schema，能自動驗證、解析格式錯誤的 LLM 輸出，並以清楚的錯誤訊息拒絕它",
+      "它們讓 API 呼叫更快",
+      "它們減少 token 用量",
+      "它們提升模型準確率"
+    ],
+    "correct": 0,
+    "explanation": "Pydantic 會強制檢查型別、必填欄位、數值限制與巢狀結構。當 LLM 產出無效輸出時，Pydantic 會給出具體的錯誤訊息，可以回饋給模型讓它自我修正。",
+    "stage": "post"
+  },
+  {
+    "question": "當 LLM 不顧指示仍回傳無效的 JSON 時，你該怎麼做？",
+    "options": [
+      "換一個模型",
+      "手動修好那段 JSON",
+      "實作一個重試迴圈，把驗證錯誤送回給模型當作脈絡，讓它重新產出修正版",
+      "提高 temperature"
+    ],
+    "correct": 2,
+    "explanation": "帶錯誤回饋的重試迴圈效果很好：解析輸出、攔截驗證錯誤，再把錯誤訊息當作脈絡送回去（「你的輸出有這個錯誤：… 請修正」）。多數模型在第二次嘗試就會自我修正。",
+    "stage": "post"
+  },
+  {
+    "question": "什麼時候該用 API 原生的 JSON 模式，什麼時候該用基於提示詞的 JSON 擷取？",
+    "options": [
+      "一律使用基於提示詞的擷取",
+      "一律使用原生 JSON 模式",
+      "需要保證結構時用原生模式；需要模型推理該擷取什麼的複雜擷取任務則用提示詞",
+      "兩者產生的結果完全相同"
+    ],
+    "correct": 2,
+    "explanation": "原生 JSON 模式（OpenAI 的 response_format、Anthropic 的 tool_use）保證 JSON 結構有效。基於提示詞的擷取在推理該填入哪些欄位這類複雜情境下更有彈性。當結構最重要時，就用原生模式。",
+    "stage": "post"
+  }
+]

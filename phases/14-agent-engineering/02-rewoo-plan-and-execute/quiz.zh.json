@@ -1,0 +1,90 @@
+{
+  "lesson": "02-rewoo-plan-and-execute",
+  "title": "ReWOO and Plan-and-Execute: Decoupled Planning",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 ReAct 的提示詞會隨著深度呈二次成長？",
+      "options": [
+        "每一步都帶上完整的先前上下文，包含之前所有的想法與觀察結果",
+        "模型每一步都對自己重新分詞",
+        "Tool schema 在每次呼叫時都被複製一份",
+        "供應商是按位元組而非按 token 計價"
+      ],
+      "correct": 0,
+      "explanation": "ReAct 每一步都會重新納入先前的想法與觀察結果，使提示詞總長度隨深度的平方成長。"
+    },
+    {
+      "stage": "pre",
+      "question": "定義 ReWOO 的三個角色分工是什麼？",
+      "options": [
+        "Planner、Workers、Solver",
+        "Reader、Writer、Reviewer",
+        "Generator、Critic、Optimizer",
+        "Actor、Evaluator、Reflector"
+      ],
+      "correct": 0,
+      "explanation": "ReWOO 把系統拆成產出 DAG 的 Planner、負責取得證據的 Workers，以及組出最終答案的 Solver。"
+    },
+    {
+      "stage": "check",
+      "question": "在 HotpotQA 上，論文回報 ReWOO 相對於 ReAct 的代表性數字是什麼？",
+      "options": [
+        "token 少 10 倍，準確率 -2",
+        "token 約少 5 倍，準確率絕對值 +4",
+        "token 相同，準確率 +1",
+        "token 約多 2 倍，準確率 +10"
+      ],
+      "correct": 1,
+      "explanation": "在 HotpotQA 上，ReWOO 相較 ReAct 回報約 5 倍的 token 縮減與絕對值 +4 的準確率。"
+    },
+    {
+      "stage": "check",
+      "question": "ReWOO 計畫節點中像 #E1 這樣的佔位符代表什麼？",
+      "options": [
+        "一個在派發時會被較早的 worker 節點輸出所取代的參照",
+        "Planner 的版本識別碼",
+        "worker 1 回傳的錯誤碼",
+        "取得證據的重試計數器"
+      ],
+      "correct": 0,
+      "explanation": "計畫節點使用 #E1、#E2 之類的證據參照，執行器會把它們替換成上游 worker 的輸出。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 ReWOO 比 ReAct 更能把失敗侷限在局部？",
+      "options": [
+        "Planner 在每次出錯後都重新產出一份新的 DAG",
+        "任何錯誤都會讓 worker 直接讓整個執行崩潰",
+        "ReWOO 會把每個失敗的呼叫重試最多十次",
+        "worker 的錯誤會變成一個字串，Solver 會連同原始計畫一起看到，因此降級是以節點為單位而非以步驟為單位"
+      ],
+      "correct": 3,
+      "explanation": "以節點為單位的失敗、加上上下文中仍保有原始計畫，讓 Solver 能優雅降級，而不必在推理串流中途從錯誤裡爬出來。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種任務形態比起單純的 ReWOO 更適合 Plan-and-Act？",
+      "options": [
+        "純算術問題",
+        "一段 40 步的網頁或行動裝置操作軌跡",
+        "兩步就能查完的事實查詢",
+        "單輪分類"
+      ],
+      "correct": 1,
+      "explanation": "Plan-and-Act 是為長時程（超過 30 步）的網頁與行動裝置代理程式而設計，這類任務中單一 ReAct 軌跡會失去連貫性。"
+    },
+    {
+      "stage": "post",
+      "question": "ReWOO 的 planner 蒸餾結果對正式環境的代理程式意味著什麼？",
+      "options": [
+        "每一步都必須使用前沿模型",
+        "小型 planner（約 7B）就能追平大型教師模型，因為 planner 從來看不到觀察結果",
+        "參數低於 7B 後規劃品質就會下滑",
+        "蒸餾需要以梯度為基礎的 RL 資料"
+      ],
+      "correct": 1,
+      "explanation": "因為 planner 看不到觀察結果，大型教師模型的計畫軌跡能乾淨地轉移到經過微調的小型 planner 上。"
+    }
+  ]
+}

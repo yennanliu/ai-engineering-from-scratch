@@ -1,0 +1,102 @@
+{
+  "lesson": "24-coreference-resolution",
+  "title": "Coreference Resolution",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "指代消解（coreference resolution）的目標是什麼？",
+      "options": [
+        "把所有指向同一個真實世界實體的提及（專名、名詞性、代名詞性）分到同一群",
+        "抽取關係",
+        "標註詞性",
+        "把代名詞翻譯成名詞"
+      ],
+      "correct": 0,
+      "explanation": "指代消解會把全部指向同一實體的提及片段分群。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪一類表達屬於「名詞性（nominal）」提及？",
+      "options": [
+        "一個動詞",
+        "像 'she' 這樣的代名詞",
+        "只有專有名詞",
+        "像 'the CEO' 或 'the company' 這樣的名詞片語"
+      ],
+      "correct": 3,
+      "explanation": "名詞性提及是像 'the company' 這樣的名詞片語；代名詞性提及則是代名詞。"
+    },
+    {
+      "stage": "check",
+      "question": "現代（Lee 等人，2017）的指代消解架構是什麼？",
+      "options": [
+        "只用規則式的句法剖析",
+        "決策樹",
+        "端到端的片段式：枚舉片段、為提及評分，再為先行詞機率評分並貪婪分群",
+        "BM25 檢索"
+      ],
+      "correct": 2,
+      "explanation": "端到端的神經指代消解會枚舉片段，並共同學習提及評分與先行詞評分。"
+    },
+    {
+      "stage": "check",
+      "question": "CoNLL F1 是哪些指標的平均？",
+      "options": [
+        "MUC、B-cubed 與 CEAF-phi4 的 F1 分數",
+        "精確率與召回率",
+        "跨語言的 F1",
+        "token 與片段的 F1"
+      ],
+      "correct": 0,
+      "explanation": "CoNLL F1 是 MUC、B-cubed 與 CEAF-phi4 三個指標的平均。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是橋接式指代（bridging anaphora）？",
+      "options": [
+        "像 'the wheels' 這樣的隱含指涉，指的是先前提到的那輛車的輪子",
+        "一個誤譯",
+        "出現在指涉對象之前的代名詞",
+        "沒有先行詞的代名詞"
+      ],
+      "correct": 0,
+      "explanation": "橋接把一個提及連到隱含但未明說的部分或相關實體。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在長文件上只靠 LLM 做指代消解並不可靠？",
+      "options": [
+        "指代消解需要 CFG",
+        "LLM 無法閱讀文字",
+        "分詞器會失效",
+        "單次呼叫的 LLM 在超過 50 個段落時會過度合併，或靜默漏掉提及；需要滑動視窗加上合併"
+      ],
+      "correct": 3,
+      "explanation": "長文件的 LLM 指代消解品質會下降；滑動視窗搭配跨視窗合併可以緩解。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在下游任務之前要把指代群集併入 NER 結果？",
+      "options": [
+        "Wikidata 的要求",
+        "這樣下游任務看到的是每個群集一個實體，而不是每個表面提及一個實體，覆蓋率會大幅提升",
+        "延遲比較低",
+        "為了增加 token 數量"
+      ],
+      "correct": 1,
+      "explanation": "不合併的話，NER 會把每個表面形式分開計算，漏掉 60-80% 的實體提及。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在指代消解系統中寫死的性別規則是個脆弱點？",
+      "options": [
+        "遇到非二元性別的指涉對象、組織與動物時就會失效；學習得到的評分更穩健",
+        "它們無法使用詞性標記",
+        "它們需要 GPU",
+        "它們跑得太快"
+      ],
+      "correct": 0,
+      "explanation": "性別啟發式規則在人口組成多元的文本上會失效；學習式模型更受青睞。"
+    }
+  ]
+}

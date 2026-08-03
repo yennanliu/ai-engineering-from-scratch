@@ -1,0 +1,90 @@
+{
+  "lesson": "17-personal-ai-tutor",
+  "title": "Capstone 17 — Personal AI Tutor (Adaptive, Multimodal, with Memory)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "當學習者直接開口要答案時，蘇格拉底式家教的策略會怎麼做？",
+      "options": [
+        "切換到另一個概念節點",
+        "記下這個請求，然後不回應",
+        "拋出一個引導性問題，替學習者搭鷹架逼近答案",
+        "立刻給出答案然後往下講"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "課程圖譜編碼的是什麼結構？",
+      "options": [
+        "只有最近讀過的那個節點",
+        "把主題隨機打亂的排列",
+        "以先備知識為邊的概念有向圖，並掛上 OER 內容",
+        "彼此無關的概念平面清單"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "每次互動之後，學習者模型會更新什麼？",
+      "options": [
+        "課程圖譜的 schema",
+        "基礎 LLM 的權重",
+        "透過貝氏知識追蹤或類似變體算出的各概念精熟機率",
+        "COPPA 的資料留存政策"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "記憶如何切分為情節式與語意式兩種儲存？",
+      "options": [
+        "情節式給家長用；語意式給學習者用",
+        "情節式保存每一次互動；語意式保存從情節式提煉上來的錯誤與偏好",
+        "情節式存嵌入；語意式存原始音訊",
+        "兩者是同一份資料的複本"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "針對 K-12 學習者，哪項限制形塑了記憶的留存方式？",
+      "options": [
+        "符合 COPPA 的留存政策，在既定期間後自動刪除並提供家長存取",
+        "依模型上下文長度決定留存",
+        "永久留存、絕不刪除",
+        "只需符合 GDPR"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "用來把關交付物的成效研究採取什麼結構？",
+      "options": [
+        "和一位學習者進行的單次一小時課程",
+        "匿名網路問卷",
+        "一次 30 秒的 AB 測試",
+        "10 位學習者為期兩週的前測與後測，並與非適性化的基準組比較"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "這個家教向學習者開放哪些多模態輸入管道？",
+      "options": [
+        "只有照片，透過自製的 OCR 模型",
+        "打字輸入的文字、透過 LiveKit + Whisper 的語音，以及用 dots.ocr 或 PaliGemma 2 辨識的數學照片",
+        "只有文字",
+        "只有語音，沒有文字或照片"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

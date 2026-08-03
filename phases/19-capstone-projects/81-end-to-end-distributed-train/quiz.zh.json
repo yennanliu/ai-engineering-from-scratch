@@ -1,0 +1,78 @@
+{
+  "lesson": "81-end-to-end-distributed-train",
+  "title": "End-to-End Distributed Training",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "每一課都已經有自己的測試了，為什麼還需要一個總整專案？",
+      "options": [
+        "組合是另一種性質：各個零件單元測試都過，整合起來卻可能死鎖、損失發散，或是一起跑的時候記憶體不斷長大",
+        "只是好看",
+        "比較慢",
+        "比較好評分"
+      ],
+      "correct": 0,
+      "explanation": "端到端測試抓的是沒有任何單一零件會測到的接線 bug：rendezvous、barrier 順序、彙集契約。"
+    },
+    {
+      "stage": "pre",
+      "question": "這個示範驗證了哪四項不變量？",
+      "options": [
+        "速度",
+        "每秒 token 數",
+        "硬體",
+        "(a) 損失跑到第 20 步都不出現 NaN，(b) 每個 rank 的參數範數一致，(c) 每個 rank 的最佳化器記憶體符合 ZeRO-1 的公式，(d) 第 10 步的檢查點能位元對位元地重新載入"
+      ],
+      "correct": 3,
+      "explanation": "每項不變量抓的都是不同的組合 bug：NaN 抓發散，範數一致抓同步漂移，記憶體抓切分錯誤，檢查點抓寫入原子性。"
+    },
+    {
+      "stage": "check",
+      "question": "模型為什麼選一個迷你 GPT，而不是 MLP？",
+      "options": [
+        "規定如此",
+        "看起來比較厲害",
+        "GPT 帶進了 LayerNorm 的執行統計量、嵌入層的梯度形狀，以及 softmax 加交叉熵的邊界情況 —— 這些都是 MLP 會掩蓋掉的",
+        "比較快"
+      ],
+      "correct": 2,
+      "explanation": "MLP 的梯度同步在第 77 課已經驗證過了；總整專案需要一個邊界情況更多的模型，才能在真實運算下證明組合是對的。"
+    },
+    {
+      "stage": "check",
+      "question": "在這個脈絡下，「自我終止」是什麼意思？",
+      "options": [
+        "行程把自己殺掉",
+        "固定步數（20 步）、完成後以 exit 0 結束、過程中不需要人介入；任何一環死鎖，示範就永遠不會返回，CI 就會抓到",
+        "當機復原",
+        "手動操作"
+      ],
+      "correct": 1,
+      "explanation": "一次有界的執行加上 exit 0，測試框架才能斷言它確實終止；while True 迴圈會把死鎖掩蓋掉。"
+    },
+    {
+      "stage": "check",
+      "question": "這個示範怎麼把 DDP 與 ZeRO 結合起來？",
+      "options": [
+        "只用 ZeRO",
+        "兩者同時全開",
+        "初始化時用 DDP 式的 broadcast 同步參數，optimizer.step 則換成 ZeRO-1 的 reduce_scatter 加 allgather；DDP 的梯度 allreduce 已被 ZeRO 的 reduce_scatter 吸收掉",
+        "只用 DDP"
+      ],
+      "correct": 2,
+      "explanation": "ZeRO-1 透過 reduce_scatter 接管了梯度同步，所以不再需要 DDP 各自的 allreduce；唯一留下來的 DDP 專屬呼叫，就是初始化時的 broadcast。"
+    },
+    {
+      "stage": "post",
+      "question": "生產環境為什麼用實際經過時間、而不是步數來決定檢查點頻率？",
+      "options": [
+        "看起來比較清爽",
+        "比較快",
+        "NCCL 規定如此",
+        "每一步的耗時會隨序列長度與微批次數量變動；用 10 分鐘一次的節奏，不管模型多大，重跑掉的計算量都差不多"
+      ],
+      "correct": 3,
+      "explanation": "這一課為了講解清楚用的是步數；實際的訓練通常每 5 到 15 分鐘的實際時間存一次。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "31-tokenized-dataset-sliding-window",
+  "title": "Tokenized Dataset with Sliding Window",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "因果 LM 訓練批次的形狀契約是什麼？",
+      "options": [
+        "(B, T) 的輸入 id 與 (B, T) 的目標 id，其中目標是輸入向左位移一格",
+        "在詞彙表上的 (B, V) one-hot 向量",
+        "(B, T, T) 的 attention 遮罩，對角線上是輸入 id",
+        "(B, 2) 的輸入 id 與標籤配對"
+      ],
+      "correct": 0,
+      "explanation": "因果 LM 訓練讀取 (B, T) 的輸入 id，並預測相同形狀的目標 id，其中 target[t] = input[t+1]。"
+    },
+    {
+      "stage": "check",
+      "question": "在長度為 N 的 id 串流中，以 stride S 可以放進多少個長度為 T+1 的視窗？",
+      "options": [
+        "max(0, 1 + (N - (T + 1)) // S)",
+        "N - T - S",
+        "(N - T) * S",
+        "N // (T + 1)"
+      ],
+      "correct": 0,
+      "explanation": "第一個視窗從 0 開始。後續視窗從 S 的倍數開始。最後一個視窗仍必須涵蓋 T+1 個 id。"
+    },
+    {
+      "stage": "check",
+      "question": "把 stride 減半對資料集有什麼影響？",
+      "options": [
+        "它讓每個 epoch 的訓練樣本數減半",
+        "它移除連續視窗之間的重疊",
+        "它讓每個 epoch 的訓練樣本數大約加倍",
+        "沒有影響，因為視窗從不重疊"
+      ],
+      "correct": 2,
+      "explanation": "較小的 stride 會產生更多重疊的視窗，提高樣本數與邊界的多樣性，代價是每個 epoch 需要更多運算。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要傳入一個明確的 torch.Generator 給 DataLoader？",
+      "options": [
+        "它讓相同種子下的多次執行有確定性的洗牌結果",
+        "它免去了批次填補的需要",
+        "它啟用多 GPU 訓練",
+        "它加快資料載入速度"
+      ],
+      "correct": 0,
+      "explanation": "帶種子的產生器會重現相同的洗牌結果。以相同種子重跑時，批次的順序完全一致，這是公平比較超參數的必要條件。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼資料集從每個大小為 T+1 的視窗回傳 (input[:-1], input[1:])？",
+      "options": [
+        "它丟掉一個 id 以節省記憶體",
+        "它從輸入中移除一個特殊 token",
+        "這是 PyTorch 張量索引的怪癖",
+        "它實作了位移一格的目標，讓損失量測的是下一個 token 的預測"
+      ],
+      "correct": 3,
+      "explanation": "位置 t 的目標是位置 t+1 的輸入。把視窗切成 [:-1] 與 [1:] 正是在表達這份契約。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼本課選擇丟棄結尾不完整的視窗，而不是把它們填補起來？",
+      "options": [
+        "丟棄能讓每個樣本長度一致，因此不需要損失遮罩",
+        "被丟掉的資料會在下一個 epoch 補回來",
+        "填補會改變詞彙表大小",
+        "模型不支援被填補的 token"
+      ],
+      "correct": 0,
+      "explanation": "所有樣本依建構方式都恰好是 T 個 token 長，因此批次是一個乾淨的矩形張量，損失可以一致套用而不需要遮罩。"
+    }
+  ]
+}

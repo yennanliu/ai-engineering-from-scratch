@@ -1,0 +1,90 @@
+{
+  "lesson": "08-memory-blocks-sleep-time-compute",
+  "title": "Memory Blocks and Sleep-Time Compute",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Letta 的三層記憶是哪三層？",
+      "options": [
+        "RAM、swap、磁碟",
+        "快取、KV、archival",
+        "core、recall、archival",
+        "工作記憶、情節記憶、語意記憶"
+      ],
+      "correct": 2,
+      "explanation": "Letta 使用 core（永遠可見）、recall（對話歷史）與 archival（外部）三層。"
+    },
+    {
+      "stage": "pre",
+      "question": "sleep-time compute 針對的是哪個正式環境問題？",
+      "options": [
+        "降低嵌入成本",
+        "加快 JSON 解析",
+        "提高數學題的準確率",
+        "在關鍵路徑上做記憶整併所造成的尾端延遲"
+      ],
+      "correct": 3,
+      "explanation": "sleep-time 把修剪、摘要、調和等工作移出面向使用者的路徑，讓主要回應維持快速。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一個屬性「不是」 Letta 記憶區塊的欄位？",
+      "options": [
+        "limit",
+        "embedding_model_version",
+        "label",
+        "value"
+      ],
+      "correct": 1,
+      "explanation": "區塊帶有 id、label、value、limit、description；嵌入模型版本不屬於區塊 schema。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 sleep-time 代理程式可以跑比主要代理程式更強的模型？",
+      "options": [
+        "記憶操作只花一半的 token",
+        "它拿到一把專用的 API key",
+        "它不在關鍵路徑上，因此不受延遲限制",
+        "它豁免於速率限制"
+      ],
+      "correct": 2,
+      "explanation": "因為它不會擋住使用者的回應，sleep-time 代理程式可以更慢、更貴。"
+    },
+    {
+      "stage": "check",
+      "question": "Human 與 Persona 區塊被推廣成什麼模式？",
+      "options": [
+        "作業系統的行程",
+        "任意由使用者定義、具型別且可編輯的區塊（Task、Project、Safety……）",
+        "JSON-RPC 通道",
+        "向量嵌入"
+      ],
+      "correct": 1,
+      "explanation": "Letta 把 MemGPT 的那兩個區塊推廣成任何使用者自訂區塊，帶有 id、label、value、limit、description。"
+    },
+    {
+      "stage": "post",
+      "question": "在這個模式中，什麼是無聲漂移？",
+      "options": [
+        "主要代理程式完全不知道 sleep-time 代理程式在它底下改寫了某個區塊；用版本控管與可見的差異來修正",
+        "嵌入模型升級",
+        "磁碟寫入緩慢",
+        "速率限制的抖動"
+      ],
+      "correct": 0,
+      "explanation": "為區塊加上版本、並在追蹤紀錄中呈現差異，能讓 sleep-time 的改寫對主要迴圈可見。"
+    },
+    {
+      "stage": "post",
+      "question": "在 Letta V1 中，是什麼取代了行內的 `Thought:` token 以及 send_message／heartbeat 模式？",
+      "options": [
+        "由獨立通道送出、並在各輪之間傳遞的原生推理",
+        "第二個專門負責想法的 LLM",
+        "更大的系統提示詞",
+        "由使用者手動輸入的想法"
+      ],
+      "correct": 0,
+      "explanation": "Letta V1（letta_v1_agent）採用供應商層級的原生推理，而不是靠提示詞塑造出來的想法。"
+    }
+  ]
+}

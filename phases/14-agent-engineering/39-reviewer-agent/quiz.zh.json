@@ -1,0 +1,90 @@
+{
+  "lesson": "39-reviewer-agent",
+  "title": "Reviewer Agent: Separate Builder from Marker",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 builder 無法可靠地為自己的工作評分？",
+      "options": [
+        "它會用光 token",
+        "模型拒絕自我評分",
+        "通過驗收是必要條件但不充分；問題契合度、範圍紀律、記錄下來的假設與交接就緒程度，需要另一個角色搭配不同的輸入",
+        "它會失去驗證身分"
+      ],
+      "correct": 2,
+      "explanation": "builder 與 reviewer 之間的落差正是可靠性所在；驗收只證明了較弱的版本。"
+    },
+    {
+      "stage": "pre",
+      "question": "下列何者不是五個評分準則面向之一？",
+      "options": [
+        "推論延遲",
+        "問題契合度",
+        "範圍紀律",
+        "驗證品質"
+      ],
+      "correct": 0,
+      "explanation": "五個面向是問題契合度、範圍紀律、假設、驗證品質、交接就緒程度。"
+    },
+    {
+      "stage": "check",
+      "question": "角色分離要求什麼？",
+      "options": [
+        "不同的系統提示詞與不同的輸入；只要姿態改變、且 reviewer 對 diff 沒有寫入權限，同一個模型可以扮演兩種角色",
+        "不同的模型",
+        "一個新帳號",
+        "不同的實體硬體"
+      ],
+      "correct": 0,
+      "explanation": "紀律在於姿態與輸入，不在於模型身分。"
+    },
+    {
+      "stage": "check",
+      "question": "Cloudflare 2026 的審查架構長什麼樣子？",
+      "options": [
+        "兩個 reviewer 輪流",
+        "最多七個專科 reviewer 在 Review Coordinator 之下平行運作並去除重複的發現；只有 coordinator 用頂級模型，專科則用較便宜的等級",
+        "一個大型 reviewer",
+        "單一循序的 LLM"
+      ],
+      "correct": 1,
+      "explanation": "Cloudflare 在 30 天內用專科加 coordinator 的架構跑了 131,246 次審查。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不是這一課列出的四種 LLM 評審偏誤？",
+      "options": [
+        "向量局部性",
+        "冗長偏誤（較長的輸出得分較高）",
+        "自我偏好（同一個模型家族）",
+        "位置偏誤（A,B 與 B,A 排序造成不一致）"
+      ],
+      "correct": 0,
+      "explanation": "四種是位置、冗長、自我偏好、權威；向量局部性不在其中。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼是校準集？",
+      "options": [
+        "一份新的訓練語料",
+        "10-20 個已知正確判定的歷史任務結案紀錄；每次改提示詞都重跑一次；若 reviewer 的一致率低於 80%，先修評分準則再出貨",
+        "一組 A/B 測試的固定資料",
+        "一個向量索引"
+      ],
+      "correct": 1,
+      "explanation": "校準集讓 reviewer 保持誠實；一致率漂移時，要修的是評分準則，不是資料。"
+    },
+    {
+      "stage": "post",
+      "question": "reviewer 的報告在工作台的其他部分的哪裡整合？",
+      "options": [
+        "它取代驗證",
+        "它只送給主管",
+        "它被打包進交接封包（第 40 課）；人類審查從這份報告開始，而不是從一張白紙開始",
+        "它覆寫閘門"
+      ],
+      "correct": 2,
+      "explanation": "審查報告餵給交接，讓下一個工作階段與人類審查者都從一份寫下來的判定開始。"
+    }
+  ]
+}

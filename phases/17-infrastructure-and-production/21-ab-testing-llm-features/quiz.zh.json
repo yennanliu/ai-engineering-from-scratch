@@ -1,0 +1,78 @@
+{
+  "lesson": "21-ab-testing-llm-features",
+  "title": "A/B Testing LLM Features — GrowthBook, Statsig, and the Vibes Problem",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在本課中，評測與 A/B 測試的精確區別是什麼？",
+      "options": [
+        "只有 A/B 測試是必要的",
+        "評測在有標籤的資料集上回答「模型做得到嗎？」；A/B 測試則用線上隨機分流的流量回答「使用者在乎嗎？」",
+        "評測面向使用者；A/B 測試是離線的",
+        "兩者可以互相取代"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "CUPED 對一次實驗做了什麼？",
+      "options": [
+        "停用多重比較校正",
+        "在比較實驗後期間之前，先把前期的變異回歸掉，通常能把變異降低 30-70% 並提高有效樣本數",
+        "靠招募更多使用者來增加樣本數",
+        "完全取代序貫檢定"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼同時跑很多 A/B 測試時需要多重比較校正（Bonferroni 或 Benjamini-Hochberg）？",
+      "options": [
+        "它們能加快實驗速度",
+        "只有序貫檢定才需要",
+        "這是 GDPR 的要求",
+        "以 95% 信心水準跑 20 個測試，光靠機率就會產生一個偽陽性；校正可以控制族系誤差率或偽發現率"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "SRM（樣本比例失衡）能偵測到什麼？",
+      "options": [
+        "分詞器效能過慢",
+        "PII 外洩",
+        "分派雜湊有 bug，導致實際分流與預期不符（例如目標 50/50 卻跑出 47/53）",
+        "實驗平台的記憶體洩漏"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 LLM 的非決定性要求你為樣本數留緩衝？",
+      "options": [
+        "非決定性會降低所需樣本數",
+        "它違反了 IID 假設；有效樣本數會下降，所以要把所需樣本數乘上約 1.3-1.5 倍作為安全邊際",
+        "它與檢定力計算無關",
+        "它只在離線時才有影響"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本課如何對比 Statsig 與 GrowthBook？",
+      "options": [
+        "GrowthBook 是閉源的",
+        "兩者功能完全相同",
+        "Statsig 只走資料倉儲原生路線",
+        "Statsig 是一體式 SaaS（2025 年 9 月被 OpenAI 以 11 億美元收購）；GrowthBook 則是 MIT 開源、資料倉儲原生，具備貝氏／頻率學派／序貫引擎以及 CUPED／SRM／BH"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

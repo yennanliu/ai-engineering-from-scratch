@@ -1,0 +1,67 @@
+[
+  {
+    "id": "pipeline-pre-1",
+    "stage": "pre",
+    "question": "在 ML pipeline 的脈絡下，什麼是資料洩漏？",
+    "options": [
+      "編碼過程中特徵被丟掉",
+      "模型處理資料太慢",
+      "測試集或未來資料的資訊污染了訓練過程",
+      "前處理時資料不小心被刪除"
+    ],
+    "correct": 2,
+    "explanation": "資料洩漏是指預測時根本拿不到的資訊被用在訓練中。例子：在包含測試資料的完整資料集上計算縮放器的平均數與標準差。"
+  },
+  {
+    "id": "pipeline-pre-2",
+    "stage": "pre",
+    "question": "為什麼在切成訓練/測試集之前就用完整資料集擬合縮放器算是洩漏？",
+    "options": [
+      "縮放器的統計量（平均數、標準差）含有測試資料，模型在訓練時就間接看到了測試資訊",
+      "縮放會改變資料的分布",
+      "縮放只該在測試集上做",
+      "在大型資料集上擬合縮放器太花時間"
+    ],
+    "correct": 0,
+    "explanation": "縮放器若在全部資料上擬合，它的平均數與標準差就編碼了測試樣本的資訊。訓練特徵接著被測試統計量平移，把未來的資訊洩漏進訓練。"
+  },
+  {
+    "id": "pipeline-post-1",
+    "stage": "post",
+    "question": "在 sklearn 中，對 pipeline 的某個步驟呼叫 fit_transform 與 transform 有什麼差別？",
+    "options": [
+      "兩者完全相同——都會擬合並轉換",
+      "fit_transform 從資料學出參數並套用轉換；transform 只套用先前學到的參數",
+      "transform 用於訓練資料；fit_transform 用於測試資料",
+      "fit_transform 比較慢但比較準"
+    ],
+    "correct": 1,
+    "explanation": "fit_transform 會從資料算出統計量（例如平均數、標準差），並且同時進行轉換。transform 則直接套用已學到的統計量，不重新計算。對測試資料必須用 transform，才不會洩漏。"
+  },
+  {
+    "id": "pipeline-post-2",
+    "stage": "post",
+    "question": "為什麼真實世界的資料集需要用到 ColumnTransformer？",
+    "options": [
+      "它讓 pipeline 在多顆 CPU 上平行執行",
+      "它把所有欄位轉成同一種資料型別",
+      "它在同一條 pipeline 裡對數值欄位與類別欄位套用不同的前處理步驟",
+      "它會自動移除有缺失值的欄位"
+    ],
+    "correct": 2,
+    "explanation": "真實資料集的欄位型別是混合的。數值欄位需要縮放，類別欄位需要編碼。ColumnTransformer 在單一 pipeline 內把各個欄位子集導向對應的轉換器。"
+  },
+  {
+    "id": "pipeline-post-3",
+    "stage": "post",
+    "question": "上線的模型收到一個訓練時從未見過的類別值（'new_category'）。pipeline 應該怎麼處理？",
+    "options": [
+      "把未知類別轉成數字零",
+      "妥善處理未知類別，例如使用一個「unknown」分桶，或在目標編碼中改用全域平均",
+      "整列直接忽略，不回傳任何預測",
+      "從頭重新訓練整個模型"
+    ],
+    "correct": 1,
+    "explanation": "穩健的 pipeline 會預先設想線上出現沒見過的類別。做法包括為 one-hot 編碼準備「unknown」備援，或在目標編碼中退回全域平均。"
+  }
+]

@@ -1,0 +1,78 @@
+{
+  "lesson": "06-sglang-radixattention",
+  "title": "Prefix-Cache Serving — RadixAttention and KV Reuse",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "SGLang 的 KV cache 重用背後是什麼核心資料結構？",
+      "options": [
+        "一棵 radix tree，每個節點擁有一段 token 範圍與其 KV 區塊",
+        "一個以請求 id 為鍵的 skip list",
+        "一個以完整提示詞為鍵的雜湊表",
+        "一棵存放 attention 分數的 B-tree"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 FCFS 排程對 SGLang 上前綴密集的流量是錯的？",
+      "options": [
+        "FCFS 正是 SGLang 建議的策略",
+        "FCFS 可能在下一個長前綴請求進來之前就把熱門的前綴分支逐出，破壞 radix tree 的重用",
+        "FCFS 只在 AMD GPU 上有效",
+        "FCFS 與 PagedAttention 不相容"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "SGLang 的 cache-aware 排程器用什麼逐出粒度來配合 radix 的形狀？",
+      "options": [
+        "只以請求為單位",
+        "隨機逐出",
+        "單一 token",
+        "整個分支，從最短、使用最少的葉節點開始"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "要讓 radix tree 的共享前綴保持可被發現，工程師最直接的槓桿是什麼？",
+      "options": [
+        "一律使用靜態批次",
+        "固定提示詞模板的順序，讓不會變動的內容（系統提示、工具、schema）永遠排在最前面",
+        "調低 GPU 記憶體使用率的旋鈕",
+        "停用連續批次"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "這一課認為 RadixAttention 在哪一種工作負載模式上不會有優勢？",
+      "options": [
+        "共用工具 schema 的代理程式",
+        "提示詞各自獨立、沒有共用系統提示詞的單次生成",
+        "帶有共用檢索前言的 RAG",
+        "有重複前言的語音工作負載"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "ProjectDiscovery 的部署把前綴快取命中率從 7% 拉到 74%，是靠做了什麼？",
+      "options": [
+        "把 GPU 數量從 8 張加到 16 張",
+        "停用連續批次",
+        "把動態內容移出可快取的前綴",
+        "在完全不改提示詞的情況下從 vLLM 換到 SGLang"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

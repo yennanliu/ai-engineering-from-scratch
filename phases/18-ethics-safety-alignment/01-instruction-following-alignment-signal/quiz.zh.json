@@ -1,0 +1,78 @@
+{
+  "lesson": "01-instruction-following-alignment-signal",
+  "title": "Instruction-Following as Alignment Signal",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼原始的預訓練語言模型面對「寫一個把 list 反轉的 Python 函式」時，常常回一段新的提示詞而不是程式碼？",
+      "options": [
+        "它的 temperature 預設為零",
+        "它的詞彙表缺少 Python 的 token",
+        "它被訓練來續寫網頁風格的文字，而在那裡提示詞後面接的往往是更多提示詞",
+        "不經過微調，它無法表示函式簽名"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "InstructGPT 的獎勵模型在成對偏好標籤上使用哪種損失？",
+      "options": [
+        "預測獎勵與真實獎勵之間的交叉熵",
+        "對標註者評分做均方誤差",
+        "固定 margin 的 hinge loss",
+        "Bradley-Terry：-log sigmoid(r(x, y_w) - r(x, y_l))"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "InstructGPT 第 3 階段的 KL 懲罰主要在防範什麼？",
+      "options": [
+        "災難性遺忘分詞器的統計特性",
+        "最佳化器找到能鑽獎勵模型漏洞的對抗性高獎勵字串",
+        "取樣過程中撐爆上下文視窗",
+        "PPO 梯度更新的數值不穩定"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "PPO-ptx 在 RL 目標中混入預訓練項，是為了緩解什麼問題？",
+      "options": [
+        "對齊稅：在 RLHF 沒有針對的基準測試上退步",
+        "SFT 與 RM 之間的分詞器不一致",
+        "KL 項變成負值",
+        "獎勵模型在 PPO 過程中漂移"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "1.3B 的 InstructGPT 大約有 70% 的時候被評為優於 175B 的 GPT-3 基礎模型。這對對齊與能力說明了什麼？",
+      "options": [
+        "對齊與能力是兩條不同的軸，而基礎模型決定了能力的下限",
+        "偏好率高於 50% 就證明代理獎勵等同於人類價值",
+        "在大規模下能力與對齊就是同一條軸",
+        "更大的基礎模型永遠會輸給小型的對齊模型"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "InstructGPT 的獎勵模型是從下列哪一個初始化而來？",
+      "options": [
+        "保留 LM head 的基礎預訓練模型",
+        "把 LM head 換成純量 head 的 SFT 模型",
+        "另一個 encoder-only 的 transformer",
+        "未經預訓練的隨機純量回歸器"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

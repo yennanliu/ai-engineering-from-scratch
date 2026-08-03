@@ -1,0 +1,90 @@
+{
+  "lesson": "06-devops-troubleshooting-agent",
+  "title": "Capstone 06 — DevOps Troubleshooting Agent for Kubernetes",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "這個排錯代理程式的 RBAC 介面預設採取什麼權限姿態？",
+      "options": [
+        "Cluster-admin，讓它能自我修復",
+        "預設唯讀，破壞性動詞則另外由獨立伺服器與人工核准把關",
+        "與 on-call 工程師等同",
+        "僅限受影響 namespace 的 namespace-admin"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "代理程式在根因分析時走訪的知識圖譜是什麼？",
+      "options": [
+        "節點是 K8s 物件加上遙測來源；邊則編碼擁有關係、排程與觀測關係",
+        "依團隊分類的 Prometheus 指標名稱",
+        "近期重啟過的 pod 的平面清單",
+        "GitHub commit 與 PR 審查的圖"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "根因假設如何排序後寫進 Slack 簡報？",
+      "options": [
+        "依警報名稱的字母順序",
+        "僅依模型的 log-probability",
+        "依產生的先後順序",
+        "依一個結合時效性、具體程度、圖上路徑長度與引用數的證據分數"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼稽核日誌除了已執行的指令，也要記錄代理程式曾考慮過的指令？",
+      "options": [
+        "ArgoCD 只接受被考慮過的指令",
+        "重放攻擊需要兩份清單",
+        "Slack API 需要兩者才能投遞",
+        "審查者可以抓出代理程式差點執行破壞性指令的險些失誤"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪個機制能防止代理程式在部署出問題時擅自回滾？",
+      "options": [
+        "破壞性工具放在獨立的 MCP 伺服器上，需要 Slack 卡片發出的核准 token",
+        "PagerDuty 會自動暫停該次部署",
+        "GitOps 儲存庫上的分支保護",
+        "由第二個 LLM-judge 對回滾投票"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "評分準則量測的 p50 提出假設時間目標是多少？",
+      "options": [
+        "1 小時以內",
+        "30 秒以內",
+        "下一輪 on-call 輪班之前",
+        "從警報到 Slack 簡報 5 分鐘以內"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "用來評分 RCA 準確率的合成事故套組有多大？",
+      "options": [
+        "5 個情境",
+        "20 個情境，涵蓋 OOMKill、DNS flap、HPA thrash、PVC 塞滿等",
+        "1 個腳本化的示範事故",
+        "100 筆隨機抽樣的正式環境警報"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

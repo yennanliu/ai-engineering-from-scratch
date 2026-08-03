@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Jupyter notebook 是什麼？",
+      "options": [
+        "一份互動式文件，把可執行的程式碼儲存格、Markdown 文字與行內輸出混在一起",
+        "一個 Python 函式庫的套件管理器",
+        "一套資料科學專案用的版本控制系統",
+        "一個撰寫 Python 腳本的文字編輯器"
+      ],
+      "correct": 0,
+      "explanation": "Jupyter notebook（.ipynb）是一個互動環境，你可以在儲存格裡撰寫並執行程式碼、直接看到輸出，還能把程式碼與格式化的文字說明混在一起。"
+    },
+    {
+      "stage": "pre",
+      "question": "Jupyter kernel 負責做什麼？",
+      "options": [
+        "執行儲存格裡的程式碼，並在多次執行之間把變數保留在記憶體裡",
+        "把 notebook 連上 GitHub 做版本控制",
+        "管理 notebook 的檔案儲存",
+        "把 Markdown 儲存格轉成 HTML"
+      ],
+      "correct": 0,
+      "explanation": "kernel 是一個獨立的 Python 行程，負責執行儲存格的程式碼並在記憶體中維持狀態（變數、匯入）。同一個 notebook 裡的所有儲存格共用同一個 kernel。"
+    },
+    {
+      "stage": "post",
+      "question": "%timeit 與 %%time 這兩個 magic 指令差在哪裡？",
+      "options": [
+        "沒有差別，它們是同義詞",
+        "%timeit 會跑很多次並取平均，%%time 只跑一次",
+        "%timeit 量的是實際經過時間，%%time 量的是 CPU 時間",
+        "%timeit 用在單行，%%time 用在整份 notebook"
+      ],
+      "correct": 1,
+      "explanation": "%timeit 會把敘述跑很多次取統計平均（適合微基準測試）。%%time 把整個儲存格跑一次並回報實際經過時間（適合訓練這類長工作）。"
+    },
+    {
+      "stage": "post",
+      "question": "notebook 在你機器上跑得好好的，別人從頭到尾執行卻失敗，最常見的原因是什麼？",
+      "options": [
+        "少了 %matplotlib inline 這個 magic 指令",
+        "用了太多 Markdown 儲存格",
+        "儲存格執行順序錯亂，產生了隱藏的執行順序相依",
+        "用了不同版本的 Python"
+      ],
+      "correct": 2,
+      "explanation": "亂序執行儲存格會製造隱藏的狀態相依。某個變數之所以存在，可能只是因為你先跑了第 5 格再跑第 2 格。用 Kernel > Restart & Run All 可以驗證線性執行是否成立。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候該把程式碼從 notebook 搬進 .py 腳本？",
+      "options": [
+        "永遠不用 —— 做 AI 一定是 notebook 比較好",
+        "只有需要在 GPU 上執行時",
+        "只要程式碼超過 10 行就該搬",
+        "當這段程式是可重複使用的工具、訓練管線，或要上生產環境的程式碼時"
+      ],
+      "correct": 3,
+      "explanation": "原則是「在 notebook 裡探索，在腳本裡交付」。可重複使用的工具、訓練管線，以及任何要在生產環境跑的東西，都該是 .py 檔。notebook 留給探索與雛形。"
+    }
+  ]
+}

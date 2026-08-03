@@ -1,0 +1,102 @@
+{
+  "lesson": "05-sentiment-analysis",
+  "title": "Sentiment Analysis",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 'The food was not great' 對樸素的 BoW 分類器來說是個難題？",
+      "options": [
+        "它沒有標點符號",
+        "它混用了英文與法文",
+        "它的 token 太少",
+        "否定會翻轉語意，但 bag of words 丟掉了 'not' 與 'great' 之間的連結"
+      ],
+      "correct": 3,
+      "explanation": "BoW 無法把 'not' 綁到它所否定的詞上，所以分類器錯過了極性的翻轉。"
+    },
+    {
+      "stage": "pre",
+      "question": "傳統情感分析由哪兩個步驟組成？",
+      "options": [
+        "先翻譯，再分類",
+        "表示（把文字向量化）與分類（在向量上套線性模型）",
+        "先搜尋，再排序",
+        "先嵌入，再分群"
+      ],
+      "correct": 1,
+      "explanation": "傳統情感分析就是特徵萃取，後面接一個線性分類器。"
+    },
+    {
+      "stage": "check",
+      "question": "Naive Bayes 的獨立性假設明明很「天真」，為什麼它還是有效？",
+      "options": [
+        "Laplace 平滑修正了相依性",
+        "這個假設對文字來說其實是成立的",
+        "Naive Bayes 私底下有學到交互作用",
+        "在稀疏的文字特徵與中等規模的資料下，分類器主要在意的是每個詞往哪一邊倒，而不是精確的聯合機率"
+      ],
+      "correct": 3,
+      "explanation": "即使獨立性假設是錯的，每個詞的傾向方向就足以分類得不錯。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼前處理時要加入以 'NOT_' 為前綴的 token？",
+      "options": [
+        "為了做詞幹提取",
+        "為了縮小詞彙表",
+        "為了正規化大小寫",
+        "把 'good' 與 'NOT_good' 變成兩個獨立特徵，讓分類器可以給它們相反的權重"
+      ],
+      "correct": 3,
+      "explanation": "否定範圍標記把被否定的形式拆成不同特徵，BoW 分類器才有辦法建模這個翻轉。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼在情感分析中移除停用詞有風險？",
+      "options": [
+        "移除停用詞會破壞斷詞",
+        "它會提高稀疏度",
+        "停用詞表太長",
+        "否定詞（'not'、'no'、'never'）通常被當成停用詞，但它們帶有情感訊號"
+      ],
+      "correct": 3,
+      "explanation": "預設的停用詞表會刪掉否定詞與其他攜帶情感的詞。"
+    },
+    {
+      "stage": "post",
+      "question": "當情感類別不平衡時，你應該回報哪個指標？",
+      "options": [
+        "只看準確率",
+        "Macro-F1（各類別 F1 的等權平均）",
+        "均方誤差",
+        "只看 Micro-F1"
+      ],
+      "correct": 1,
+      "explanation": "Macro-F1 逼你把少數類別算進去；準確率或 Micro-F1 會把它藏起來。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候你該跳過傳統模型，改用 transformer 做情感分析？",
+      "options": [
+        "當你手上不到 100 筆範例時",
+        "諷刺偵測、情緒會轉折的長文件、面向式情感分析，或低資源語言",
+        "當延遲很關鍵時",
+        "當你需要可解釋性時"
+      ],
+      "correct": 1,
+      "explanation": "諷刺、面向式與跨語言的情感分析，超出了傳統 BoW 模型的能力範圍。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在文字上做邏輯迴歸時，L2 正則化很重要？",
+      "options": [
+        "加速矩陣求逆",
+        "避免 ReLU 神經元死亡",
+        "否則稀疏的高維文字特徵會讓模型直接背下訓練樣本",
+        "計算梯度時必須用到"
+      ],
+      "correct": 2,
+      "explanation": "在文字這種稀疏特徵、高維度的情境下，L2 能防止過度擬合。"
+    }
+  ]
+}

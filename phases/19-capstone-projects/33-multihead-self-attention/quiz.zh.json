@@ -1,0 +1,78 @@
+{
+  "lesson": "33-multihead-self-attention",
+  "title": "Multi-Head Self-Attention",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼高效的 self-attention 區塊使用單一個輸出 3*D 個特徵的線性層？",
+      "options": [
+        "它在數學上等同於三個 Linear(D, D) 層，卻只跑一次矩陣乘法",
+        "它減少模型的參數量",
+        "它強制 Q、K、V 之間共用權重",
+        "它免去了因果遮罩的需要"
+      ],
+      "correct": 0,
+      "explanation": "把三個 (D, D) 的投影矩陣疊成一個 (3D, D) 矩陣會產生相同的輸出，但前向傳播變成單一次對加速器友善的矩陣乘法。"
+    },
+    {
+      "stage": "check",
+      "question": "d_model、n_heads 與 d_head 之間的關係是什麼？",
+      "options": [
+        "d_head = d_model * n_heads",
+        "d_head = d_model + n_heads",
+        "d_head 與 d_model 無關",
+        "d_head = d_model // n_heads，且 d_model 必須能被 n_heads 整除"
+      ],
+      "correct": 3,
+      "explanation": "這個區塊把 d_model 平均切分到各個 head 上。建構時會強制檢查 d_model % n_heads == 0 這個限制。"
+    },
+    {
+      "stage": "check",
+      "question": "scaled dot-product attention 的縮放因子裡放的是什麼值？",
+      "options": [
+        "sqrt(d_head)",
+        "sqrt(n_heads)",
+        "sqrt(d_model)",
+        "sqrt(seq_len)"
+      ],
+      "correct": 0,
+      "explanation": "分數會除以 sqrt(d_head)，也就是矩陣乘法收縮掉的那個 head 維度。這讓分數的變異數在 d_head 變大時仍維持有界。"
+    },
+    {
+      "stage": "check",
+      "question": "因果遮罩如何強制位置 t 不能關注位置 t+1？",
+      "options": [
+        "把未來位置的 key 乘上零",
+        "在 softmax 之前把對角線以上的分數項目設為負無限大",
+        "把未來的 token 從輸入中移除",
+        "為未來使用另一個 attention head"
+      ],
+      "correct": 1,
+      "explanation": "把未來的項目設為 -inf，會迫使 softmax 給它們零權重。過去與現在的位置則保有有效的權重分布。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼這個區塊在合併各個 head 之後，要以一個 Linear(D, D) 輸出投影收尾？",
+      "options": [
+        "為了讓模型能跨各個 head 混合資訊",
+        "為了符合模型的詞彙表大小",
+        "為了把激活值正規化到平均值為零",
+        "這是 autograd 追蹤梯度所必需的"
+      ],
+      "correct": 0,
+      "explanation": "少了輸出投影，各 head 的輸出就只能在後面的層才有機會結合。這個投影讓區塊在同一步內就有一個混合各 head 的地方。"
+    },
+    {
+      "stage": "post",
+      "question": "形狀為 (B, H, T, T) 的 attention 權重矩陣告訴你什麼？",
+      "options": [
+        "每個 batch 元素、每個 head 中，每個 query 位置關注了哪些 key 位置",
+        "query 與 value 向量之間的餘弦相似度",
+        "下一個 token 的輸出 logit",
+        "每個 head 有多少參數"
+      ],
+      "correct": 0,
+      "explanation": "每個 head 矩陣的第 t 列，就是 query 位置 t 在 key 位置上的分布。檢視它可以看出每個 head 在看哪裡。"
+    }
+  ]
+}

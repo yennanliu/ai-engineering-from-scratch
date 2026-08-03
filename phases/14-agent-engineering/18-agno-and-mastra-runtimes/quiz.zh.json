@@ -1,0 +1,90 @@
+{
+  "lesson": "18-agno-and-mastra-runtimes",
+  "title": "Production Agent Runtimes",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "課程建議這兩套執行環境各自搭配哪種語言？",
+      "options": [
+        "Agno 配 TypeScript，Mastra 配 Python",
+        "兩者都以 Go 為先",
+        "Agno 配 Python，Mastra 配 TypeScript",
+        "兩者都以 Rust 為先"
+      ],
+      "correct": 2,
+      "explanation": "Agno 是 Python 取向（FastAPI 的形狀）；Mastra 是 TypeScript 取向（Vercel AI SDK 的形狀）。"
+    },
+    {
+      "stage": "pre",
+      "question": "Agno 建議的正式環境部署形狀是什麼？",
+      "options": [
+        "一個長時間存活的有狀態 daemon",
+        "只用 serverless cron worker",
+        "無狀態、以 session 為範圍的 FastAPI 後端；每個請求都開一個全新代理程式，session 狀態放在資料庫",
+        "只提供 WebSocket 的伺服器"
+      ],
+      "correct": 2,
+      "explanation": "每個請求都用無狀態的 FastAPI；session 狀態外部化到資料庫。"
+    },
+    {
+      "stage": "check",
+      "question": "Mastra 的三個基本元件是什麼？",
+      "options": [
+        "Node、Edge、State",
+        "Plan、Worker、Solver",
+        "Agents、Tools、Workflows",
+        "Actor、Message、Inbox"
+      ],
+      "correct": 2,
+      "explanation": "Agents（LLM 加上角色）、Tools（用 Zod 定型）與 Workflows 就是 Mastra 的三個基本元件。"
+    },
+    {
+      "stage": "check",
+      "question": "依官方文件，Agno 把代理程式的實體化成本壓到大約多少？",
+      "options": [
+        "每個代理程式約 1 秒與 1 GiB",
+        "每個代理程式約 2 微秒與約 3.75 KiB",
+        "每個代理程式約 200 毫秒與 100 MiB",
+        "每個代理程式約 10 分鐘與 4 GiB"
+      ],
+      "correct": 1,
+      "explanation": "Agno 的文件標示每個代理程式約 2 微秒、約 3.75 KiB。"
+    },
+    {
+      "stage": "check",
+      "question": "Mastra 的 Unified Model Router 提供什麼？",
+      "options": [
+        "一層向量資料庫",
+        "一個統一的客戶端介面，涵蓋眾多供應商的數千個模型",
+        "一個圖的 checkpointer",
+        "一個工具呼叫的佇列"
+      ],
+      "correct": 1,
+      "explanation": "Mastra 的 Unified Model Router 標示涵蓋 94 家供應商、3,300 個以上的模型。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼情況下「為效能而效能」是選 Agno 的錯誤理由？",
+      "options": [
+        "當你在用 Langfuse 時",
+        "當工作負載是每個請求只有一次緩慢的代理程式呼叫，額外開銷根本不是瓶頸時",
+        "當你在用 Python 3.13 時",
+        "當你要部署到 AWS 時"
+      ],
+      "correct": 1,
+      "explanation": "2 微秒只有在對話大量匯入的規模下才有意義，對每個請求只有一次慢呼叫的情況沒有差別。"
+    },
+    {
+      "stage": "post",
+      "question": "在 fork Mastra 之前，應該仔細讀哪一部分的授權條款？",
+      "options": [
+        "它根本沒有授權檔案",
+        "ee/ 目錄是 source-available 而非 Apache 2.0，並且限制商業使用",
+        "整個 Mastra 都是 GPL",
+        "Mastra 要求簽 CLA，但不需要審視授權"
+      ],
+      "correct": 1,
+      "explanation": "Mastra 除了 ee/ 之外是 Apache 2.0，ee/ 屬於 source-available；fork 之前先確認那些限制。"
+    }
+  ]
+}

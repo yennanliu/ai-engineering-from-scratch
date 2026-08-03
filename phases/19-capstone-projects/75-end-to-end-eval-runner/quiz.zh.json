@@ -1,0 +1,78 @@
+{
+  "lesson": "75-end-to-end-eval-runner",
+  "title": "End-to-End Eval Runner",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "ModelAdapter 介面可能的最小介面面積是什麼？",
+      "options": [
+        "complete、embed、classify、summarise",
+        "init、login、generate、close",
+        "generate(prompt, task)，回傳文字加上選用的信心值與逐 token 的 nll",
+        "load_weights、generate、save_weights"
+      ],
+      "correct": 2,
+      "explanation": "一個方法就能涵蓋任何轉接層。其餘都是選用的裝飾。執行器不需要更豐富的介面。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼執行器接受一個 parallel 旗標，而不是一律平行執行？",
+      "options": [
+        "測試需要確定性的執行順序；這個旗標讓它們能切換成循序執行",
+        "平行執行在 CPython 中不安全",
+        "平行執行需要 GPU",
+        "ThreadPoolExecutor 不屬於標準函式庫"
+      ],
+      "correct": 0,
+      "explanation": "測試要的是可重現性，正式環境要的是吞吐量。這個旗標把兩種考量分開，而不必寫兩條程式碼路徑。"
+    },
+    {
+      "stage": "check",
+      "question": "執行器如何決定校準緩衝區中的 correct 旗標？",
+      "options": [
+        "對 exact_match 類指標使用門檻 1.0，對分級型指標預設使用門檻 0.5",
+        "它呼叫轉接層兩次並比較輸出",
+        "它使用分箱平均信心值",
+        "它使用 Brier 分解"
+      ],
+      "correct": 0,
+      "explanation": "門檻會依指標而定：exact_match 類指標使用接近 1.0 的切點，分級型指標則預設使用 0.5。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼執行器是建構 EvalRun 紀錄再交給彙總器，而不是內嵌計算排行榜？",
+      "options": [
+        "這讓執行器與彙總器無關，也讓排行榜這一層能自行演進而不必動到執行器",
+        "彙總器處理 numpy 陣列比處理 dataclass 快",
+        "JSON Schema 要求要有 EvalRun",
+        "EvalRun 更省記憶體"
+      ],
+      "correct": 0,
+      "explanation": "組合優於內嵌。執行器產出紀錄，彙總器擁有排行榜的計算。每一課各自負責一件事。"
+    },
+    {
+      "stage": "check",
+      "question": "最終 JSON 封包中的 perplexity 區塊扮演什麼角色？",
+      "options": [
+        "它是由 bootstrap 信賴區間算出來的",
+        "它承載每個模型在留出集上的語言模型數值，與任務計分無關",
+        "它是校準報告的輸入",
+        "排行榜排名需要它"
+      ],
+      "correct": 1,
+      "explanation": "perplexity 是擺在排行榜旁邊，而不是放在裡面。它使用轉接層每次呼叫回傳的 token NLL 與 token 數。"
+    },
+    {
+      "stage": "post",
+      "question": "自我終止示範程式的乾淨執行判定條件是什麼？",
+      "options": [
+        "每一項任務都通過驗證、每一項任務都完成計分、校準已彙總，且規則式轉接層在排行榜上嚴格高於隨機轉接層",
+        "每一項任務都拿到 0.9 以上",
+        "每個模型的 ECE 都低於 0.05",
+        "每一組配對的 bootstrap 信賴區間都排除零"
+      ],
+      "correct": 0,
+      "explanation": "示範程式端到端地執行這份契約：每一層都跑過了，而且最準的轉接層排名也相應在前。"
+    }
+  ]
+}

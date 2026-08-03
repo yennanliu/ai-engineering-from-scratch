@@ -1,0 +1,78 @@
+{
+  "lesson": "46-gradient-accumulation",
+  "title": "Gradient Accumulation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "梯度累積表達的有效批次恆等式是什麼？",
+      "options": [
+        "effective_batch = micro_batch / accum_steps",
+        "effective_batch 只等於 world_size",
+        "effective_batch = micro_batch + accum_steps",
+        "effective_batch = micro_batch * accum_steps"
+      ],
+      "correct": 3,
+      "explanation": "micro batch 是記憶體塞得下的量；累積步數則是在一次最佳化器步驟之前，有多少次前向加反向會把梯度堆進同一個緩衝區。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼每個 micro batch 在 backward 之前必須把損失除以 accum_steps？",
+      "options": [
+        "這樣損失曲線比較好看",
+        "這樣可以避免 NaN",
+        "只有混合精度才需要",
+        "PyTorch 預設會把梯度加總進 param.grad，所以不除的話累積梯度會大 N 倍，最佳化器的步伐也會激進 N 倍"
+      ],
+      "correct": 3,
+      "explanation": "累積緩衝區是一個總和。每個 micro batch 各乘 1/N，就把這個總和推回單次完整批次反向傳遞會產生的同一個尺度。"
+    },
+    {
+      "stage": "check",
+      "question": "最佳化器步驟在累積迴圈中何時執行？",
+      "options": [
+        "永遠不執行；最佳化器被取代掉了",
+        "為了保險，每個視窗執行兩次",
+        "每個 micro batch 之後都執行",
+        "只在累積視窗的最後一個 micro batch 之後執行"
+      ],
+      "correct": 3,
+      "explanation": "在累積途中執行 step 會汙染這次訓練其餘部分所依賴的每一個參數。最佳化器步驟每個有效批次只觸發一次。"
+    },
+    {
+      "stage": "check",
+      "question": "在真正的多 GPU 訓練中，no_sync 情境管理器包住的是什麼？",
+      "options": [
+        "資料載入器",
+        "非最後的那些 micro batch，讓梯度 all-reduce 只在最後一次 backward 之後觸發，而不是觸發 N 次",
+        "最佳化器步驟",
+        "前向傳遞"
+      ],
+      "correct": 1,
+      "explanation": "DDP 的 no_sync 會跳過梯度集合通訊。把除了最後一個以外的 micro batch 都包起來，就把每個有效步驟的 N 次集合通訊變成一次。"
+    },
+    {
+      "stage": "check",
+      "question": "main.py 裡的 equivalence_check 函式斷言了什麼？",
+      "options": [
+        "損失會收斂",
+        "梯度為零",
+        "單次完整批次的反向傳遞，與分成 accum_steps 塊、損失除以 N 的反向傳遞，會產生相同的梯度緩衝區與相同的步後參數，誤差在一個很小的容忍值之內",
+        "吞吐量維持固定"
+      ],
+      "correct": 2,
+      "explanation": "斷言的界線是最大絕對差小於 1e-4。沒有損失縮放時差值會爆掉；有縮放時它只停留在浮點雜訊的量級。"
+    },
+    {
+      "stage": "post",
+      "question": "看吞吐量對有效批次的曲線，什麼大致維持不變、什麼會隨之縮放？",
+      "options": [
+        "吞吐量會上升，因為模型變快了",
+        "兩個指標都隨累積步數線性縮放",
+        "每秒樣本數會逼近硬體上限而飽和，而每個最佳化器步驟的實際耗時則隨 accum_steps 線性成長；下降的是每秒最佳化器步數",
+        "有效批次越大，每秒樣本數越低"
+      ],
+      "correct": 2,
+      "explanation": "每個 micro batch 的前向加反向成本都一樣。累積買到的是每個最佳化器步驟的統計平滑，而不是原始吞吐量；這條曲線是對抗坊間傳言的有用現實檢查。"
+    }
+  ]
+}

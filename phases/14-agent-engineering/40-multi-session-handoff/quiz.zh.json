@@ -1,0 +1,90 @@
+{
+  "lesson": "40-multi-session-handoff",
+  "title": "Multi-Session Handoff",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "交接封包裡哪個欄位是承重的？",
+      "options": [
+        "next_action（沒有它，這份文件只是狀態報告，不是交接）",
+        "verdict_pointer",
+        "summary",
+        "commands_run"
+      ],
+      "correct": 0,
+      "explanation": "一份除了 next_action 之外什麼都有的交接就是狀態報告；下一個具體步驟才是讓下一個工作階段有產出的關鍵。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼交接是產生出來的，而不是手寫的？",
+      "options": [
+        "手寫的交接在辛苦的一天會被跳過；產生器讀取工作台產物並輸出封包，代理程式只需要把工作台留在產生器能摘要的狀態",
+        "Apache 2.0 授權要求如此",
+        "產生器比較快",
+        "產生器加密比較好"
+      ],
+      "correct": 0,
+      "explanation": "自動化補上了意圖與一致性之間的落差。"
+    },
+    {
+      "stage": "check",
+      "question": "封包以哪兩種形式出貨？",
+      "options": [
+        "Email 與 Slack",
+        "PDF 與 PNG",
+        "YAML 與 TOML",
+        "handoff.md（人類可讀）與 handoff.json（機器可讀，兩者來自同一批來源產物；不一致時以 JSON 為準）"
+      ],
+      "correct": 3,
+      "explanation": "Markdown 給人看，JSON 給下一個代理程式看；兩者都來自同一個產生器。"
+    },
+    {
+      "stage": "check",
+      "question": "這一課如何區分壓縮（compaction）與交接？",
+      "options": [
+        "兩者相同",
+        "壓縮要付費，交接免費",
+        "交接需要 GPU",
+        "壓縮是延長同一個工作階段；交接是乾淨地結束一個，並在全新的上下文中開始下一個。封包就是讓這個轉換變便宜的東西"
+      ],
+      "correct": 3,
+      "explanation": "Hermes Issue 20372 的說法：在原地壓縮讓品質下降之前先寫好精簡的交接，然後在全新的工作階段接續。"
+    },
+    {
+      "stage": "check",
+      "question": "關於何時該收尾一個工作階段，這一課建議什麼？",
+      "options": [
+        "在用掉 50-75% 上下文預算之前，趁上下文還完整時；在壓縮產物污染狀態之前寫很便宜",
+        "到 100% 上下文再開始慌",
+        "只在合併之後",
+        "只在半夜"
+      ],
+      "correct": 0,
+      "explanation": "提早收尾能讓產生器的輸入保持乾淨。"
+    },
+    {
+      "stage": "post",
+      "question": "這一課建議在封包裡把回饋日誌修剪成什麼？",
+      "options": [
+        "最後 K 筆，加上每一筆結束碼非零的紀錄，讓封包保持精簡的同時保留失敗歷史",
+        "隨機 N 筆",
+        "只留前 K 筆",
+        "只留最新一筆"
+      ],
+      "correct": 0,
+      "explanation": "不對稱修剪：失敗必須留下；尾端的瑣事留著也不貴。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼樣的中繼資料能讓多代理程式工作階段之間的協調運作起來？",
+      "options": [
+        "branch、last_known_good_commit 與 status（active | superseded | archived）；每個分支與主題只能有一份 active 交接",
+        "一個共用的 Slack 頻道",
+        "一個中央佇列",
+        "最高機密的加密"
+      ],
+      "correct": 0,
+      "explanation": "過期的交接是多代理程式最主要的失敗來源；status 加 branch 加 LKG 能讓 active 集合維持很小。"
+    }
+  ]
+}

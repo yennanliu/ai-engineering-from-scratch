@@ -1,0 +1,102 @@
+{
+  "lesson": "23-chunking-strategies-rag",
+  "title": "Chunking Strategies for RAG",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼在 RAG 中，切塊策略和嵌入模型一樣重要？",
+      "options": [
+        "切塊會縮小模型",
+        "較小的區塊訓練得比較快",
+        "FAISS 要求先切塊",
+        "區塊邊界決定了答案是否根本檢索得到；壞的區塊會讓再好的嵌入都失效"
+      ],
+      "correct": 3,
+      "explanation": "Vectara 2025 年的研究顯示，切塊品質對檢索品質的影響不亞於甚至超過嵌入模型。"
+    },
+    {
+      "stage": "pre",
+      "question": "LangChain 的 RecursiveCharacterTextSplitter 會依序嘗試什麼？",
+      "options": [
+        "先以段落分隔切，再換行，再句子邊界，最後才是空白",
+        "依 token ID 切",
+        "只依空白切",
+        "一律在第 N 個字元處切"
+      ],
+      "correct": 0,
+      "explanation": "遞迴切分依序退回段落 -> 換行 -> 句子 -> 空白，藉此保留結構。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 parent-document 模式能改善答案品質？",
+      "options": [
+        "它移除了嵌入",
+        "子區塊帶來精確的檢索；回傳較大的父區塊則保留閱讀器需要的周邊脈絡",
+        "它避開了分詞",
+        "它耗用較少的 GPU 週期"
+      ],
+      "correct": 1,
+      "explanation": "以小的子區塊檢索求精確，再擴展到父區塊取得脈絡。"
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 的「contextual retrieval」會在建立索引前為每個區塊加上什麼？",
+      "options": [
+        "一段由 LLM 生成的 50-100 字摘要，說明這個區塊在整份文件脈絡中的位置",
+        "隨機雜訊",
+        "一個詞性標記",
+        "一個語言代碼"
+      ],
+      "correct": 0,
+      "explanation": "Contextual retrieval 會在每個區塊前面加上由 LLM 撰寫的定位摘要；召回率約提升 35-50%。"
+    },
+    {
+      "stage": "check",
+      "question": "2026 年的哪一項發現推翻了關於區塊重疊的傳統見解？",
+      "options": [
+        "重疊應該設為 50%",
+        "BM25 需要重疊",
+        "重疊只對 contextual retrieval 有幫助",
+        "2026 年的實證基準顯示，重疊往往帶不來任何可量測的好處，卻讓索引成本加倍"
+      ],
+      "correct": 3,
+      "explanation": "較新的研究（在 NQ 上以 SPLADE+Mistral 測試）顯示區塊重疊少有幫助，反而讓索引膨脹。"
+    },
+    {
+      "stage": "post",
+      "question": "NVIDIA 2026 年的基準測試把哪一種區塊大小和事實型查詢連在一起？",
+      "options": [
+        "大約 256-512 個 token",
+        "2048-4096 個 token",
+        "8192 個 token",
+        "64 個 token"
+      ],
+      "correct": 0,
+      "explanation": "事實型查詢受惠於較小的區塊（256-512 個 token），因為答案訊號更集中。"
+    },
+    {
+      "stage": "post",
+      "question": "使用語意切塊時，為什麼設定最小 token 下限很重要？",
+      "options": [
+        "沒有下限時，語意切塊可能產生只有 40 個 token 的碎片，反而傷害檢索",
+        "BERT 的要求",
+        "下限可以避免重疊",
+        "下限能加快推論"
+      ],
+      "correct": 0,
+      "explanation": "語意切塊器可能過度切分；強制最小長度可避免訊號稀薄的碎片。"
+    },
+    {
+      "stage": "post",
+      "question": "「late chunking」的做法和傳統切塊有什麼不同？",
+      "options": [
+        "在檢索之後才切塊",
+        "先在 token 層級嵌入整份文件，再把 token 嵌入池化成區塊向量，藉此保留跨區塊的脈絡",
+        "完全不切塊",
+        "改用 BM25"
+      ],
+      "correct": 1,
+      "explanation": "Late chunking 先嵌入、後池化，保留了跨越區塊邊界的脈絡互動。"
+    }
+  ]
+}

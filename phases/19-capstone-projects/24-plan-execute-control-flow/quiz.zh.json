@@ -1,0 +1,90 @@
+{
+  "lesson": "24-plan-execute-control-flow",
+  "title": "Plan-Execute Control Flow",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 plan-execute 代理程式中，規劃器的職責是什麼？",
+      "options": [
+        "處理 JSON-RPC 傳輸",
+        "產出一份有序的具型別步驟清單，交給執行器執行",
+        "強制執行逾時",
+        "對每個步驟呼叫分派器"
+      ],
+      "correct": 1,
+      "explanation": "規劃器產出結構化的計畫。執行器負責執行。把兩者混在一起，正是本課要擺脫的 chain-of-thought 陷阱。"
+    },
+    {
+      "stage": "pre",
+      "question": "即使執行器不檢查 expected_outcome，為什麼它仍是 Step 結構的一部分？",
+      "options": [
+        "因為它為重新規劃器與追蹤器提供了一個明述的成功條件可讀",
+        "因為模型會拿它來訓練",
+        "因為分派器拿它當快取鍵",
+        "因為註冊表要求要有它"
+      ],
+      "correct": 0,
+      "explanation": "重新規劃器在修訂時會讀它。追蹤器會把它繪製在時間軸上。它是步驟上一份人類可讀的契約。"
+    },
+    {
+      "stage": "check",
+      "question": "當某個步驟失敗、重新規劃器回傳一份新計畫時，執行器會在事件串流上發出什麼？",
+      "options": [
+        "session.complete，status=failed",
+        "tool.error，接著 session.start",
+        "plan.diff，內含移除／新增／修訂的步驟 id",
+        "什麼都沒有 —— 重新規劃是靜默的"
+      ],
+      "correct": 2,
+      "explanation": "plan.diff 讓修訂變得可見。靜默改寫正是我們要避免的錯誤。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要把 max_steps 與 max_replans 分成兩個獨立的預算？",
+      "options": [
+        "因為分派器會拒絕無界限的計畫",
+        "因為註冊表會計算重新規劃次數",
+        "因為 asyncio 兩者都需要",
+        "因為它們量測不同的單位。步驟上限限制總執行量；重新規劃上限限制規劃器被呼叫的次數。"
+      ],
+      "correct": 3,
+      "explanation": "max_replans 抓的是不斷回傳同一份壞計畫的規劃器。max_steps 抓的是不斷膨脹的失控計畫。"
+    },
+    {
+      "stage": "check",
+      "question": "當規劃器在第一次呼叫就回傳空清單時，回傳的 reason 是什麼？",
+      "options": [
+        "replan_budget",
+        "step_budget",
+        "no_plan",
+        "goal_met"
+      ],
+      "correct": 2,
+      "explanation": "沒有計畫，就沒有執行。工作階段以 reason=no_plan 與 status=failed 結束。"
+    },
+    {
+      "stage": "post",
+      "question": "PlanDiff.revised 裡面是什麼？",
+      "options": [
+        "規劃器要求跳過的步驟 id",
+        "在兩次修訂之間 tool_name 或 args 有變動的步驟 id",
+        "出現在新計畫、但不在舊計畫中的步驟 id",
+        "出現在舊計畫、但不在新計畫中的步驟 id"
+      ],
+      "correct": 1,
+      "explanation": "revised 是那些 (tool_name, args) 簽章在修訂前後有變動的 id 集合。"
+    },
+    {
+      "stage": "post",
+      "question": "當執行器用盡 max_replans 時，最終的 SessionResult.reason 是什麼？",
+      "options": [
+        "step_budget",
+        "replan_budget",
+        "no_plan",
+        "goal_met"
+      ],
+      "correct": 1,
+      "explanation": "replan_budget。status 為 failed。歷史紀錄保留了每一個執行過的步驟，包含觸發重新規劃的那些失敗。"
+    }
+  ]
+}

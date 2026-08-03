@@ -1,0 +1,78 @@
+{
+  "lesson": "20-bias-representational-harm",
+  "title": "Bias and Representational Harm in LLMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本課如何區分表徵性危害與分配性危害？",
+      "options": [
+        "表徵性是計算性的，分配性是統計性的",
+        "分配性危害只發生在離線情境",
+        "表徵性危害只對視覺模型有意義",
+        "表徵性危害是刻板印象／抹除／貶抑的描繪；分配性危害則是某個群體在物質結果上受到的不平等對待"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "下列何者是 Gallegos 等人（2024）提出的三類評測指標？",
+      "options": [
+        "視覺、音訊、文字",
+        "WEAT、BLEU、ROUGE",
+        "基於嵌入、基於機率、基於生成文字",
+        "RLHF 前、RLHF 中、RLHF 後"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "為什麼除了單一軸向的評測之外，還需要交織性公平評測？",
+      "options": [
+        "單一軸向的量測在計算上比較便宜",
+        "交織性和交叉驗證是同一回事",
+        "單一軸向是法律上唯一允許的做法",
+        "只在交織處才浮現的偏誤（例如性別 × 種族），會被一次只看一個軸向的評測漏掉"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "WinoIdentity（COLM 2025）提出了什麼？",
+      "options": [
+        "一種基於不確定性的交織性公平評測，比較模型在不同交織身分組合下對結果的不確定性，而不只是點預測",
+        "一種針對人口統計分類器的對抗攻擊",
+        "嵌入空間中 WEAT 的替代方案",
+        "一種針對身分詞彙的新分詞器"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "下列何者屬於處理偏誤的機制可解釋性做法？",
+      "options": [
+        "重新標註訓練集",
+        "在 MLP 層中辨識性別神經元、用 SAE 找出與種族相關的特徵，或操作特定的 attention head（UniBias）",
+        "從 PPO 改用 DPO",
+        "加入更多 KL 正則化"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "那篇涵蓋十年的後設批評（arXiv:2508.11067）對偏誤文獻提出了什麼論點？",
+      "options": [
+        "它過度集中在二元性別偏誤，忽略了其他軸向（身心障礙、宗教、移民身分、多語言身分），可能因忽視而傷害邊緣族群",
+        "它在所有身分軸向上都很均衡",
+        "它迴避量化方法",
+        "它過度強調交織性"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

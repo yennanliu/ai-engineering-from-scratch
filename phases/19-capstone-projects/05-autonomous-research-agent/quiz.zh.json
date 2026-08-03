@@ -1,0 +1,90 @@
+{
+  "lesson": "05-autonomous-research-agent",
+  "title": "Capstone 05 — Autonomous Research Agent (AI-Scientist Class)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "AI-Scientist 這一類的代理程式用什麼形狀的搜尋來探索實驗？",
+      "options": [
+        "以隨機評分做廣度優先展開",
+        "對 token 輸出做 beam search",
+        "純粹的人類回饋強化學習",
+        "在實驗節點上做最佳優先樹狀搜尋，評分為新穎度 x 品質 x 預算"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼沙箱要設定 --network=none 並加上資源上限？",
+      "options": [
+        "為了逼代理程式使用提示詞快取",
+        "為了阻止對外網路連線，並把實驗的副作用收攏在可重現的範圍內",
+        "為了強制浮點運算具確定性",
+        "為了預設允許 GPU 直通"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在寫作迴圈中，視覺評析步驟扮演什麼角色？",
+      "options": [
+        "從螢幕截圖生成新的實驗構想",
+        "在渲染時取代 matplotlib",
+        "把圖表轉換成長條圖",
+        "把 LaTeX 草稿編譯成 PDF，再讓 VLM 評析版面、圖表可讀性與主張和證據的一致性"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "審稿者集群如何為這條流程把關？",
+      "options": [
+        "審稿者匿名投票，多數決勝出",
+        "五位評審依 NeurIPS 式的評分標準給分，加權總分必須跨過門檻，否則草稿就退回寫作階段",
+        "由單一評審以二元旗標決定接受或拒絕",
+        "審稿只在發表之後才進行"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這個總結專案對每篇論文施加什麼樣的成本紀律？",
+      "options": [
+        "追蹤 GPU 時數但不設上限",
+        "透過 Langfuse 計數器與執行前估算追蹤的 30 美元硬性預算",
+        "只做成本最佳化，不做品質檢查",
+        "算力不設限，只有硬性的實際時間上限"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪個評分函式決定樹狀節點是否進一步展開？",
+      "options": [
+        "相關論文的引用數",
+        "均勻隨機的優先序",
+        "輸出長度與 token 數",
+        "新穎度 x 品質 x 剩餘預算"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "紅隊報告針對這個系統演練了什麼？",
+      "options": [
+        "fork bomb、網路外洩與檔案系統逃脫等沙箱逃逸嘗試",
+        "系統提示詞的快取命中率",
+        "向量資料庫中的多租戶資料外洩",
+        "封包遺失下的延遲尾端"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

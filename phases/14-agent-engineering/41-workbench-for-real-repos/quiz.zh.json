@@ -1,0 +1,90 @@
+{
+  "lesson": "41-workbench-for-real-repos",
+  "title": "The Workbench on a Real Repo",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "把同一個任務分別跑過純提示詞與工作台導引兩條流程，目的是什麼？",
+      "options": [
+        "為 GPU 做基準測試",
+        "比較模型",
+        "產出一份可以拿給懷疑者看的前後對照報告，用數字而不是論點",
+        "挑選供應商"
+      ],
+      "correct": 2,
+      "explanation": "由數字來說服人；而且要用感覺真實的任務，不是玩具題目。"
+    },
+    {
+      "stage": "pre",
+      "question": "下列何者不是被量測的五個結果之一？",
+      "options": [
+        "files_outside_scope",
+        "model_perplexity",
+        "acceptance_met",
+        "tests_actually_run"
+      ],
+      "correct": 1,
+      "explanation": "五個是 tests_actually_run、acceptance_met、files_outside_scope、handoff_quality、reviewer_total。"
+    },
+    {
+      "stage": "check",
+      "question": "LangChain 的 Anatomy of an Agent Harness 在 Terminal Bench 2.0 上量到了什麼？",
+      "options": [
+        "頂級模型掉了 25 名",
+        "所有模型都收斂到前三名",
+        "改 harness 並沒有改變排名",
+        "同一個模型只改 harness，就從 30 名外進到第 5 名"
+      ],
+      "correct": 3,
+      "explanation": "同一個模型 25 名的落差，是 harness 勝過模型最具代表性的證據。"
+    },
+    {
+      "stage": "check",
+      "question": "preprints.org 的論文引用的企業代理程式專案失敗率是多少？",
+      "options": [
+        "8%",
+        "約 88% 無法進到生產環境，而且失敗集中在執行期，不是推理能力",
+        "約 50%",
+        "沒有失敗的"
+      ],
+      "correct": 1,
+      "explanation": "Harness Engineering for Language Agents 預印本把失敗追溯到執行期問題（過期狀態、脆弱的重試、失控膨脹的上下文）。"
+    },
+    {
+      "stage": "check",
+      "question": "在長上下文的條件下，WebAgent 的基準準確率會怎樣？",
+      "options": [
+        "維持不變",
+        "從 40-50% 掉到 10% 以下，主要來自無限迴圈與目標遺失",
+        "上升 30%",
+        "腰斬但仍維持在 30% 以上"
+      ],
+      "correct": 1,
+      "explanation": "長上下文崩潰正是 Ralph Loop 與交接封包要吸收的問題。"
+    },
+    {
+      "stage": "post",
+      "question": "關於偽陰性（純提示詞反而比較快的情況），這一課怎麼說？",
+      "options": [
+        "單步事實型任務、一行的 lint、跑格式化工具，用純提示詞比較快；誠實地列舉這些情況，工作台才不會被說成殺雞用牛刀",
+        "它們證明工作台失敗了",
+        "它們不存在",
+        "它們推翻了 harness 的論點"
+      ],
+      "correct": 0,
+      "explanation": "誠實列舉純提示詞最快的情況，能讓 harness 的論點保持可信。"
+    },
+    {
+      "stage": "post",
+      "question": "這一課的報告該在什麼場合引用？",
+      "options": [
+        "內部人資考核",
+        "只在黑客松",
+        "當有人想「就這一個衝刺」拿掉驗證閘門時，或當新的代理程式產品推出、需要一份可攜的省時基準時",
+        "只在行銷簡報裡"
+      ],
+      "correct": 2,
+      "explanation": "數字比解釋傳得更遠；當壓力想抄捷徑繞過這些介面時，就引用這份報告。"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "lesson": "19-subword-tokenization",
+  "title": "Subword Tokenization — BPE, WordPiece, Unigram, SentencePiece",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "相較於詞層級的詞彙表，子詞分詞帶來什麼好處？",
+      "options": [
+        "訓練更快",
+        "模型更小",
+        "嵌入品質更好",
+        "罕見詞會分解成已知的子詞片段，在詞彙表規模仍有上限的同時消除 OOV"
+      ],
+      "correct": 3,
+      "explanation": "子詞 token 靠分解涵蓋任何輸入，消除了詞層級詞彙表的 OOV 問題。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼 GPT-2 使用位元組層級的 BPE，而不是字元層級的 BPE？",
+      "options": [
+        "transformers 套件要求如此",
+        "256 個位元組的基礎詞彙表可涵蓋任何 UTF-8 輸入，保證不會出現 [UNK] token",
+        "位元組比較小",
+        "位元組 BPE 可以省略合併步驟"
+      ],
+      "correct": 1,
+      "explanation": "位元組層級 BPE 從 256 個位元組出發，任何輸入都能編碼；不會有 OOV。"
+    },
+    {
+      "stage": "check",
+      "question": "Unigram 分詞器如何建立它的詞彙表？",
+      "options": [
+        "貪婪地合併高頻的字元對",
+        "隨機抽樣",
+        "從一個很大的候選集出發，反覆剪除「移除後對語料庫對數概似傷害最小」的 token",
+        "貪婪的 IDF 加權"
+      ],
+      "correct": 2,
+      "explanation": "Unigram 會擬合一個 unigram LM，反覆移除最沒用的 token，直到達成目標詞彙表大小。"
+    },
+    {
+      "stage": "check",
+      "question": "WordPiece 的合併準則和 BPE 有什麼不同？",
+      "options": [
+        "WordPiece 使用位元組",
+        "WordPiece 省略合併步驟",
+        "WordPiece 是非監督式的",
+        "WordPiece 合併的是能讓訓練語料概似最大化的字元對，而 BPE 合併的是出現最頻繁的那一對"
+      ],
+      "correct": 3,
+      "explanation": "WordPiece 依概似挑選合併；BPE 依原始頻率挑選。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一個工具能直接在原始的多語言 Unicode 文字上訓練分詞器？",
+      "options": [
+        "spaCy",
+        "tiktoken",
+        "tokenizers-lite",
+        "SentencePiece（把空白編碼成特殊標記，並訓練 BPE 或 Unigram）"
+      ],
+      "correct": 3,
+      "explanation": "SentencePiece 不需預先分詞就能在原始文字上訓練 BPE/Unigram；tiktoken 只負責編碼。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼正式環境的 CI 必須對部署的 tokenizer.json 做雜湊檢查？",
+      "options": [
+        "分詞器漂移會產生與模型訓練時不同的 token ID，靜默地破壞輸出",
+        "為了壓縮儲存空間",
+        "它能縮小詞彙表",
+        "Hugging Face 的要求"
+      ],
+      "correct": 0,
+      "explanation": "即使分詞器只有小幅改動也會位移 ID；雜湊檢查能在漂移影響使用者之前抓到它。"
+    },
+    {
+      "stage": "post",
+      "question": "單一個 emoji 佔用很多 token，常見原因是什麼？",
+      "options": [
+        "Emoji 是停止字元",
+        "Emoji 是保留字",
+        "多碼位的 emoji 會編碼成多個 UTF-8 位元組；沒有專屬 token 時，每個位元組都自成一個子詞",
+        "Emoji 以浮點數儲存"
+      ],
+      "correct": 2,
+      "explanation": "複合 emoji 會編碼成好幾個位元組；位元組層級分詞器可能對單一字形使用多個 token。"
+    },
+    {
+      "stage": "post",
+      "question": "為新的單語 Transformer 決定詞彙表大小，有什麼經驗法則？",
+      "options": [
+        "與訓練語料庫的大小一致",
+        "參數量 1B 以下約 32k；1-10B 為 50-100k；多語言或前沿模型 200k 以上",
+        "一律用 1M",
+        "一律用 8000"
+      ],
+      "correct": 1,
+      "explanation": "詞彙表大小隨模型規模與語言覆蓋範圍調整；這些是社群的粗略預設值。"
+    }
+  ]
+}

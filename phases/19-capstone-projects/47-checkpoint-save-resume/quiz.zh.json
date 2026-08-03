@@ -1,0 +1,78 @@
+{
+  "lesson": "47-checkpoint-save-resume",
+  "title": "Checkpoint Save and Resume",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "哪一組內容最能描述一個完整的訓練檢查點？",
+      "options": [
+        "任何 torch.save() 能序列化的東西",
+        "只有模型權重",
+        "模型狀態、最佳化器狀態、排程器狀態、步數計數器、損失歷史，以及 python、numpy、torch CPU、torch CUDA 的 RNG 狀態",
+        "只有損失歷史"
+      ],
+      "correct": 2,
+      "explanation": "續訓必須走上同一條軌跡。少了最佳化器的動量項、排程器位置與 RNG 狀態，續訓後的損失就是另一條曲線。"
+    },
+    {
+      "stage": "pre",
+      "question": "儲存端為什麼先寫到暫存檔再改名，而不是直接寫到目標檔名？",
+      "options": [
+        "I/O 比較快",
+        "在同一個目錄內的 POSIX rename 是原子操作，所以寫到一半崩潰時留下的是先前那份完好的檔案，而不是目標檔名下一份只寫了一半的檔案",
+        "它會對檔案去重",
+        "它會繞過 fsync"
+      ],
+      "correct": 1,
+      "explanation": "atomic_save 對同一目錄下的暫存檔呼叫 os.replace。跨裝置的 rename 會失去原子性，這就是暫存檔必須放在目標目錄裡的原因。"
+    },
+    {
+      "stage": "check",
+      "question": "分片的檢查點為什麼要在 index.json 裡替每個分片存一份 sha256？",
+      "options": [
+        "讓載入器能在載入時偵測出被截斷或被竄改的分片，而不是無聲地把壞掉的 state_dict 合併進來",
+        "因為 torch 要求如此",
+        "為了 SEO",
+        "為了壓縮檔案"
+      ],
+      "correct": 0,
+      "explanation": "load_sharded_checkpoint 會斷言每個分片的實際雜湊與記錄值相符，meta 檔的雜湊也一樣。無聲損毀是最糟糕的失敗模式。"
+    },
+    {
+      "stage": "check",
+      "question": "續訓如何從當前 epoch 內正確的位置接續？",
+      "options": [
+        "它用了一個特殊的資料庫",
+        "它會跳到下一個 epoch 的邊界",
+        "它一律從第 0 步重新開始",
+        "TrainState 記錄了 (epoch, batch_in_epoch)，而且 RNG 狀態會被還原，所以載入器會把產生器快轉過已消費的批次之後再繼續"
+      ],
+      "correct": 3,
+      "explanation": "少了 (epoch, batch_in_epoch)，你會被彈到下一個 epoch 邊界，白做一堆工。少了 RNG，你看到的批次就不一樣。兩者缺一不可。"
+    },
+    {
+      "stage": "check",
+      "question": "酬載上的 schema 欄位替你買到什麼？",
+      "options": [
+        "一個遷移掛勾：日後格式變動時就提升 schema 字串，載入器可以據此分派，而不會弄壞舊的訓練",
+        "什麼也沒有",
+        "壓縮",
+        "一個好看的檔名"
+      ],
+      "correct": 0,
+      "explanation": "這一課用的是 ckpt.v1；下一版就是 ckpt.v2 搭配一個 migrate 函式。沒有這個欄位，格式演進就只能靠破壞相容性。"
+    },
+    {
+      "stage": "post",
+      "question": "看續訓示範的摘要，max_loss_diff_after_resume 接近 0 證明了什麼？",
+      "options": [
+        "沒什麼有用的",
+        "磁碟很快",
+        "模型很好",
+        "續訓後的損失軌跡與未中斷的基準線相符，誤差落在浮點雜訊之內，代表 RNG 狀態與最佳化器狀態都被忠實還原了"
+      ],
+      "correct": 3,
+      "explanation": "忘了 RNG，你會看到另一條曲線與不小的差值。忘了最佳化器狀態，差值會非常巨大。這個接近零的數字就是契約。"
+    }
+  ]
+}

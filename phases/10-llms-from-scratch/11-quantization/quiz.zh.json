@@ -1,0 +1,62 @@
+[
+  {
+    "question": "70B 參數的模型以 FP16 儲存，光是權重就需要多少 VRAM？",
+    "options": [
+      "70 GB",
+      "140 GB",
+      "35 GB",
+      "280 GB"
+    ],
+    "correct": 1,
+    "explanation": "700 億參數 × 每個 FP16 參數 2 位元組 = 1400 億位元組 = 140 GB。這超過單張 A100（80GB）的容量，光是載入權重就至少需要兩張 GPU。",
+    "stage": "pre"
+  },
+  {
+    "question": "在 LLM 的脈絡下，量化（quantization）是什麼？",
+    "options": [
+      "降低權重的數值精度（例如從 FP16 降到 INT4），以減少記憶體用量並加快推論速度",
+      "壓縮訓練資料",
+      "移除模型中沒用到的層",
+      "縮減詞彙表大小"
+    ],
+    "correct": 0,
+    "explanation": "量化把高精度的浮點權重對應到低精度整數。INT4 量化把每個權重從 16 位元存成 4 位元，記憶體減少 4 倍，而準確率損失極小。",
+    "stage": "pre"
+  },
+  {
+    "question": "訓練後量化（PTQ）與量化感知訓練（QAT）的關鍵差異是什麼？",
+    "options": [
+      "QAT 不使用梯度",
+      "PTQ 需要更多資料",
+      "PTQ 在訓練完成後才量化、不需重新訓練；QAT 則在訓練期間模擬量化，讓模型學會容忍降低的精度",
+      "PTQ 比較準確"
+    ],
+    "correct": 2,
+    "explanation": "PTQ 很快（只要校準再量化），但可能損失準確率。QAT 在訓練期間加入偽量化，讓模型調整權重以更能承受精度損失。QAT 通常能得到較好的準確率。",
+    "stage": "post"
+  },
+  {
+    "question": "「per-channel」量化是什麼意思，為什麼它比「per-tensor」好？",
+    "options": [
+      "它對每個輸出通道分別量化，各自使用不同的 scale 與 zero-point，藉此降低量化誤差",
+      "它一次處理一個色彩通道",
+      "它是一種資料平行化",
+      "它為每個通道分配不同的 GPU"
+    ],
+    "correct": 0,
+    "explanation": "per-tensor 對整個權重矩陣只用一個 scale factor。per-channel 則對每個輸出通道（列）使用各自的 scale。由於不同通道的數值範圍不同，per-channel 能更精確地捕捉它們。",
+    "stage": "post"
+  },
+  {
+    "question": "為什麼 Llama 3 70B 有 95% 的權重落在 -0.1 到 +0.1 之間？",
+    "options": [
+      "權重還沒有收斂",
+      "訓練期間的 weight decay 與正規化把權重推向小數值，使得完整的 FP16 範圍變得浪費",
+      "這是 Llama 架構特有的現象",
+      "這個模型訓練得很差"
+    ],
+    "correct": 1,
+    "explanation": "weight decay 正則化把權重縮往零。層正規化讓激活值維持置中。兩者結合產生集中在零附近的權重分布，使低精度量化得以奏效。",
+    "stage": "post"
+  }
+]

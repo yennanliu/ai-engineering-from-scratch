@@ -1,0 +1,78 @@
+{
+  "lesson": "17-disaggregated-prefill-decode",
+  "title": "Disaggregated Prefill/Decode — NVIDIA Dynamo and llm-d",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 prefill 與 decode 想要的最佳 GPU 配置不一樣？",
+      "options": [
+        "Prefill 必須跑在 AMD 上，decode 必須跑在 NVIDIA 上",
+        "它們使用不同的模型權重",
+        "Prefill 受限於矩陣乘法吞吐量的運算瓶頸；decode 受限於 HBM 頻寬的記憶體瓶頸，所以把兩者放在一起會浪費其中一種資源",
+        "Decode 需要更大的網路頻寬"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "NVIDIA Dynamo 用什麼傳輸方式在 prefill 池與 decode 池之間搬移 KV 快取？",
+      "options": [
+        "只用 gRPC 雙向串流",
+        "NIXL（可用時走 RDMA／InfiniBand，否則退回 TCP）",
+        "純 HTTP",
+        "架在 NFS 上的共享檔案系統"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "依本課所述，什麼情況下分離式部署划不來？",
+      "options": [
+        "前綴超過 8K 的 RAG",
+        "Blackwell 上的 MoE 工作負載",
+        "共用系統提示詞的多租戶服務",
+        "提示詞低於 512 個 token 且輸出低於 200 個 token，此時 KV 傳輸的稅金會蓋過收益"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Dynamo 與 llm-d 的核心架構差異是什麼？",
+      "options": [
+        "Dynamo 是開源的；llm-d 是閉源的",
+        "Dynamo 跑在 CPU 上；llm-d 跑在 GPU 上",
+        "Dynamo 是架在 vLLM／SGLang／TRT-LLM 之上的協調層；llm-d 則是 Kubernetes 原生，把 prefill／decode／router 各自做成獨立的 Service",
+        "Dynamo 需要 AMD；llm-d 需要 NVIDIA"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Dynamo 的哪些元件會為了達成 SLO 自動調整 prefill 與 decode 的比例？",
+      "options": [
+        "Marlin kernel",
+        "Planner Profiler 與 SLA Planner",
+        "Cluster Autoscaler",
+        "Sidecar proxy 與 Envoy filter"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "分離式部署如何與第 17 階段第 11 課的感知快取路由互相配合？",
+      "options": [
+        "分離式部署會完全停用 KV 快取重用",
+        "感知快取的路由器可以把請求送到已經持有其前綴的 decode 池；沒命中時就依序走 prefill -> decode，因此兩者效果相乘",
+        "兩者互斥",
+        "感知快取的路由只適用於共置式服務"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

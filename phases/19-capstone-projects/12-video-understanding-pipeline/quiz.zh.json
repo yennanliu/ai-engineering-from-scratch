@@ -1,0 +1,90 @@
+{
+  "lesson": "12-video-understanding-pipeline",
+  "title": "Capstone 12 — Video Understanding Pipeline (Scene, QA, Search)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "既然長上下文 VLM 已能原生讀完一支 2 小時的影片，為什麼還需要場景層級的索引？",
+      "options": [
+        "場景切點是 VLM 唯一看得懂的東西",
+        "向量索引不支援影片檔",
+        "長上下文 VLM 無法串流輸出",
+        "要把 100 小時影片變成可查詢的語料庫，仍需要場景層級的檢索，即使單支影片可以整支讀完"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "在多向量索引裡，每個場景會得到哪三種向量？",
+      "options": [
+        "音訊波形、梅爾頻譜圖與 MFCC",
+        "姿態、深度與光流",
+        "雜湊、gzip 與 CRC",
+        "字幕描述嵌入、關鍵影格嵌入與逐字稿嵌入"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "查詢時，三條檢索串流的結果如何合併？",
+      "options": [
+        "對三份排序清單做 reciprocal rank fusion",
+        "取餘弦相似度的平均",
+        "只挑字幕描述的命中結果",
+        "直接取聯集，不做評分"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "時間定位步驟在最相關的場景內細化什麼？",
+      "options": [
+        "包含答案的（起、迄）時間戳區間",
+        "關鍵影格嵌入的維度",
+        "Whisper 產出的逐字稿詞級時間戳",
+        "存在 Qdrant 裡的向量數量"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪一類問題因為是已知的幻覺重災區而被單獨回報？",
+      "options": [
+        "翻譯類問題",
+        "說話者辨識類問題",
+        "計數與動作類型問題，VLM 在這類問題上會數錯或把事件順序搞反",
+        "關於景物的描述性問題"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "評分準則在保留測試集上量測哪個定位指標？",
+      "options": [
+        "Perplexity",
+        "時間定位的 intersection-over-union（IoU）",
+        "Acceptance rate",
+        "MRR@10"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼這條管線要求答案必須引用時間戳？",
+      "options": [
+        "Whisper 的輸出規定要有時間戳",
+        "Qdrant 的 payload 規定要有時間戳",
+        "它們能降低嵌入維度",
+        "它們讓播放器能跳到精確的（video_id, start, end），使用者才能自行驗證這個說法"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

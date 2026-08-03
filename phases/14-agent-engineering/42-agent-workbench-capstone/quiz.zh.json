@@ -1,0 +1,90 @@
+{
+  "lesson": "42-agent-workbench-capstone",
+  "title": "Capstone: Ship a Reusable Agent Workbench Pack",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "這個 capstone 產出什麼？",
+      "options": [
+        "一個監控儀表板",
+        "一個有版本的即插即用目錄（agent-workbench-pack/），內含七個介面，加上一支能冪等鋪設它們的 bin/install.sh",
+        "一篇研究論文",
+        "一個新的 LLM"
+      ],
+      "correct": 1,
+      "explanation": "pack 是食譜；每次安裝是一道上桌的菜。"
+    },
+    {
+      "stage": "pre",
+      "question": "下列何者不屬於 pack 的目錄配置？",
+      "options": [
+        "vendor_proprietary_weights/",
+        "schemas/",
+        "AGENTS.md + docs/",
+        "scripts/"
+      ],
+      "correct": 0,
+      "explanation": "pack 的配置是 AGENTS.md、docs/、schemas/、scripts/、bin/、README.md。pack 不綁定框架，也不綁定供應商。"
+    },
+    {
+      "stage": "check",
+      "question": "pack 為什麼要帶一個 VERSION 檔？",
+      "options": [
+        "追蹤代理程式的 IQ",
+        "為了 SEO",
+        "為了在 Hacker News 上宣傳",
+        "需要遷移的 schema 或 script 變更升 major；新增功能升 minor；只改文件升 patch；目標儲存庫會記錄自己是對哪個版本安裝的"
+      ],
+      "correct": 3,
+      "explanation": "形狀跟 npm、Cargo、pyproject.toml 一樣；VERSION 是契約，不是行銷。"
+    },
+    {
+      "stage": "check",
+      "question": "這個 pack 的跨工具散布長什麼樣子？",
+      "options": [
+        "一份原始檔加上符號連結（ln -s AGENTS.md CLAUDE.md、.cursor/rules/、.github/copilot-instructions.md），讓同一份來源擴散到每一個編碼代理程式",
+        "每個工具手動複製一份",
+        "把每個工具的路徑寫死",
+        "每個工具各綁一家供應商"
+      ],
+      "correct": 0,
+      "explanation": "Nx 的 nx ai-setup 是參考範例；pack 的安裝器用符號連結做同一件事。"
+    },
+    {
+      "stage": "check",
+      "question": "這一課建議解除安裝器該怎麼運作？",
+      "options": [
+        "只刪文件",
+        "遇到非瑣碎的狀態就拒絕執行；絕不刪除使用者的 agent_state.json、task_board.json 或 outputs/；只移除 schemas、scripts、docs 與 AGENTS.md（可選擇不移除）",
+        "全部刪掉，包含狀態",
+        "停用 git"
+      ],
+      "correct": 1,
+      "explanation": "狀態屬於使用者；pack 不擁有它。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼東西要留在 pack 之外？",
+      "options": [
+        "Scripts",
+        "Schemas",
+        "專案特有的任務、供應商 SDK 呼叫、團隊上手說明文字——pack 不綁定框架，它放在上手流程旁邊，而不是裡面",
+        "安裝器"
+      ],
+      "correct": 2,
+      "explanation": "任務屬於目標儲存庫的任務板，不屬於 pack；供應商 SDK 呼叫會把 pack 綁死在單一框架上。"
+    },
+    {
+      "stage": "post",
+      "question": "pack 透過什麼管道一次出貨給許多編碼代理程式？",
+      "options": [
+        "SkillKit 式的散布（skillkit install agent-workbench-pack）從單一來源鋪設到 32 個 AI 代理程式",
+        "Email 附件",
+        "手動複製",
+        "只發 GitHub release notes"
+      ],
+      "correct": 0,
+      "explanation": "pack 儲存庫是真相來源；SkillKit 是散布管道；供應商鎖定就此瓦解。"
+    }
+  ]
+}

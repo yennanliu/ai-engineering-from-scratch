@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/28-observability-otel-traces",
+  "title": "Observability: OTel GenAI Spans and Prometheus Metrics",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "閱讀本課之前：把 harness 的 span 寫成 OTel GenAI 屬性形狀，實務上的好處是什麼？",
+      "options": [
+        "每個相容 OTel 的後端都能讀取它們，不必寫自訂剖析器。",
+        "OTel 是純 Python 的標準，所以 harness 可以拿到型別提示。",
+        "這是 HIPAA 要求的。",
+        "OTel span 在磁碟上壓縮率比較好。"
+      ],
+      "correct": 0,
+      "explanation": "這些慣例是與整個生態系之間的契約。Honeycomb、Grafana Tempo、Jaeger 與 Datadog 開箱即可剖析 gen_ai.* 屬性。"
+    },
+    {
+      "stage": "check",
+      "question": "在 SpanBuilder.span() 的情境中拋出了一個例外。本課的 builder 會記錄什麼？",
+      "options": [
+        "status 維持 UNSET，例外被靜默吞掉。",
+        "該 span 被丟棄，以免污染追蹤紀錄。",
+        "status=ERROR、status_message 含有例外的型別與訊息，並附加一則 'exception' 事件。",
+        "該 span 被改名為 'error'。"
+      ],
+      "correct": 2,
+      "explanation": "狀態 ERROR 加上一則 exception 事件符合 OTel 規格。例外會被重新拋出，讓呼叫端的程式碼可以反應。"
+    },
+    {
+      "stage": "check",
+      "question": "Prometheus 對 histogram 的呈現包含 _bucket、_sum 與 _count 幾行。為什麼 bucket 計數是累計的（每個 le bucket 都包含所有更小的 bucket）？",
+      "options": [
+        "累計計數可以減少浮點誤差。",
+        "累計計數讓抓取端可以用相減算出每個 bucket 的計數，不必儲存所有觀測值。",
+        "累計計數是 Grafana 唯一支援的格式。",
+        "它們並非累計的；本課的呈現方式不符標準。"
+      ],
+      "correct": 1,
+      "explanation": "這是 Prometheus 的設計選擇：後端讀取累計計數，再計算各 bucket 之間的差值。這讓每個 bucket 的時間序列都是一個單純的單調遞增計數器。"
+    },
+    {
+      "stage": "check",
+      "question": "Harness 把一次工具執行包在一個 span 中。在 GenAI 慣例下，哪些屬性鍵標示它是一次工具呼叫？",
+      "options": [
+        "operation + tool.name。",
+        "agent.harness.tool + agent.harness.call。",
+        "gen_ai.system + gen_ai.request.model。",
+        "gen_ai.tool.name + gen_ai.tool.call.id。"
+      ],
+      "correct": 3,
+      "explanation": "在 GenAI 慣例中，gen_ai.tool.name 與 gen_ai.tool.call.id 是工具執行的標準鍵。"
+    },
+    {
+      "stage": "post",
+      "question": "你想查詢「read_file 呼叫的 p95 延遲是多少」。你要查哪一份產物？",
+      "options": [
+        "Span 的 status_message 欄位。",
+        "計數器 tools_called_total，除以時間視窗。",
+        "在一段視窗內抓取的 Prometheus histogram tool_latency_ms{tool=\"read_file\"}。",
+        "traces.jsonl 中每個 span 的 duration_ms，用腳本剖析。"
+      ],
+      "correct": 2,
+      "explanation": "要算百分位數，histogram 才是對的工具。計數器只會計數；追蹤紀錄含有原始 span，但沒有預先聚合。"
+    },
+    {
+      "stage": "post",
+      "question": "審查者問為什麼本課要手工實作，而不直接匯入 opentelemetry-sdk。哪個回答是正確的？",
+      "options": [
+        "手工實作能教會線路格式；之後可以用相同的屬性鍵直接換上 SDK。",
+        "手工實作在執行期比較快。",
+        "SDK 在匯入時需要網路連線。",
+        "SDK 不支援 GenAI 慣例。"
+      ],
+      "correct": 0,
+      "explanation": "這些慣例在各種實作之間是穩定的。手工版本的存在是為了清晰；正式環境會接上 SDK，並沿用同一組 gen_ai.* 鍵。"
+    }
+  ]
+}

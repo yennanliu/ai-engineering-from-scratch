@@ -1,0 +1,90 @@
+{
+  "lesson": "38-verification-gates",
+  "title": "Verification Gates",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "驗證閘門要回答的單一問題是什麼？",
+      "options": [
+        "這個任務真的完成了嗎？（讀取範圍、規則、回饋與 diff 產物）",
+        "提示詞是否最佳？",
+        "模型夠快嗎？",
+        "token 預算是否健康？"
+      ],
+      "correct": 0,
+      "explanation": "閘門是一個對工作台產物運作的確定性函式，產出 pass/fail 判定。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼閘門必須是確定性的？",
+      "options": [
+        "同一組產物每次都必須產出相同判定；LLM 評審屬於 reviewer（質性判斷），不屬於閘門（狀態判定）",
+        "供應商要求如此",
+        "確定性不用付出成本",
+        "可以省錢"
+      ],
+      "correct": 0,
+      "explanation": "把模型的主觀判斷混進閘門，會讓確定性與質性的分工崩塌。"
+    },
+    {
+      "stage": "check",
+      "question": "閘門的覆寫紀律是什麼？",
+      "options": [
+        "block 等級的發現只能由人類覆寫，且必須在簽章稽核日誌中記錄 override_reason 與 overridden_by 使用者 id",
+        "禁止任何覆寫",
+        "任何人都可以無聲覆寫",
+        "覆寫需要主管的 email"
+      ],
+      "correct": 0,
+      "explanation": "簽章過的覆寫會寫入 outputs/verification/overrides.jsonl；代理程式不能自我覆寫。"
+    },
+    {
+      "stage": "check",
+      "question": "這一課引用的 Hybrid Norm 是哪一組配對？",
+      "options": [
+        "GPU 與 CPU 的分工",
+        "熱／冷提示詞",
+        "可驗證的獎勵（測試、schema、結束碼）回答「問題解決了嗎？」；LLM 評分準則回答「可讀、安全、符合風格嗎？」",
+        "有快取 vs 無快取"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic 2026 指引：閘門執行第一類，reviewer（第 39 課）執行第二類。"
+    },
+    {
+      "stage": "check",
+      "question": "防禦縱深如何分層設置閘門？",
+      "options": [
+        "pre-commit hook -> CI 狀態檢查 -> pre-tool 授權 hook -> 合併前閘門；每一層都是確定性的，所以其中一層漏掉的會被下一層攔下",
+        "只在合併時設一道閘門",
+        "只靠聊天提醒",
+        "只靠 IDE 警告"
+      ],
+      "correct": 0,
+      "explanation": "多道無法繞過的分層，能攔下單一層會漏掉的問題。"
+    },
+    {
+      "stage": "post",
+      "question": "coverage_floor 檢查防的是什麼？",
+      "options": [
+        "熱路徑延遲",
+        "代理程式偷偷刪掉失敗的測試；當量測到的覆蓋率低於下限、或比上次合併掉超過 1 個百分點時，閘門會失敗",
+        "冷啟動",
+        "過期的 lockfile"
+      ],
+      "correct": 1,
+      "explanation": "沒有下限，代理程式可以無聲地壓低覆蓋率來讓判定維持綠燈。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候該用 --strict 模式把每個 warn 升級成 block？",
+      "options": [
+        "永遠",
+        "永不",
+        "只在星期天",
+        "發布分支、會擋出貨的 PR、事故後的分流；不作為日常預設，因為對所有事情都嚴格會侵蝕流暢度"
+      ],
+      "correct": 3,
+      "explanation": "--strict 依分支選擇性啟用；保留給高風險時刻。"
+    }
+  ]
+}

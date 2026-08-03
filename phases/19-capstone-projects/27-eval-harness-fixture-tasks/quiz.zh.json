@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/27-eval-harness-fixture-tasks",
+  "title": "Eval Harness with Fixture Tasks",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "閱讀本課之前：一個好的代理程式評測驗證器最需要具備哪一項特性？",
+      "options": [
+        "跨多次執行的確定性。",
+        "毫秒等級的速度。",
+        "對判定結果的自然語言說明。",
+        "涵蓋候選程式碼的每一行。"
+      ],
+      "correct": 0,
+      "explanation": "確定性才讓退步變得可偵測。非確定性的驗證器會把每一次紅燈都變成擲銅板。"
+    },
+    {
+      "stage": "check",
+      "question": "某個候選在單一任務的 5 次取樣中通過 3 次。本課的 pass@5 公式會回傳什麼值（四捨五入到小數點後兩位）？",
+      "options": [
+        "0.75",
+        "1.00",
+        "0.99",
+        "0.60"
+      ],
+      "correct": 2,
+      "explanation": "pass@k = 1 - (1 - p)^k = 1 - (1 - 0.6)^5 = 1 - 0.4^5 = 1 - 0.01024 = 0.98976，四捨五入為 0.99。原始的單次取樣通過率（0.6）是選項 (a) 所指的值，但公式會把它在 k 次取樣上放大。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼本課在報告中同時列出 pass@1 與 pass@k？",
+      "options": [
+        "pass@1 是驗證器註冊表支援的版本；pass@k 保留給未來的驗證器。",
+        "pass@k 可能掩蓋一個要試很多次才對一次的模型，所以 pass@1 把結果錨定在首次嘗試的品質上。",
+        "pass@1 是使用者在儀表板上看到的值；pass@k 供內部除錯用。",
+        "當 k > 1 時，pass@k 與 pass@1 在數學上完全相同。"
+      ],
+      "correct": 1,
+      "explanation": "pass@k 會讓那些試很多次才答對一次的模型看起來很強；pass@1 則是首次嘗試的下限。兩者一起報告可以避免誇大宣稱。"
+    },
+    {
+      "stage": "check",
+      "question": "Harness 在每次取樣之前都會呼叫 _prepare_scratch。為什麼這對 pass@k > 1 很重要？",
+      "options": [
+        "它確保每次取樣都從有錯誤的初始設定開始，而不是從上一次取樣的輸出開始。",
+        "它避免共用暫存目錄上的競爭條件。",
+        "它只跟 shell 驗證器有關。",
+        "它純粹是效能最佳化。"
+      ],
+      "correct": 0,
+      "explanation": "沒有全新的暫存區的話，第 N+1 次取樣會從第 N 次的輸出開始。Harness 量到的會是「第二次嘗試的收尾」，而不是首次嘗試的成功率。"
+    },
+    {
+      "stage": "post",
+      "question": "你新增一個在暫存目錄中執行 pytest 的驗證器 'pytest_passes'。你應該以哪個既有驗證器為基礎？",
+      "options": [
+        "不可能把 pytest 表達成一個驗證器。",
+        "shell_exit_zero，因為 pytest 以離開碼 0 表示通過。",
+        "file_equals，因為 pytest 會寫出一份結果檔。",
+        "regex_match，因為 pytest 的輸出含有 'passed' 這個字。"
+      ],
+      "correct": 1,
+      "explanation": "pytest 通過時離開碼為 0，失敗時為非零。shell_exit_zero 是對的原語。正式接線時會把這次呼叫繞經第 26 課的沙箱。"
+    },
+    {
+      "stage": "post",
+      "question": "審查者問：「這次退步是出在模型還是 harness？」哪一份產物能回答這個問題？",
+      "options": [
+        "逐任務、逐取樣的 SampleResult，加上驗證器的細節訊息。",
+        "Fixture 的 JSON 檔。",
+        "代理程式的 chain-of-thought 逐字稿。",
+        "驗證器註冊表的原始碼。"
+      ],
+      "correct": 0,
+      "explanation": "逐次取樣的延遲、驗證器細節與通過／失敗讓你能分診：同樣的 fixture 卻有不同判定，代表模型變了；判定相同但延遲不同，代表變的是別的東西。"
+    }
+  ]
+}

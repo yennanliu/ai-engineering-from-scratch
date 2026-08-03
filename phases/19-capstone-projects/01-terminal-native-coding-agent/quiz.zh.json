@@ -1,0 +1,90 @@
+{
+  "lesson": "01-terminal-native-coding-agent",
+  "title": "Capstone 01 — Terminal-Native Coding Agent",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "2026 年的終端機編碼代理程式共有哪一種迴圈形狀？",
+      "options": [
+        "取得、嵌入、排序、綜整",
+        "規劃、行動、觀察、復原",
+        "訓練、評測、部署、監控",
+        "編碼、解碼、抽樣、串流"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼這個測試框架要把每個任務都跑在 E2B 或 Daytona 沙箱裡？",
+      "options": [
+        "為了讓代理程式迴圈能用到 GPU",
+        "為了繞過模型供應商的速率限制",
+        "為了把檔案系統與工具執行和主機隔離，任務結束後就能直接把 worktree 拆掉",
+        "為了在冷快取下測量 token 吞吐量"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪一個內建 hook 是在破壞性 shell 指令執行前攔下它的自然位置？",
+      "options": [
+        "Stop",
+        "PostToolUse",
+        "PreToolUse",
+        "SessionStart"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "這個總結專案把每次工具結果上限設在約 4k token。這主要防範哪一種失效模式？",
+      "options": [
+        "模型過度擬合到工具呼叫的軌跡",
+        "透過惡意 shell 特殊字元逃脫沙箱",
+        "跨續接工作階段的計畫狀態過期",
+        "工具回傳大量輸出時造成的上下文汙染與成本失控"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "PreCompact hook 在 150k token 的門檻做了什麼？",
+      "options": [
+        "取消這次執行並退回使用者的預算",
+        "強制推送目前分支以備份進度",
+        "把較舊的回合摘要成一段先前狀態區塊，讓計畫與新的觀察仍然放得下",
+        "把後端模型換成較小的草稿模型"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "這個總結專案在 30 個 issue 的 SWE-bench Pro 子集上，拿自家測試框架和哪個基準比較？",
+      "options": [
+        "Aider",
+        "mini-swe-agent",
+        "Live-SWE-agent",
+        "OpenCode"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "這份交付成果要對照哪一組指標來衡量？",
+      "options": [
+        "WER、MOS 與首個音訊輸出時間",
+        "MRR@10 與 nDCG@10",
+        "perplexity、BLEU 與 ROUGE",
+        "pass@1、每任務回合數與每任務美元成本"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

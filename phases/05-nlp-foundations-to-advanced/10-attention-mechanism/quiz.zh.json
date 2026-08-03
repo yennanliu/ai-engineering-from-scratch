@@ -1,0 +1,102 @@
+{
+  "lesson": "10-attention-mechanism",
+  "title": "Attention Mechanism — The Breakthrough",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Bahdanau attention 解決了 seq2seq 的什麼問題？",
+      "options": [
+        "斷詞不匹配",
+        "beam search 的延遲",
+        "固定長度脈絡向量的瓶頸——解碼器只看得到編碼器的最終狀態",
+        "編碼器中的梯度消失"
+      ],
+      "correct": 2,
+      "explanation": "attention 讓解碼器可以查閱每一個編碼器狀態，而不只是最後一個。"
+    },
+    {
+      "stage": "pre",
+      "question": "解碼器第 t 步的 attention 脈絡向量是什麼？",
+      "options": [
+        "編碼器的最終隱藏狀態",
+        "解碼器的輸入嵌入",
+        "一個隨機投影",
+        "編碼器隱藏狀態的加權平均，權重來自 query 與 key 的分數"
+      ],
+      "correct": 3,
+      "explanation": "脈絡 = sum of alpha_i * h_i，是隨步驟變化的編碼器狀態加權平均。"
+    },
+    {
+      "stage": "check",
+      "question": "在 Bahdanau（加性）attention 中，向量 v_a 扮演什麼角色？",
+      "options": [
+        "它編碼位置",
+        "它為 softmax 加上偏置",
+        "它控制 dropout",
+        "它是把 attention 維度的隱藏組合投影成每個編碼器位置一個純量分數的那個投影"
+      ],
+      "correct": 3,
+      "explanation": "v_a 與 tanh(W_a s + U_a h) 做內積，把一個 d_attn 維向量收斂成純量分數。"
+    },
+    {
+      "stage": "check",
+      "question": "在 Luong 的 'dot' attention 變體中，必須成立的限制是什麼？",
+      "options": [
+        "必須使用 beam search",
+        "解碼器狀態與編碼器狀態的維度必須相同（d_s == d_h）",
+        "softmax 必須在對數空間計算",
+        "編碼器必須是雙向的"
+      ],
+      "correct": 1,
+      "explanation": "dot 直接用 s^T h，中間沒有投影，所以兩邊維度必須完全一致。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一種 Q/K/V 對應方式描述了傳統（Bahdanau/Luong）attention？",
+      "options": [
+        "Q 來自編碼器，K 與 V 來自解碼器",
+        "Q、K、V 是來源端的三個獨立學習投影",
+        "Q = 解碼器狀態；K 與 V = 編碼器狀態（同一個張量）",
+        "Q 是隨機的，K 與 V 是學來的"
+      ],
+      "correct": 2,
+      "explanation": "在傳統 attention 中，key 與 value 都是編碼器狀態；transformer 則透過學習到的投影把 K 與 V 分開。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼把原始 attention 權重當成「解釋」來回報被認為很脆弱？",
+      "options": [
+        "研究（例如 Jain 與 Wallace，2019）顯示在某些任務上，attention 分布可以被重新排列而預測結果不變",
+        "attention 權重不可微分",
+        "attention 權重會洩漏標籤",
+        "它們太小了畫不出圖"
+      ],
+      "correct": 0,
+      "explanation": "attention 權重與預測相關，但若沒有搭配消融或反事實檢驗，就不是忠實的解釋。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一步把 Bahdanau attention 銜接到 transformer 的 self-attention？",
+      "options": [
+        "用各自學習的 Q、K、V 投影讓一個序列去查詢它自己，並在多個平行的頭上執行",
+        "拿掉 beam search",
+        "把 softmax 換成 sigmoid",
+        "增加更多 RNN 層"
+      ],
+      "correct": 0,
+      "explanation": "self-attention 查詢的是同一個序列，K 與 V 各有獨立投影，並跨多個 attention head 平行化。"
+    },
+    {
+      "stage": "post",
+      "question": "attention 中的遮罩有什麼實務用途？",
+      "options": [
+        "取代 dropout",
+        "編碼位置",
+        "把 padding token 的 attention 權重設為零，讓它們不會影響脈絡向量",
+        "縮小模型體積"
+      ],
+      "correct": 2,
+      "explanation": "遮蔽 padding（或解碼器中的未來 token）能避免 softmax 把權重分配到無效位置上。"
+    }
+  ]
+}

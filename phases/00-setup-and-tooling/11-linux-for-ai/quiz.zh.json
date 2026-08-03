@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 Linux 的檔案路徑裡，~ 這個符號代表什麼？",
+      "options": [
+        "檔案系統的根目錄",
+        "暫存檔目錄",
+        "目前使用者的家目錄",
+        "系統程式的安裝目錄"
+      ],
+      "correct": 2,
+      "explanation": "波浪號（~）是目前使用者家目錄的簡寫，在 Linux 上通常是 /home/使用者名稱。不管你在哪，cd ~ 都會帶你回家。"
+    },
+    {
+      "stage": "pre",
+      "question": "在指令前面加上 sudo 的用途是什麼？",
+      "options": [
+        "以 root（管理員）權限執行該指令",
+        "在沙箱環境中執行該指令",
+        "加快該指令的執行速度",
+        "把指令輸出記錄到系統檔案裡"
+      ],
+      "correct": 0,
+      "explanation": "sudo（superuser do）會針對單一指令，暫時把你的權限提升到 root 層級。用 apt 安裝套件這類系統層級的操作就需要它。"
+    },
+    {
+      "stage": "post",
+      "question": "你想執行一個 shell 腳本卻收到 Permission denied，哪個指令能解決？",
+      "options": [
+        "chown root script.sh",
+        "mv script.sh /usr/bin/",
+        "chmod +x script.sh",
+        "sudo rm script.sh"
+      ],
+      "correct": 2,
+      "explanation": "chmod +x 會為檔案加上執行權限。沒有設定執行位元的話，就算檔案是你的，shell 也拒絕執行這個腳本。"
+    },
+    {
+      "stage": "post",
+      "question": "在遠端 GPU 機器上，訓練資料把磁碟塞爆了。哪個指令能找出佔用空間最多的目錄？",
+      "options": [
+        "ls -la /",
+        "cat /proc/meminfo",
+        "du -h --max-depth=1 / | sort -hr | head -20",
+        "free -h"
+      ],
+      "correct": 2,
+      "explanation": "du -h 顯示每個目錄的磁碟用量，--max-depth=1 限制只看最上層目錄，sort -hr 再依大小由大到小排序。這樣就能看出哪些目錄吃掉最多空間。"
+    },
+    {
+      "stage": "post",
+      "question": "macOS 與 Linux 版本的 sed -i 有什麼關鍵差異？",
+      "options": [
+        "Linux 的 sed 比 macOS 的快",
+        "Linux 的 sed 不支援正規表達式",
+        "macOS 的 sed 無法就地修改檔案",
+        "macOS 的 sed 在 -i 後面必須加一個空字串引數（sed -i \"\"），Linux 則不用"
+      ],
+      "correct": 3,
+      "explanation": "macOS 用的是 BSD sed，語法必須寫成 sed -i \"\" pattern file；Linux 用的是 GNU sed，接受 sed -i pattern file。腳本在兩種系統之間搬動時，這是很常踩的坑。"
+    }
+  ]
+}

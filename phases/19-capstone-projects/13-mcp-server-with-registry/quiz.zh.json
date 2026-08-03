@@ -1,0 +1,90 @@
+{
+  "lesson": "13-mcp-server-with-registry",
+  "title": "Capstone 13 — MCP Server with Registry and Governance",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼 2026 版的 MCP 修訂偏好用 StreamableHTTP 跑正式環境伺服器？",
+      "options": [
+        "它是唯一支援工具呼叫的傳輸方式",
+        "它預設無狀態，因此負載平衡器後面的單一端點可以水平擴展",
+        "它會自動加密 payload",
+        "它讓認證變得不必要"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "本 capstone 用哪種授權模型把關工具呼叫？",
+      "options": [
+        "帶有各工具 scope 的 OAuth 2.1 token，在工具呼叫當下檢查",
+        "依 IP 位址發放的 API key",
+        "不帶 scope 的雙向 TLS",
+        "一組共用的管理員密碼"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": ".well-known/mcp-capabilities 文件的角色是什麼？",
+      "options": [
+        "列出對外連線的 IP 範圍",
+        "存放 OPA 政策套件",
+        "公開工具清單、傳輸 URL 與認證需求，讓 registry 得以驗證並索引這台伺服器",
+        "保存這台伺服器的稽核日誌"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在這個設計裡，破壞性工具為什麼要放在獨立的 MCP 伺服器上？",
+      "options": [
+        "它們跑在較慢的硬體上",
+        "它們需要不同的程式語言",
+        "它們無法透過 StreamableHTTP 公開",
+        "它們由一個經 Slack 卡片在短時間視窗內提權取得的核准 token 把關"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "每次工具呼叫時，OPA / Rego 決定什麼？",
+      "options": [
+        "呼叫方的 scope 是否允許此次調用，外加 PII 遮蔽與 payload 上限",
+        "伺服器該如何對回應重新排序",
+        "該調用哪個模型",
+        "稽核日誌該寫到哪裡"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "負載測試中，哪項證據能證明 StreamableHTTP 可水平擴展？",
+      "options": [
+        "加開第二個副本，並展示負載平衡器在沒有 session 黏著的情況下重新分配流量",
+        "把所有東西跑在單一行程裡",
+        "把並行數降到只剩一個用戶端",
+        "改用 stdio 傳輸"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼稽核日誌要先用 Presidio 清除 PII 才依租戶留存？",
+      "options": [
+        "為了滿足企業安全需求，同時仍能查詢每次呼叫的來龍去脈",
+        "PII 能提升搜尋效能",
+        "為了讓日誌更短",
+        "Presidio 能降低 ClickHouse 的寫入放大"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

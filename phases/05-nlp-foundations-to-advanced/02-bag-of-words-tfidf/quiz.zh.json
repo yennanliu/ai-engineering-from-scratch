@@ -1,0 +1,102 @@
+{
+  "lesson": "02-bag-of-words-tfidf",
+  "title": "Bag of Words, TF-IDF, and Text Representation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Bag of Words 丟掉了什麼？",
+      "options": [
+        "標點符號",
+        "token 的順序",
+        "詞彙表大小",
+        "文件長度"
+      ],
+      "correct": 1,
+      "explanation": "BoW 計算每份文件中各 token 的次數，但捨棄了它們的順序。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼要用 IDF 因子去縮放 TF？",
+      "options": [
+        "為了正規化文件長度",
+        "在每份文件都出現的詞幾乎沒有鑑別力，應該降低權重",
+        "為了移除標點符號",
+        "為了加速訓練"
+      ],
+      "correct": 1,
+      "explanation": "IDF 懲罰無所不在的詞，並提升罕見詞的權重。"
+    },
+    {
+      "stage": "check",
+      "question": "在平滑後的 IDF 公式 log((N+1)/(df+1)) + 1 中，尾端的 +1 保證了什麼？",
+      "options": [
+        "N 很大時的數值穩定性",
+        "與原始次數相容",
+        "在每份文件都出現的詞其 IDF 仍是 1 而不是 0",
+        "計算更快"
+      ],
+      "correct": 2,
+      "explanation": "這個 +1 讓無所不在的詞維持在 IDF=1 而不被歸零，也和 scikit-learn 的預設一致。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼在算餘弦相似度之前要對 TF-IDF 的每一列做 L2 正規化？",
+      "options": [
+        "為了把稀疏向量轉成稠密向量",
+        "否則較長的文件會主宰相似度分數；正規化把所有文件放到單位超球面上",
+        "為了移除為零的項目",
+        "為了壓縮詞彙表"
+      ],
+      "correct": 1,
+      "explanation": "L2 正規化消除了文件長度的偏差，並讓餘弦相似度化為內積。"
+    },
+    {
+      "stage": "check",
+      "question": "對情感分析來說，TfidfVectorizer 的哪一個設定開下去有風險？",
+      "options": [
+        "sublinear_tf=True",
+        "ngram_range=(1, 2)",
+        "min_df=2",
+        "stop_words='english'"
+      ],
+      "correct": 3,
+      "explanation": "英文停用詞表會刪掉像 'not' 這種否定詞，而它們帶有情感訊號。"
+    },
+    {
+      "stage": "post",
+      "question": "到了 2026 年，TF-IDF 在哪類任務上仍然勝出？",
+      "options": [
+        "機器翻譯",
+        "開放式對話",
+        "影像描述生成",
+        "垃圾訊息偵測、log 異常標記，以及低延遲的窄領域分類"
+      ],
+      "correct": 3,
+      "explanation": "當訊號就在於某個詞有沒有出現，而且可解釋性或速度很重要時，TF-IDF 勝過嵌入。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 TF-IDF 在 'The movie was not good' 與 'The movie was excellent' 這組句子上會失敗？",
+      "options": [
+        "TF-IDF 必須用 bigram 才能運作",
+        "兩份文件共用了大部分 token；bag-of-words 沒有否定或詞序的概念",
+        "TF-IDF 無法處理停用詞",
+        "嵌入的重疊度太高"
+      ],
+      "correct": 1,
+      "explanation": "沒有詞序與句法脈絡，BoW 無法建模 'not' 會把 'good' 的情感翻轉過來。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼是 TF-IDF 加權嵌入的混合做法？",
+      "options": [
+        "把 BoW 與稠密嵌入串接起來",
+        "對 TF-IDF 做 PCA 之後再重新嵌入",
+        "在平均之前，用 TF-IDF 權重當作逐 token 嵌入的池化權重",
+        "用 TF-IDF 特徵訓練 BERT"
+      ],
+      "correct": 2,
+      "explanation": "這個混合做法用每個 token 的 TF-IDF 分數為其嵌入加權後平均，兼顧語意能力與對罕見詞的強調。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "79-pipeline-parallel",
+  "title": "Pipeline Parallel and Bubble Analysis",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "管線氣泡（pipeline bubble）是什麼？",
+      "options": [
+        "一種網路封包",
+        "NCCL 的一個 bug",
+        "管線頭尾的閒置時間：第一個微批次還沒到達某些 stage 之前它們沒事做，最後一個微批次離開之後也一樣",
+        "記憶體洩漏"
+      ],
+      "correct": 2,
+      "explanation": "有 M 個微批次與 N 個 stage 時，每個 stage 的氣泡比例是 (N-1)/(M+N-1)。把 M 選得遠大於 N 就能縮小它。"
+    },
+    {
+      "stage": "pre",
+      "question": "GPipe 的激活記憶體為什麼與 M 成正比？",
+      "options": [
+        "硬體限制",
+        "編譯器限制",
+        "這是一個 bug",
+        "所有 M 個微批次的激活值都必須保留到對應的反向傳播為止；在開始排空之前，什麼都釋放不了"
+      ],
+      "correct": 3,
+      "explanation": "GPipe 會先把所有前向填滿整條管線，才開始任何反向。每個在途的微批次都得一路帶著自己的激活值，直到它的反向啟動。"
+    },
+    {
+      "stage": "check",
+      "question": "1F1B 相較於 GPipe 改善了什麼？",
+      "options": [
+        "吞吐量更高",
+        "氣泡一樣，但激活記憶體有上界；微批次 0 的前向一抵達最後一個 stage，它的反向就開始，激活值隨即釋放",
+        "模型更小",
+        "氣泡更小"
+      ],
+      "correct": 1,
+      "explanation": "Megatron-LM 與 PipeDream 都用 1F1B，讓激活記憶體的上界取決於管線深度，而不是微批次數量。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼每個 stage 的計算量相等，比參數量相等更重要？",
+      "options": [
+        "記憶體對齊",
+        "比較美觀",
+        "最慢的 stage 決定了每一輪的節奏，其他 stage 只能空等。嵌入層參數很多但計算量很少，所以照參數量切分會讓管線失衡",
+        "比較好寫"
+      ],
+      "correct": 2,
+      "explanation": "Megatron-LM 提供 --num-layers-per-stage 讓你傳一個清單，正是為了在各層成本不同時能切出不均等的層數。"
+    },
+    {
+      "stage": "check",
+      "question": "如果每個 stage 都先呼叫 send 再呼叫 recv，會出什麼問題？",
+      "options": [
+        "氣泡變大",
+        "變慢",
+        "在通訊層死鎖；標準解法是交錯排程，偶數 rank 先送、奇數 rank 先收",
+        "記憶體洩漏"
+      ],
+      "correct": 2,
+      "explanation": "同步的 send/recv 配對需要一方在送的時候另一方正在收。這一課明確排定各 rank 的順序，好讓這個模式看得見。"
+    },
+    {
+      "stage": "post",
+      "question": "管線平行搭配 ZeRO-1，合併了哪兩項記憶體上的收穫？",
+      "options": [
+        "只有激活值",
+        "沒有收穫",
+        "逐 stage 的參數切分（每個 rank 只持有一段層）加上逐 rank 的最佳化器切分（每個 rank 只持有自己那個 stage 的 1/N 最佳化器狀態）",
+        "壓縮與量化"
+      ],
+      "correct": 2,
+      "explanation": "管線把層切分到各 rank；ZeRO 則在每個管線 rank 所屬的資料平行群組內切分最佳化器狀態。兩項收穫可以相乘。"
+    }
+  ]
+}

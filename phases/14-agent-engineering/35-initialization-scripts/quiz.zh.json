@@ -1,0 +1,90 @@
+{
+  "lesson": "35-initialization-scripts",
+  "title": "Initialization Scripts for Agents",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "初始化腳本消除了什麼？",
+      "options": [
+        "認證 token",
+        "供應商的速率限制",
+        "推論造成的延遲",
+        "每個 session 的設定稅：探測 runtime、列出儲存庫內容、每開一個新 session 就重跑同樣的檢查"
+      ],
+      "correct": 3,
+      "explanation": "腳本把這筆稅付一次，然後把答案寫進代理程式會讀取的 init_report.json。"
+    },
+    {
+      "stage": "pre",
+      "question": "初始化腳本的失敗模式契約是什麼？",
+      "options": [
+        "大聲失敗、盡早失敗、集中在同一個地方失敗；工作台壞掉時就拒絕啟動",
+        "一律成功",
+        "無限重試",
+        "軟性失敗然後繼續執行"
+      ],
+      "correct": 0,
+      "explanation": "重點正是工作台壞掉時要拒絕啟動；無聲退場會讓這件事失去意義。"
+    },
+    {
+      "stage": "check",
+      "question": "下列何者不屬於本課列出的探測項目？",
+      "options": [
+        "逐 token 的取樣 temperature",
+        "測試指令是否可解析",
+        "相依套件是否可用",
+        "runtime 版本"
+      ],
+      "correct": 0,
+      "explanation": "探測項目包含 runtime 版本、相依套件、測試指令、路徑、環境變數、狀態新鮮度，以及最後已知良好的 commit。"
+    },
+    {
+      "stage": "check",
+      "question": "本課為什麼說初始化必須是冪等的？",
+      "options": [
+        "這樣才符合 SOC 2",
+        "JSON Schema 有此要求",
+        "冪等可以省錢",
+        "跑第二次除了換一個新的時間戳記之外應該毫無作用，這樣才能接進 CI、hook 或任務前的 slash command"
+      ],
+      "correct": 3,
+      "explanation": "冪等讓初始化可以從許多入口（hook、CI、slash command）安全呼叫。"
+    },
+    {
+      "stage": "check",
+      "question": "什麼是最後已知良好（LKG）commit 的錨定？",
+      "options": [
+        "儲存庫中最早的那個 commit",
+        "拿目前的 commit 對照 LKG 檔案；若差異超出預算且未經人工批准就拒絕啟動",
+        "團隊主管最近的那個 commit",
+        "HEAD 與 main 的合併基準點"
+      ],
+      "correct": 1,
+      "explanation": "Cloudflare 的 AI Code Review 以 LKG 為基準界定審查範圍，避免漂移跨 session 不斷累積。"
+    },
+    {
+      "stage": "post",
+      "question": "帶 TTL 的鎖定檔案模式在做什麼？",
+      "options": [
+        "探測全數通過後寫下 prereqs.lock；只要 manifest 雜湊相符，之後 24 小時內都信任這份鎖定檔並跳過昂貴的探測",
+        "鎖住儲存庫，禁止編輯",
+        "停用 CI",
+        "封鎖所有寫入 24 小時"
+      ],
+      "correct": 0,
+      "explanation": "形狀與 Docker 層快取相同：冪等探測加上內容雜湊，就等於可以跳過。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼絕對不該出現在初始化的熱路徑上？",
+      "options": [
+        "網路呼叫、LLM 呼叫、外部授權檢查；探測應該是三秒內完成的確定性管線",
+        "讀取鎖定檔案",
+        "讀取本機檔案系統",
+        "讀取環境變數"
+      ],
+      "correct": 0,
+      "explanation": "會呼叫 LLM 的探測是工作流程，不是探測；初始化必須維持確定性。"
+    }
+  ]
+}

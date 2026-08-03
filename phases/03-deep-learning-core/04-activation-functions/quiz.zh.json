@@ -1,0 +1,62 @@
+[
+  {
+    "question": "為什麼只用線性層（沒有激活函式）就無法建出有用的深層網路？",
+    "options": [
+      "堆疊線性層會塌縮成單一個線性轉換，深度帶不來任何好處",
+      "線性層太慢",
+      "線性層無法處理批次資料",
+      "線性層沒有偏差項"
+    ],
+    "correct": 0,
+    "explanation": "y = W2(W1*x + b1) + b2 可以化簡成 y = Ax + c。不管你堆多少個線性層，結果都等同於一個線性層。激活函式打破了這種可合成性。",
+    "stage": "pre"
+  },
+  {
+    "question": "ReLU 激活函式的輸出範圍是什麼？",
+    "options": [
+      "(-infinity, infinity)",
+      "[0, infinity)",
+      "(0, 1)",
+      "(-1, 1)"
+    ],
+    "correct": 1,
+    "explanation": "ReLU(x) = max(0, x)。所有負輸入都輸出 0，正輸入則原樣通過，因此範圍是 [0, infinity)。",
+    "stage": "pre"
+  },
+  {
+    "question": "ReLU 網路中的「死神經元」問題是什麼？",
+    "options": [
+      "偏差為零的神經元",
+      "運算太慢的神經元",
+      "輸入永久為負的神經元，會永遠輸出零、梯度也永遠為零",
+      "產生 NaN 值的神經元"
+    ],
+    "correct": 2,
+    "explanation": "如果某個 ReLU 神經元的加權輸入永遠是負的（因為初始化不佳或偏差為很大的負值），它就會輸出 0、梯度也是 0。它永遠無法恢復，因為零梯度代表零更新。",
+    "stage": "post"
+  },
+  {
+    "question": "在 GPT 與 BERT 這類現代 transformer 中，隱藏層的預設激活函式是哪一個？",
+    "options": [
+      "Sigmoid",
+      "Tanh",
+      "GELU",
+      "ReLU"
+    ],
+    "correct": 2,
+    "explanation": "GELU（Gaussian Error Linear Unit）是 transformer 的預設激活函式。它提供平滑的梯度流、避免死神經元，且已被證實在語言模型上勝過 ReLU。",
+    "stage": "post"
+  },
+  {
+    "question": "為什麼 softmax 只用在輸出層、從不用在隱藏層？",
+    "options": [
+      "它只能處理兩個類別",
+      "它會造成梯度爆炸",
+      "它把向量轉成機率分布（數值總和為 1），這是分類輸出需要的，但中間表示並不需要",
+      "它對隱藏層來說太慢"
+    ],
+    "correct": 2,
+    "explanation": "softmax 把向量正規化成所有數值落在 (0,1) 且總和為 1，形成一個機率分布。隱藏層需要保留並轉換資訊，而不是把它壓縮成機率。",
+    "stage": "post"
+  }
+]

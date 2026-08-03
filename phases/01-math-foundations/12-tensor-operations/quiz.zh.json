@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "張量的 shape 描述的是什麼？",
+      "options": [
+        "一個列出每個軸長度的 tuple",
+        "張量的記憶體位址",
+        "張量中元素的總數",
+        "張量元素的資料型別"
+      ],
+      "correct": 0,
+      "explanation": "shape 是一個列出每個軸長度的 tuple。例如 shape 為 (2, 3, 4) 的張量，在軸 0 上有 2 個元素、軸 1 上有 3 個、軸 2 上有 4 個。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 PyTorch 中，一批影像的張量預設使用哪種排列方式？",
+      "options": [
+        "CHWN（通道、高、寬、批次）",
+        "NHWC（批次、高、寬、通道）",
+        "WHCN（寬、高、通道、批次）",
+        "NCHW（批次、通道、高、寬）"
+      ],
+      "correct": 3,
+      "explanation": "PyTorch 預設使用 NCHW（通道優先）排列，TensorFlow 則預設使用 NHWC（通道置後）。排列方式不一致會造成靜默的錯誤或效能問題。"
+    },
+    {
+      "stage": "post",
+      "question": "對 shape 為 (8, 1, 6, 1) 與 (7, 1, 5) 的張量做 broadcasting，結果的 shape 是什麼？",
+      "options": [
+        "(8, 7, 6, 5)",
+        "(8, 1, 6, 5)",
+        "(8, 7, 6, 1)",
+        "Broadcasting 失敗 — shape 不相容"
+      ],
+      "correct": 0,
+      "explanation": "從右邊對齊 shape：(8,1,6,1) 與 (1,7,1,5)。維度相等、或其中一個是 1 時才相容。結果在每個軸上取最大值：(8, 7, 6, 5)。"
+    },
+    {
+      "stage": "post",
+      "question": "在 einsum 運算式 'bhtd,bhsd->bhts' 中，索引 'd' 發生了什麼事？",
+      "options": [
+        "它在兩個輸入張量之間被轉置",
+        "它被加總（縮並）掉了，因為它出現在兩個輸入中，卻不出現在輸出中",
+        "它被 broadcast 到兩個張量上",
+        "它被保留在輸出中，成為一個新的軸"
+      ],
+      "correct": 1,
+      "explanation": "在 einsum 中，任何出現在輸入卻不出現在輸出的索引都會被加總掉。索引 'd' 同時出現在 'bhtd' 與 'bhsd'，但不在輸出 'bhts' 裡，所以它被縮並（相乘後加總）。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼在 PyTorch 中對轉置過的張量呼叫 .view() 會失敗？",
+      "options": [
+        "轉置後張量在記憶體中不連續，而 view 需要連續的資料",
+        "轉置過的張量有不同的資料型別",
+        "轉置改變了元素的總數",
+        "view 只適用於 2D 張量"
+      ],
+      "correct": 0,
+      "explanation": "轉置只交換 stride 而不搬動資料，因此張量變得不連續。.view() 要求連續的記憶體排列。請改用 .reshape()，或先呼叫 .contiguous()。"
+    }
+  ]
+}

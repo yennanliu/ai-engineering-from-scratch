@@ -1,0 +1,78 @@
+{
+  "lesson": "66-reranker-cross-encoder",
+  "title": "Cross-Encoder Reranker",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "bi-encoder 與 cross-encoder 的架構差異是什麼？",
+      "options": [
+        "bi-encoder 分別獨立嵌入查詢與文件；cross-encoder 讀取串接後的（查詢、文件）序列，attention 完整跨越兩者",
+        "bi-encoder 有訓練過，cross-encoder 沒有",
+        "bi-encoder 用餘弦，cross-encoder 用內積",
+        "cross-encoder 只能在 GPU 上執行"
+      ],
+      "correct": 0,
+      "explanation": "跨接合處的 cross attention 正是 cross-encoder 精度的來源；bi-encoder 從來不會同時看到查詢與文件。"
+    },
+    {
+      "stage": "pre",
+      "question": "為什麼 cross-encoder 不能在一千萬篇文件的語料上當作主要檢索器？",
+      "options": [
+        "它無法嵌入文字",
+        "每一組（查詢、文件）配對都需要一次前向傳遞，每個查詢就是一千萬次",
+        "它不支援負分",
+        "它要求 CLS token 放在序列末端"
+      ],
+      "correct": 1,
+      "explanation": "在語料規模下吞吐量會崩潰；cross-encoder 是每個配對跑一次，而不是在建索引時每份文件跑一次。"
+    },
+    {
+      "stage": "check",
+      "question": "在「先檢索再重排」的兩階段流程中，參數 N 的角色是什麼？",
+      "options": [
+        "它是詞彙表的大小",
+        "它是 cross-encoder 的隱藏層維度",
+        "它是 cross-encoder 的層數",
+        "它是 bi-encoder 回傳、交由 cross-encoder 重新計分的候選數量"
+      ],
+      "correct": 3,
+      "explanation": "N 是重排池：它同時決定品質上限（cross-encoder 無法超越 bi-encoder 在 N 的召回率）與延遲（cross-encoder 要跑 N 次前向傳遞）。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼 N 必須嚴格大於 K（通常是 3 倍以上）？",
+      "options": [
+        "BM25 的 IDF 計算需要這個條件",
+        "較小的 N 會降低嵌入維度",
+        "cross-encoder 要求 N 必須是 K 的倍數",
+        "如果 N 等於 K，cross-encoder 就只能重新加權而無法重新排序，重排帶來的提升會歸零"
+      ],
+      "correct": 3,
+      "explanation": "N = K 時根本沒有東西可以重排；cross-encoder 的工作就是從 N 個裡挑出正確的 K 個，這需要 N > K。"
+    },
+    {
+      "stage": "check",
+      "question": "本課中 cross-encoder 的 mean-pooling head 做了什麼？",
+      "options": [
+        "在詞彙表分布上做池化",
+        "在文件位置上計算 softmax",
+        "把最後一層的輸出在非 pad 位置上取平均，再送進單一線性層產生一個相關性純量",
+        "把嵌入索引加總起來"
+      ],
+      "correct": 2,
+      "explanation": "先在非 pad 位置做 mean-pool，再由單一線性層輸出相關性分數；CLS-pooling 是品質相近的替代做法。"
+    },
+    {
+      "stage": "post",
+      "question": "記錄第一名的 cross-encoder 分數有助於偵測哪一種正式環境失效模式？",
+      "options": [
+        "領域外查詢：當 top-1 的 reranker 分數低於該語料特有的門檻時，模型就是在示意語料中沒有任何內容真正回答了這個查詢",
+        "網路斷線",
+        "分詞器的詞彙漂移",
+        "bi-encoder 的索引毀損"
+      ],
+      "correct": 0,
+      "explanation": "持續偏低的第一名分數，就是 cross-encoder 在告訴你檢索池裡沒有答案；把這件事當成低信心訊號傳給 LLM。"
+    }
+  ]
+}

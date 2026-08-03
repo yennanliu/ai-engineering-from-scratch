@@ -1,0 +1,78 @@
+{
+  "lesson": "04-vllm-serving-internals",
+  "title": "Serving Engine Internals — PagedAttention, Continuous Batching, Chunked Prefill",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "傳統的靜態批次在面對長度不一的請求時，主要問題是什麼？",
+      "options": [
+        "它只支援 FP4",
+        "它完全無法使用 GPU",
+        "為了對齊最長的提示詞與最長的輸出而做填補，既浪費記憶體，整個批次又會被最慢的序列卡住",
+        "它要求每兩張 GPU 之間都要有 NVLink"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "PagedAttention 如何把 KV cache 碎片化從 60-80% 降到 4% 以下？",
+      "options": [
+        "完全停用 KV cache",
+        "把完整的提示詞放在 CPU RAM 裡",
+        "把權重壓縮成 INT4",
+        "以固定大小的區塊（預設 16 個 token）配置 KV cache，再透過每個序列的區塊表來參照"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 vLLM V1 排程器中，是什麼不變量定義了連續批次？",
+      "options": [
+        "每個請求都拿到自己專屬的 GPU stream",
+        "排程器會等 10 ms 的視窗把批次填滿才執行",
+        "排程器每個請求只跑一次，批次永遠不變",
+        "排程器每一次 decode 迭代都跑一次，把完成的序列放出去、把等待中的放進來"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在混合負載下，chunked prefill 主要保護哪個延遲指標？",
+      "options": [
+        "平均吞吐量",
+        "冷啟動時間",
+        "網路 RTT",
+        "P99 token 間延遲（ITL）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在 vLLM v0.18.0 中，哪一種推測式解碼變體仍與 --enable-chunked-prefill 相容？",
+      "options": [
+        "沒有任何推測式解碼與它相容",
+        "V1 排程器中的 N-gram GPU 推測式解碼",
+        "draft-model 推測式解碼",
+        "只有 EAGLE-1"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 chunked prefill 單獨來看並不會提高平均吞吐量？",
+      "options": [
+        "它把權重壓縮得更積極",
+        "它只降低 decode 時的抖動；實務上的吞吐量收益來自在長 prefill 期間讓 decode 序列繼續活著，而不是改變了要做的工作量",
+        "它跑在與 decode 不同的 GPU 上",
+        "它底層使用了推測式解碼"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

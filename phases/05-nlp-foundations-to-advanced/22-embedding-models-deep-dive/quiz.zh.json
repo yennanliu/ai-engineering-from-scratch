@@ -1,0 +1,102 @@
+{
+  "lesson": "22-embedding-models-deep-dive",
+  "title": "Embedding Models — The 2026 Deep Dive",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "什麼是密集嵌入（dense embedding）？",
+      "options": [
+        "每段文字一個固定大小的向量，並以餘弦相似度依語意接近程度為段落排序",
+        "token 層級的對齊矩陣",
+        "詞彙表中每個 token 各一個稀疏權重",
+        "文件之間構成的一張圖"
+      ],
+      "correct": 0,
+      "explanation": "密集嵌入為每段文字給出一個向量（通常 384-3072 維）；以餘弦相似度排序相似程度。"
+    },
+    {
+      "stage": "pre",
+      "question": "Matryoshka Representation Learning 讓什麼成為可能？",
+      "options": [
+        "更快的 softmax",
+        "多語言訓練",
+        "cross-encoder 重評分",
+        "把訓練好的嵌入截斷到前 N 維，仍能得到堪用的較小嵌入"
+      ],
+      "correct": 3,
+      "explanation": "Matryoshka 訓練讓向量的前 N 維本身就有用，因此可以廉價地截斷。"
+    },
+    {
+      "stage": "check",
+      "question": "多向量（ColBERT）嵌入如何為查詢-文件配對評分？",
+      "options": [
+        "對平均池化後的 token 向量取餘弦相似度",
+        "交叉熵",
+        "MaxSim：為每個查詢 token 找出最相似的文件 token，再把這些最大值加總",
+        "Earth-mover's distance"
+      ],
+      "correct": 2,
+      "explanation": "ColBERT 式的後期互動使用逐 token 向量之間的 MaxSim。"
+    },
+    {
+      "stage": "check",
+      "question": "BGE-M3 會同時輸出什麼？",
+      "options": [
+        "只有稀疏向量",
+        "只有密集向量",
+        "在單次推論中，由同一個模型輸出密集、稀疏與多向量（colbert）三種表示",
+        "只有 colbert 向量"
+      ],
+      "correct": 2,
+      "explanation": "BGE-M3 由同一個模型產生三種檢索模式，適合用於融合式的混合評分。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼經 Matryoshka 截斷的向量在計算餘弦相似度前必須重新正規化？",
+      "options": [
+        "截斷會改變向量的範數；不重新正規化的話，內積就不再等於餘弦相似度",
+        "餘弦相似度不理會正規化",
+        "截斷會破壞訓練",
+        "只有 FAISS 有這個要求"
+      ],
+      "correct": 0,
+      "explanation": "截斷後重新正規化可恢復單位範數，讓內積再次等於餘弦相似度。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 BGE 模型的查詢端常常需要加上一段前綴字串？",
+      "options": [
+        "為了壓縮查詢",
+        "前綴會改變分詞器的行為",
+        "FAISS 的要求",
+        "BGE 訓練時就帶著明確的查詢提示詞；省略它會損失 3-5 個百分點的召回率"
+      ],
+      "correct": 3,
+      "explanation": "BGE 模型預期查詢帶有「Represent this sentence for searching...」這類前綴。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼挑選嵌入模型時，MTEB 是必要但不充分的？",
+      "options": [
+        "MTEB 只涵蓋英文",
+        "MTEB 偏袒較大的模型",
+        "MTEB 忽略延遲",
+        "排行榜名次是許多任務的平均值；你的特定領域可能不同，所以一定要在自己的資料上做基準測試"
+      ],
+      "correct": 3,
+      "explanation": "MTEB 是跨任務的平均；領域專屬的評測可能會翻轉排名。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼時候該在密集嵌入之外再加上 SPLADE 稀疏檢索？",
+      "options": [
+        "只在小型語料庫上",
+        "只要編碼器是多語言的就加",
+        "當查詢以關鍵字為主，或含有密集嵌入會模糊掉的識別碼與代碼時",
+        "只要用了 Matryoshka 就加"
+      ],
+      "correct": 2,
+      "explanation": "SPLADE 能捕捉密集模型可能漏掉的字面與關鍵字比對；用 RRF 與密集檢索融合。"
+    }
+  ]
+}

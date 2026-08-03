@@ -1,0 +1,90 @@
+{
+  "lesson": "37-runtime-feedback-loops",
+  "title": "Runtime Feedback Loops",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "回饋執行器強迫代理程式做什麼？",
+      "options": [
+        "對想像出來的輸出做出反應",
+        "對事實做出反應：每一個指令都會把結構化的 stdout、stderr、exit、duration 記錄擷取進迴圈",
+        "跳過驗證",
+        "改用另一個模型"
+      ],
+      "correct": 1,
+      "explanation": "執行器把「測試通過了」（想像）與「測試確實跑過而且以 0 結束」（記錄）之間的落差補起來。"
+    },
+    {
+      "stage": "pre",
+      "question": "回饋與遙測有什麼不同？",
+      "options": [
+        "回饋是給這次執行的下一輪用的；遙測是給操作者跨時間回顧多次執行用的（不同檔案、不同保留期）",
+        "它們是同一件事",
+        "遙測要付費",
+        "遙測用 OTel，回饋用 GraphQL"
+      ],
+      "correct": 0,
+      "explanation": "兩者共用欄位，卻放在不同檔案、有不同的保留期；回饋是執行內的，遙測是跨執行的。"
+    },
+    {
+      "stage": "check",
+      "question": "哪個欄位必須出現在每一筆回饋記錄裡？",
+      "options": [
+        "exit_code（而且 exit 為 null 時必須拒絕讓迴圈前進）",
+        "embedding_vector",
+        "model_id",
+        "prompt_cache_token"
+      ],
+      "correct": 0,
+      "explanation": "exit_code 是毫不含糊的成功訊號；exit 為 null 就代表沒有任何進展。"
+    },
+    {
+      "stage": "check",
+      "question": "執行器如何截斷過長的輸出？",
+      "options": [
+        "用 gzip 壓縮",
+        "隨機取樣",
+        "只取前 10 行",
+        "確定性地取頭部加尾部，並附上「已截斷 N 行」的標記，讓相同的輸出永遠產生相同的記錄"
+      ],
+      "correct": 3,
+      "explanation": "確定性的截斷讓記錄可以重播，同時把 token 成本框住；尾部承載的是失敗摘要。"
+    },
+    {
+      "stage": "check",
+      "question": "為什麼要在寫入時遮蔽，而不是在讀取時遮蔽？",
+      "options": [
+        "讀取時遮蔽會破壞 JSON",
+        "攻擊者碰得到的是磁碟上的檔案；只在讀取時遮蔽，等於把祕密留在 JSONL 檔案裡",
+        "這樣比較快",
+        "為了壓縮"
+      ],
+      "correct": 1,
+      "explanation": "在追加之前先遮蔽符合 Bearer、password=、api_key=、AKIA...、xox[baprs]- 的行，並每季稽核這些樣式。"
+    },
+    {
+      "stage": "post",
+      "question": "parent_command_id 為工作台帶來什麼？",
+      "options": [
+        "更快的檔案 I/O",
+        "更低的記憶體用量",
+        "重試會連結回它的上一次嘗試，讓審查者與稽核看得到整條失敗鏈；少了它，重試看起來就像各自獨立的成功",
+        "更便宜的推論"
+      ],
+      "correct": 2,
+      "explanation": "父層連結讓重試鏈對審查者（第 39 課）與驗證關卡都是可見的。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼要把 feedback_record.jsonl 限制在 1 MB 並做輪替？",
+      "options": [
+        "磁碟太慢",
+        "代理程式只會讀取當前那份檔案；輪替讓執行期成本維持有界，完整的集合則交由 CI 產出物保存",
+        "JSON 無法處理更大的檔案",
+        "供應商按位元組收費"
+      ],
+      "correct": 1,
+      "explanation": "有界的當前檔案加上輪替過的歷史，就是 logrotate 採用的同一種模式；熱迴圈裡的成本因此可預測。"
+    }
+  ]
+}
