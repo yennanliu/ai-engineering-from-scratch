@@ -34,6 +34,24 @@ concurrency:
 
 jobs:
   prepare:
+    # Upstream only. This fork translates by hand into Traditional Chinese
+    # (site/i18n.zh-Hant.js + per-lesson docs/zh.md, served straight off main),
+    # and does not use the `translations` branch this workflow publishes to —
+    # site/lesson.html here reads docs/zh.md, not i18n/<lang>/. Without the
+    # guard, every merge from upstream that touches phases/**/docs/en.md queues
+    # a 5-language x 20-phase matrix of NLLB-200 jobs that nothing consumes,
+    # and they sit ahead of the Pages deploy in the runner queue. The fork's
+    # own language, Traditional Chinese, is zh-TW in languages.json without
+    # ci:true, so it is not even in that matrix.
+    #
+    # workflow_dispatch still runs anywhere, so this fork can opt in on purpose
+    # without editing the file. Only the automatic push trigger is suppressed.
+    #
+    # Kept byte-compatible with upstream otherwise, so future merges of this
+    # file stay conflict-free. Drop the guard to adopt the pipeline here.
+    if: >-
+      github.repository == 'rohitg00/ai-engineering-from-scratch'
+      || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: read
