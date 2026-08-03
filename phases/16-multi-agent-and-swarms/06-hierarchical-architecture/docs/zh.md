@@ -67,6 +67,10 @@ LangGraph 用巢狀的 `create_supervisor` 呼叫。內層的 supervisor 有它�
 
 參考：https://reference.langchain.com/python/langgraph-supervisor。
 
+```figure
+swarm-hierarchy-token
+```
+
 ## 建構它
 
 `code/main.py` 跑一個 3 層的階層：

@@ -109,6 +109,10 @@ server -> notifications/tasks/updated {taskId, state, progress?}
 
 SEP-1686 在 2025-11-25 出貨，但更大的路線圖點出了三個未決問題：持久化訂閱的原語、子任務（父子 task 關係），以及結果 TTL 的標準化。預期這份規格在 2026 年間還會演化。生產程式碼只該把 Tasks 當成在常見情境下穩定，並為子任務相關的未來 SDK 變動做好防護。
 
+```figure
+tp-task-lifecycle
+```
+
 ## 框架應用
 
 `code/main.py` 實作了一個持久化的 task 儲存（以檔案系統為後端），以及一個跑在背景執行緒的 `generate_report` 工具。客戶端呼叫該工具，立刻拿到一個 task id，在工作者更新進度的同時輪詢 `tasks/status`，完成後再取回 `tasks/result`。取消是可用的；崩潰復原則以殺掉工作者執行緒再重新載入狀態的方式模擬。

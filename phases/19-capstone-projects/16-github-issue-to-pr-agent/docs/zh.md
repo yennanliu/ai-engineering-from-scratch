@@ -65,6 +65,10 @@ GitHub issue labeled `@agent fix` or PR comment
 - 可觀測性：Langfuse，並在 PR 內文連到逐 PR 的軌跡封存
 - 預算：逐儲存庫的每日美元上限；每個儲存庫每天最多幾份 PR
 
+```figure
+cf-issue-to-pr
+```
+
 ## 動手建
 
 1. **GitHub App。** 細緻權限的安裝權杖：issues 讀+寫、pull_requests 寫、contents 讀+寫、workflows 讀。分支保護（唯一做得到這件事的面向）強制執行「不得直接推送到 `main`」與「不得強制推送」；那個 app 不在豁免清單裡。由於 GitHub App 權限不支援路徑範圍，工作者要以「對提案差異做允許清單檢查」的方式，強制執行「不得寫入 `.github/workflows` 底下」。

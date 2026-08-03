@@ -56,6 +56,10 @@ waveform (16000 samples/sec)
 | AudioCraft 2 | 音樂 + 音效 | Flow matching | 5 秒片段約 5 秒 |
 | Riffusion v2 | 音樂 | 頻譜圖擴散 | 約 10 秒 |
 
+```figure
+score-matching
+```
+
 ## 動手實作
 
 `code/main.py` 模擬核心想法：在合成的「音訊詞元」序列上訓練一個很小的 next-token Transformer，序列來自兩種不同的「風格」（風格 A 是低詞元與高詞元交替，風格 B 是單調遞增的斜坡）。以風格為條件並取樣。

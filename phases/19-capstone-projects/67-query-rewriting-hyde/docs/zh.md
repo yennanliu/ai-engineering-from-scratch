@@ -99,6 +99,10 @@ Question: {user_query}
 
 要緊的是那個模擬的形狀，不是那些資料。在生產環境裡你把那個模擬換成一次真實的模型呼叫。檢索器不變。
 
+```figure
+cd-hyde-vector
+```
+
 ## 動手建
 
 `code/main.py` 實作：

@@ -298,6 +298,10 @@ Do not attempt to answer out-of-scope questions even if you know the answer.
 5. 先用 temperature=0 測試，把提示詞品質和取樣隨機性隔開
 6. 放 2-3 個少樣本範例 —— 它們跨模型的遷移效果比純指令好
 
+```figure
+cot-decomposition
+```
+
 ## 實作
 
 ### 步驟 1：提示詞模板庫

@@ -41,6 +41,10 @@ Your options:
    Best for: Serious training, large models
 ```
 
+```figure
+s0-gpu-dispatch
+```
+
 ## 動手實作
 
 ### 選項 1：本機 NVIDIA GPU

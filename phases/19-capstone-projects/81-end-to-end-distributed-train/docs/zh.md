@@ -55,6 +55,10 @@ flowchart TB
 
 那個迴路跑固定的 20 步然後結束。沒有 `while True`、沒有人為介入、沒有從外部狀態續跑。一個你能丟著跑、回來就看到一份完整記錄的 capstone，才是一個證明系統接線正確的 capstone。若任何一塊死鎖，那個示範就永遠不回來，而測試台會抓到它。
 
+```figure
+ci-distributed-assembly
+```
+
 ## 動手建
 
 `code/main.py` 實作：

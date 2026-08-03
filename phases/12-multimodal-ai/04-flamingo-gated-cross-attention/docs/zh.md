@@ -108,6 +108,10 @@ Otter（2023）在 OpenFlamingo 之上，用 MIMIC-IT（一份多模態指令資
 
 預算有限、要做單影像 VQA，就選 BLIP-2。要做交錯、少樣本或多影像推理，就選 Flamingo／Idefics2。
 
+```figure
+cross-attention-fusion
+```
+
 ## 框架應用
 
 `code/main.py` 示範了：

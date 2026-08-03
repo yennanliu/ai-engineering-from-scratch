@@ -72,6 +72,10 @@ learner device
 - 安全：Llama Guard 4 + 自訂的年齡適切過濾器
 - 評估：Bloom 層級的題目生成、前後測框架、成效研究工具
 
+```figure
+cf-tutor-loop
+```
+
 ## 動手建
 
 1. **課綱圖。** 建一張含 50-150 個概念節點（例如 K-12 代數，從「數線」到「二次公式」）與先備邊的 Neo4j。替每個節點附上 OER 內容（Open Textbook、OpenStax）。

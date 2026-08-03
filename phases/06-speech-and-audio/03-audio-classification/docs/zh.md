@@ -49,6 +49,10 @@ ESC-50：50 個類別，每類 40 段片段 —— 平衡、簡單。UrbanSound8
 | AudioSet mAP | 0.485（AST） | 0.548（BEATs-iter3） | HEAR 排行榜 2026 |
 | Speech Commands v2 | 98%（CNN） | 99.0%（Audio-MAE） | HEAR v2 結果 |
 
+```figure
+mfcc-pipeline
+```
+
 ## 動手實作
 
 ### 步驟 1：特徵化

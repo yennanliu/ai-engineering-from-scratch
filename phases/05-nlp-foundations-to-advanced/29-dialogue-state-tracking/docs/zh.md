@@ -50,6 +50,10 @@
 - **修正。** 「Actually make it 7 pm.」必須更新時間，同時不能清掉其他槽位。
 - **指代前一輪系統語句。** 「Yes, that one.」哪一個「that」？
 
+```figure
+n5-slot-tracker
+```
+
 ## 動手實作
 
 ### 步驟 1：規則式槽位抽取器

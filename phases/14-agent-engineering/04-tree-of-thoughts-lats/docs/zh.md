@@ -77,6 +77,10 @@ UCT 公式：`Q(s, a) + c * sqrt(ln N(s) / N(s, a))`。第一項是利用；第�
 
 AlphaEvolve（第 11 課）是 2025 年的極端案例：對程式碼做演化式搜尋、機器可檢核的適應度、前沿級的收穫（56 年來第一次改進 4x4 矩陣乘法）。
 
+```figure
+tree-of-thoughts
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

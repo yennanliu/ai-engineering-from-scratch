@@ -125,6 +125,10 @@ Masked Autoencoder（He et al., 2022）：隨機遮住 75% 的影像區塊，只
 
 MAE 讓 ViT 光靠 ImageNet-1k 就訓得起來、能達到 SOTA，也是目前預設的自監督配方。
 
+```figure
+batchnorm-inference
+```
+
 ## 動手實作
 
 ### 步驟 1：區塊嵌入

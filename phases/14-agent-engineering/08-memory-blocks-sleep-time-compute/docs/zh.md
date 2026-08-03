@@ -74,6 +74,10 @@ Letta V1（`letta_v1_agent`，2026）棄用 `send_message`／心跳與內嵌的 
 - **無聲漂移。** Sleep-time 代理改寫了某個區塊，主要代理卻從沒察覺。要給區塊做版本，並在軌跡中把 diff 呈現出來。
 - **被投毒的整併。** Sleep-time 代理把攻擊者可觸及的內容處理進了 core。第 27 課同樣適用於 sleep-time 這個表面。
 
+```figure
+memory-blocks
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

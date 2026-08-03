@@ -33,6 +33,10 @@ graph TD
     L1["1. Base Editor<br/>VS Code — free, extensible, universal"]
 ```
 
+```figure
+s0-lsp-roundtrip
+```
+
 ## 動手實作
 
 ### 步驟 1：安裝 VS Code

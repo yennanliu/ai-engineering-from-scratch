@@ -66,6 +66,10 @@ OpenHands 的作者與 Epoch AI 都標示了 SWE-bench Verified 有一條容易�
 
 對選代理的意涵：拿你自己臭蟲待辦清單中類 Pro 的子集去跑。要緊的分數，是在那些足以代表你實際出貨內容的任務上的分數。
 
+```figure
+a5-scaffold-delta
+```
+
 ## 框架應用
 
 `code/main.py` 在一個固定的迷你任務分布上比較兩個玩具代理鷹架：

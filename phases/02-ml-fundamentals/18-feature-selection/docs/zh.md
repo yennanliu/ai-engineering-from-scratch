@@ -202,6 +202,10 @@ flowchart TD
     K -->|No| M["Try different method or keep all features"]
 ```
 
+```figure
+f3-feature-prune
+```
+
 ## 動手實作
 
 ### 步驟 1：生成特徵結構已知的合成資料

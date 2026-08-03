@@ -33,6 +33,10 @@ graph TD
 
 大多數人一上來就跳到第 3 層（盯著 TensorBoard 看）。但 AI 的 bug 有 80% 都住在第 1、2 層。
 
+```figure
+s0-flame-hot
+```
+
 ## 動手實作
 
 ### 第 1 部分：用 print 除錯（沒錯，這招有用）

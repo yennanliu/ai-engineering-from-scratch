@@ -46,6 +46,10 @@
 
 **用 NLI 做零樣本。** 給定一份文件與一組候選標籤，把每個標籤改寫成一個假設（「This text is about sports」）。逐一算出蘊涵機率。取最大值。這就是 Hugging Face `zero-shot-classification` pipeline 背後的機制。
 
+```figure
+nli-router
+```
+
 ## 動手實作
 
 ### 步驟 1：跑一個預訓練的 NLI 模型

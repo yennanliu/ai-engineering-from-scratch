@@ -51,6 +51,10 @@
 | Vapi／Retell（代管） | 300-500 ms | 商用 | 上線最快；客製化受限 |
 | Whisper.cpp + llama.cpp + Kokoro-ONNX | 離線 | 開源 | 隱私／邊緣裝置 |
 
+```figure
+v4-voice-latency
+```
+
 ## 動手實作
 
 ### 步驟 1：麥克風擷取與切區塊（偽程式碼）

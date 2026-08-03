@@ -64,6 +64,10 @@ Coder A          Coder B          Coder C          Coder D          (4 parallel)
 - 可觀測性：帶角色標記 span 的 Langfuse、逐代理的詞元記帳
 - 部署：K8s，每個角色一份獨立的 Deployment + 以待辦積壓做 HPA
 
+```figure
+ce-team-handoff
+```
+
 ## 動手建
 
 1. **任務看板。** 以檔案為後盾的 JSONL，帶型別化訊息：`plan_request`、`subtask`、`diff_ready`、`review_needed`、`test_needed`、`approved`、`rejected`、`replan_needed`。代理依標籤訂閱。

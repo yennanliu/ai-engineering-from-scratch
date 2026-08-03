@@ -48,6 +48,10 @@
 
 這些全都是基於編碼器-解碼器或 RNN-T。純 CTC 系統（wav2vec 2.0）在 test-clean 上大約落在 1.8–2.1%。
 
+```figure
+ctc-collapse
+```
+
 ## 動手實作
 
 ### 步驟 1：貪婪 CTC 解碼

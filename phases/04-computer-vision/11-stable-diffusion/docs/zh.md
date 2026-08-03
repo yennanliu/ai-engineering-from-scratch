@@ -104,6 +104,10 @@ r is typically 4-32.
 
 換排程器在 `diffusers` 裡是改一行的事，而且有時候不用重新訓練就能修掉取樣上的問題。
 
+```figure
+cv3-latent-compression
+```
+
 ## 動手實作
 
 本單元從頭到尾都用 `diffusers`，而不是把 Stable Diffusion 從零重建一遍。真要重建會需要的那些零件（VAE、文字編碼器、U-Net、排程器）各自都是獨立單元的主題；這裡的目標是把生產級 API 用得熟練。

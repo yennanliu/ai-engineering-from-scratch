@@ -87,6 +87,10 @@ AlphaEvolve（arXiv:2506.13131，DeepMind，2025 年 6 月）是另一種東西�
 - **沒有真評估器的 AlphaEvolve。** 「問 LLM 這段程式碼是不是比較好」不是適應度函數。評估器必須是決定性且快速的。
 - **過度工程。** 多數代理任務兩者都不需要。先伸手拿 ReAct 或 ReWOO。
 
+```figure
+htn-tree-expand
+```
+
 ## 建構它
 
 `code/main.py` 實作了兩個玩具：

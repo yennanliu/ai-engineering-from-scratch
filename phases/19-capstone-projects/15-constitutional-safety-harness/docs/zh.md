@@ -73,6 +73,10 @@ output: CVSS-scored findings + disclosure timeline + before/after harmlessness d
 - PII 清洗：Presidio
 - 目標：一個 8B 指令微調模型，或其他綜合專案裡的某個 RAG 聊天機器人
 
+```figure
+cf-safety-stack
+```
+
 ## 動手建
 
 1. **目標建置。** 在 vLLM 上架起一個 8B 指令微調模型（或重用另一個綜合專案的 RAG 聊天機器人）。這就是受測應用。

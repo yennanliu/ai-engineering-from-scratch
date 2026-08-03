@@ -255,6 +255,10 @@ if not result["valid"]:
 - **註冊 token 遭竊。** 洩漏的 `registration_access_token` 讓攻擊者能改寫轉址 URI。這些要以雜湊形式靜態儲存；每次更新都要求客戶端出示明文；有疑慮就輪替。
 - **`iss` 沒有釘住。** 一個什麼 `iss` 都接受的驗證器，會讓攻擊者立起自己的授權伺服器、為目標受眾註冊一個客戶端，然後簽發 token。受保護資源中繼資料的 `authorization_servers` 清單就是那份白名單；請把它強制執行。
 
+```figure
+t3-jwks-rotate
+```
+
 ## 框架應用
 
 `code/main.py` 用 stdlib Python 與三個角色 —— `AuthorizationServer`、`ResourceServer` 與 `Client` —— 走過完整的生產流程。流程是：

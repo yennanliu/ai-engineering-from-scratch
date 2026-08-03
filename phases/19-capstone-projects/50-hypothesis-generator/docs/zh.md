@@ -41,6 +41,10 @@ Hypothesis
 
 `baseline_ref` 是選配的，但建議填。第五十三課的評估器需要一個基線來比對。若假說省略了它，評估器就退回同一指標上的前一次執行。
 
+```figure
+cg-novelty-ramp
+```
+
 ## 架構
 
 ```mermaid

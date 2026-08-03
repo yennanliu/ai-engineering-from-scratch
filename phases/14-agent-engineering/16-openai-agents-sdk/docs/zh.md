@@ -67,6 +67,10 @@
 - **護欄被繞過。** 工具護欄只在 function tool 上觸發；內建工具（檔案讀取器、網頁抓取）需要另外的政策。
 - **過度追蹤。** span 裡出現敏感內容。要搭配 OTel GenAI 的內容捕捉規則（第 23 課）—— 存到外部去，用 ID 參照。
 
+```figure
+ae-agent-handoff
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib 實作這個 SDK 的形狀：

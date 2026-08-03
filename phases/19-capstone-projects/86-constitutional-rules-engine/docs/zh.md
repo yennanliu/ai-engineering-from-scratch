@@ -51,6 +51,10 @@ flowchart LR
 
 那份差異是拿原始版與修訂版算出來的。它是一份 `Change` 紀錄清單，帶 `op`（新增、刪除、修改）與相關文字。下游那個閘門可以把差異記下來，好讓一位人類審查者長期稽核修補器的行為。
 
+```figure
+cd-constitution-loop
+```
+
 ## 動手建
 
 `code/rules.yml` 裝著那份憲章。`code/main.py` 裡的載入器接受一個 YAML 檔（當 PyYAML 可用時）或一個 JSON 檔（內建）。這一課附上一份 `rules.yml`，而課程測試用兩條程式碼路徑都剖析得了它。`code/main.py` 定義 `Engine` 與 `Fixer` 類別，以及一個 `diff` 函式。組合子以遞迴求值，並在 `any_of` 上短路。

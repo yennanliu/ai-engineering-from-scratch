@@ -100,6 +100,10 @@
 | 帶 reducer 的數千次並行扇出 | LangGraph + `Send` | 唯一有一級並行派送 API 的。 |
 | 快速原型，不想綁框架 | 純 Python + 供應商 SDK | 沒有框架就是最快的框架。 |
 
+```figure
+l5-framework-fit
+```
+
 ## 練習
 
 1. **簡單。** 拿同一個任務 ——「研究 Anthropic 的總部、寫一份 200 字摘要、附上出處」—— 分別用 LangGraph（四個節點：plan、search、write、cite）和 CrewAI（三個角色：researcher、writer、editor）實作。報告每次執行的詞元成本與程式碼行數。

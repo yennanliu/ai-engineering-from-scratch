@@ -111,6 +111,10 @@
 | MMAU 音樂子集 | 音樂類音訊語言模型 | （在 MMAU 之內） |
 | HEAR benchmark | 自監督音訊 | `hearbenchmark.com` |
 
+```figure
+sp-wer-align
+```
+
 ## 動手實作
 
 ### 步驟 1：帶正規化的 WER

@@ -288,6 +288,10 @@ flowchart TD
     J -->|"No labels"| M["Unsupervised or self-supervised"]
 ```
 
+```figure
+f3-learning-boundary
+```
+
 ## 動手實作
 
 `code/ml_intro.py` 裡的程式碼從零實作了一個最近質心分類器，也就是最簡單的 ML 演算法。它示範了核心想法：從資料學習，然後對新資料做預測。

@@ -64,6 +64,10 @@ flowchart TD
 
 Block 等級的發現不能由代理覆寫。它們只能由人類覆寫，並記下 `override_reason` 與 `overridden_by` 使用者 id。那次覆寫是一個有簽章的變更，不是代理的決定。
 
+```figure
+wb-gate-sequence
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

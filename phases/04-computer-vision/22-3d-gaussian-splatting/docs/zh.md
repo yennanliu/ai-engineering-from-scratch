@@ -120,6 +120,10 @@ c_i = eval_SH(SH_i, view_direction)    view-dependent colour
 - **生成式潑濺** —— text-to-splat 模型（World Labs 的 Marble），能憑空生成整個場景。
 - **3D Gaussian Unscented Transform** —— NVIDIA NuRec 為自動駕駛模擬做的變體。
 
+```figure
+cv3-gaussian-splat
+```
+
 ## 動手實作
 
 ### 步驟 1：一個 2D 高斯

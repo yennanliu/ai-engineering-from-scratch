@@ -71,6 +71,10 @@ MATS 培養研究者。畢業生前往 Anthropic、DeepMind、OpenAI（實驗室
 
 第 7-11 課引用了 Redwood 與 Apollo 的工作；第 18 課引用了 METR 的框架比較；第 19 課引用了 Eleos。第 28 課就是把整個階段所倚賴的那個生態系，明確畫成一張組織地圖。
 
+```figure
+sae-features
+```
+
 ## 框架應用
 
 沒有程式碼。去讀 METR 的〈Common Elements of Frontier AI Safety Policies〉，把它當成「外部綜整如何替實驗室內部的政策工作增添價值」的一個例子。

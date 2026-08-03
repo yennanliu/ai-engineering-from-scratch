@@ -36,6 +36,10 @@ ExperimentSpec
 
 腳本住在磁碟上；執行器把設定寫到一個暫存檔路徑，供腳本讀取。腳本被期待在 stdout 上印出單一行 json，其鍵是 `metric_keys` 的超集。stdout 上的其他東西會被擷取，但指標剖析器會忽略它們。
 
+```figure
+cg-runner-limits
+```
+
 ## 架構
 
 ```mermaid

@@ -83,6 +83,10 @@ outputs/agent-workbench-pack/
 
 套件帶一個 `VERSION` 檔。需要遷移的 schema 進位與腳本變更會提升主版號。只改文件的變更提升修訂號。目標儲存庫的 `agent_state.json` 會記下它是對著哪個套件版本初始化的。
 
+```figure
+wb-pack-install
+```
+
 ## 建構它
 
 `code/main.py` 會把套件組裝到課程旁邊的 `outputs/agent-workbench-pack/`，並以這條小支線先前各課的 schema 與腳本、加上你已經寫好的那些文件來播種。

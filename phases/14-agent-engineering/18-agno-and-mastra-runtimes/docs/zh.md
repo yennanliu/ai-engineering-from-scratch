@@ -62,6 +62,10 @@ LangGraph、AutoGen、CrewAI 都是重框架。想要「就只要代理迴圈，
 - **生態系綁定。** Mastra 那套 Vercel 口味的整合，在 Vercel 上是加分，在別處是扣分。
 - **企業授權的混淆。** Mastra 的 `ee/` 目錄是 source-available，不是 Apache 2.0。如果你打算 fork，先把授權讀清楚。
 
+```figure
+wb-runtime-spawn
+```
+
 ## 建構它
 
 這一課主要是比較性的 —— 單一份程式碼產物沒辦法對兩個框架都公平。見 `code/main.py` 的並排玩具：一個最小的「跑一個代理、把輸出串流出來、持久化工作階段」流程被實作兩次（一次是 Agno 形狀，一次是 Mastra 形狀）。

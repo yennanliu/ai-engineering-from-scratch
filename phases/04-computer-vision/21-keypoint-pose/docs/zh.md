@@ -87,6 +87,10 @@ For each connection (limb):
   - 直接從影像迴歸 3D（PyMAF、MHFormer）。
   - 用多視角設置（CMU Panoptic）取得真實標註。
 
+```figure
+cv3-pose-heatmap
+```
+
 ## 動手實作
 
 ### 步驟 1：高斯熱圖目標

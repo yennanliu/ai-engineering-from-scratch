@@ -62,6 +62,10 @@ answer + (start, end) timestamps + frame thumbs + citations
 - 評估：ActivityNet-QA、NeXT-GQA、自訂的 100 題人工標註集
 - 幻覺基準：帶人工標籤的計數與動作類子集
 
+```figure
+cf-scene-index
+```
+
 ## 動手建
 
 1. **攝取走訪器。** 接受 YouTube 網址或本地 MP4。必要時降到 720p。持久化 `{video_id, file_path}`。

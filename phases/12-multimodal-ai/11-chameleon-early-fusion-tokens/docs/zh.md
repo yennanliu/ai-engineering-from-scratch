@@ -98,6 +98,10 @@ Fuyu（Adept，2023）是一種相關的路線：徹底跳過獨立的視覺編�
 
 AnyGPT（Zhan 等人，2024）把 Chameleon 擴展到四種模態：文字、影像、語音、音樂。每一種都用同樣的 VQ-VAE 把戲，共享同一個 Transformer。做到任意對任意的生成。單元 12.16 會談得更多。
 
+```figure
+vq-codebook
+```
+
 ## 框架應用
 
 `code/main.py` 做了一個玩具版的端到端早期融合模型：

@@ -258,6 +258,10 @@ flowchart TD
 | 沒有資料驗證 | 爛資料悄悄產出錯誤的預測 | 預測前加上結構檢查 |
 | 訓練／服務偏斜 | 生產環境裡模型看到的特徵不一樣 | 兩邊共用同一個 Pipeline 物件 |
 
+```figure
+f3-pipeline-flow
+```
+
 ## 動手實作
 
 `code/pipeline.py` 裡的程式碼從零打造出一條完整的 ML 管線：

@@ -56,6 +56,10 @@ flowchart LR
 
 若執行器在捕捉到離開碼之前就出錯，那筆紀錄會帶 `exit_code: null` 與 `error: <reason>`。代理迴圈必須拒絕在 `null` 離開碼上宣稱成功。沒有離開碼，就沒有進展。
 
+```figure
+wb-feedback-loop
+```
+
 ## 建構它
 
 `code/main.py` 實作了：

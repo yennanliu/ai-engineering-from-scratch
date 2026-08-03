@@ -136,6 +136,10 @@ Artifact 可以分塊串流。呼叫方負責累積。
 
 想呼叫某個特定工具時用 MCP。想把一整項任務委派給另一個代理時用 A2A。許多生產系統兩者都用：一個代理在工具層用 MCP，在協作層用 A2A。
 
+```figure
+a2a-task-lifecycle
+```
+
 ## 框架應用
 
 `code/main.py` 實作了一套最小的 A2A 測試框架：一個研究代理發布它的卡片，一個寫作代理收到一次 `tasks/send`，其中的 part 包含一份 PDF 與一段文字指令，接著它在 working → input_required → working → completed 之間轉移，最後回傳一份文字 artifact。全部用 stdlib；並用一個記憶體內傳輸，好把焦點放在訊息形狀上。

@@ -105,6 +105,10 @@ GB300 NVL72 + Dynamo 顯示相對 Hopper 基線有 50 倍的 MoE 吞吐量。MoE
 - 分離的門檻：提示詞 >512 詞元 + 輸出 >200 詞元。
 - 透過 NIXL 的 KV 轉移：70B FP8 上 4K 提示詞的 KV 要 20-80 毫秒。
 
+```figure
+prefill-decode-split
+```
+
 ## 框架應用
 
 `code/main.py` 模擬共置與分離式服務。回報吞吐量、每請求成本，以及提示詞長度的交叉點。

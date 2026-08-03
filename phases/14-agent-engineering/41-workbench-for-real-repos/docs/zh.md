@@ -73,6 +73,10 @@ flowchart TD
 | `handoff_quality` | 下個工作階段要為它付錢，或從它得利 |
 | `reviewer_total` | 疊在閘門之上的質性判斷 |
 
+```figure
+wb-ab-runs
+```
+
 ## 建構它
 
 `code/main.py` 對同一份範例應用固定樣本，編排那兩條管線。兩條管線都是腳本化的（迴圈裡沒有 LLM），好讓量測可重現。這支腳本把比較寫進 `before-after-report.md` 與 `comparison.json`。

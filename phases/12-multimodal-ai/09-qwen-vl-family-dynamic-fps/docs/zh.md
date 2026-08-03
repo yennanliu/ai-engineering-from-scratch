@@ -109,6 +109,10 @@ Qwen2.5-VL 的代理程式訓練明確瞄準結構化的工具呼叫：
 
 解析是確定性的：對模型輸出跑 JSON.parse。相比之下，自由形式的「click at (1024, 512)」需要正規表示式，還得處理歧義。正是這個轉變，讓 Qwen2.5-VL 的 ScreenSpot 分數從 Qwen2-VL 的 55% 跳到 84%。
 
+```figure
+mm-mrope-axes
+```
+
 ## 框架應用
 
 `code/main.py` 實作了：

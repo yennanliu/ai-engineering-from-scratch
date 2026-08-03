@@ -87,6 +87,10 @@ Claude Desktop 用的是伺服器名稱前綴。Cursor 用的是帶明確錯誤�
 
 Streamable HTTP 用一個 `Mcp-Session-Id` 標頭。stdio 則沒有工作階段 id —— 行程的身分「就是」那個工作階段。keepalive ping 是選配的；stdio 管線不會因為閒置而斷掉。
 
+```figure
+tp-client-merge
+```
+
 ## 框架應用
 
 `code/main.py` 以子行程的方式啟動三台模擬的 MCP 伺服器，各自握手，合併它們的工具清單，並把工具呼叫路由到正確的那一台。那些「伺服器」其實是另外幾個跑著玩具回應器的 Python 行程（沒有真正的 LLM）。跑跑看，你會看到：

@@ -121,6 +121,10 @@ GOOD : Invalid input: 'city' is required. Example: {"city": "Bengaluru"}.
 
 三者都是開放的；在一套普通的 GPU 設定上，完整的評測迴圈一小時內就能跑完。把其中一個放進你的 CI（評測驅動開發會在未來的階段涵蓋）。
 
+```figure
+tp-schema-routing
+```
+
 ## 框架應用
 
 `code/main.py` 出貨了一個工具 schema linter，會依照上述規則稽核一份登錄。它會標記：

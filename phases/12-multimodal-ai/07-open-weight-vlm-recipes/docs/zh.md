@@ -98,6 +98,10 @@ Prismatic VLMs（Karamcheti 等人，2024）是那篇把所有軸都控制住的
 
 上面每一項預設值，都能追溯到本課末尾所引論文中一次實測的消融實驗。
 
+```figure
+l5-vlm-recipe-knobs
+```
+
 ## 框架應用
 
 `code/main.py` 是一個消融表解析器兼配方挑選器。它把 MM1 與 Idefics2 的消融表（濃縮版）編了進去，讓你可以查詢：

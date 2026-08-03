@@ -112,6 +112,10 @@ L = L_rpn_cls + L_rpn_box + L_box_cls + L_box_reg + L_mask
 
 遮罩已經是整張影像的解析度了。28x28 的頭部輸出在模型內部就已經上採樣過。
 
+```figure
+cv3-roialign-sampling
+```
+
 ## 動手實作
 
 ### 步驟 1：從零實作 RoIAlign

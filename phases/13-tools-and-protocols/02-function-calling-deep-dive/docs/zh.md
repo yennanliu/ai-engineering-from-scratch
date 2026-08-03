@@ -114,6 +114,10 @@ Tool(
 
 生產團隊會把這個轉譯器包進 `AbstractToolset`（Pydantic AI）、`UniversalToolNode`（LangGraph）或 `BaseTool`（LlamaIndex）。階段 13 · 17 會出貨一個閘道，在這三家中的任何一家前面暴露一組 OpenAI 形狀的 API。
 
+```figure
+function-call-args
+```
+
 ## 框架應用
 
 `code/main.py` 定義了一個標準的 `Tool` dataclass，以及三個分別吐出 OpenAI、Anthropic 與 Gemini 宣告 JSON 的轉譯器。接著它把三種形狀各自手工打造的供應商回應，解析成同一個標準呼叫物件，藉此展示它們在皮下的語意其實一模一樣。跑跑看，並把三份宣告並排 diff 一下。

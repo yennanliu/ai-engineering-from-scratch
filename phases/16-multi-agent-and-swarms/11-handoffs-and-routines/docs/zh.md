@@ -80,6 +80,10 @@ Swarm 在多次執行之間明確地是無狀態的。框架在一趟執行期�
 
 Swarm 是「由代理決定接下來是什麼」；GroupChat 是「由管理者決定接下來是什麼」。Swarm 的決策住在活躍代理的那次工具呼叫裡；GroupChat 的住在 `GroupChatManager` 裡。
 
+```figure
+sw-handoff-routing
+```
+
 ## 建構它
 
 `code/main.py` 從零實作 Swarm：一個 Agent dataclass、一套交接機制（工具回傳 Agent），以及一個會偵測代理切換的執行迴圈。

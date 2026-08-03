@@ -35,6 +35,10 @@ graph TD
 
 三件事同時在跑，只用一個終端機。你可以中途離開（detach）、回家、再 SSH 進來重新接上（reattach），訓練從頭到尾都沒斷。
 
+```figure
+s0-shell-pipeline
+```
+
 ## 動手實作
 
 ### 步驟 1：認識你的 shell

@@ -69,6 +69,10 @@ PwC 回報（CrewAI 部署，2025），加入一條結構化的驗證迴圈，�
 - **AutoGen** —— GroupChat 裡帶單字名稱、角色專屬的 ConversableAgent。
 - **OpenAI Agents SDK** —— 角色特化 Agent 之間的交接工具。
 
+```figure
+swarm-roles
+```
+
 ## 建構它
 
 `code/main.py` 實作一條 4 角色的管線，用來建出一支簡單的 Python 函數：

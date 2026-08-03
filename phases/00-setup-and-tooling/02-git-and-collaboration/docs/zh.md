@@ -40,6 +40,10 @@ sequenceDiagram
 2. 推上遠端（`git push`）
 3. 實驗開分支（`git checkout -b experiment`）
 
+```figure
+s0-commit-dag
+```
+
 ## 動手實作
 
 ### 步驟 1：設定 git

@@ -50,6 +50,10 @@
 - 中文、日文這類語言裡的零照應。
 - 後指，也就是代詞出現在指稱物之前："When **she** walked in, Mary smiled."
 
+```figure
+coref-links
+```
+
 ## 動手實作
 
 ### 步驟 1：預訓練的神經指代模型（AllenNLP／spaCy-experimental）

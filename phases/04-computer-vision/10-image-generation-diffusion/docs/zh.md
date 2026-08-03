@@ -120,6 +120,10 @@ feature_map += MLP(t_embedding)
 
 沒有時間條件的話，網路就得從圖片本身去猜雜訊的強度 —— 這行得通，但樣本效率差很多。
 
+```figure
+cv-diffusion-image
+```
+
 ## 動手實作
 
 ### 步驟 1：雜訊排程

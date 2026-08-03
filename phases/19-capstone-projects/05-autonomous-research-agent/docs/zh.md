@@ -69,6 +69,10 @@ seed idea + domain
 - 實驗框架：物理實驗用 PyTorch 2.5，記錄用 W&B
 - 可觀測性：代理軌跡用 Langfuse，每篇論文 30 美元硬預算
 
+```figure
+ce-experiment-tree
+```
+
 ## 動手建
 
 1. **種子與領域範圍界定。** 拿一個種子想法（例如「研究次十億參數 transformer 注意力圖中的稀疏樣式」）。定義搜尋空間：模型、資料集、運算預算。

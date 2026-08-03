@@ -32,6 +32,10 @@ graph TD
 
 在 AI 工作裡，Hugging Face 的 `datasets` 函式庫是載入資料的標準做法。下載、快取、格式轉換與串流，它開箱就都幫你處理好。
 
+```figure
+s0-data-pipeline
+```
+
 ## 動手實作
 
 ### 步驟 1：安裝 datasets 函式庫

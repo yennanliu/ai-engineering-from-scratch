@@ -46,6 +46,10 @@ flowchart TB
 
 毒性分類器刻意做成規則式：一份策展過的騷擾關鍵字清單，配上以空白為界的比對，以及一項小小的否定視窗檢查，好讓「你不是一個髒話」不會誤觸那條規則。那份清單刻意很短（這一課談的是管路，不是詞庫建置）。個資分類器對常見形狀用標準的正規表達式。指令洩漏分類器在建構時接受一個 `system_prompt` 參數，並拿三連詞重疊度與輸出比對；高重疊度就是那項洩漏訊號。
 
+```figure
+cd-output-router
+```
+
 ## 動手建
 
 `code/classifiers.py` 定義全部三個分類器。每一個都有一個 `classify(text) -> ClassifierVerdict` 方法與一個 `redact(text) -> str` 方法。`code/main.py` 定義 `Router` 類別，帶 `decide(text, verdicts) -> Action` 與一個 `run(text) -> Action` 捷徑。示範把三個分類器接在一個路由器後面，並跑一小份精心打造、能演練每一種嚴重度的輸出語料。

@@ -90,6 +90,10 @@ Show-o2（2025 年的後續版本，arXiv 2506.15564）把 Show-o 擴大規模�
 
 依任務來挑：想在一個開放模型裡同時要 T2I + 修補 + VQA 且速度合理，就選 Show-o；品質至上且你負擔得起雙損失那套接線，就選 Transfusion。
 
+```figure
+masked-diffusion-unmask
+```
+
 ## 框架應用
 
 `code/main.py` 模擬了 Show-o 的取樣：

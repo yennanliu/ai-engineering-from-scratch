@@ -79,6 +79,10 @@ CrewAI 把兩種部署模式形式化：
 - **Swarm 裡來回彈跳的交接。** A -> B -> A -> B。用跳數計數器。
 - **假階層。** 因為「企業級」所以做了三層；實際上只有兩個團隊。塌縮它。
 
+```figure
+orchestration-pattern
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib 對著一個腳本化 LLM 實作全部四種模式：

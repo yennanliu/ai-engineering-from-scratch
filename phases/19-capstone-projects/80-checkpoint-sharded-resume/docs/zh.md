@@ -68,6 +68,10 @@ flowchart TD
 
 透過 `O_APPEND` 對同一個檔案做並行寫入，在 POSIX 上對位元組對齊的寫入是行得通的，但實務上一片之內的偏移量橫跨數 MB 大小的區域，而鎖就成了主導。逐 rank 的檔案沒有爭用，而且在底層檔案系統是平行式（Lustre、GPFS）時還能受惠於條帶化。生產堆疊（DeepSpeed、FSDP、NeMo）全都基於那個理由用逐 rank 的檔案。
 
+```figure
+ci-sharded-checkpoint
+```
+
 ## 動手建
 
 `code/main.py` 實作：

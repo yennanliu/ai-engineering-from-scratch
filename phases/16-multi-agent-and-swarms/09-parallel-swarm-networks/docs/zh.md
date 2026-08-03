@@ -68,6 +68,10 @@ LangGraph 2025 年的文件明確把「Swarm Architecture」描述成多代理�
 
 Swarm 天生就跟基於內容的路由（第 22 課）配得起來。與其用一條泛用佇列，不如每種訊息型別一條佇列。專家 worker 只訂閱自己那一型。這就是那些能擴展到數千個代理的訊息匯流排架構的基礎。
 
+```figure
+sw-work-stealing
+```
+
 ## 建構它
 
 `code/main.py` 實作一個由 4 條 worker 執行緒組成、從一個共享 `queue.Queue` 拉工作的 swarm。任務時長不一（有快有慢）。這個示範做三方對照：

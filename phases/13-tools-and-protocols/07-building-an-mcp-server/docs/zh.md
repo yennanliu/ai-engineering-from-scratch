@@ -120,6 +120,10 @@ def notes_search(query: str, limit: int = 10) -> list[dict]:
 
 TypeScript SDK 有對等的形狀。等你準備好，畢業路徑是直接替換的；那些概念（能力、分派、內容區塊）都一樣。
 
+```figure
+t3-dispatch-loop
+```
+
 ## 框架應用
 
 `code/main.py` 是一台完整的、跑在 stdio 上、純 stdlib 的筆記 MCP 伺服器。它處理 `initialize`、三個工具（`notes_list`、`notes_search`、`notes_create`）的 `tools/list` 與 `tools/call`、每則筆記的 `resources/list` 與 `resources/read`，以及一個 `review_note` 提示詞。你可以用管線灌 JSON-RPC 訊息來驅動它：

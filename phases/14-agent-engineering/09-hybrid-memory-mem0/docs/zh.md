@@ -88,6 +88,10 @@ Mem0 依範圍切分記憶：
 - **KV schema 蔓生。** `(user_id, type, entity)` 看起來很簡單，直到每個團隊都加上自己的 `type`。每季稽核一次那組 type。
 - **圖爆炸。** 一個很吵的抽取器每則訊息就加 50 條邊。要限制每次 `add` 呼叫可寫入的圖邊數；低信心的邊就丟掉。
 
+```figure
+ae-memory-fusion
+```
+
 ## 建構它
 
 `code/main.py` 用 stdlib 實作這套三儲存模式：

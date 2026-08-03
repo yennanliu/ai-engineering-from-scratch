@@ -92,6 +92,10 @@ Gemini 2.5 Pro 在長達 90 分鐘的影片上，回想率超過 99%。開放的
 
 這結合了暴力脈絡的全域理解，與檢索的局部細節。
 
+```figure
+mm-video-token-budget
+```
+
 ## 框架應用
 
 `code/main.py`：

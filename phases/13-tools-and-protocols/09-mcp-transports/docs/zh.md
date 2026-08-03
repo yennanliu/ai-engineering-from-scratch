@@ -94,6 +94,10 @@ SSE 連線會斷。客戶端靠帶著同一個 `Mcp-Session-Id` 重新 GET 來�
 
 有些企業在自家網路內，把 MCP 伺服器部署在 gRPC 或訊息佇列傳輸之後。這是非標準的 —— MCP 規格並沒有正式定義這些。閘道可以對 MCP 客戶端暴露一個 Streamable HTTP 表面，內部卻使用 gRPC。讓對外的表面保持合規；轉譯由閘道負責。
 
+```figure
+tp-transport-handshake
+```
+
 ## 框架應用
 
 `code/main.py` 用 `http.server`（stdlib）實作了一個最小的 Streamable HTTP 端點。它在 `/mcp` 上處理 POST、GET 與 DELETE，在第一次回應時設上 `Mcp-Session-Id`，驗證 `Origin`，並拒絕來自非白名單來源的請求。這個處理器重用了單元 07 那台筆記伺服器的分派邏輯。

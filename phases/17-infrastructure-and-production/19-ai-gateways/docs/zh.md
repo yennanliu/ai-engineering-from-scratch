@@ -94,6 +94,10 @@
 - Kong 定價：每個模型每月 100 美元，Plus 層級最多 5 個。
 - Cloudflare/Vercel：邊緣上 1-3 毫秒開銷。
 
+```figure
+mx-gateway-fallback
+```
+
 ## 框架應用
 
 `code/main.py` 在注入 429/5xx 的情況下，模擬跨 3 家供應商、帶退路的閘道路由。回報延遲、重試率與退路命中率。

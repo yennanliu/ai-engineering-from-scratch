@@ -88,6 +88,10 @@ y_ij = +1 if matching, -1 otherwise
 
 一旦有了共享嵌入空間，每一個視覺 + 語言任務都變成一次距離計算。
 
+```figure
+clip-contrastive
+```
+
 ## 動手實作
 
 ### 步驟 1：一個迷你雙塔模型

@@ -66,6 +66,10 @@ W' = W + ΔW,  ΔW = B @ A,  A ∈ R^{r×d},  B ∈ R^{d×r}
 
 ControlNet ≈ 空間層面。LoRA ≈ 語意層面。兩個都用。
 
+```figure
+v4-controlnet-zero
+```
+
 ## 動手實作
 
 `code/main.py` 在 1 維上模擬這兩套機制：

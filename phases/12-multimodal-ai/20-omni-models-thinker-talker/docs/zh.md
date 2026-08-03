@@ -93,6 +93,10 @@ TTFAB 總計：7B 時 320 到 510ms，70B 時 600 到 900ms。前沿品質通常
 
 這就是為什麼會有專門的小型 Talker 模型，而不是「直接用主模型就好」。
 
+```figure
+l5-thinker-talker
+```
+
 ## 框架應用
 
 `code/main.py`：

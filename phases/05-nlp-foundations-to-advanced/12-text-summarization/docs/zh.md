@@ -27,6 +27,10 @@
 
 評估用 **ROUGE**（Recall-Oriented Understudy for Gisting Evaluation）。ROUGE-1 與 ROUGE-2 計算 unigram 與 bigram 的重疊，ROUGE-L 計算最長共同子序列。分數越高越好，但 ROUGE-L 到 40 算「不錯」，到 50 算「非常突出」。每篇論文都會把三個一起報出來。用 `rouge-score` 這個套件。
 
+```figure
+summarize-collapse
+```
+
 ## 動手實作
 
 ### 步驟 1：TextRank（抽取式）

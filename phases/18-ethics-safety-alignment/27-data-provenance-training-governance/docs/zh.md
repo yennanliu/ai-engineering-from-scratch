@@ -71,6 +71,10 @@ dataprovenance.org。Longpre、Mahari、Lee 等人的〈Consent in Crisis〉（2
 
 第 26 課是模型層級的文件。第 27 課是資料集層級的治理。合起來，它們界定了透明度那一層。第 28 課盤點處理這些問題的研究生態系。
 
+```figure
+an-provenance-oneway
+```
+
 ## 框架應用
 
 `code/main.py` 替一個玩具型資料集生成一份符合加州 AB 2013 的 12 欄位資料集摘要骨架。你可以把欄位填起來，觀察哪些欄位會觸發後續的隱私或著作權義務。
