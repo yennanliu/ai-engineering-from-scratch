@@ -3484,6 +3484,17 @@
         }
         var quizPromiseForRequest = lessonQuizPromise;
 
+        // The quiz has to speak the language the body ended up in. When a
+        // translation is dropped for drifting from its source, its quiz has
+        // drifted with it — leaving it in place would pair an English lesson
+        // with questions written against the version it replaced.
+        var englishQuizPromise = null;
+        function quizFor(lang) {
+          if (lang !== 'en' || localQuizPath === quizPath) return quizPromiseForRequest;
+          if (!englishQuizPromise) englishQuizPromise = fetchJson(quizPath);
+          return englishQuizPromise;
+        }
+
         // Read alongside a translation to recover the English heading text the
         // anchors and section styling key on — see canonHeadings.
         var enDocPromise = (docPath === enPath)
@@ -3537,7 +3548,7 @@
               showError('Render error', 'Loaded the lesson markdown but failed to render it. Details in the browser console.');
               return;
             }
-            quizPromiseForRequest
+            quizFor(lang)
               .then(function (data) {
                 if (!data || requestSequence !== lessonFetchSequence) return;
                 try { renderQuiz(data); }
