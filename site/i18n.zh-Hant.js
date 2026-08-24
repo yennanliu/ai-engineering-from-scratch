@@ -242,6 +242,10 @@ window.I18N_ZH_HANT = {
   /* 'Copy command' / 'Copied!' are shared with the catalog page, above. */
   'Learning Path': '學習路徑',
   'Phase {n}: {name}': '階段 {n}：{name}',
+  'Lesson {n} of {total}': '第 {n} 個單元，共 {total} 個',
+  /* The timeline ellipsis carries the short label; the long form is its title. */
+  '{n} earlier': '前面 {n} 個',
+  '{n} later': '後面 {n} 個',
   '{n} earlier lessons': '前面還有 {n} 個單元',
   '{n} later lessons': '後面還有 {n} 個單元',
   'You\'ve completed {done} of {total} lessons in this phase':
@@ -265,6 +269,8 @@ window.I18N_ZH_HANT = {
   'Did you get it?': '你都學會了嗎？',
   'Question {n} of {total}': '第 {n} 題，共 {total} 題',
   'Complete all questions to see your score': '答完所有題目就會顯示分數',
+  '{answered}/{total} answered. Review the feedback, then retry when ready.':
+    '已作答 {answered}/{total}。看完回饋後，隨時可以重新作答。',
   '{correct}/{total} correct': '答對 {correct}/{total}',
   'Perfect score!': '滿分！',
   'Great work!': '表現很好！',
@@ -768,25 +774,33 @@ window.I18N_ZH_HANT = {
   "Parallel and Streaming Tool Calls": "平行與串流工具呼叫",
   "Structured Output": "結構化輸出",
   "Tool Schema Design": "工具結構定義設計",
-  "MCP Fundamentals": "MCP 基礎",
-  "Building an MCP Server": "打造 MCP 伺服器",
-  "Building an MCP Client": "打造 MCP 用戶端",
-  "MCP Transports": "MCP 傳輸層",
-  "MCP Resources and Prompts": "MCP 資源與提示詞",
-  "MCP Sampling": "MCP 取樣",
-  "MCP Roots and Elicitation": "MCP Roots 與資訊徵詢",
-  "MCP Async Tasks": "MCP 非同步任務",
-  "MCP Apps": "MCP 應用",
-  "MCP Security I — Tool Poisoning": "MCP 安全性 I —— 工具下毒",
-  "MCP Security II — OAuth 2.1": "MCP 安全性 II —— OAuth 2.1",
-  "MCP Gateways and Registries": "MCP 閘道與註冊中心",
-  "MCP Auth in Production — Enrollment, JWKS Refresh, Audience Pinning":
+  "MCP Fundamentals: Stateless Requests and JSON-RPC": "MCP 基礎",
+  "Building an MCP Server: Stateless Python and TypeScript": "打造 MCP 伺服器",
+  "Building an MCP Client: Discovery, Routing, and Dual-Era Fallback": "打造 MCP 用戶端",
+  "MCP Transports: stdio and Stateless Streamable HTTP": "MCP 傳輸層",
+  "MCP Resources and Prompts: Addressable Context for Stateless Servers": "MCP 資源與提示詞",
+  "MCP Model Input: Sampling Migration and Stateless MRTR": "MCP 取樣",
+  "Explicit Scope and Stateless Elicitation": "MCP Roots 與資訊徵詢",
+  "MCP Tasks Extension: Durable Work on a Stateless Core": "MCP 非同步任務",
+  "MCP Apps on the Stateless Protocol": "MCP 應用",
+  "MCP Security: Poisoned Metadata, Routing, and MRTR State": "MCP 安全性 I —— 工具下毒",
+  "MCP Authorization: CIMD, Issuer Binding, PKCE, and Step-Up": "MCP 安全性 II —— OAuth 2.1",
+  "Stateless MCP Gateways and Registry Admission": "MCP 閘道與註冊中心",
+  "MCP Auth in Production: Issuer-Bound Enrollment and Tokens":
     "生產環境的 MCP 認證 —— 註冊、JWKS 更新、受眾綁定",
   "A2A Protocol": "A2A 協定",
   "OpenTelemetry GenAI": "OpenTelemetry GenAI",
   "LLM Routing Layer": "LLM 路由層",
-  "Skills and Agent SDKs": "技能與代理程式 SDK",
-  "Capstone — Tool Ecosystem": "總結專案 —— 工具生態系",
+  "Agent Skills: Portable Contract and Runtime Boundary": "Agent Skills：可攜式契約與執行邊界",
+  "Capstone: Stateless Tool Ecosystem": "總結專案 —— 無狀態工具生態系",
+  "Skill Discovery and Progressive Disclosure": "技能探索與漸進式揭露",
+  "Skill Invocation and Routing": "技能呼叫與路由",
+  "Skill Permissions, Sandboxes, and Trust": "技能權限、沙箱與信任",
+  "Skill Evals, Packaging, and Portability": "技能評測、打包與可攜性",
+  "MCP Tool Contracts and Content": "MCP 工具契約與內容",
+  "MCP Reliability, Cancellation, and Flow Control": "MCP 可靠性、取消與流量控制",
+  "MCP Registry Supply Chain: Admission, Drift, and Rollback": "MCP 註冊中心供應鏈 —— 准入、偏移與回溯",
+  "MCP Conformance Engineering: Versioning, Evidence, and Operations": "MCP 一致性工程 —— 版本、佐證與維運",
   "The Agent Loop": "代理程式迴圈",
   "ReWOO and Plan-and-Execute": "ReWOO 與先規劃後執行",
   "Reflexion and Verbal Reinforcement Learning": "Reflexion 與語言式強化學習",
@@ -956,7 +970,7 @@ window.I18N_ZH_HANT = {
   "Multi-Agent Software Engineering Team": "多代理軟體工程團隊",
   "LLM Observability & Eval Dashboard": "LLM 可觀測性與評估儀表板",
   "Video Understanding Pipeline (Scene → QA)": "影片理解管線（場景 → 問答）",
-  "MCP Server with Registry and Governance": "帶註冊中心與治理的 MCP 伺服器",
+  "Stateless MCP Server with Registry and Governance": "帶註冊中心與治理的 MCP 伺服器",
   "Speculative-Decoding Inference Server": "推測式解碼推論伺服器",
   "Constitutional Safety Harness + Red-Team Range": "憲法式安全框架加紅隊靶場",
   "GitHub Issue-to-PR Autonomous Agent": "從 GitHub issue 到 PR 的自主代理程式",
@@ -1032,253 +1046,253 @@ window.I18N_ZH_HANT = {
   "Constitutional Rules Engine": "憲法式規則引擎",
   "End-to-End Safety Gate": "端到端安全關卡",
   /* ── Glossary ────────────────────────────────────────────────── */
-  "An autonomous AI that thinks and acts on its own": "會自己思考、自己行動的自主 AI",
-  "A while loop where an LLM decides what tool to call next, executes it, sees the result, and repeats":
-    "一個 while 迴圈：由 LLM 決定下一步要呼叫哪個工具，執行它，看結果，然後重複",
-  "How the AI focuses on important parts": "AI 怎麼聚焦在重要的部分",
-  "A mechanism where every token computes a weighted sum of all other tokens' values, with weights determined by how relevant they are (via dot product of query and key vectors)":
-    "一種機制：每個詞元對所有其他詞元的 value 取加權總和，權重由彼此的相關程度決定（以 query 與 key 向量的內積計算）",
-  "Making AI safe": "讓 AI 變安全",
-  "The technical challenge of making an AI system's behavior match human intentions, values, and preferences, including edge cases the designer didn't anticipate":
-    "讓 AI 系統的行為符合人類意圖、價值與偏好的技術難題，包含設計者沒預料到的邊界情況",
-  "The AI generates one word at a time": "AI 一次生成一個字",
-  "A model that predicts the next token conditioned on all previous tokens, then feeds that prediction back as input for the next step. GPT, LLaMA, and Claude are all autoregressive.":
-    "模型以先前所有詞元為條件預測下一個詞元，再把這個預測回饋為下一步的輸入。GPT、LLaMA 與 Claude 都是自迴歸模型。",
-  "The nonlinear thing between layers": "夾在層與層之間那個非線性的東西",
-  "A function applied after each linear layer that introduces nonlinearity. Without it, stacking any number of linear layers collapses to a single linear transformation. ReLU, GELU, and SiLU are the most common. The choice directly affects whether gradients flow during training.":
+  "The nonlinear operation between layers.": "夾在層與層之間那個非線性的東西",
+  "A function applied after a linear or affine layer that introduces nonlinearity. Without it, composing layers with weights and biases collapses to one affine transformation. ReLU, GELU, and SiLU are common choices. The choice directly affects whether gradients flow during training.":
     "接在每個線性層之後、用來引入非線性的函式。少了它，不論疊多少線性層都會塌縮成單一線性轉換。最常見的是 ReLU、GELU 與 SiLU，選擇會直接影響訓練時梯度能否順利流動。",
-  "The default optimizer": "預設的最佳化器",
-  "Adaptive Moment Estimation. Combines momentum (first moment) with adaptive learning rates per parameter (second moment). Has bias correction for early steps. Works well across most tasks without much tuning.":
+  "The optimizer you use without thinking about it.": "預設的最佳化器",
+  "Adaptive Moment Estimation. It combines an exponential average of gradients with an exponential average of squared gradients, applies bias correction, and adapts the update scale per parameter. It is a useful baseline, but it still needs a suitable learning rate and schedule.":
     "Adaptive Moment Estimation（適應性動量估計）。結合動量（一階動量）與每個參數各自的適應性學習率（二階動量），並對初期步驟做偏差校正。多數任務不必怎麼調參就能用得不錯。",
-  "Adam but better": "比較好的 Adam",
-  "Adam with decoupled weight decay. In standard Adam, L2 regularization gets scaled by the adaptive learning rate per parameter, which is not what you want. AdamW applies weight decay directly to the weights, independent of the gradient statistics. The default optimizer for training transformers.":
+  "Adam with weight decay fixed.": "比較好的 Adam",
+  "An Adam variant that decouples weight decay from the gradient-based parameter update. That makes the shrinkage behavior easier to reason about than adding an L2 penalty inside Adam's adaptively scaled gradient.":
     "帶有解耦權重衰減的 Adam。標準 Adam 中，L2 正則化會被每個參數的適應性學習率縮放，那並不是你想要的效果。AdamW 直接把權重衰減套用在權重上，與梯度統計量無關。訓練 Transformer 的預設最佳化器。",
-  "Automatic gradients": "自動算梯度",
-  "A system that records operations on tensors and automatically computes gradients via reverse-mode differentiation. PyTorch's autograd builds a computation graph on-the-fly (dynamic graph), while JAX uses function transformations (grad). This is what makes backpropagation practical -- you write the forward pass, and the framework computes all the derivatives.":
+  "An autonomous model that thinks and acts alone.": "會自己思考、自己行動的自主 AI",
+  "A software system that lets a model select actions toward a goal, observe tool or environment results, and continue under an orchestration policy. An agent may use a loop, a state machine, a workflow engine, or human approvals. The model is one component, not the entire system.":
+    "一個 while 迴圈：由 LLM 決定下一步要呼叫哪個工具，執行它，看結果，然後重複",
+  "Making AI safe.": "讓 AI 變安全",
+  "The effort to make a model or AI system behave in ways that match intended goals, constraints, and human preferences across both expected and adversarial situations.":
+    "讓 AI 系統的行為符合人類意圖、價值與偏好的技術難題，包含設計者沒預料到的邊界情況",
+  "How a model focuses on important tokens.": "AI 怎麼聚焦在重要的部分",
+  "A mechanism that forms contextual representations by comparing query vectors with key vectors, normalizing the resulting scores, and using them to combine value vectors. Masks, position rules, or sparse patterns can restrict which positions participate.":
+    "一種機制：每個詞元對所有其他詞元的 value 取加權總和，權重由彼此的相關程度決定（以 query 與 key 向量的內積計算）",
+  "Automatic gradients.": "自動算梯度",
+  "A system that records or transforms tensor operations so it can compute derivatives, usually with reverse-mode automatic differentiation. You write the forward computation and the framework derives the gradients needed for backpropagation.":
     "記錄張量運算並以反向模式微分自動計算梯度的系統。PyTorch 的 autograd 會即時建構運算圖（動態圖），JAX 則採用函式轉換（grad）。這正是反向傳播得以實用的原因 —— 你只寫前向傳播，框架就把所有導數算出來。",
-  "How many examples at once": "一次餵幾筆資料",
-  "The number of training examples processed in one forward/backward pass before updating weights. Larger batches give more stable gradient estimates but use more memory. Typical values: 32-512 for training, larger for inference. Batch size interacts with learning rate -- double the batch, double the LR (linear scaling rule).":
-    "更新權重前，一次前向／反向傳播處理的訓練樣本數。批次越大梯度估計越穩定，但也吃更多記憶體。常見值：訓練 32-512，推論可更大。批次大小會與學習率互相影響 —— 批次加倍，學習率也加倍（線性縮放法則）。",
-  "How neural networks learn": "神經網路學習的方式",
-  "An algorithm that computes how much each weight contributed to the error by applying the chain rule backward through the network, then adjusts weights proportionally":
+  "The model generates one word at a time.": "AI 一次生成一個字",
+  "A factorization in which each output token is predicted from the tokens that precede it. During generation, the selected token is appended to the sequence and becomes part of the next prediction's context.":
+    "模型以先前所有詞元為條件預測下一個詞元，再把這個預測回饋為下一步的輸入。GPT、LLaMA 與 Claude 都是自迴歸模型。",
+  "How neural networks learn.": "神經網路學習的方式",
+  "An efficient application of the chain rule that propagates derivatives from a scalar loss backward through a computation graph. It computes gradients; an optimizer uses those gradients to update parameters.":
     "一種演算法：沿著網路反向套用連鎖律，算出每個權重對誤差的貢獻有多大，再按比例調整權重",
-  "How much the AI can remember": "AI 能記住多少東西",
-  "The maximum number of tokens (input + output) that fit in a single API call. Not memory — it's a fixed-size buffer that resets every call":
-    "單次 API 呼叫能容納的最大詞元數（輸入加輸出）。它不是記憶 —— 而是每次呼叫都會歸零的固定大小緩衝區",
-  "Making the AI think step by step": "讓 AI 一步一步想",
-  "A prompting technique where you ask the model to show its reasoning steps, which improves accuracy on multi-step problems because each step conditions the next token generation":
+  "How many examples are processed at once.": "一次餵幾筆資料",
+  "The number of examples whose losses contribute to one gradient estimate before an optimizer update. Larger batches can improve hardware utilization and reduce gradient noise, but they require more memory and may need different learning-rate or scheduling choices.":
+    "更新權重前，一次前向／反向傳播處理的訓練樣本數。批次越大梯度估計越穩定，但也吃更多記憶體。常見值：訓練 32-512，推論可更大。批次大小會與學習率互相影響 —— 批次加倍，學習率也加倍（線性縮放法則）。",
+  "Asking the model to show every step of its thinking.": "讓 AI 一步一步想",
+  "Intermediate reasoning used to decompose a task before producing an answer. A prompt can request a visible rationale, while some systems use internal reasoning that is not returned to the user.":
     "一種提示技巧：要求模型把推理步驟寫出來。因為每一步都會成為下一個詞元生成的條件，多步驟問題的正確率因此提升",
-  "Image AI": "處理圖片的 AI",
+  "Splitting documents into pieces.": "把文件切成小塊",
+  "Dividing source material into retrievable units before indexing. Chunk boundaries, overlap, metadata, and document structure determine whether retrieval returns enough context without flooding the prompt.":
+    "在做嵌入以供檢索之前，先把文字切成片段。切塊大小決定搜尋結果的顆粒度：太小會失去脈絡，太大會稀釋相關性。常見策略：固定長度加重疊、依句子切，或語意切分。典型大小為 256-512 個詞元，重疊 10-20%。",
+  "A neural network for images.": "處理圖片的 AI",
   "A neural network that uses convolution operations (sliding filters over the input) to detect local patterns. Stacking convolutions detects increasingly complex features: edges, textures, objects.":
     "使用卷積運算（讓濾波器在輸入上滑動）偵測局部樣式的神經網路。層層堆疊的卷積會依序偵測越來越複雜的特徵：邊緣、紋理、物體。",
-  "GPU programming": "GPU 程式設計",
-  "NVIDIA's parallel computing platform. Lets you run matrix operations on thousands of GPU cores simultaneously. PyTorch and TensorFlow use CUDA under the hood.":
-    "NVIDIA 的平行運算平台。讓你把矩陣運算同時丟到數千個 GPU 核心上執行。PyTorch 與 TensorFlow 底層都用 CUDA。",
-  "Splitting documents into pieces": "把文件切成小塊",
-  "Breaking text into segments before embedding for retrieval. Chunk size determines the granularity of search results. Too small: loses context. Too large: dilutes relevance. Common strategies: fixed-size with overlap, sentence-based, or semantic splitting. Typical chunk size: 256-512 tokens with 10-20% overlap.":
-    "在做嵌入以供檢索之前，先把文字切成片段。切塊大小決定搜尋結果的顆粒度：太小會失去脈絡，太大會稀釋相關性。常見策略：固定長度加重疊、依句子切，或語意切分。典型大小為 256-512 個詞元，重疊 10-20%。",
-  "Learning by comparison": "靠比較來學習",
+  "How much the model remembers.": "AI 能記住多少東西",
+  "The maximum token capacity available to one model inference under a specific model and API contract. The capacity may include system instructions, messages, retrieved content, tool exchanges, and generated output, with provider-specific accounting and output limits.":
+    "單次 API 呼叫能容納的最大詞元數（輸入加輸出）。它不是記憶 —— 而是每次呼叫都會歸零的固定大小緩衝區",
+  "Learning by comparison.": "靠比較來學習",
   "Training by pulling similar pairs closer and pushing dissimilar pairs apart in embedding space. CLIP uses this: matching image-text pairs vs non-matching ones.":
     "訓練時在嵌入空間裡把相似的配對拉近、不相似的配對推遠。CLIP 就是這樣做：用配對的圖文與不配對的圖文互相對照。",
-  "How similar two vectors are": "兩個向量有多像",
-  "The cosine of the angle between two vectors: dot(a, b) / (||a|| * ||b||). Ranges from -1 (opposite) to 1 (identical direction). Ignores magnitude, only cares about direction. The standard similarity metric for embeddings and semantic search.":
+  "How similar two vectors are.": "兩個向量有多像",
+  "The normalized dot product of two vectors. It compares their direction rather than their magnitude and ranges from -1 to 1 for real-valued vectors.":
     "兩個向量夾角的餘弦值：dot(a, b) / (||a|| * ||b||)。範圍從 -1（方向相反）到 1（方向相同）。忽略長度，只在乎方向。嵌入與語意搜尋的標準相似度指標。",
-  "The classification loss": "分類用的損失函式",
-  "Measures the difference between two probability distributions. For classification: -sum(y_true * log(y_pred)). For language models: the negative log probability of the correct next token. Lower is better. Perplexity is just exp(cross-entropy).":
+  "The classification loss.": "分類用的損失函式",
+  "A loss based on the negative log probability assigned to the target outcome. In next-token training, it penalizes the model when it assigns low probability to the observed next token.":
     "衡量兩個機率分布的差距。分類任務為 -sum(y_true * log(y_pred))；語言模型則是正確下一個詞元的負對數機率。越低越好。困惑度就是 exp(交叉熵)。",
-  "Making more training data": "生出更多訓練資料",
-  "Creating modified copies of existing data (rotate images, add noise, paraphrase text) to increase training set diversity without collecting new data. Reduces overfitting.":
+  "GPU programming.": "GPU 程式設計",
+  "NVIDIA's platform and programming model for general-purpose computation on compatible GPUs. Deep-learning frameworks use CUDA libraries and kernels to execute many tensor operations in parallel.":
+    "NVIDIA 的平行運算平台。讓你把矩陣運算同時丟到數千個 GPU 核心上執行。PyTorch 與 TensorFlow 底層都用 CUDA。",
+  "Making more training data.": "生出更多訓練資料",
+  "Creating modified examples, such as transformed images, perturbed audio, or paraphrased text, to increase training diversity without collecting entirely new source data. It can reduce overfitting when the transformation preserves the task signal.":
     "對既有資料做修改後複製（旋轉圖片、加雜訊、改寫句子），在不蒐集新資料的前提下增加訓練集多樣性，可減少過度擬合。",
-  "The output part": "負責輸出的那半",
-  "In transformers, a decoder uses causal (masked) self-attention so each position can only attend to earlier positions. GPT is decoder-only. BERT is encoder-only. T5 is encoder-decoder.":
+  "The output side of a model.": "負責輸出的那半",
+  "A component that maps a representation into an output. In an encoder-decoder transformer, the decoder uses masked self-attention and cross-attention to generate outputs. Decoder-only language models instead generate from a single causal stack.":
     "在 Transformer 中，解碼器使用因果（遮罩）自注意力，每個位置只能看到前面的位置。GPT 只有解碼器，BERT 只有編碼器，T5 兩者都有。",
-  "AI that generates images from noise": "從雜訊生出圖片的 AI",
-  "A model trained to reverse a gradual noising process — it learns to predict and remove noise, and at generation time starts from pure noise and iteratively denoises":
+  "A model that generates images from noise.": "從雜訊生出圖片的 AI",
+  "A generative model trained around a progressive noising process and a learned reverse process. Sampling usually begins from noise and applies repeated denoising steps, sometimes in a learned latent space.":
     "訓練來反轉逐步加噪過程的模型 —— 它學會預測並移除雜訊，生成時則從純雜訊出發，反覆去噪",
-  "A simpler RLHF": "更簡單的 RLHF",
-  "A training method that skips the reward model entirely — it directly optimizes the language model to prefer the better response in pairs of human preferences":
+  "Preference training without a separate reward-model stage.": "更簡單的 RLHF",
+  "A preference-optimization objective that trains a policy directly from preferred and rejected response pairs relative to a reference policy. It avoids running an explicit reward model and reinforcement-learning loop during this stage.":
     "一種訓練方法，完全跳過獎勵模型 —— 直接最佳化語言模型，讓它在成對的人類偏好中偏好較好的那個回應",
-  "Randomly turning off neurons": "隨機關掉一些神經元",
-  "During training, randomly set a fraction of activations to zero. Forces the network to not rely on any single neuron. Turned off during inference. Simple but effective regularization.":
+  "Randomly turning off activations.": "隨機關掉一些神經元",
+  "During training, randomly setting a fraction of activations to zero encourages the network not to rely on one activation path. It is normally disabled for standard inference, although Monte Carlo dropout deliberately keeps it active to estimate uncertainty.":
     "訓練時隨機把一部分激活值設為零，逼網路不去依賴任何單一神經元。推論時關閉。簡單但有效的正則化手段。",
-  "Some math thing for PCA": "PCA 用到的某個數學東西",
-  "For a matrix A, an eigenvalue lambda satisfies Av = lambda*v for some vector v. It tells you how much the matrix scales vectors in that direction. Large eigenvalues = directions of high variance in your data.":
+  "A matrix property used in PCA.": "PCA 用到的某個數學東西",
+  "A scalar that describes how a linear transformation scales a corresponding nonzero eigenvector without changing its direction. In covariance-matrix PCA, larger eigenvalues correspond to directions with more variance.":
     "對矩陣 A 而言，特徵值 lambda 滿足 Av = lambda*v（v 為某個向量）。它代表矩陣在該方向上把向量放大多少。特徵值大 = 資料變異量高的方向。",
-  "Some AI magic that turns words into numbers": "把文字變成數字的某種 AI 魔法",
+  "A vector that represents meaning.": "把文字變成數字的某種 AI 魔法",
   "A learned mapping from discrete items (words, images, users) to dense vectors in continuous space, where similar items end up close together":
     "一種學習得到的映射，把離散項目（詞、圖片、使用者）對應到連續空間中的稠密向量，相似的項目會落在相近的位置",
-  "The input part": "負責輸入的那半",
-  "In transformers, an encoder uses bidirectional self-attention so each position can attend to all positions. BERT is encoder-only. Good for understanding tasks (classification, NER) but not generation.":
+  "The input side of a model.": "負責輸入的那半",
+  "A component that transforms input into a representation. A transformer encoder commonly uses non-causal self-attention, subject to any masks, so each position can incorporate context from across the input.":
     "在 Transformer 中，編碼器使用雙向自注意力，每個位置都能看到所有位置。BERT 只有編碼器。適合理解類任務（分類、命名實體識別），但不適合生成。",
-  "One pass through the data": "把資料跑完一輪",
-  "Exactly that. One complete pass through every example in the training set. Multiple epochs = seeing the data multiple times. More epochs can improve learning but risks overfitting.":
+  "One pass through the training data.": "把資料跑完一輪",
+  "One traversal of the defined training dataset. In distributed or sampled training, the exact implementation of an epoch depends on the data loader and sampling policy.":
     "就是字面意思。完整走過訓練集裡每一筆樣本一次。多個 epoch 就是把資料看好幾遍。epoch 越多可能學得越好，但也有過度擬合的風險。",
-  "A column in your data": "資料裡的一個欄位",
+  "A column in a dataset.": "資料裡的一個欄位",
   "An individual measurable property of the data. In classical ML, you engineer features by hand. In deep learning, the network learns features automatically from raw data.":
     "資料中一項可量測的個別屬性。傳統機器學習要靠人工設計特徵；深度學習則由網路直接從原始資料自動學出特徵。",
-  "Give the AI some examples first": "先給 AI 幾個例子",
-  "Including a small number of input-output examples in the prompt before asking the model to perform a task. Typically 3-5 examples. The model pattern-matches on these examples to understand the desired format and behavior. Contrast with zero-shot (no examples) and fine-tuning (thousands of examples baked into weights).":
+  "Give the model a few examples in the prompt.": "先給 AI 幾個例子",
+  "In-context learning that includes a small set of demonstrations before the target input so the model can infer the desired task, format, or decision boundary.":
     "在請模型執行任務前，先在提示詞裡放少量輸入輸出範例，通常 3 到 5 個。模型會依這些範例做樣式比對，理解你要的格式與行為。與零樣本（不給範例）和微調（把上千筆範例烙進權重）相對。",
-  "Training the AI on your data": "用你自己的資料訓練 AI",
-  "Starting with a pre-trained model's weights and continuing training on a smaller, task-specific dataset. Only updates existing weights, doesn't add new knowledge from scratch":
+  "Training a model on your data.": "用你自己的資料訓練 AI",
+  "Continuing training from pretrained parameters on a narrower dataset or objective. Depending on the method, you may update all parameters, selected parameters, or added adapter parameters.":
     "以預訓練模型的權重為起點，在較小的、特定任務的資料集上繼續訓練。只會更新既有權重，不會從零加入新知識",
-  "AI that can use tools": "會用工具的 AI",
-  "A structured way for LLMs to request execution of external functions. You define tools with JSON Schema descriptions, the model outputs a structured JSON object specifying which function to call with what arguments, your code executes it, and the result goes back to the model. Not the same as agents -- function calling is the mechanism, agents are the loop.":
+  "A model using tools.": "會用工具的 AI",
+  "A provider or application interface through which a model emits a structured request naming a tool and its arguments. Application code validates the request, performs the operation, and can return the result for another model step.":
     "讓 LLM 提出執行外部函式請求的結構化方式。你用 JSON Schema 定義工具，模型輸出結構化 JSON 指明要呼叫哪個函式、帶什麼參數，由你的程式執行，再把結果送回模型。這與代理程式不同 —— 函式呼叫是機制，代理程式是那個迴圈。",
-  "Safety filters for AI": "AI 的安全過濾器",
-  "Input/output validation layers around an LLM that detect and block harmful content, prompt injection attempts, PII leakage, or off-topic responses. Typically a pipeline: input filter -> LLM -> output filter. Can be rule-based (regex, keyword lists) or model-based (classifier that scores safety).":
-    "包在 LLM 外層的輸入／輸出驗證層，用來偵測並阻擋有害內容、提示詞注入、個資外洩或偏離主題的回應。典型結構是一條管線：輸入過濾 → LLM → 輸出過濾。可以是規則式（正規表達式、關鍵字清單）或模型式（用分類器給安全性評分）。",
-  "ChatGPT\" or \"The AI": "ChatGPT」或「那個 AI",
-  "Generative Pre-trained Transformer — a specific architecture that predicts the next token using a decoder-only transformer trained on large text corpora":
-    "Generative Pre-trained Transformer（生成式預訓練 Transformer）—— 一種特定架構，以僅含解碼器的 Transformer 在大型文字語料上訓練，用來預測下一個詞元",
-  "Two AIs fighting each other": "兩個 AI 互相對打",
+  "Two neural networks competing during training.": "兩個 AI 互相對打",
   "A generator network tries to create realistic data while a discriminator network tries to tell real from fake. They train together: the generator gets better at fooling the discriminator, and the discriminator gets better at detecting fakes.":
     "生成器網路試圖造出逼真的資料，判別器網路試圖分辨真假。兩者一起訓練：生成器越來越會騙過判別器，判別器也越來越會抓假貨。",
-  "The slope": "斜率",
+  "A generic name for any chatbot.": "ChatGPT」或「那個 AI",
+  "Generative Pre-trained Transformer, a family label for generative transformer models pretrained on sequence-prediction objectives and adapted for downstream use. Product names and model architectures should not be treated as interchangeable.":
+    "Generative Pre-trained Transformer（生成式預訓練 Transformer）—— 一種特定架構，以僅含解碼器的 Transformer 在大型文字語料上訓練，用來預測下一個詞元",
+  "The slope of the loss.": "斜率",
   "A vector of partial derivatives pointing in the direction of steepest increase. In ML, you go opposite to the gradient (gradient descent) to minimize the loss.":
     "由偏導數組成的向量，指向函數上升最陡的方向。在機器學習中，你往梯度的反方向走（梯度下降）以最小化損失。",
-  "How AI improves": "AI 進步的方式",
-  "An optimization algorithm that adjusts parameters in the direction that reduces the loss function most steeply, like walking downhill in a high-dimensional landscape":
+  "Walking downhill on the loss surface.": "AI 進步的方式",
+  "A family of optimization updates that move parameters using the negative gradient of an objective, usually estimated from batches rather than the entire dataset.":
     "一種最佳化演算法：朝著能讓損失函式下降最快的方向調整參數，就像在高維地形裡一路往下走",
-  "Settings you tune": "你要調的那些設定",
-  "Values set before training that control the training process itself: learning rate, batch size, number of layers, dropout rate. Unlike model parameters (weights), these aren't learned from data.":
-    "訓練前就要設定、用來控制訓練過程本身的值：學習率、批次大小、層數、dropout 比率。與模型參數（權重）不同，這些不是從資料學來的。",
-  "The AI is lying\" or \"making things up": "AI 在說謊」或「在瞎掰",
-  "The model generates plausible-sounding text that isn't grounded in its training data or the given context — it's pattern-completing, not fact-retrieving":
+  "Safety filters around a model.": "AI 的安全過濾器",
+  "System controls that constrain inputs, tool use, outputs, permissions, and escalation. They can include schemas, policy checks, classifiers, allowlists, sandboxing, approvals, and post-action verification.":
+    "包在 LLM 外層的輸入／輸出驗證層，用來偵測並阻擋有害內容、提示詞注入、個資外洩或偏離主題的回應。典型結構是一條管線：輸入過濾 → LLM → 輸出過濾。可以是規則式（正規表達式、關鍵字清單）或模型式（用分類器給安全性評分）。",
+  "The model is lying.": "AI 在說謊」或「在瞎掰",
+  "Generated content that is false, unsupported by the available evidence, or inconsistent with the task's source of truth. It can arise even when the output is fluent and the model is not attempting to deceive.":
     "模型生出聽起來合理、卻沒有根據於訓練資料或給定脈絡的內容 —— 它是在補完樣式，不是在查事實",
-  "Running the AI": "跑模型",
-  "Using a trained model to make predictions on new data. No weight updates happen. This is what you do in production: send input, get output.":
-    "用訓練好的模型對新資料做預測，不會更新權重。這就是你在生產環境做的事：送進輸入，取得輸出。",
-  "Never heard of it": "沒聽過這個詞",
-  "The assumptions built into a model's architecture. CNNs assume local patterns matter (convolution). RNNs assume order matters (sequential processing). Transformers assume everything might relate to everything (attention). The right bias helps the model learn faster from less data.":
+  "A setting you tune.": "你要調的那些設定",
+  "A configuration choice that shapes model structure, optimization, data processing, or inference rather than being learned as an ordinary model parameter. Examples include learning rate, batch size, layer count, and decoding settings.":
+    "訓練前就要設定、用來控制訓練過程本身的值：學習率、批次大小、層數、dropout 比率。與模型參數（權重）不同，這些不是從資料學來的。",
+  "Assumptions built into a learning system.": "沒聽過這個詞",
+  "Structural or statistical assumptions that favor some functions or representations over others. Convolution favors locality and shared filters; causal masking favors prediction from preceding positions.":
     "內建在模型架構裡的假設。CNN 假設局部樣式重要（卷積），RNN 假設順序重要（依序處理），Transformer 假設任何東西都可能與任何東西有關（注意力）。選對偏好能讓模型用更少資料學得更快。",
-  "Google's ML framework": "Google 的機器學習框架",
-  "A NumPy-compatible library that adds automatic differentiation (grad), JIT compilation (jit), automatic vectorization (vmap), and multi-device parallelism (pmap). Unlike PyTorch's object-oriented style, JAX is purely functional -- no hidden state, no in-place mutation. Used by Google DeepMind for AlphaFold, Gemini, and large-scale research.":
+  "Running a trained model.": "跑模型",
+  "Executing a trained model to produce predictions, scores, embeddings, or generated tokens without performing an ordinary training update to its parameters.":
+    "用訓練好的模型對新資料做預測，不會更新權重。這就是你在生產環境做的事：送進輸入，取得輸出。",
+  "A NumPy-like system for accelerated machine learning.": "Google 的機器學習框架",
+  "A Python library for transforming numerical functions with automatic differentiation, compilation, vectorization, and parallel execution across accelerators. Its transformations work best with explicit state and functional-style code.":
     "與 NumPy 相容的函式庫，額外提供自動微分（grad）、即時編譯（jit）、自動向量化（vmap）與多裝置平行化（pmap）。與 PyTorch 的物件導向風格不同，JAX 是純函式式的 —— 沒有隱藏狀態，也不做原地修改。Google DeepMind 用它做 AlphaFold、Gemini 與大規模研究。",
-  "Makes inference faster": "讓推論變快",
-  "During autoregressive generation, caching the key and value matrices from previous tokens so you don't recompute them at each step. Trades memory for speed. Essential for fast LLM inference.":
+  "A cache that makes token generation faster.": "讓推論變快",
+  "Stored key and value tensors from earlier positions in autoregressive generation. Reusing them avoids recomputing attention projections for the unchanged prefix at every decoding step.":
     "自迴歸生成時，把先前詞元的 key 與 value 矩陣快取起來，避免每一步重算。用記憶體換速度，是 LLM 快速推論的關鍵。",
-  "The hidden representation": "那個藏起來的表示法",
-  "A compressed, learned representation space where similar inputs map to nearby points. Autoencoders, VAEs, and diffusion models all work in latent space. It's lower-dimensional than the input but captures the important structure.":
+  "A model's hidden representation space.": "那個藏起來的表示法",
+  "A learned representation space whose coordinates encode factors useful to a model. It may be lower-dimensional than the input, but compression is not required for every latent representation.":
     "一個經過壓縮、學習得到的表示空間，相似的輸入會落在相近的位置。自編碼器、VAE 與擴散模型都在潛在空間裡運作。它的維度低於輸入，但保留了重要結構。",
-  "How fast the AI learns": "AI 學多快",
-  "A scalar that controls step size during gradient descent. Too high: overshoots the minimum and diverges. Too low: converges too slowly or gets stuck. The single most important hyperparameter.":
+  "How large each optimization step is.": "AI 學多快",
+  "A scale factor used by an optimizer to control parameter-update magnitude. Values that are too large can destabilize training; values that are too small can make useful progress impractically slow.":
     "控制梯度下降步伐大小的純量。太大會衝過最低點而發散，太小則收斂過慢或卡住。單一最重要的超參數。",
-  "AI\" or \"the brain": "AI」或「那顆大腦",
-  "A transformer-based neural network trained to predict the next token in a sequence, with billions of parameters, trained on internet-scale text data":
+  "The brain of an AI application.": "AI」或「那顆大腦",
+  "A language model with enough capacity and broad training to perform many language tasks through prompting or adaptation. Most current LLMs use transformer architectures and sequence-prediction objectives, but size thresholds, data sources, and training recipes vary.":
     "以 Transformer 為基礎的神經網路，訓練目標是預測序列中的下一個詞元，擁有數十億參數，並在網路規模的文字資料上訓練",
-  "Efficient fine-tuning": "省資源的微調",
-  "Instead of updating all weights, insert small low-rank matrices alongside the original weights. Only these small matrices are trained, reducing memory by 10-100x":
+  "Parameter-efficient fine-tuning.": "省資源的微調",
+  "A method that keeps base weights frozen and learns low-rank update matrices for selected layers. It reduces the number of trainable parameters and can lower training memory relative to full-parameter fine-tuning.":
     "不更新全部權重，而是在原有權重旁插入小的低秩矩陣，只訓練這些小矩陣，記憶體需求可降低 10 到 100 倍",
-  "How wrong the AI is": "AI 錯得多離譜",
-  "A function that measures the gap between predicted and actual output. Training minimizes this function. MSE for regression, cross-entropy for classification, contrastive loss for embeddings. The choice of loss function defines what \"good\" means to the model.":
+  "A number that measures training error.": "AI 錯得多離譜",
+  "An objective that maps predictions and targets, sometimes with regularization terms, to a value optimization tries to reduce. The loss determines which errors training directly rewards or penalizes.":
     "衡量預測與實際輸出差距的函式，訓練就是在最小化它。回歸用 MSE，分類用交叉熵，嵌入用對比損失。損失函式的選擇，等於定義了對模型而言什麼叫「好」。",
-  "Training trick for speed": "加速訓練的小技巧",
-  "Using float16 for forward pass and most operations (faster, less memory) but keeping float32 for gradient accumulation and weight updates (more precise). Gets 2x speedup with negligible accuracy loss.":
-    "前向傳播與大多數運算用 float16（更快、更省記憶體），梯度累加與權重更新則保留 float32（更精確）。可換來約兩倍加速，準確度幾乎不受影響。",
-  "Only part of the model runs": "只有部分模型會運作",
-  "A model with many \"expert\" subnetworks where a routing mechanism sends each input to only a few experts. The full model is huge but each forward pass is cheap because most experts are skipped. Mixtral and GPT-4 use this.":
-    "模型內含許多「專家」子網路，由路由機制把每個輸入只送給少數幾個專家。整個模型很龐大，但因為大多數專家被跳過，每次前向傳播都很便宜。Mixtral 與 GPT-4 都採用這個做法。",
-  "A way for AI to use tools": "讓 AI 使用工具的一種方式",
-  "An open protocol (JSON-RPC over stdio/HTTP) that standardizes how AI applications connect to external data sources and tools, with typed schemas for tools, resources, and prompts":
+  "A standard way for AI applications to connect to tools and context.": "讓 AI 使用工具的一種方式",
+  "An open JSON-RPC protocol for a host to connect to servers that expose tools, resources, prompts, and extensions through defined request, result, discovery, and transport contracts. In revision 2026-07-28, every request carries its protocol version and client capabilities instead of relying on an initialization handshake or protocol session.":
     "一個開放協定（以 JSON-RPC 走 stdio 或 HTTP），標準化 AI 應用連接外部資料來源與工具的方式，並為工具、資源與提示詞提供具型別的結構定義",
-  "Training crashed": "訓練爆掉了",
-  "A floating-point value indicating undefined results (0/0, inf-inf). In training, NaN loss usually means: learning rate too high, exploding gradients, log of zero, or division by zero. Always the first thing to check when training fails.":
+  "Using lower-precision arithmetic for speed and memory savings.": "加速訓練的小技巧",
+  "A numerical strategy that uses different data types for different operations, often lower precision for many matrix operations and higher precision for values that need more range or stability.":
+    "前向傳播與大多數運算用 float16（更快、更省記憶體），梯度累加與權重更新則保留 float32（更精確）。可換來約兩倍加速，準確度幾乎不受影響。",
+  "A large model that activates only part of its parameters for each token.": "只有部分模型會運作",
+  "An architecture with multiple expert subnetworks and a learned router that selects a subset for each input unit, often each token. Sparse activation can increase total parameter capacity without using every expert on every forward pass.":
+    "模型內含許多「專家」子網路，由路由機制把每個輸入只送給少數幾個專家。整個模型很龐大，但因為大多數專家被跳過，每次前向傳播都很便宜。Mixtral 與 GPT-4 都採用這個做法。",
+  "A sign that numerical computation failed.": "訓練爆掉了",
+  "A floating-point value representing an undefined or unrepresentable numerical result. In training, NaNs can come from invalid operations, overflow, unstable normalization, excessive updates, or earlier corrupted values.":
     "表示未定義結果的浮點值（0/0、inf-inf）。訓練中出現 NaN 損失通常意味著：學習率太高、梯度爆炸、對零取對數，或除以零。訓練失敗時第一個該檢查的東西。",
-  "Scaling the data": "把資料縮放一下",
-  "Adjusting values to a standard range. Batch normalization normalizes across a batch. Layer normalization normalizes across features. Both stabilize training and allow higher learning rates.":
+  "Scaling data to a standard range.": "把資料縮放一下",
+  "A family of transformations that rescale or recenter inputs, activations, or features using defined statistics. Batch normalization and layer normalization use different axes and behave differently across training and inference.":
     "把數值調整到標準範圍。批次正規化跨批次做正規化，層正規化跨特徵做正規化。兩者都能穩定訓練，並容許使用較高的學習率。",
-  "The model memorized the data": "模型把資料背下來了",
-  "The model performs well on training data but poorly on unseen data. It learned the noise, not the signal. Fix with: more data, regularization (dropout, weight decay), early stopping, data augmentation, simpler model.":
-    "模型在訓練資料上表現很好，但在沒見過的資料上很差 —— 它學到的是雜訊，不是訊號。解法：更多資料、正則化（dropout、權重衰減）、提早停止、資料增強、換更簡單的模型。",
-  "The thing that updates weights": "負責更新權重的那個東西",
-  "An algorithm that uses gradients to update model parameters. SGD is the simplest. Adam is the most common. Each optimizer has different properties: convergence speed, memory usage, sensitivity to hyperparameters.":
+  "The algorithm that updates weights.": "負責更新權重的那個東西",
+  "An algorithm that transforms gradients into parameter updates. Plain stochastic gradient descent is a simple baseline; momentum, Adam, and other optimizers change the update using history or adaptive scaling. Each choice has different memory, stability, and tuning behavior.":
     "利用梯度更新模型參數的演算法。SGD 最簡單，Adam 最常見。每種最佳化器在收斂速度、記憶體用量與對超參數的敏感度上各有不同。",
-  "Model size": "模型大小",
-  "A learnable value in the model, typically a weight or bias. \"7B parameters\" means 7 billion learnable numbers. Each float32 parameter takes 4 bytes, so 7B parameters = 28GB of memory just for the weights.":
+  "The model memorized the training data.": "模型把資料背下來了",
+  "A generalization gap in which performance on training data is substantially better than performance on representative unseen data. Memorization can contribute, but the operational symptom is poor generalization.":
+    "模型在訓練資料上表現很好，但在沒見過的資料上很差 —— 它學到的是雜訊，不是訊號。解法：更多資料、正則化（dropout、權重衰減）、提早停止、資料增強、換更簡單的模型。",
+  "A number used to describe model size.": "模型大小",
+  "A value learned during training, commonly a weight, bias, embedding element, or normalization parameter. Parameter count is one measure of model capacity, but it does not directly determine quality, memory, or serving cost.":
     "模型中一個可學習的值，通常是權重或偏差。「7B 參數」意思是 70 億個可學習的數字。每個 float32 參數佔 4 個位元組，所以 7B 參數光是權重就要 28GB 記憶體。",
-  "How confused the model is": "模型有多困惑",
-  "The exponential of the average cross-entropy loss. Lower is better. A perplexity of 10 means the model is as uncertain as if it were choosing uniformly among 10 tokens at each step.":
+  "How surprised a language model is by a dataset.": "模型有多困惑",
+  "The exponentiated average negative log-likelihood under a stated tokenization and logarithm convention. Lower values mean the model assigned higher probability to the evaluated sequence.":
     "平均交叉熵損失取指數。越低越好。困惑度為 10 表示模型的不確定程度，相當於每一步都在 10 個詞元之間均勻亂猜。",
-  "Accuracy metrics": "準確度指標",
-  "Precision = of items you flagged, how many were correct. Recall = of all correct items, how many did you find. They trade off: catching every spam email (high recall) means more false alarms (low precision). F1 score is their harmonic mean. Use precision when false positives are costly, recall when false negatives are costly.":
+  "Two metrics for classification or retrieval quality.": "準確度指標",
+  "Precision asks how many flagged items were correct; recall asks how many relevant items were found. When you change the decision threshold for one fixed scoring model, improving recall often lowers precision and vice versa. A better model can improve both. F1 is their harmonic mean.":
     "精確率 = 你標記出來的項目中有多少是對的。召回率 = 所有正確項目中你找到了多少。兩者會互相拉扯：要抓到每一封垃圾信（高召回）就會誤判更多（低精確）。F1 分數是兩者的調和平均。誤判代價高時看精確率，漏抓代價高時看召回率。",
-  "Talking to AI the right way": "用對的方式跟 AI 說話",
-  "Designing the input text to reliably produce desired outputs -- including system prompts, few-shot examples, format instructions, and chain-of-thought triggers":
+  "Wording instructions so a model follows the task.": "用對的方式跟 AI 說話",
+  "Designing model-facing instructions, examples, constraints, and output requirements to improve behavior on a defined task.":
     "設計輸入文字以穩定產出想要的結果 —— 包含系統提示詞、少量範例、格式指示，以及觸發思維鏈的寫法",
-  "Hacking the AI with words": "用文字駭進 AI",
-  "An attack where malicious text in the input overrides the system prompt or instructions. Direct injection: user types \"Ignore previous instructions.\" Indirect injection: a retrieved document contains hidden instructions. The LLM equivalent of SQL injection. No complete solution exists -- defense is layers of input validation, output filtering, and privilege separation.":
+  "An adversarial instruction that redirects a model.": "用文字駭進 AI",
+  "An attack or failure mode in which untrusted content influences a model to disregard intended instructions, expose data, misuse tools, or take actions outside the user's goal. The content can arrive directly from a user or indirectly through retrieved pages, files, messages, or tool output.":
     "一種攻擊：輸入中的惡意文字覆蓋掉系統提示詞或指示。直接注入是使用者自己輸入「忽略先前的指示」；間接注入則是被檢索到的文件裡藏了指示。相當於 LLM 版的 SQL 注入。目前沒有完整解法 —— 防禦靠的是分層的輸入驗證、輸出過濾與權限隔離。",
-  "LoRA but cheaper": "更便宜的 LoRA",
-  "Quantized LoRA. Keeps the frozen base model weights in 4-bit precision (NF4 format) while training LoRA adapters in 16-bit. Reduces memory by another 3-4x compared to standard LoRA. A 7B model that needs 14GB with LoRA fits in 4-6GB with QLoRA. Quality is within 1% of full fine-tuning on most benchmarks.":
+  "LoRA with a quantized base model.": "更便宜的 LoRA",
+  "A parameter-efficient fine-tuning method that keeps a pretrained base model frozen in a low-bit quantized representation while training LoRA adapters with higher-precision computation where needed.":
     "量化版 LoRA。凍結的基礎模型權重保持 4 位元精度（NF4 格式），LoRA 轉接層則以 16 位元訓練。相較標準 LoRA 再省 3 到 4 倍記憶體：用 LoRA 需要 14GB 的 7B 模型，用 QLoRA 只需 4 到 6GB。多數基準測試上的品質與完整微調相差不到 1%。",
-  "AI that can search": "會搜尋的 AI",
-  "A pattern where you retrieve relevant documents from a knowledge base (using embedding similarity), stuff them into the prompt, and let the LLM answer based on that context":
-    "一種模式：先用嵌入相似度從知識庫檢索相關文件，塞進提示詞，再讓 LLM 依這些脈絡作答",
-  "How they make AI helpful": "他們讓 AI 變得有用的方法",
-  "A training pipeline: (1) collect human preferences on model outputs, (2) train a reward model on those preferences, (3) use PPO to optimize the LLM to produce higher-reward outputs":
-    "一條訓練管線：(1) 蒐集人類對模型輸出的偏好，(2) 用這些偏好訓練獎勵模型，(3) 以 PPO 最佳化 LLM，使其產生獎勵更高的輸出",
-  "Making the model smaller": "把模型變小",
-  "Reducing the precision of model weights from float32 (4 bytes) to int8 (1 byte) or int4 (0.5 bytes). Trades a small amount of accuracy for 4-8x less memory and faster inference. GPTQ, AWQ, and GGUF are common formats.":
+  "Storing or computing model values with fewer bits.": "把模型變小",
+  "Representing weights, activations, or caches with lower-precision formats to reduce memory, bandwidth, or compute cost. Methods differ in calibration, granularity, data type, and whether conversion happens before, during, or after training.":
     "把模型權重的精度從 float32（4 個位元組）降到 int8（1 個位元組）或 int4（0.5 個位元組）。用少量準確度換取 4 到 8 倍的記憶體節省與更快的推論。GPTQ、AWQ 與 GGUF 是常見格式。",
-  "Activation function": "激活函式",
-  "Rectified Linear Unit: f(x) = max(0, x). The simplest non-linear activation. Fast to compute, doesn't saturate for positive values. Used everywhere because it works and is cheap. Variants: LeakyReLU, GELU, SiLU.":
+  "A model answering with retrieved knowledge.": "會搜尋的 AI",
+  "A system pattern that retrieves evidence relevant to a request and supplies selected content to a generative model before it answers or acts. Retrieval can use lexical, vector, structured, or hybrid methods.":
+    "一種模式：先用嵌入相似度從知識庫檢索相關文件，塞進提示詞，再讓 LLM 依這些脈絡作答",
+  "A simple activation function.": "激活函式",
+  "Rectified Linear Unit, defined as `f(x) = max(0, x)`. It is inexpensive and has a non-saturating positive branch, though zero gradients on negative inputs can create inactive units.":
     "Rectified Linear Unit（整流線性單元）：f(x) = max(0, x)。最簡單的非線性激活函式，計算快，且在正值區不會飽和。到處都在用，因為它有效又便宜。變體有 LeakyReLU、GELU、SiLU。",
-  "Summarization metric": "摘要評估指標",
-  "Recall-Oriented Understudy for Gisting Evaluation. Measures overlap between generated text and reference text. ROUGE-1 counts unigram matches, ROUGE-2 counts bigram matches, ROUGE-L finds the longest common subsequence. Cheap to compute but only measures surface similarity -- two sentences with the same meaning but different words score poorly.":
+  "Training a model from human preferences.": "他們讓 AI 變得有用的方法",
+  "A family of pipelines that uses human feedback to learn a reward or preference signal and then optimizes a model policy against that signal. Implementations vary and need not all use the same reinforcement-learning algorithm.":
+    "一條訓練管線：(1) 蒐集人類對模型輸出的偏好，(2) 用這些偏好訓練獎勵模型，(3) 以 PPO 最佳化 LLM，使其產生獎勵更高的輸出",
+  "A reference-overlap metric often used for summaries.": "摘要評估指標",
+  "A family of metrics that compares generated text with reference text using units such as n-gram overlap or longest common subsequence.":
     "Recall-Oriented Understudy for Gisting Evaluation。衡量生成文字與參考文字的重疊程度。ROUGE-1 數單詞重疊，ROUGE-2 數雙詞重疊，ROUGE-L 找最長共同子序列。計算便宜，但只衡量表面相似度 —— 兩句意思相同但用詞不同的句子分數會很低。",
-  "Smart search that understands meaning": "懂意思的聰明搜尋",
-  "Finding documents by meaning rather than keyword matching. Embed the query and all documents into the same vector space, then return documents whose embeddings are closest to the query embedding. \"payment failed\" finds \"transaction declined\" even though they share no words. Powered by embedding models + vector databases.":
-    "依語意而非關鍵字比對來找文件。把查詢與所有文件嵌入同一個向量空間，再回傳嵌入最接近查詢的文件。「付款失敗」能找到「交易遭拒」，即使兩者沒有共同用詞。背後靠嵌入模型加向量資料庫。",
-  "Seeing the response appear word by word": "看回應一個字一個字冒出來",
-  "The LLM sends tokens as they are generated rather than waiting for the complete response. Uses Server-Sent Events (SSE) or WebSocket protocols. Reduces perceived latency from seconds to milliseconds for the first token. Essential for production chat interfaces. Each chunk contains a delta (partial token or word).":
-    "LLM 邊生成邊送出詞元，不必等整個回應完成。使用 Server-Sent Events（SSE）或 WebSocket 協定。可把首個詞元的感知延遲從數秒降到數毫秒，是生產級聊天介面的必備功能。每個區塊都含一個 delta（部分詞元或字）。",
-  "How the model decides what to focus on": "模型如何決定要注意什麼",
-  "Each token computes query, key, and value vectors. Attention weight between two tokens = dot product of their query and key, scaled and softmaxed. Output = weighted sum of value vectors. Lets every token see every other token.":
+  "Tokens deciding which other tokens matter.": "模型如何決定要注意什麼",
+  "Attention in which queries, keys, and values are derived from the same sequence representation. Scaled similarity scores are normalized and used to combine values, subject to causal, padding, local, or other masks.":
     "每個詞元都算出 query、key 與 value 向量。兩個詞元之間的注意力權重 = 兩者 query 與 key 的內積，經縮放與 softmax。輸出是 value 向量的加權總和。這讓每個詞元都能看到其他所有詞元。",
-  "Teaching the model to follow instructions": "教模型聽指示",
-  "Fine-tuning a pre-trained model on (instruction, response) pairs. The model learns to generate the response given the instruction. This is what turns a base model into a chat model.":
+  "Search by meaning instead of exact words.": "懂意思的聰明搜尋",
+  "Retrieval that represents a query and candidates in an embedding space and ranks candidates using a vector-similarity function.":
+    "依語意而非關鍵字比對來找文件。把查詢與所有文件嵌入同一個向量空間，再回傳嵌入最接近查詢的文件。「付款失敗」能找到「交易遭拒」，即使兩者沒有共同用詞。背後靠嵌入模型加向量資料庫。",
+  "Training on example inputs and desired outputs.": "教模型聽指示",
+  "Fine-tuning a pretrained model on paired inputs and desired responses so it learns the demonstrated behavior under the training distribution.":
     "用（指示、回應）配對資料微調預訓練模型，讓模型學會在給定指示時生出對應回應。這就是把基礎模型變成聊天模型的步驟。",
-  "Turns numbers into probabilities": "把數字變成機率",
-  "softmax(x_i) = exp(x_i) / sum(exp(x_j)). Transforms a vector of arbitrary real numbers into a probability distribution (all positive, sums to 1). Used in classification heads, attention weights, and anywhere you need probabilities.":
+  "A function that turns logits into normalized positive values.": "把數字變成機率",
+  "A function defined by `softmax(x_i) = exp(x_i) / sum(exp(x_j))`, implemented with numerical stabilization. Its outputs are positive and sum to one, so they can parameterize a categorical distribution.":
     "softmax(x_i) = exp(x_i) / sum(exp(x_j))。把任意實數向量轉成機率分布（全為正、總和為 1）。用於分類輸出層、注意力權重，以及任何需要機率的地方。",
-  "A bunch of AI agents working together like bees": "一群像蜜蜂一樣協同工作的 AI 代理程式",
-  "Multiple agents sharing state and coordinating through message passing, with emergent behavior arising from simple individual rules rather than central control":
+  "Showing output as it is generated.": "看回應一個字一個字冒出來",
+  "Delivering incremental response events before the complete result is ready. A stream may contain token text, structured deltas, tool-call arguments, usage metadata, or status events depending on the API.":
+    "LLM 邊生成邊送出詞元，不必等整個回應完成。使用 Server-Sent Events（SSE）或 WebSocket 協定。可把首個詞元的感知延遲從數秒降到數毫秒，是生產級聊天介面的必備功能。每個區塊都含一個 delta（部分詞元或字）。",
+  "Many agents collaborating without one fixed controller.": "一群像蜜蜂一樣協同工作的 AI 代理程式",
+  "A loosely coordinated multi-agent pattern in which local agent decisions and message exchange produce system-level behavior. The term is used inconsistently, so the actual topology, state ownership, and termination rules must be specified.":
     "多個代理程式共享狀態、透過訊息傳遞協調，其群體行為是由簡單的個體規則湧現出來，而非來自中央控制",
-  "The AI's instructions": "給 AI 的指示",
-  "A special message at the start of a conversation that sets the model's behavior, persona, and constraints. Processed before user messages. Not visible to the user in most UIs. Defines what the model should and shouldn't do, its tone, format preferences, and domain focus. Different from user prompts -- system prompts are set by the developer.":
+  "Developer-controlled instructions for a model interaction.": "給 AI 的指示",
+  "A provider-defined instruction message or configuration supplied by the application to establish behavior and constraints within that provider's instruction hierarchy.":
     "對話最開頭的一則特殊訊息，用來設定模型的行為、人格與限制。會在使用者訊息之前處理，在多數介面中對使用者不可見。它定義模型該做與不該做什麼、語氣、格式偏好與領域重點。與使用者提示詞不同 —— 系統提示詞由開發者設定。",
-  "A multi-dimensional array": "多維陣列",
-  "The fundamental data structure in deep learning frameworks. A 0D tensor is a scalar, 1D is a vector, 2D is a matrix, 3D+ is a tensor. In PyTorch and JAX, tensors track their computation history for automatic differentiation and can live on CPU or GPU. All neural network inputs, outputs, weights, and gradients are tensors.":
-    "深度學習框架中最基本的資料結構。0 維張量是純量，1 維是向量，2 維是矩陣，3 維以上是張量。在 PyTorch 與 JAX 中，張量會記錄自己的運算歷程以支援自動微分，並可存放在 CPU 或 GPU 上。神經網路的所有輸入、輸出、權重與梯度都是張量。",
-  "A word": "一個字",
-  "A subword unit (typically 3-4 characters in English) produced by a tokenizer like BPE. \"unbelievable\" might be 3 tokens: \"un\" + \"believ\" + \"able\"":
-    "由 BPE 這類分詞器產生的子詞單位（英文中通常 3 到 4 個字元）。「unbelievable」可能是 3 個詞元：「un」+「believ」+「able」",
-  "Creativity setting": "創意程度的設定",
-  "A scalar that divides logits before softmax. Temperature=1 is default. Higher = flatter distribution = more random outputs. Lower = sharper distribution = more deterministic. Temperature=0 is argmax (always pick the most likely token).":
+  "A creativity setting.": "創意程度的設定",
+  "A decoding parameter that rescales logits before a probability distribution is formed. Higher positive values usually flatten the distribution; lower positive values sharpen it.":
     "在 softmax 之前用來除 logits 的純量。預設為 1。越高分布越平坦、輸出越隨機；越低分布越尖銳、輸出越確定。溫度為 0 等於取 argmax（永遠選最可能的詞元）。",
-  "Using a pre-trained model": "拿預訓練模型來用",
-  "Taking a model trained on one task and adapting it to a different task. The early layers learn general features (edges, syntax patterns) that transfer. Only the later layers need task-specific training. This is why you can fine-tune BERT for any NLP task.":
+  "A multidimensional array used for numerical computation.": "多維陣列",
+  "A typed array with a shape, data type, and device placement that frameworks use to represent inputs, parameters, activations, and gradients. Automatic-differentiation metadata is framework- and operation-dependent, not an inherent property of every tensor.":
+    "深度學習框架中最基本的資料結構。0 維張量是純量，1 維是向量，2 維是矩陣，3 維以上是張量。在 PyTorch 與 JAX 中，張量會記錄自己的運算歷程以支援自動微分，並可存放在 CPU 或 GPU 上。神經網路的所有輸入、輸出、權重與梯度都是張量。",
+  "A word-sized piece of model input or output.": "一個字",
+  "An integer identifier produced by a model-specific tokenizer from text, bytes, images, audio, or another input representation. A token can be a whole word, part of a word, punctuation, whitespace, a byte sequence, or a special control symbol.":
+    "由 BPE 這類分詞器產生的子詞單位（英文中通常 3 到 4 個字元）。「unbelievable」可能是 3 個詞元：「un」+「believ」+「able」",
+  "Reusing a pretrained model for a new task.": "拿預訓練模型來用",
+  "Starting from representations or parameters learned on one data distribution or objective and adapting them for another. The transferable components and update strategy depend on architecture and task.":
     "把在某個任務上訓練好的模型拿來適配到另一個任務。前面的層學到的是可移轉的通用特徵（邊緣、語法樣式），只有後面的層需要針對新任務訓練。這就是為什麼 BERT 可以微調到任何 NLP 任務。",
-  "The architecture behind modern AI": "現代 AI 背後的架構",
-  "A neural network architecture that processes sequences using self-attention (letting every position attend to every other position) instead of recurrence, enabling massive parallelization":
+  "The architecture behind many modern language models.": "現代 AI 背後的架構",
+  "A neural-network architecture built from attention, position information, feed-forward sublayers, residual connections, and normalization. Encoder, decoder, and encoder-decoder variants use different masks and information flows.":
     "一種神經網路架構，以自注意力（讓每個位置都能注意到其他所有位置）取代遞迴來處理序列，因此能大規模平行化",
-  "The model isn't learning": "模型根本沒在學",
-  "The model is too simple to capture the patterns in the data. Training loss stays high. Fix with: more parameters, more layers, longer training, lower regularization, better features.":
+  "The model cannot fit the training task well enough.": "模型根本沒在學",
+  "A model or training setup has insufficient effective capacity, optimization, features, or training signal to capture useful patterns in the training data.":
     "模型太簡單，抓不到資料中的樣式，訓練損失一直很高。解法：增加參數、增加層數、訓練更久、降低正則化、改用更好的特徵。",
-  "A generative model": "一種生成模型",
-  "An autoencoder that learns a smooth latent space by forcing the encoder output to follow a Gaussian distribution. You can sample from this distribution and decode to generate new data. The reparameterization trick makes it trainable via backpropagation.":
+  "A probabilistic generative autoencoder.": "一種生成模型",
+  "A latent-variable model trained with a reconstruction objective and a regularization term that keeps an approximate posterior close to a chosen prior. The reparameterization estimator allows gradients through stochastic latent sampling.":
     "一種自編碼器，透過強迫編碼器輸出服從高斯分布，學出平滑的潛在空間。你可以從這個分布取樣再解碼，生成新資料。重參數化技巧讓它能用反向傳播訓練。",
-  "A special database for AI": "給 AI 用的特殊資料庫",
-  "A database optimized for storing vectors (dense arrays of floats) and performing fast approximate nearest-neighbor search. The core operation in similarity search, RAG, and recommendation systems.":
+  "A database optimized for vector similarity search.": "給 AI 用的特殊資料庫",
+  "A storage and indexing system that supports nearest-neighbor queries over vector representations, often with metadata filtering, persistence, and approximate indexes.":
     "針對儲存向量（稠密浮點陣列）與快速近似最近鄰搜尋最佳化的資料庫。相似度搜尋、RAG 與推薦系統的核心操作。",
-  "What the model learned": "模型學到的東西",
-  "A single number in a model's parameter matrix. A linear layer with input size 768 and output size 3072 has 768*3072 = 2,359,296 weights. Training adjusts each weight to minimize the loss function.":
+  "A learned number inside a model.": "模型學到的東西",
+  "A trainable coefficient in a model transformation. Weights are usually organized into tensors, and optimization adjusts them to reduce the training objective.":
     "模型參數矩陣裡的一個數字。輸入 768、輸出 3072 的線性層有 768*3072 = 2,359,296 個權重。訓練就是在調整每個權重以最小化損失函式。",
-  "Regularization": "正則化",
-  "Adding a penalty proportional to the magnitude of weights to the loss function. Equivalent to L2 regularization. Prevents weights from growing too large. Typical value: 0.01-0.1.":
+  "Regularization that shrinks weights during optimization.": "正則化",
+  "An update rule that reduces selected parameter magnitudes over training, often by multiplying weights by a shrinkage factor separate from the gradient update.":
     "在損失函式上加一個與權重大小成正比的懲罰項，等同於 L2 正則化，可防止權重長得太大。典型值：0.01 到 0.1。",
-  "No training needed": "不用訓練",
-  "Using a model on a task it wasn't explicitly trained for, with no task-specific examples in the prompt. The model generalizes from pre-training. Works because large models have seen enough variety to handle new task formats.":
+  "Asking for a task without examples in the current prompt.": "不用訓練",
+  "Performing a task from instructions or task framing without including task-specific demonstrations in the immediate input.":
     "把模型用在它沒有被明確訓練過的任務上，且提示詞中不給任何該任務的範例。模型從預訓練中泛化而來。大型模型見過的樣態足夠多，因此能應付新的任務格式。",
 };
