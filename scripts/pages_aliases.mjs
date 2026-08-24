@@ -35,7 +35,11 @@ const { rewrites = [] } = JSON.parse(
 );
 
 let count = 0;
-for (const { source, destination } of rewrites) {
+for (const { source, destination, has } of rewrites) {
+  // Conditional rewrites are Vercel's content negotiation: /about with an
+  // `accept` header goes to the /api/markdown function, which no static host
+  // can serve. Only the unconditional page rewrite belongs in a stub.
+  if (has) continue;
   const slug = source.replace(/^\/+|\/+$/g, '');
   if (!slug || !destination) continue;
   // Climb back out of the alias directory so the stub's target stays
