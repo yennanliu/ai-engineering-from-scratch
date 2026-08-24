@@ -3521,9 +3521,17 @@
           })
           .then(function (documentResult) {
             if (requestSequence !== lessonFetchSequence) return;
-            applyRenderedLanguage(documentResult.lang);
+            var md = documentResult.markdown;
+            var enMd = documentResult.enMarkdown;
+            var lang = documentResult.lang;
+            if (enMd && enMd !== md && !headingsAlign(enMd, md)) {
+              md = enMd;
+              enMd = null;
+              lang = 'en';
+            }
+            applyRenderedLanguage(lang);
             try {
-              renderLesson(documentResult.markdown, documentResult.enMarkdown);
+              renderLesson(md, enMd);
             } catch (err) {
               console.error('renderLesson failed', err);
               showError('Render error', 'Loaded the lesson markdown but failed to render it. Details in the browser console.');
@@ -3683,6 +3691,21 @@
         var idx = headingSeen[level]++;
         var list = canonHeadings && canonHeadings[level];
         return (list && list[idx]) || ownText;
+      }
+
+      // The ordinal map is only meaningful while the two files still have the
+      // same heading shape. Once an upstream rewrite lands ahead of its
+      // translation the nth heading is a different section on each side, and
+      // mapping them anyway would silently anchor the quizzes and section
+      // tints to the wrong headings — worse than showing English.
+      function headingsAlign(enMd, md) {
+        var a = headingsByLevel(enMd);
+        var b = headingsByLevel(md);
+        if (!a || !b) return false;
+        for (var level = 1; level <= 3; level++) {
+          if (a[level].length !== b[level].length) return false;
+        }
+        return true;
       }
 
       var headingHashRestoreFrame = 0;
