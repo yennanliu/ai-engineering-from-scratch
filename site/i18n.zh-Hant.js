@@ -1046,6 +1046,8 @@ window.I18N_ZH_HANT = {
   "Constitutional Rules Engine": "憲法式規則引擎",
   "End-to-End Safety Gate": "端到端安全關卡",
   /* ── Glossary ────────────────────────────────────────────────── */
+  "A training-memory technique that saves only selected forward-pass activations and recomputes the omitted ones during backpropagation.":
+    "一種訓練記憶體技巧：前向傳播時只保存選定的活化值，反向傳播時再重新計算被省略的那些。",
   "The nonlinear operation between layers.": "夾在層與層之間那個非線性的東西",
   "A function applied after a linear or affine layer that introduces nonlinearity. Without it, composing layers with weights and biases collapses to one affine transformation. ReLU, GELU, and SiLU are common choices. The choice directly affects whether gradients flow during training.":
     "接在每個線性層之後、用來引入非線性的函式。少了它，不論疊多少線性層都會塌縮成單一線性轉換。最常見的是 ReLU、GELU 與 SiLU，選擇會直接影響訓練時梯度能否順利流動。",
@@ -1055,45 +1057,105 @@ window.I18N_ZH_HANT = {
   "Adam with weight decay fixed.": "比較好的 Adam",
   "An Adam variant that decouples weight decay from the gradient-based parameter update. That makes the shrinkage behavior easier to reason about than adding an L2 penalty inside Adam's adaptively scaled gradient.":
     "帶有解耦權重衰減的 Adam。標準 Adam 中，L2 正則化會被每個參數的適應性學習率縮放，那並不是你想要的效果。AdamW 直接把權重衰減套用在權重上，與梯度統計量無關。訓練 Transformer 的預設最佳化器。",
+  "A pre-acceptance gate that decides whether a request may enter a bounded queue or service under the system's current capacity, priority, and policy.":
+    "一道接受前的關卡：依系統當下的容量、優先序與政策，決定一個請求能否進入有界佇列或服務。",
   "An autonomous model that thinks and acts alone.": "會自己思考、自己行動的自主 AI",
   "A software system that lets a model select actions toward a goal, observe tool or environment results, and continue under an orchestration policy. An agent may use a loop, a state machine, a workflow engine, or human approvals. The model is one component, not the entire system.":
     "一個 while 迴圈：由 LLM 決定下一步要呼叫哪個工具，執行它，看結果，然後重複",
+  "The runtime around a model that assembles context, exposes tools, manages state, enforces limits, records traces, and decides when the agent should continue, retry, ask, or stop.":
+    "包在模型外的執行環境：組裝脈絡、開放工具、管理狀態、施加限制、記錄軌跡，並決定代理程式該繼續、重試、詢問，還是停止。",
+  "Information stored outside the model and selected for use in later agent steps, such as prior decisions, user preferences, task episodes, or verified facts.":
+    "存放在模型之外、供後續步驟取用的資訊，例如先前的決策、使用者偏好、任務經歷或已驗證的事實。",
+  "The explicit data an agent carries across steps, such as the current objective, completed actions, tool results, open questions, budgets, approvals, and artifact references.":
+    "代理程式跨步驟攜帶的明確資料，例如當前目標、已完成的動作、工具結果、未解的問題、預算、核准，以及產出物的參照。",
+  "A discoverable directory of procedural instructions whose entry point is `SKILL.md`, with optional references, scripts, and assets that a compatible runtime can load in stages.":
+    "一個可被探索的程序性指令目錄，進入點是 `SKILL.md`，可另外附上參考文件、腳本與素材，讓相容的執行環境分階段載入。",
+  "A documented analysis of how an AI system can affect people, organizations, and environments, including context, hazards, likelihood, impact, controls, residual risk, and monitoring responsibilities.":
+    "一份書面分析，說明 AI 系統可能如何影響人、組織與環境，內容涵蓋情境、危害、發生機率、衝擊、控制措施、殘餘風險與監控責任。",
   "Making AI safe.": "讓 AI 變安全",
   "The effort to make a model or AI system behave in ways that match intended goals, constraints, and human preferences across both expected and adversarial situations.":
     "讓 AI 系統的行為符合人類意圖、價值與偏好的技術難題，包含設計者沒預料到的邊界情況",
+  "A control point that blocks a consequential action until an authorized person or policy grants permission.":
+    "一個控制點：在獲得授權者或政策許可之前，擋下具重大後果的動作。",
+  "A search method that returns vectors likely to be among the nearest to a query without exhaustively comparing the query with every stored vector.":
+    "一種搜尋方法：回傳可能最接近查詢的向量，而不必把查詢與每一個已存向量逐一比對。",
   "How a model focuses on important tokens.": "AI 怎麼聚焦在重要的部分",
   "A mechanism that forms contextual representations by comparing query vectors with key vectors, normalizing the resulting scores, and using them to combine value vectors. Masks, position rules, or sparse patterns can restrict which positions participate.":
     "一種機制：每個詞元對所有其他詞元的 value 取加權總和，權重由彼此的相關程度決定（以 query 與 key 向量的內積計算）",
+  "A discrete identifier produced by an audio codec or tokenizer for a short segment or feature of an audio signal, sometimes across several codebooks.":
+    "音訊編解碼器或斷詞器為音訊訊號的一小段或某項特徵所產生的離散識別碼，有時橫跨多個編碼簿。",
+  "A durable, access-controlled record of security- or accountability-relevant events, including who or what acted, what changed, when it happened, and the resulting status.":
+    "一份持久且受存取控管的紀錄，記載與安全或問責相關的事件，包含誰或什麼執行了動作、改了什麼、何時發生，以及結果狀態。",
   "Automatic gradients.": "自動算梯度",
   "A system that records or transforms tensor operations so it can compute derivatives, usually with reverse-mode automatic differentiation. You write the forward computation and the framework derives the gradients needed for backpropagation.":
     "記錄張量運算並以反向模式微分自動計算梯度的系統。PyTorch 的 autograd 會即時建構運算圖（動態圖），JAX 則採用函式轉換（grad）。這正是反向傳播得以實用的原因 —— 你只寫前向傳播，框架就把所有導數算出來。",
+  "The task and system pipeline that maps a speech signal to a transcription, often with optional token or segment timing and confidence information.":
+    "把語音訊號轉成逐字稿的任務與系統流程，通常可附帶詞元或片段的時間戳與信心資訊。",
   "The model generates one word at a time.": "AI 一次生成一個字",
   "A factorization in which each output token is predicted from the tokens that precede it. During generation, the selected token is appended to the sequence and becomes part of the next prediction's context.":
     "模型以先前所有詞元為條件預測下一個詞元，再把這個預測回饋為下一步的輸入。GPT、LLaMA 與 Claude 都是自迴歸模型。",
+  "A control loop that changes the number or capacity of serving workers from observed demand, resource use, or application metrics within configured bounds.":
+    "一個控制迴圈：依觀測到的需求、資源使用率或應用指標，在設定範圍內調整服務工作單元的數量或容量。",
+  "The proportion of eligible service interactions or time windows in which users can obtain the defined acceptable service under a stated measurement boundary.":
+    "在明確的量測邊界下，使用者能取得所定義之可接受服務的互動次數或時間區間佔比。",
+  "A flow-control mechanism that slows or rejects upstream work when a downstream component cannot process it safely at the current rate.":
+    "一種流量控制機制：當下游元件無法以當前速率安全處理時，減緩或拒絕上游送來的工作。",
   "How neural networks learn.": "神經網路學習的方式",
   "An efficient application of the chain rule that propagates derivatives from a scalar loss backward through a computation graph. It computes gradients; an optimizer uses those gradients to update parameters.":
     "一種演算法：沿著網路反向套用連鎖律，算出每個權重對誤差的貢獻有多大，再按比例調整權重",
   "How many examples are processed at once.": "一次餵幾筆資料",
   "The number of examples whose losses contribute to one gradient estimate before an optimizer update. Larger batches can improve hardware utilization and reduce gradient noise, but they require more memory and may need different learning-rate or scheduling choices.":
     "更新權重前，一次前向／反向傳播處理的訓練樣本數。批次越大梯度估計越穩定，但也吃更多記憶體。常見值：訓練 32-512，推論可更大。批次大小會與學習率互相影響 —— 批次加倍，學習率也加倍（線性縮放法則）。",
+  "Overlap or information leakage between evaluation examples and data used to pretrain, tune, prompt, select, or otherwise improve the evaluated system.":
+    "評測樣本與用來預訓練、微調、提示、選型或以其他方式改進受測系統的資料之間，出現重疊或資訊外洩。",
+  "A lexical ranking function that scores a document from query-term matches while accounting for term rarity, repeated occurrences, and document length.":
+    "一種詞彙式排序函式：依查詢詞的匹配情形為文件評分，同時考量詞的稀有度、重複出現次數與文件長度。",
+  "A subword-tokenization method that repeatedly merges frequent adjacent units to construct a fixed vocabulary from training text.":
+    "一種子詞斷詞法：反覆合併高頻的相鄰單元，從訓練語料建構出固定大小的詞彙表。",
+  "The agreement between a system's stated confidence and the observed frequency with which predictions at that confidence are correct.":
+    "系統宣稱的信心值，與該信心水準下預測實際答對頻率之間的吻合程度。",
+  "A deployment strategy that exposes a new version to a limited slice of traffic or infrastructure before expanding the rollout.":
+    "一種部署策略：先把新版本開放給一小部分流量或機器，確認無虞後再擴大推行。",
   "Asking the model to show every step of its thinking.": "讓 AI 一步一步想",
   "Intermediate reasoning used to decompose a task before producing an answer. A prompt can request a visible rationale, while some systems use internal reasoning that is not returned to the user.":
     "一種提示技巧：要求模型把推理步驟寫出來。因為每一步都會成為下一個詞元生成的條件，多步驟問題的正確率因此提升",
+  "A durable snapshot used to resume from a known boundary. In a workflow, it stores operational state and artifact references. In model training, it can store parameters, optimizer state, scheduler state, and the training position.":
+    "一份持久快照，用來從已知的邊界恢復。在工作流程中它保存運行狀態與產出物參照；在模型訓練中則可保存參數、最佳化器狀態、排程器狀態與訓練進度位置。",
+  "A serving technique that divides a long prompt's prefill work into smaller schedulable pieces so prompt processing can interleave with decode work from other requests.":
+    "一種服務技巧：把長提示的預填工作切成較小、可排程的片段，讓提示處理能與其他請求的解碼工作交錯進行。",
   "Splitting documents into pieces.": "把文件切成小塊",
   "Dividing source material into retrievable units before indexing. Chunk boundaries, overlap, metadata, and document structure determine whether retrieval returns enough context without flooding the prompt.":
     "在做嵌入以供檢索之前，先把文字切成片段。切塊大小決定搜尋結果的顆粒度：太小會失去脈絡，太大會稀釋相關性。常見策略：固定長度加重疊、依句子切，或語意切分。典型大小為 256-512 個詞元，重疊 10-20%。",
+  "A reliability control that temporarily stops calls to a dependency after failures cross a threshold, then probes whether the dependency has recovered.":
+    "一種可靠性控制：當對某依賴的失敗次數越過門檻後暫停呼叫，之後再探測它是否已恢復。",
   "A neural network for images.": "處理圖片的 AI",
   "A neural network that uses convolution operations (sliding filters over the input) to detect local patterns. Stacking convolutions detects increasingly complex features: edges, textures, objects.":
     "使用卷積運算（讓濾波器在輸入上滑動）偵測局部樣式的神經網路。層層堆疊的卷積會依序偵測越來越複雜的特徵：邊緣、紋理、物體。",
+  "An agent specialized for software work that can inspect a repository, edit files, run development tools, and use their outputs to advance a scoped engineering task.":
+    "專門處理軟體工作的代理程式，能檢視程式庫、編輯檔案、執行開發工具，並用工具輸出推進一項界定好的工程任務。",
+  "A deliberate operation that semantically counteracts a completed side effect when the original operation cannot be rolled back atomically.":
+    "一個刻意執行的操作：當原本的操作無法原子式回滾時，用它在語意上抵銷已經產生的副作用。",
+  "Verifiable information about the origin and editing history of a piece of media or other digital content, including the actors, tools, transformations, and assertions attached to it.":
+    "關於一份媒體或其他數位內容其來源與編修歷程的可驗證資訊，包含涉及的行為者、工具、轉換過程，以及附加於其上的聲明。",
+  "Reducing the token footprint of source material while attempting to preserve the information required for a later model decision.":
+    "縮減素材所佔的詞元量，同時盡量保住模型後續決策所需的資訊。",
+  "Designing the full information environment supplied to a model at each step, including instructions, selected files, retrieved evidence, tool results, examples, state, and output constraints.":
+    "設計每一步提供給模型的完整資訊環境，包含指令、選定的檔案、檢索到的證據、工具結果、範例、狀態與輸出限制。",
   "How much the model remembers.": "AI 能記住多少東西",
   "The maximum token capacity available to one model inference under a specific model and API contract. The capacity may include system instructions, messages, retrieved content, tool exchanges, and generated output, with provider-specific accounting and output limits.":
     "單次 API 呼叫能容納的最大詞元數（輸入加輸出）。它不是記憶 —— 而是每次呼叫都會歸零的固定大小緩衝區",
+  "A serving scheduler that adds and removes generation requests at iteration boundaries instead of waiting for every request in a fixed batch to finish.":
+    "一種服務排程器：在每次迭代的邊界加入或移除生成請求，而不必等固定批次裡的所有請求都跑完。",
   "Learning by comparison.": "靠比較來學習",
   "Training by pulling similar pairs closer and pushing dissimilar pairs apart in embedding space. CLIP uses this: matching image-text pairs vs non-matching ones.":
     "訓練時在嵌入空間裡把相似的配對拉近、不相似的配對推遠。CLIP 就是這樣做：用配對的圖文與不配對的圖文互相對照。",
   "How similar two vectors are.": "兩個向量有多像",
   "The normalized dot product of two vectors. It compares their direction rather than their magnitude and ranges from -1 to 1 for real-valued vectors.":
     "兩個向量夾角的餘弦值：dot(a, b) / (||a|| * ||b||)。範圍從 -1（方向相反）到 1（方向相同）。忽略長度，只在乎方向。嵌入與語意搜尋的標準相似度指標。",
+  "Total system cost divided by the number of tasks that satisfy a defined success criterion, including retries, failed runs, tool use, and evaluation overhead.":
+    "系統總成本除以達成既定成功標準的任務數；重試、失敗的執行、工具使用與評測開銷都要計入成本。",
+  "Attention in which the query representation comes from one sequence or representation while keys and values come from another.":
+    "一種注意力：query 表示來自某一個序列或表示，key 與 value 則來自另一個。",
   "The classification loss.": "分類用的損失函式",
   "A loss based on the negative log probability assigned to the target outcome. In next-token training, it penalizes the model when it assigns low probability to the observed next token.":
     "衡量兩個機率分布的差距。分類任務為 -sum(y_true * log(y_pred))；語言模型則是正確下一個詞元的負對數機率。越低越好。困惑度就是 exp(交叉熵)。",
@@ -1103,18 +1165,58 @@ window.I18N_ZH_HANT = {
   "Making more training data.": "生出更多訓練資料",
   "Creating modified examples, such as transformed images, perturbed audio, or paraphrased text, to increase training diversity without collecting entirely new source data. It can reduce overfitting when the transformation preserves the task signal.":
     "對既有資料做修改後複製（旋轉圖片、加雜訊、改寫句子），在不蒐集新資料的前提下增加訓練集多樣性，可減少過度擬合。",
+  "Assigning data to documented sensitivity or impact classes so handling, access, retention, sharing, and incident rules follow the consequences of disclosure or loss.":
+    "把資料歸入書面定義的敏感度或衝擊等級，讓處理、存取、保存、分享與事件處理規則能依洩漏或遺失的後果而定。",
+  "Detecting and removing exact and near-duplicate examples within or across datasets.":
+    "偵測並移除資料集內部或跨資料集之間完全重複與近似重複的樣本。",
+  "Unauthorized transfer of protected data from a system or trust zone to a person, tool, service, or storage location that is not permitted to receive it.":
+    "未經授權地把受保護資料，從系統或信任區傳送到不該接收它的人、工具、服務或儲存位置。",
+  "Unintended use of information during training or feature construction that would not be available at the real prediction point or belongs to a held-out evaluation boundary.":
+    "在訓練或特徵建構過程中，不慎用到真實預測當下取不到、或屬於保留評測範圍的資訊。",
+  "A record of how a data artifact was derived across sources, transformations, joins, filters, versions, and downstream uses.":
+    "一份紀錄，說明某項資料產出物是如何跨越來源、轉換、合併、篩選、版本與下游用途一路衍生出來的。",
+  "For personal data, limiting what is collected, processed, exposed, and retained to what is necessary for a specified purpose. Teams can apply the same discipline to sensitive non-personal data as an engineering control.":
+    "對個人資料而言，是把蒐集、處理、揭露與保存的範圍限縮到特定目的所必需。團隊也可以把同樣的紀律當成工程控制，套用在敏感的非個人資料上。",
+  "Traceable information about where data originated, who or what transformed it, which versions were used, and how derived artifacts relate to their sources.":
+    "可追溯的資訊，說明資料源自何處、由誰或什麼轉換過、用了哪些版本，以及衍生產出物與其來源之間的關係。",
+  "A documented partition of examples into separate subsets for fitting, development decisions, and final evaluation.":
+    "把樣本明確劃分成數個子集，分別用於擬合、開發階段的決策，以及最終評測。",
+  "Structured documentation of a dataset's motivation, composition, collection process, preprocessing, uses, distribution, maintenance, and known limitations.":
+    "針對一份資料集所寫的結構化文件，涵蓋動機、組成、蒐集過程、前處理、用途、散布、維護與已知限制。",
+  "Passing the remaining end-to-end time budget to downstream calls so each dependency knows how long the original request can still usefully wait.":
+    "把端到端剩餘的時間預算往下游呼叫傳遞，讓每個依賴都知道原始請求還能有意義地等多久。",
+  "The iterative stage of autoregressive inference that generates new tokens one step at a time after the input prefix has been processed.":
+    "自迴歸推論中的迭代階段：輸入前綴處理完之後，一步一個詞元地生成新內容。",
   "The output side of a model.": "負責輸出的那半",
   "A component that maps a representation into an output. In an encoder-decoder transformer, the decoder uses masked self-attention and cross-attention to generate outputs. Decoder-only language models instead generate from a single causal stack.":
     "在 Transformer 中，解碼器使用因果（遮罩）自注意力，每個位置只能看到前面的位置。GPT 只有解碼器，BERT 只有編碼器，T5 兩者都有。",
+  "The algorithm that converts a model's sequence of next-token scores into selected tokens and a completed output.":
+    "把模型輸出的下一個詞元分數序列，轉換成選定詞元與完整輸出的演算法。",
+  "Using independent preventive, detective, and corrective controls at several system boundaries so one failed control does not determine the outcome.":
+    "在系統的多個邊界上佈署彼此獨立的預防、偵測與修正控制，讓單一控制失效不至於決定最終結果。",
+  "Assigning a bounded subtask to another person or agent together with the needed context, authority, output contract, and return conditions.":
+    "把一項界定好的子任務指派給另一個人或代理程式，同時交付所需的脈絡、權限、輸出契約與回報條件。",
+  "First-stage retrieval that embeds queries and candidates into vector representations and ranks candidates by a similarity function.":
+    "第一階段檢索：把查詢與候選項嵌入成向量表示，再依相似度函式為候選項排序。",
   "A model that generates images from noise.": "從雜訊生出圖片的 AI",
   "A generative model trained around a progressive noising process and a learned reverse process. Sampling usually begins from noise and applies repeated denoising steps, sometimes in a learned latent space.":
     "訓練來反轉逐步加噪過程的模型 —— 它學會預測並移除雜訊，生成時則從純雜訊出發，反覆去噪",
+  "A serving architecture that runs prefill and decode work in separately provisioned worker pools and transfers the required attention state between them.":
+    "一種服務架構：預填與解碼工作跑在各自配置的工作單元池裡，並在兩者之間傳輸所需的注意力狀態。",
+  "A difference between the data distribution used to build or evaluate a system and the distribution it encounters after deployment.":
+    "建構或評測系統時所用的資料分布，與系統上線後實際遇到的分布之間的差異。",
   "Preference training without a separate reward-model stage.": "更簡單的 RLHF",
   "A preference-optimization objective that trains a policy directly from preferred and rejected response pairs relative to a reference policy. It avoids running an explicit reward model and reinforcement-learning loop during this stage.":
     "一種訓練方法，完全跳過獎勵模型 —— 直接最佳化語言模型，讓它在成對的人類偏好中偏好較好的那個回應",
   "Randomly turning off activations.": "隨機關掉一些神經元",
   "During training, randomly setting a fraction of activations to zero encourages the network not to rely on one activation path. It is normally disabled for standard inference, although Monte Carlo dropout deliberately keeps it active to estimate uncertainty.":
     "訓練時隨機把一部分激活值設為零，逼網路不去依賴任何單一神經元。推論時關閉。簡單但有效的正則化手段。",
+  "Running a workflow so its state and completed steps survive process crashes, restarts, or long waits without redoing confirmed side effects.":
+    "以某種方式執行工作流程，使其狀態與已完成的步驟能撐過行程崩潰、重啟或長時間等待，而不必重做已確認的副作用。",
+  "A runtime policy that forms inference batches from queued requests according to compatible shapes, maximum size, priority, and allowed queue delay.":
+    "一種執行期政策：依相容的張量形狀、最大批次大小、優先序與可容忍的排隊延遲，把佇列中的請求組成推論批次。",
+  "Combining raw or low-level representations from several modalities before most task-specific modeling occurs.":
+    "在多數任務專屬的建模發生之前，就先把來自數個模態的原始或低階表示結合起來。",
   "A matrix property used in PCA.": "PCA 用到的某個數學東西",
   "A scalar that describes how a linear transformation scales a corresponding nonzero eigenvector without changing its direction. In covariance-matrix PCA, larger eigenvalues correspond to directions with more variance.":
     "對矩陣 A 而言，特徵值 lambda 滿足 Av = lambda*v（v 為某個向量）。它代表矩陣在該方向上把向量放大多少。特徵值大 = 資料變異量高的方向。",
@@ -1127,6 +1229,16 @@ window.I18N_ZH_HANT = {
   "One pass through the training data.": "把資料跑完一輪",
   "One traversal of the defined training dataset. In distributed or sampled training, the exact implementation of an epoch depends on the data loader and sampling policy.":
     "就是字面意思。完整走過訓練集裡每一筆樣本一次。多個 epoch 就是把資料看好幾遍。epoch 越多可能學得越好，但也有過度擬合的風險。",
+  "The amount of unsuccessful service allowed by a service-level objective over its measurement window before the objective is exhausted.":
+    "在服務等級目標的量測窗內，目標耗盡前所容許的不成功服務量。",
+  "A versioned collection of inputs, expected properties, scoring rules, and metadata used to measure an AI system against a defined capability or risk.":
+    "一份帶版本的集合，包含輸入、預期性質、評分規則與中介資料，用來衡量 AI 系統在某項既定能力或風險上的表現。",
+  "A defined process for measuring model or system behavior on representative tasks using explicit success criteria, data, scorers, and review procedures.":
+    "一套明確定義的流程：用清楚的成功標準、資料、評分器與審查程序，衡量模型或系統在代表性任務上的行為。",
+  "A metric that counts an output as correct only when its normalized representation exactly equals an accepted reference answer.":
+    "一種指標：只有當輸出經正規化後與可接受的參考答案完全相等，才算答對。",
+  "Distributing mixture-of-experts subnetworks across devices and routing each token's activations to the devices that host its selected experts.":
+    "把混合專家的子網路分散到多個裝置上，並將每個詞元的活化值路由到承載其選定專家的那些裝置。",
   "A column in a dataset.": "資料裡的一個欄位",
   "An individual measurable property of the data. In classical ML, you engineer features by hand. In deep learning, the network learns features automatically from raw data.":
     "資料中一項可量測的個別屬性。傳統機器學習要靠人工設計特徵；深度學習則由網路直接從原始資料自動學出特徵。",
@@ -1136,93 +1248,203 @@ window.I18N_ZH_HANT = {
   "Training a model on your data.": "用你自己的資料訓練 AI",
   "Continuing training from pretrained parameters on a narrower dataset or objective. Depending on the method, you may update all parameters, selected parameters, or added adapter parameters.":
     "以預訓練模型的權重為起點，在較小的、特定任務的資料集上繼續訓練。只會更新既有權重，不會從零加入新知識",
+  "A test that can pass and fail across equivalent runs without a relevant change to the code or intended test environment.":
+    "一個測試在等價的多次執行中時而通過、時而失敗，而程式碼或預期的測試環境並沒有相關改動。",
+  "An exact attention algorithm that tiles the computation to reduce transfers between accelerator memory levels while avoiding materialization of the full attention matrix in high-bandwidth memory.":
+    "一種精確的注意力演算法：用分塊計算減少加速器各層記憶體之間的資料搬運，同時避免在高頻寬記憶體中具體化完整的注意力矩陣。",
   "A model using tools.": "會用工具的 AI",
   "A provider or application interface through which a model emits a structured request naming a tool and its arguments. Application code validates the request, performs the operation, and can return the result for another model step.":
     "讓 LLM 提出執行外部函式請求的結構化方式。你用 JSON Schema 定義工具，模型輸出結構化 JSON 指明要呼叫哪個函式、帶什麼參數，由你的程式執行，再把結果送回模型。這與代理程式不同 —— 函式呼叫是機制，代理程式是那個迴圈。",
   "Two neural networks competing during training.": "兩個 AI 互相對打",
   "A generator network tries to create realistic data while a discriminator network tries to tell real from fake. They train together: the generator gets better at fooling the discriminator, and the discriminator gets better at detecting fakes.":
     "生成器網路試圖造出逼真的資料，判別器網路試圖分辨真假。兩者一起訓練：生成器越來越會騙過判別器，判別器也越來越會抓假貨。",
+  "The rate of completed requests that satisfy defined service constraints, such as both time-to-first-token and per-token latency objectives, under a stated workload.":
+    "在既定工作負載下，達成所定義服務限制（例如首詞元時間與每詞元延遲兩項目標）的完成請求速率。",
   "A generic name for any chatbot.": "ChatGPT」或「那個 AI",
   "Generative Pre-trained Transformer, a family label for generative transformer models pretrained on sequence-prediction objectives and adapted for downstream use. Product names and model architectures should not be treated as interchangeable.":
     "Generative Pre-trained Transformer（生成式預訓練 Transformer）—— 一種特定架構，以僅含解碼器的 Transformer 在大型文字語料上訓練，用來預測下一個詞元",
+  "Preserving a bounded core service when capacity or dependencies are impaired by reducing optional quality, features, freshness, or workload instead of failing every request.":
+    "當容量或依賴受損時，靠降低非必要的品質、功能、新鮮度或工作量來保住一項有界的核心服務，而不是讓每個請求都失敗。",
   "The slope of the loss.": "斜率",
   "A vector of partial derivatives pointing in the direction of steepest increase. In ML, you go opposite to the gradient (gradient descent) to minimize the loss.":
     "由偏導數組成的向量，指向函數上升最陡的方向。在機器學習中，你往梯度的反方向走（梯度下降）以最小化損失。",
+  "Summing or averaging gradients from several microbatches before performing one optimizer update.":
+    "先把數個微批次的梯度加總或平均起來，再執行一次最佳化器更新。",
+  "Limiting gradient values or their combined norm before an optimizer update when they exceed a chosen threshold.":
+    "當梯度值或其整體範數超過選定門檻時，在最佳化器更新前先加以限制。",
   "Walking downhill on the loss surface.": "AI 進步的方式",
   "A family of optimization updates that move parameters using the negative gradient of an objective, usually estimated from batches rather than the entire dataset.":
     "一種最佳化演算法：朝著能讓損失函式下降最快的方向調整參數，就像在高維地形裡一路往下走",
+  "Connecting a generated answer or action to evidence, state, or observations that the system can identify and check.":
+    "把生成的答案或動作，連結到系統能夠指認並查核的證據、狀態或觀測結果。",
   "Safety filters around a model.": "AI 的安全過濾器",
   "System controls that constrain inputs, tool use, outputs, permissions, and escalation. They can include schemas, policy checks, classifiers, allowlists, sandboxing, approvals, and post-action verification.":
     "包在 LLM 外層的輸入／輸出驗證層，用來偵測並阻擋有害內容、提示詞注入、個資外洩或偏離主題的回應。典型結構是一條管線：輸入過濾 → LLM → 輸出過濾。可以是規則式（正規表達式、關鍵字清單）或模型式（用分類器給安全性評分）。",
   "The model is lying.": "AI 在說謊」或「在瞎掰",
   "Generated content that is false, unsupported by the available evidence, or inconsistent with the task's source of truth. It can arise even when the output is fluent and the model is not attempting to deceive.":
     "模型生出聽起來合理、卻沒有根據於訓練資料或給定脈絡的內容 —— 它是在補完樣式，不是在查事實",
+  "A structured transfer of a task between people or agents that preserves the objective, current state, evidence, decisions, constraints, and remaining work.":
+    "在人與人或代理程式之間有結構地移交任務，並保留目標、當前狀態、證據、決策、限制與尚未完成的工作。",
+  "An approximate-nearest-neighbor index that organizes vectors in layered proximity graphs and searches from coarse upper layers toward detailed lower layers.":
+    "一種近似最近鄰索引：把向量組織成分層的鄰近圖，搜尋時從粗略的上層往細緻的下層推進。",
+  "A workflow design in which a person supplies judgment, correction, approval, or escalation at defined points in an AI-driven process.":
+    "一種工作流程設計：在 AI 驅動流程的特定節點上，由人提供判斷、修正、核准或升級處理。",
+  "Retrieval that combines signals from different methods, commonly lexical matching and dense-vector similarity, before merging or reranking results.":
+    "結合不同方法訊號的檢索，常見的是詞彙匹配加上密集向量相似度，再把結果合併或重排序。",
   "A setting you tune.": "你要調的那些設定",
   "A configuration choice that shapes model structure, optimization, data processing, or inference rather than being learned as an ordinary model parameter. Examples include learning rate, batch size, layer count, and decoding settings.":
     "訓練前就要設定、用來控制訓練過程本身的值：學習率、批次大小、層數、dropout 比率。與模型參數（權重）不同，這些不是從資料學來的。",
+  "The property that repeating the same operation with the same identity does not create additional side effects beyond the first successful application.":
+    "一種性質：以相同身分重複執行同一個操作，除了第一次成功套用之外，不會再產生額外的副作用。",
+  "A model-specific visual unit represented as a vector or discrete code, commonly derived from an image patch, region, or learned visual-codebook entry.":
+    "模型專屬的視覺單元，以向量或離散碼表示，通常來自影像區塊、區域，或學習得到的視覺編碼簿項目。",
+  "A model adapting its behavior from instructions, examples, or patterns supplied in the current input without an ordinary parameter update.":
+    "模型僅憑當前輸入中提供的指令、範例或樣式來調整行為，過程中不做一般意義上的參數更新。",
+  "The coordinated process for detecting, analyzing, containing, recovering from, communicating, and learning from an event that threatens service, data, safety, or security.":
+    "一套協調一致的流程，用來偵測、分析、控制、復原、對外溝通事件，並從中學習；事件指的是威脅服務、資料、人身安全或資安的狀況。",
+  "A prompt-injection attack delivered through content the system retrieves or observes, such as a webpage, document, email, image text, or tool result, rather than directly through the user's instruction.":
+    "一種提示注入攻擊：攻擊內容不是直接來自使用者的指令，而是藏在系統檢索或觀測到的內容裡，例如網頁、文件、電子郵件、影像中的文字或工具結果。",
   "Assumptions built into a learning system.": "沒聽過這個詞",
   "Structural or statistical assumptions that favor some functions or representations over others. Convolution favors locality and shared filters; causal masking favors prediction from preceding positions.":
     "內建在模型架構裡的假設。CNN 假設局部樣式重要（卷積），RNN 假設順序重要（依序處理），Transformer 假設任何東西都可能與任何東西有關（注意力）。選對偏好能讓模型用更少資料學得更快。",
   "Running a trained model.": "跑模型",
   "Executing a trained model to produce predictions, scores, embeddings, or generated tokens without performing an ordinary training update to its parameters.":
     "用訓練好的模型對新資料做預測，不會更新權重。這就是你在生產環境做的事：送進輸入，取得輸出。",
+  "A model capability to map natural-language directions and supplied context to behavior that satisfies the stated task and constraints.":
+    "模型把自然語言指示與所給脈絡，對應成能滿足指定任務與限制之行為的能力。",
+  "A rule set for resolving conflicts among instructions from sources with different authority, such as application policy, users, and untrusted retrieved content.":
+    "一套規則，用來化解不同權威來源的指令衝突，例如應用政策、使用者，以及不受信任的檢索內容。",
+  "The elapsed time between two consecutive output-token arrival events for one request, calculated as `t_i - t_(i-1)` for an output token after the first.":
+    "同一個請求中，兩個連續輸出詞元抵達事件之間的間隔時間；對第一個之後的輸出詞元，計算方式為 `t_i - t_(i-1)`。",
+  "An adversarial input or interaction strategy intended to make a model produce behavior that its training or application controls are designed to prevent.":
+    "一種對抗性輸入或互動策略，意圖讓模型做出其訓練或應用層控制原本要防止的行為。",
   "A NumPy-like system for accelerated machine learning.": "Google 的機器學習框架",
   "A Python library for transforming numerical functions with automatic differentiation, compilation, vectorization, and parallel execution across accelerators. Its transformations work best with explicit state and functional-style code.":
     "與 NumPy 相容的函式庫，額外提供自動微分（grad）、即時編譯（jit）、自動向量化（vmap）與多裝置平行化（pmap）。與 PyTorch 的物件導向風格不同，JAX 是純函式式的 —— 沒有隱藏狀態，也不做原地修改。Google DeepMind 用它做 AlphaFold、Gemini 與大規模研究。",
+  "Training a student model to reproduce selected behavior or output distributions from a more capable teacher, often alongside ordinary target labels.":
+    "訓練一個學生模型，去重現能力更強的教師模型所選定的行為或輸出分布，通常會與一般的目標標籤一併使用。",
   "A cache that makes token generation faster.": "讓推論變快",
   "Stored key and value tensors from earlier positions in autoregressive generation. Reusing them avoids recomputing attention projections for the unchanged prefix at every decoding step.":
     "自迴歸生成時，把先前詞元的 key 與 value 矩陣快取起來，避免每一步重算。用記憶體換速度，是 LLM 快速推論的關鍵。",
+  "Processing modalities through separate encoders or predictors and combining their high-level representations, scores, or decisions near the task output.":
+    "讓各模態各自通過獨立的編碼器或預測器，再在接近任務輸出的地方，把它們的高階表示、分數或決策結合起來。",
   "A model's hidden representation space.": "那個藏起來的表示法",
   "A learned representation space whose coordinates encode factors useful to a model. It may be lower-dimensional than the input, but compression is not required for every latent representation.":
     "一個經過壓縮、學習得到的表示空間，相似的輸入會落在相近的位置。自編碼器、VAE 與擴散模型都在潛在空間裡運作。它的維度低於輸入，但保留了重要結構。",
   "How large each optimization step is.": "AI 學多快",
   "A scale factor used by an optimizer to control parameter-update magnitude. Values that are too large can destabilize training; values that are too small can make useful progress impractically slow.":
     "控制梯度下降步伐大小的純量。太大會衝過最低點而發散，太小則收斂過慢或卡住。單一最重要的超參數。",
+  "A policy that changes the optimizer's learning rate as training progresses according to steps, epochs, metrics, or a predefined curve.":
+    "一套政策：隨著訓練推進，依步數、輪數、指標或預先定義的曲線調整最佳化器的學習率。",
+  "Giving a model, agent, tool, or user only the permissions required for the current task, for only as long as those permissions are needed.":
+    "只給模型、代理程式、工具或使用者當前任務所需的權限，而且只在需要的期間內給。",
   "The brain of an AI application.": "AI」或「那顆大腦",
   "A language model with enough capacity and broad training to perform many language tasks through prompting or adaptation. Most current LLMs use transformer architectures and sequence-prediction objectives, but size thresholds, data sources, and training recipes vary.":
     "以 Transformer 為基礎的神經網路，訓練目標是預測序列中的下一個詞元，擁有數十億參數，並在網路規模的文字資料上訓練",
+  "Using a language model to score, compare, classify, or critique another system's output against a rubric.":
+    "用語言模型依評分準則，為另一個系統的輸出評分、比較、分類或評論。",
+  "Deliberately rejecting, dropping, or cancelling selected work at one or more overload boundaries when demand exceeds the capacity available to produce useful results.":
+    "當需求超過可用來產出有效結果的容量時，在一個或多個過載邊界上刻意拒絕、丟棄或取消部分工作。",
+  "The model's unnormalized numeric scores for candidate outcomes before a normalization function or decoding rule converts them into selections.":
+    "模型為各候選結果給出的未正規化數值分數，之後才由正規化函式或解碼規則把它們轉換成選擇。",
   "Parameter-efficient fine-tuning.": "省資源的微調",
   "A method that keeps base weights frozen and learns low-rank update matrices for selected layers. It reduces the number of trainable parameters and can lower training memory relative to full-parameter fine-tuning.":
     "不更新全部權重，而是在原有權重旁插入小的低秩矩陣，只訓練這些小矩陣，記憶體需求可降低 10 到 100 倍",
   "A number that measures training error.": "AI 錯得多離譜",
   "An objective that maps predictions and targets, sometimes with regularization terms, to a value optimization tries to reduce. The loss determines which errors training directly rewards or penalizes.":
     "衡量預測與實際輸出差距的函式，訓練就是在最小化它。回歸用 MSE，分類用交叉熵，嵌入用對比損失。損失函式的選擇，等於定義了對模型而言什麼叫「好」。",
+  "A long-context failure pattern in which model performance changes with evidence position and can degrade when relevant information sits between the beginning and end.":
+    "一種長脈絡失效模式：模型表現會隨證據所在位置而變化，當相關資訊夾在開頭與結尾之間時可能退化。",
+  "A selection rule that balances relevance to the query with novelty relative to items already selected.":
+    "一種挑選規則：在與查詢的相關性、以及相對於已選項目的新穎性之間取得平衡。",
   "A standard way for AI applications to connect to tools and context.": "讓 AI 使用工具的一種方式",
   "An open JSON-RPC protocol for a host to connect to servers that expose tools, resources, prompts, and extensions through defined request, result, discovery, and transport contracts. In revision 2026-07-28, every request carries its protocol version and client capabilities instead of relying on an initialization handshake or protocol session.":
     "一個開放協定（以 JSON-RPC 走 stdio 或 HTTP），標準化 AI 應用連接外部資料來源與工具的方式，並為工具、資源與提示詞提供具型別的結構定義",
+  "An attack that estimates whether a particular record or example was included in a model's training data by observing model outputs or other accessible signals.":
+    "一種攻擊：透過觀察模型輸出或其他可取得的訊號，推估某筆特定紀錄或樣本是否被納入模型的訓練資料。",
   "Using lower-precision arithmetic for speed and memory savings.": "加速訓練的小技巧",
   "A numerical strategy that uses different data types for different operations, often lower precision for many matrix operations and higher precision for values that need more range or stability.":
     "前向傳播與大多數運算用 float16（更快、更省記憶體），梯度累加與權重更新則保留 float32（更精確）。可換來約兩倍加速，準確度幾乎不受影響。",
+  "A form of information with its own structure and acquisition process, such as text, image, audio, video, depth, or sensor measurements.":
+    "一種具有自身結構與取得方式的資訊形式，例如文字、影像、音訊、影片、深度或感測器量測值。",
+  "Learning or establishing correspondences between representations from different modalities so semantically or temporally related items can be matched.":
+    "學習或建立不同模態表示之間的對應關係，讓語意或時間上相關的項目能夠彼此匹配。",
+  "A structured report describing a model's intended uses, evaluation conditions, performance characteristics, limitations, and relevant ethical or safety considerations.":
+    "一份結構化報告，說明模型的預期用途、評測條件、效能特性、限制，以及相關的倫理或安全考量。",
+  "A component that selects a model or provider for a request using requirements such as capability, latency, cost, context size, policy, and current availability.":
+    "一個元件：依能力、延遲、成本、脈絡大小、政策與當前可用性等需求，為請求挑選模型或供應商。",
+  "The runtime and API layer that loads versioned model artifacts, accepts inference requests, schedules execution, manages resources, and returns results under an operational contract.":
+    "執行環境與 API 層：載入帶版本的模型產出物、接受推論請求、排程執行、管理資源，並在營運契約下回傳結果。",
   "A large model that activates only part of its parameters for each token.": "只有部分模型會運作",
   "An architecture with multiple expert subnetworks and a learned router that selects a subset for each input unit, often each token. Sparse activation can increase total parameter capacity without using every expert on every forward pass.":
     "模型內含許多「專家」子網路，由路由機制把每個輸入只送給少數幾個專家。整個模型很龐大，但因為大多數專家被跳過，每次前向傳播都很便宜。Mixtral 與 GPT-4 都採用這個做法。",
+  "Combining evidence or learned representations from more than one modality to produce a joint representation, prediction, or generated output.":
+    "把來自一種以上模態的證據或學到的表示結合起來，產生聯合表示、預測或生成輸出。",
+  "A model that learns from, relates, or generates more than one modality through representation, alignment, fusion, translation, or coordinated prediction.":
+    "透過表示、對齊、融合、轉譯或協同預測，從一種以上模態學習、建立關聯或進行生成的模型。",
+  "An MCP request pattern in which an operation returns `resultType: input_required` with one or more `inputRequests`, then the client retries the original method with `inputResponses` and the exact returned `requestState`.":
+    "一種 MCP 請求模式：操作先回傳 `resultType: input_required` 與一個以上的 `inputRequests`，接著用戶端帶著 `inputResponses` 與原封不動回傳的 `requestState` 重試原本的方法。",
   "A sign that numerical computation failed.": "訓練爆掉了",
   "A floating-point value representing an undefined or unrepresentable numerical result. In training, NaNs can come from invalid operations, overflow, unstable normalization, excessive updates, or earlier corrupted values.":
     "表示未定義結果的浮點值（0/0、inf-inf）。訓練中出現 NaN 損失通常意味著：學習率太高、梯度爆炸、對零取對數，或除以零。訓練失敗時第一個該檢查的東西。",
   "Scaling data to a standard range.": "把資料縮放一下",
   "A family of transformations that rescale or recenter inputs, activations, or features using defined statistics. Batch normalization and layer normalization use different axes and behave differently across training and inference.":
     "把數值調整到標準範圍。批次正規化跨批次做正規化，層正規化跨特徵做正規化。兩者都能穩定訓練，並容許使用較高的學習率。",
+  "A decoding method that samples from the smallest set of next-token candidates whose cumulative probability reaches a chosen threshold.":
+    "一種解碼方法：從累積機率達到選定門檻的最小候選詞元集合中取樣。",
+  "The ability to understand an AI system's behavior from recorded inputs, outputs, state transitions, tool calls, timings, costs, errors, and evaluation signals.":
+    "從記錄下來的輸入、輸出、狀態轉移、工具呼叫、時間、成本、錯誤與評測訊號，理解 AI 系統行為的能力。",
   "The algorithm that updates weights.": "負責更新權重的那個東西",
   "An algorithm that transforms gradients into parameter updates. Plain stochastic gradient descent is a simple baseline; momentum, Adam, and other optimizers change the update using history or adaptive scaling. Each choice has different memory, stability, and tuning behavior.":
     "利用梯度更新模型參數的演算法。SGD 最簡單，Adam 最常見。每種最佳化器在收斂速度、記憶體用量與對超參數的敏感度上各有不同。",
+  "The control logic that sequences, branches, delegates, retries, pauses, resumes, and terminates work across model and tool steps.":
+    "控制邏輯：在模型與工具步驟之間安排順序、分支、委派、重試、暫停、恢復與終止。",
   "The model memorized the training data.": "模型把資料背下來了",
   "A generalization gap in which performance on training data is substantially better than performance on representative unseen data. Memorization can contribute, but the operational symptom is poor generalization.":
     "模型在訓練資料上表現很好，但在沒見過的資料上很差 —— 它學到的是雜訊，不是訊號。解法：更多資料、正則化（dropout、權重衰減）、提早停止、資料增強、換更簡單的模型。",
+  "A KV-cache memory manager that stores attention state in fixed-size blocks and maps logical sequence positions to physical blocks instead of requiring one contiguous allocation per sequence.":
+    "一種 KV 快取記憶體管理器：把注意力狀態存放在固定大小的區塊中，並將邏輯序列位置映射到實體區塊，不必為每個序列配置一整段連續空間。",
   "A number used to describe model size.": "模型大小",
   "A value learned during training, commonly a weight, bias, embedding element, or normalization parameter. Parameter count is one measure of model capacity, but it does not directly determine quality, memory, or serving cost.":
     "模型中一個可學習的值，通常是權重或偏差。「7B 參數」意思是 70 億個可學習的數字。每個 float32 參數佔 4 個位元組，所以 7B 參數光是權重就要 28GB 記憶體。",
+  "Across a task set, the fraction of tasks for which at least one of k sampled candidates passes a defined correctness test.":
+    "在一組任務中，k 個取樣候選裡至少有一個通過既定正確性測試的任務比例。",
+  "A reviewable representation of changes to one or more files, usually expressed as additions and deletions against a known base revision.":
+    "一份可供審查的檔案變更表示，通常以相對於已知基準修訂版的新增與刪除行來呈現。",
+  "A learned projection that converts an image patch into a fixed-width vector used as one element of a transformer input sequence.":
+    "一個學習得到的投影：把影像區塊轉換成固定寬度的向量，作為 Transformer 輸入序列中的一個元素。",
   "How surprised a language model is by a dataset.": "模型有多困惑",
   "The exponentiated average negative log-likelihood under a stated tokenization and logarithm convention. Lower values mean the model assigned higher probability to the evaluated sequence.":
     "平均交叉熵損失取指數。越低越好。困惑度為 10 表示模型的不確定程度，相當於每一步都在 10 個詞元之間均勻亂猜。",
+  "Partitioning sequential groups of model layers across devices and moving microbatches or requests through those stages as a pipeline.":
+    "把模型層依序分組後分散到多個裝置，並讓微批次或請求像流水線一樣依序通過這些階段。",
+  "Constructing, selecting, or revising a sequence of actions and dependencies intended to move from the current state to a goal.":
+    "建構、挑選或修訂一連串動作與其相依關係，目的是把系統從當前狀態帶往目標。",
+  "A durable incident record that explains impact, detection, response, contributing conditions, recovery, and owned follow-up actions without assigning blame as a substitute for analysis.":
+    "一份持久的事件紀錄，說明衝擊、偵測、應變、促成條件、復原與有人負責的後續行動，而不以歸咎取代分析。",
   "Two metrics for classification or retrieval quality.": "準確度指標",
   "Precision asks how many flagged items were correct; recall asks how many relevant items were found. When you change the decision threshold for one fixed scoring model, improving recall often lowers precision and vice versa. A better model can improve both. F1 is their harmonic mean.":
     "精確率 = 你標記出來的項目中有多少是對的。召回率 = 所有正確項目中你找到了多少。兩者會互相拉扯：要抓到每一封垃圾信（高召回）就會誤判更多（低精確）。F1 分數是兩者的調和平均。誤判代價高時看精確率，漏抓代價高時看召回率。",
+  "The initial inference stage that processes all supplied input tokens to produce their representations and the attention state required for subsequent autoregressive generation.":
+    "推論的起始階段：處理所有輸入詞元，產生它們的表示，以及後續自迴歸生成所需的注意力狀態。",
+  "Reusing KV-cache blocks produced for an identical eligible token prefix across requests so the serving runtime can skip repeated prefix computation.":
+    "跨請求重用為同一段合格詞元前綴所產生的 KV 快取區塊，讓服務執行環境能省去重複的前綴運算。",
+  "Supplying a person or model with the minimum useful context first, then revealing deeper detail when the task or evidence requires it.":
+    "先給人或模型最低限度但夠用的脈絡，等任務或證據有需要時，再揭露更深入的細節。",
+  "Reuse of provider-side or application-side computation for an identical or eligible prompt prefix so repeated inference avoids some preprocessing work.":
+    "重用供應商端或應用端針對相同或合格提示前綴所做的運算，讓重複推論能省去部分前處理工作。",
   "Wording instructions so a model follows the task.": "用對的方式跟 AI 說話",
   "Designing model-facing instructions, examples, constraints, and output requirements to improve behavior on a defined task.":
     "設計輸入文字以穩定產出想要的結果 —— 包含系統提示詞、少量範例、格式指示，以及觸發思維鏈的寫法",
   "An adversarial instruction that redirects a model.": "用文字駭進 AI",
   "An attack or failure mode in which untrusted content influences a model to disregard intended instructions, expose data, misuse tools, or take actions outside the user's goal. The content can arrive directly from a user or indirectly through retrieved pages, files, messages, or tool output.":
     "一種攻擊：輸入中的惡意文字覆蓋掉系統提示詞或指示。直接注入是使用者自己輸入「忽略先前的指示」；間接注入則是被檢索到的文件裡藏了指示。相當於 LLM 版的 SQL 注入。目前沒有完整解法 —— 防禦靠的是分層的輸入驗證、輸出過濾與權限隔離。",
+  "Variation in model output or measured performance caused by changes to prompt wording, order, formatting, or examples that preserve the intended task.":
+    "在不改變預期任務的前提下，僅更動提示的用字、順序、格式或範例，就造成模型輸出或量測表現出現變化。",
+  "Authenticated, machine-readable metadata that binds an artifact to claims about how, where, when, and from which inputs it was produced.":
+    "經過認證、機器可讀的中介資料，把產出物與「如何、在何處、於何時、由哪些輸入產生」的聲明綁定起來。",
+  "For personal data, collecting and using it only for specified, explicit purposes unless a new use has an appropriate compatible or authorized basis.":
+    "對個人資料而言，是只為特定、明確的目的蒐集與使用；除非新的用途有適當的相容性或授權依據，否則不得為之。",
   "LoRA with a quantized base model.": "更便宜的 LoRA",
   "A parameter-efficient fine-tuning method that keeps a pretrained base model frozen in a low-bit quantized representation while training LoRA adapters with higher-precision computation where needed.":
     "量化版 LoRA。凍結的基礎模型權重保持 4 位元精度（NF4 格式），LoRA 轉接層則以 16 位元訓練。相較標準 LoRA 再省 3 到 4 倍記憶體：用 LoRA 需要 14GB 的 7B 模型，用 QLoRA 只需 4 到 6GB。多數基準測試上的品質與完整微調相差不到 1%。",
@@ -1232,51 +1454,147 @@ window.I18N_ZH_HANT = {
   "A model answering with retrieved knowledge.": "會搜尋的 AI",
   "A system pattern that retrieves evidence relevant to a request and supplies selected content to a generative model before it answers or acts. Retrieval can use lexical, vector, structured, or hybrid methods.":
     "一種模式：先用嵌入相似度從知識庫檢索相關文件，塞進提示詞，再讓 LLM 依這些脈絡作答",
+  "A policy that caps requests, tokens, concurrent work, or another resource within a defined time or capacity window.":
+    "一種政策：在既定的時間或容量窗內，為請求數、詞元數、並行工作量或其他資源設上限。",
+  "An agent pattern that interleaves task reasoning, a concrete action, and an observation returned by the environment before deciding the next step.":
+    "一種代理程式模式：交錯進行任務推理、一個具體動作，以及環境回傳的觀測結果，然後才決定下一步。",
+  "A diagnostic that tells the traffic-routing layer whether a service instance is currently able to accept requests.":
+    "一項診斷：告訴流量路由層某個服務實例當下是否有能力接受請求。",
+  "For one query, Recall@K is `|relevant items intersecting the top k| / |relevant items|`. A dataset score aggregates those per-query values under a stated rule.":
+    "對單一查詢而言，Recall@K 是 `|relevant items intersecting the top k| / |relevant items|`，也就是前 k 名中相關項目的數量除以相關項目總數。資料集層級的分數則依既定規則彙整各查詢的值。",
+  "A rank-fusion method that combines several result lists by summing contributions that decrease with each item's rank in each list.":
+    "一種排名融合方法：把多份結果清單合併起來，各項的貢獻隨其在每份清單中的名次遞減，再加總。",
+  "A structured adversarial testing process in which authorized testers seek failures using documented objectives, threat assumptions, cases, and evidence.":
+    "一套有結構的對抗式測試流程：由獲授權的測試者依書面目標、威脅假設、案例與證據去尋找失效。",
+  "A repeatable check that protects behavior known to work, especially after code, prompt, model, retrieval, or tool changes.":
+    "一項可重複執行的檢查，用來保護已知可運作的行為，在程式碼、提示、模型、檢索或工具變動後尤其重要。",
   "A simple activation function.": "激活函式",
   "Rectified Linear Unit, defined as `f(x) = max(0, x)`. It is inexpensive and has a non-saturating positive branch, though zero gradients on negative inputs can create inactive units.":
     "Rectified Linear Unit（整流線性單元）：f(x) = max(0, x)。最簡單的非線性激活函式，計算快，且在正值區不會飽和。到處都在用，因為它有效又便宜。變體有 LeakyReLU、GELU、SiLU。",
+  "Version-controlled guidance that tells coding agents how a repository is organized, which commands and conventions apply, what boundaries to respect, and how to verify work.":
+    "納入版本控管的指引，告訴程式碼代理程式這個程式庫怎麼組織、該用哪些指令與慣例、要尊重哪些邊界，以及如何驗證成果。",
+  "A compact, maintained description of a repository's important directories, ownership boundaries, entry points, build commands, tests, generated files, and local instructions.":
+    "一份精簡且持續維護的說明，涵蓋程式庫的重要目錄、權責邊界、進入點、建置指令、測試、產生檔與在地指引。",
+  "A build whose declared source, environment, and instructions can be independently rerun to produce bit-for-bit identical specified artifacts.":
+    "一次建置，其宣告的原始碼、環境與指令能被獨立重跑，並產生位元完全相同的指定產出物。",
+  "A second-stage model or scoring function that reorders a small candidate set using a richer comparison between the query and each candidate.":
+    "第二階段的模型或評分函式：用查詢與各候選項之間更豐富的比較，為一小組候選項重新排序。",
+  "A bound on retry traffic, usually expressed relative to original requests or over a time window, that prevents retries from consuming unbounded capacity.":
+    "對重試流量設下的上限，通常以相對於原始請求數或某個時間窗來表示，避免重試無節制地吃掉容量。",
+  "Repeating a failed transient operation after progressively longer delays, usually with randomized jitter and a strict retry limit.":
+    "在暫時性操作失敗後，以逐次拉長的延遲重試，通常搭配隨機抖動與嚴格的重試次數上限。",
+  "An agent assigned to inspect another agent's artifact or decision against explicit criteria and return findings or a verdict.":
+    "被指派的代理程式：依明確標準檢視另一個代理程式的產出物或決策，並回報發現或判定結果。",
   "Training a model from human preferences.": "他們讓 AI 變得有用的方法",
   "A family of pipelines that uses human feedback to learn a reward or preference signal and then optimizes a model policy against that signal. Implementations vary and need not all use the same reinforcement-learning algorithm.":
     "一條訓練管線：(1) 蒐集人類對模型輸出的偏好，(2) 用這些偏好訓練獎勵模型，(3) 以 PPO 最佳化 LLM，使其產生獎勵更高的輸出",
+  "Restoring a previously known deployment or configuration when the current release violates operational, quality, or safety criteria.":
+    "當目前版本違反營運、品質或安全標準時，還原到先前已知良好的部署或設定。",
   "A reference-overlap metric often used for summaries.": "摘要評估指標",
   "A family of metrics that compares generated text with reference text using units such as n-gram overlap or longest common subsequence.":
     "Recall-Oriented Understudy for Gisting Evaluation。衡量生成文字與參考文字的重疊程度。ROUGE-1 數單詞重疊，ROUGE-2 數雙詞重疊，ROUGE-L 找最長共同子序列。計算便宜，但只衡量表面相似度 —— 兩句意思相同但用詞不同的句子分數會很低。",
+  "An isolated execution environment that restricts an agent's access to files, processes, network destinations, credentials, and host resources.":
+    "一個隔離的執行環境：限制代理程式對檔案、行程、網路目的地、憑證與主機資源的存取。",
+  "The degree to which a constrained resource or service has exhausted its capacity, including queued work that cannot begin promptly.":
+    "受限資源或服務耗盡其容量的程度，包含已排隊但無法立即開始的工作。",
+  "A concrete agreement that defines a task's goal, allowed and forbidden surfaces, expected artifacts, verification requirements, and stopping conditions.":
+    "一份具體約定：界定任務目標、允許與禁止碰觸的範圍、預期產出物、驗證要求與停止條件。",
   "Tokens deciding which other tokens matter.": "模型如何決定要注意什麼",
   "Attention in which queries, keys, and values are derived from the same sequence representation. Scaled similarity scores are normalized and used to combine values, subject to causal, padding, local, or other masks.":
     "每個詞元都算出 query、key 與 value 向量。兩個詞元之間的注意力權重 = 兩者 query 與 key 的內積，經縮放與 softmax。輸出是 value 向量的加權總和。這讓每個詞元都能看到其他所有詞元。",
+  "A cache that reuses a previous result when a new request is judged sufficiently similar under a chosen representation and threshold.":
+    "一種快取：當新請求在選定的表示與門檻下被判定為足夠相似時，就重用先前的結果。",
   "Search by meaning instead of exact words.": "懂意思的聰明搜尋",
   "Retrieval that represents a query and candidates in an embedding space and ranks candidates using a vector-similarity function.":
     "依語意而非關鍵字比對來找文件。把查詢與所有文件嵌入同一個向量空間，再回傳嵌入最接近查詢的文件。「付款失敗」能找到「交易遭拒」，即使兩者沒有共同用詞。背後靠嵌入模型加向量資料庫。",
+  "Dividing conflicting responsibilities or authority across independent roles so one principal cannot complete a high-risk action without another authorized decision.":
+    "把彼此衝突的職責或權限拆分到獨立角色，讓單一主體無法在沒有另一個授權決策的情況下完成高風險動作。",
+  "A quantitative measure of service behavior at a defined user-relevant boundary, such as successful request ratio or latency below a threshold.":
+    "在使用者有感的既定邊界上，對服務行為所做的量化量測，例如成功請求比例，或延遲低於某門檻的比例。",
+  "A target range or threshold for a service-level indicator over a stated population and measurement window.":
+    "針對某個服務等級指標，在既定母體與量測窗內所設定的目標範圍或門檻。",
   "Training on example inputs and desired outputs.": "教模型聽指示",
   "Fine-tuning a pretrained model on paired inputs and desired responses so it learns the demonstrated behavior under the training distribution.":
     "用（指示、回應）配對資料微調預訓練模型，讓模型學會在給定指示時生出對應回應。這就是把基礎模型變成聊天模型的步驟。",
+  "A copy of live request traffic sent to a candidate system for observation while the candidate response remains outside the primary user response path. Because the copied request still executes, its side effects must be isolated.":
+    "把線上請求流量複製一份送給候選系統以供觀察，候選系統的回應不會進入主要的使用者回應路徑。由於複製的請求仍會實際執行，其副作用必須加以隔離。",
+  "A common vector space in which representations from different modalities can be compared with the same similarity function.":
+    "一個共用向量空間：來自不同模態的表示可以在其中用同一個相似度函式互相比較。",
+  "The complete installable skill directory, including `SKILL.md` and every reference, script, asset, fixture, or companion file required by the workflow.":
+    "一個完整、可安裝的技能目錄，包含 `SKILL.md` 以及該工作流程所需的每一份參考文件、腳本、素材、測試資料或附屬檔案。",
+  "The compact model-visible inventory of eligible skills, usually containing routing metadata such as name, description, and an internal source identifier rather than every skill body.":
+    "對模型可見的合格技能精簡清單，通常只帶名稱、描述與內部來源識別碼等路由用中介資料，而非每個技能的完整內容。",
+  "A runtime pipeline that searches configured roots, identifies candidate skill directories, validates their package contract, attaches scope and provenance, resolves collisions, and publishes eligible catalog entries.":
+    "一條執行期流程：搜尋設定好的根目錄、找出候選技能目錄、驗證其封裝契約、附加範圍與來源資訊、化解命名衝突，並發布合格的目錄項目。",
+  "The runtime-mediated process in which an eligible human, model, application, or other skill selects a skill and causes its instructions to enter the working context.":
+    "由執行環境居中促成的過程：合格的人、模型、應用程式或其他技能挑選一個技能，使其指令進入工作脈絡。",
   "A function that turns logits into normalized positive values.": "把數字變成機率",
   "A function defined by `softmax(x_i) = exp(x_i) / sum(exp(x_j))`, implemented with numerical stabilization. Its outputs are positive and sum to one, so they can parameterize a categorical distribution.":
     "softmax(x_i) = exp(x_i) / sum(exp(x_j))。把任意實數向量轉成機率分布（全為正、總和為 1）。用於分類輸出層、注意力權重，以及任何需要機率的地方。",
+  "A structured inventory of software components and relationships associated with a product or artifact, often including versions, suppliers, licenses, and identifiers.":
+    "一份結構化清單，列出與某產品或產出物相關的軟體元件及其關係，通常包含版本、供應商、授權條款與識別碼。",
+  "An inference method in which a cheaper draft process proposes several tokens and the target model scores those draft positions in parallel. In exact sampling variants, an acceptance and correction rule preserves the target model's output distribution.":
+    "一種推論方法：先由成本較低的草稿流程提出數個詞元，再由目標模型平行為這些草稿位置評分。在精確取樣的變體中，接受與修正規則會保持目標模型原本的輸出分布。",
+  "The MCP 2026-07-28 request model in which every request carries the protocol version and client capabilities in `params._meta`, while results carry an explicit `resultType`; no protocol state is keyed by an initialization handshake, connection, or `Mcp-Session-Id`.":
+    "MCP 2026-07-28 的請求模型：每個請求都在 `params._meta` 中帶上協定版本與用戶端能力，結果則帶有明確的 `resultType`；協定狀態不繫結於初始化握手、連線或 `Mcp-Session-Id`。",
+  "An optimizer family that updates parameters from a gradient estimated on a sampled example or minibatch rather than the complete training dataset.":
+    "一族最佳化器：以取樣得到的單一樣本或小批次估計梯度來更新參數，而非用完整訓練資料集。",
+  "An application-specified token or text pattern that causes generation to stop when the decoding system encounters it.":
+    "由應用端指定的詞元或文字樣式，解碼系統一旦遇到它就停止生成。",
   "Showing output as it is generated.": "看回應一個字一個字冒出來",
   "Delivering incremental response events before the complete result is ready. A stream may contain token text, structured deltas, tool-call arguments, usage metadata, or status events depending on the API.":
     "LLM 邊生成邊送出詞元，不必等整個回應完成。使用 Server-Sent Events（SSE）或 WebSocket 協定。可把首個詞元的感知延遲從數秒降到數毫秒，是生產級聊天介面的必備功能。每個區塊都含一個 delta（部分詞元或字）。",
+  "Model output constrained or validated against a machine-readable schema so application code can consume fields without parsing free-form prose.":
+    "依機器可讀的結構定義加以約束或驗證的模型輸出，讓應用程式碼不必解析自由格式散文就能取用各欄位。",
   "Many agents collaborating without one fixed controller.": "一群像蜜蜂一樣協同工作的 AI 代理程式",
   "A loosely coordinated multi-agent pattern in which local agent decisions and message exchange produce system-level behavior. The term is used inconsistently, so the actual topology, state ownership, and termination rules must be specified.":
     "多個代理程式共享狀態、透過訊息傳遞協調，其群體行為是由簡單的個體規則湧現出來，而非來自中央控制",
   "Developer-controlled instructions for a model interaction.": "給 AI 的指示",
   "A provider-defined instruction message or configuration supplied by the application to establish behavior and constraints within that provider's instruction hierarchy.":
     "對話最開頭的一則特殊訊息，用來設定模型的行為、人格與限制。會在使用者訊息之前處理，在多數介面中對使用者不可見。它定義模型該做與不該做什麼、語氣、格式偏好與領域重點。與使用者提示詞不同 —— 系統提示詞由開發者設定。",
+  "The latency experienced by the slowest portion of requests, commonly summarized with a high percentile under a stated workload and time window.":
+    "最慢那部分請求所經歷的延遲，通常在既定工作負載與時間窗下以高百分位數來概括。",
   "A creativity setting.": "創意程度的設定",
   "A decoding parameter that rescales logits before a probability distribution is formed. Higher positive values usually flatten the distribution; lower positive values sharpen it.":
     "在 softmax 之前用來除 logits 的純量。預設為 1。越高分布越平坦、輸出越隨機；越低分布越尖銳、輸出越確定。溫度為 0 等於取 argmax（永遠選最可能的詞元）。",
   "A multidimensional array used for numerical computation.": "多維陣列",
   "A typed array with a shape, data type, and device placement that frameworks use to represent inputs, parameters, activations, and gradients. Automatic-differentiation metadata is framework- and operation-dependent, not an inherent property of every tensor.":
     "深度學習框架中最基本的資料結構。0 維張量是純量，1 維是向量，2 維是矩陣，3 維以上是張量。在 PyTorch 與 JAX 中，張量會記錄自己的運算歷程以支援自動微分，並可存放在 CPU 或 GPU 上。神經網路的所有輸入、輸出、權重與梯度都是張量。",
+  "Partitioning tensor operations within a model layer across devices, with collective communication combining partial results during the layer computation.":
+    "把模型單一層內的張量運算切分到多個裝置，並在該層運算過程中以集合通訊把部分結果合併起來。",
+  "An explicit rule that ends or pauses an agent run when it succeeds, fails, exhausts a budget, reaches a safe boundary, or requires escalation.":
+    "一條明確規則：當代理程式成功、失敗、耗盡預算、抵達安全邊界或需要升級處理時，結束或暫停該次執行。",
+  "The mechanism, specification, reference, invariant, or human judgment used to decide whether observed program behavior is correct.":
+    "用來判定觀察到的程式行為是否正確的機制、規格、參考答案、不變式或人為判斷。",
+  "A documented account of protected assets, trust boundaries, potential adversaries, assumed capabilities, attack paths, impacts, and planned controls.":
+    "一份書面說明，涵蓋受保護資產、信任邊界、潛在攻擊者、假設其具備的能力、攻擊路徑、衝擊與規劃中的控制措施。",
+  "For one request with `N > 1` output tokens, the average post-first-token interval: `(t_N - t_1) / (N - 1)`. System distributions then aggregate those per-request averages.":
+    "對一個有 `N > 1` 個輸出詞元的請求而言，是第一個詞元之後的平均間隔：`(t_N - t_1) / (N - 1)`。系統層級的分布再彙整各請求的這些平均值。",
+  "The elapsed time from submitting a generation request until the client receives the first output token or content event under a defined measurement boundary.":
+    "在既定量測邊界下，從送出生成請求到用戶端收到第一個輸出詞元或內容事件所經過的時間。",
   "A word-sized piece of model input or output.": "一個字",
   "An integer identifier produced by a model-specific tokenizer from text, bytes, images, audio, or another input representation. A token can be a whole word, part of a word, punctuation, whitespace, a byte sequence, or a special control symbol.":
     "由 BPE 這類分詞器產生的子詞單位（英文中通常 3 到 4 個字元）。「unbelievable」可能是 3 個詞元：「un」+「believ」+「able」",
+  "An explicit allocation of token capacity across instructions, evidence, history, tool results, reasoning or working space, and output.":
+    "把詞元容量明確分配到指令、證據、歷史、工具結果、推理或工作空間，以及輸出上。",
+  "Converting an input representation into the ordered token identifiers a specific model or tokenizer accepts.":
+    "把輸入表示轉換成特定模型或斷詞器所接受的有序詞元識別碼。",
+  "A throughput measure reporting how many output tokens a serving system produces per unit time under a stated scope and workload.":
+    "一種吞吐量指標：在既定範圍與工作負載下，服務系統每單位時間產出多少輸出詞元。",
+  "The complete agreement for a tool boundary: purpose, typed inputs, outputs, validation, permissions, side effects, errors, timeouts, idempotency, and evidence returned to the caller.":
+    "一個工具邊界的完整約定：用途、具型別的輸入、輸出、驗證、權限、副作用、錯誤、逾時、冪等性，以及回傳給呼叫者的證據。",
+  "A decoding method that restricts the next-token distribution to the k highest-scoring candidates, renormalizes their probabilities, and samples from that set.":
+    "一種解碼方法：把下一個詞元的分布限縮到分數最高的 k 個候選，重新正規化它們的機率後再從中取樣。",
+  "A correlated record of one request or task across model calls, retrieval, tools, state transitions, retries, approvals, and evaluations.":
+    "一份互相關聯的紀錄，橫跨單一請求或任務所經過的模型呼叫、檢索、工具、狀態轉移、重試、核准與評測。",
   "Reusing a pretrained model for a new task.": "拿預訓練模型來用",
   "Starting from representations or parameters learned on one data distribution or objective and adapting them for another. The transferable components and update strategy depend on architecture and task.":
     "把在某個任務上訓練好的模型拿來適配到另一個任務。前面的層學到的是可移轉的通用特徵（邊緣、語法樣式），只有後面的層需要針對新任務訓練。這就是為什麼 BERT 可以微調到任何 NLP 任務。",
   "The architecture behind many modern language models.": "現代 AI 背後的架構",
   "A neural-network architecture built from attention, position information, feed-forward sublayers, residual connections, and normalization. Encoder, decoder, and encoder-decoder variants use different masks and information flows.":
     "一種神經網路架構，以自注意力（讓每個位置都能注意到其他所有位置）取代遞迴來處理序列，因此能大規模平行化",
+  "An interface where data, instructions, identity, or authority crosses between components or principals that operate under different trust assumptions.":
+    "一個介面：資料、指令、身分或權限在此跨越運作於不同信任假設下的元件或主體。",
   "The model cannot fit the training task well enough.": "模型根本沒在學",
   "A model or training setup has insufficient effective capacity, optimization, features, or training signal to capture useful patterns in the training data.":
     "模型太簡單，抓不到資料中的樣式，訓練損失一直很高。解法：增加參數、增加層數、訓練更久、降低正則化、改用更好的特徵。",
@@ -1286,13 +1604,29 @@ window.I18N_ZH_HANT = {
   "A database optimized for vector similarity search.": "給 AI 用的特殊資料庫",
   "A storage and indexing system that supports nearest-neighbor queries over vector representations, often with metadata filtering, persistence, and approximate indexes.":
     "針對儲存向量（稠密浮點陣列）與快速近似最近鄰搜尋最佳化的資料庫。相似度搜尋、RAG 與推薦系統的核心操作。",
+  "A control point that blocks progress until defined evidence satisfies a correctness or quality criterion.":
+    "一個控制點：在既定證據滿足正確性或品質標準之前，擋下後續進展。",
+  "A model that learns relationships between, or jointly processes, visual and language representations for tasks such as retrieval, description, question answering, or grounded generation.":
+    "一種模型：學習視覺與語言表示之間的關係，或對兩者聯合處理，用於檢索、描述、問答或有依據的生成等任務。",
+  "A vision architecture that represents an image as a sequence of patch embeddings with position information and processes that sequence with transformer encoder blocks.":
+    "一種視覺架構：把影像表示成帶位置資訊的區塊嵌入序列，再用 Transformer 編碼器區塊處理該序列。",
+  "Connecting a language expression to spatial evidence in an image or video, such as a region, object, mask, or tracked entity.":
+    "把語言表述連結到影像或影片中的空間證據，例如某個區域、物體、遮罩或被追蹤的實體。",
+  "The finite mapping between token identifiers and the units a tokenizer can emit, including ordinary, byte-level, and special control tokens.":
+    "詞元識別碼與斷詞器所能輸出之單元之間的有限對應關係，包含一般詞元、位元組層級詞元與特殊控制詞元。",
+  "An initial training phase in which the learning rate rises from a smaller value toward the main schedule's target value.":
+    "訓練初期的一個階段：學習率從較小的值逐步升到主排程的目標值。",
   "A learned number inside a model.": "模型學到的東西",
   "A trainable coefficient in a model transformation. Weights are usually organized into tensors, and optimization adjusts them to reduce the training objective.":
     "模型參數矩陣裡的一個數字。輸入 768、輸出 3072 的線性層有 768*3072 = 2,359,296 個權重。訓練就是在調整每個權重以最小化損失函式。",
   "Regularization that shrinks weights during optimization.": "正則化",
   "An update rule that reduces selected parameter magnitudes over training, often by multiplying weights by a shrinkage factor separate from the gradient update.":
     "在損失函式上加一個與權重大小成正比的懲罰項，等同於 L2 正則化，可防止權重長得太大。典型值：0.01 到 0.1。",
+  "In Git, a working directory attached to a repository and branch or commit, with shared object storage but its own checked-out files and index.":
+    "在 Git 中，指依附於某個程式庫與分支或提交的工作目錄；它共用物件儲存，但有自己的簽出檔案與索引。",
   "Asking for a task without examples in the current prompt.": "不用訓練",
   "Performing a task from instructions or task framing without including task-specific demonstrations in the immediate input.":
     "把模型用在它沒有被明確訓練過的任務上，且提示詞中不給任何該任務的範例。模型從預訓練中泛化而來。大型模型見過的樣態足夠多，因此能應付新的任務格式。",
+  "A security model that grants no implicit trust from network location or asset ownership and instead evaluates each access request against identity, device, resource, policy, and current context.":
+    "一種資安模型：不因網路位置或資產歸屬而給予任何隱含信任，改為針對每一次存取請求，依身分、裝置、資源、政策與當下情境逐一評估。",
 };
