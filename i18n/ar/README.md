@@ -29,7 +29,7 @@
 </p>
 
 ## Demo code
-- [ai-engineering-from-scratch-dem](https://github.com/yennanliu/ai_experiment/tree/main/ai-engineering-from-scratch-demo)
+- [ai-engineering-from-scratch-demo](https://github.com/yennanliu/ai_experiment/tree/main/ai-engineering-from-scratch-demo)
 
 
 
