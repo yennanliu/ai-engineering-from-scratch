@@ -1,90 +1,78 @@
 {
   "lesson": "13-mcp-server-with-registry",
-  "title": "Capstone 13 — MCP Server with Registry and Governance",
+  "title": "綜合專案 13：具登錄檔與治理的無狀態 MCP 伺服器",
   "questions": [
     {
       "stage": "pre",
-      "question": "為什麼 2026 版的 MCP 修訂偏好用 StreamableHTTP 跑正式環境伺服器？",
+      "question": "這個綜合專案為什麼同時使用 server.json 與 server/discover？",
       "options": [
-        "它是唯一支援工具呼叫的傳輸方式",
-        "它預設無狀態，因此負載平衡器後面的單一端點可以水平擴展",
-        "它會自動加密 payload",
-        "它讓認證變得不必要"
-      ],
-      "correct": 1,
-      "explanation": ""
-    },
-    {
-      "stage": "pre",
-      "question": "本 capstone 用哪種授權模型把關工具呼叫？",
-      "options": [
-        "帶有各工具 scope 的 OAuth 2.1 token，在工具呼叫當下檢查",
-        "依 IP 位址發放的 API key",
-        "不帶 scope 的雙向 TLS",
-        "一組共用的管理員密碼"
-      ],
-      "correct": 0,
-      "explanation": ""
-    },
-    {
-      "stage": "check",
-      "question": ".well-known/mcp-capabilities 文件的角色是什麼？",
-      "options": [
-        "列出對外連線的 IP 範圍",
-        "存放 OPA 政策套件",
-        "公開工具清單、傳輸 URL 與認證需求，讓 registry 得以驗證並索引這台伺服器",
-        "保存這台伺服器的稽核日誌"
-      ],
-      "correct": 2,
-      "explanation": ""
-    },
-    {
-      "stage": "check",
-      "question": "在這個設計裡，破壞性工具為什麼要放在獨立的 MCP 伺服器上？",
-      "options": [
-        "它們跑在較慢的硬體上",
-        "它們需要不同的程式語言",
-        "它們無法透過 StreamableHTTP 公開",
-        "它們由一個經 Slack 卡片在短時間視窗內提權取得的核准 token 把關"
+        "server.json 儲存工作階段，而 server/discover 刪除它們",
+        "登錄檔要求這兩個檔案含有完全相同的版本日期",
+        "它們是同一份工具清單的兩個名字",
+        "server.json 發布安裝與端點中繼資料，而 server/discover 回報即時的協定能力"
       ],
       "correct": 3,
-      "explanation": ""
+      "explanation": "登錄檔紀錄幫助客戶端定位並設定伺服器。即時的 RPC 回報的是執行中的行程支援什麼。兩者的 schema 與版本領域各自獨立，但發布出去的身分必須使用已認證的命名空間，並與即時的 serverInfo 相符。"
     },
     {
       "stage": "check",
-      "question": "每次工具呼叫時，OPA / Rego 決定什麼？",
+      "question": "在 MCP 修訂版 2026-07-28 裡，什麼取代了 initialize 握手？",
       "options": [
-        "呼叫方的 scope 是否允許此次調用，外加 PII 遮蔽與 payload 上限",
-        "伺服器該如何對回應重新排序",
-        "該調用哪個模型",
-        "稽核日誌該寫到哪裡"
+        "Mcp-Session-Id 加上 notifications/initialized",
+        "每一則請求都帶著協定版本與客戶端能力，而客戶端可以呼叫必備的 server/discover",
+        "一則開啟永久伺服器串流的 GET 請求",
+        "每條 TCP 連線送出一次的工作階段 cookie"
       ],
-      "correct": 0,
-      "explanation": ""
+      "correct": 1,
+      "explanation": "這個協定是無狀態的。版本與能力屬於請求中繼資料，而 server/discover 提供即時的版本與能力發現，過程中不建立任何工作階段。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一種 tools/list 行為能支撐安全且高效的發現？",
+      "options": [
+        "一個沒有範圍、永久快取的回應",
+        "每個副本上都隨機的工具順序",
+        "在 initialize 期間建立、只屬於該連線的清單",
+        "確定性的排序，加上 ttlMs 與正確的 public 或 private cacheScope"
+      ],
+      "correct": 3,
+      "explanation": "穩定的排序改善可重現性與提示詞快取。ttlMs 傳達新鮮度，而 cacheScope 防止使用者專屬的結果透過共用快取外洩。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一種 Streamable HTTP 設計符合當前的無狀態傳輸？",
+      "options": [
+        "所有客戶端都需要黏著式的負載平衡路由",
+        "POST 建立工作階段，GET 恢復它，DELETE 關閉它",
+        "一條獨立的 GET 串流，使用 Last-Event-ID 重播",
+        "每一則 JSON-RPC 訊息各自走一次 POST，請求則回傳 JSON 或請求範圍的 SSE"
+      ],
+      "correct": 3,
+      "explanation": "現行的 Streamable HTTP 對 MCP 訊息只收 POST，而且沒有協定工作階段、沒有獨立的 GET 串流、沒有工作階段 DELETE，也沒有 Last-Event-ID 續傳。"
     },
     {
       "stage": "post",
-      "question": "負載測試中，哪項證據能證明 StreamableHTTP 可水平擴展？",
+      "question": "在一個經政策核准的工具處理器執行之前，正式環境的伺服器必須驗證什麼？",
       "options": [
-        "加開第二個副本，並展示負載平衡器在沒有 session 黏著的情況下重新分配流量",
-        "把所有東西跑在單一行程裡",
-        "把並行數降到只剩一個用戶端",
-        "改用 stdio 傳輸"
+        "只要確認 server.json 裡列出了那個遠端 URL",
+        "只要看那個工具的 destructiveHint 註記",
+        "只要有人張貼過一則核准訊息",
+        "協定中繼資料，加上權杖簽發者、受眾或資源、到期、範圍，以及任何綁定確切動作的核准"
       ],
-      "correct": 0,
-      "explanation": ""
+      "correct": 3,
+      "explanation": "傳輸中繼資料、權杖驗證與政策是三道各自獨立的關卡。註記與發布中繼資料都不授予權限。"
     },
     {
       "stage": "post",
-      "question": "為什麼稽核日誌要先用 Presidio 清除 PII 才依租戶留存？",
+      "question": "哪一項證據最能支持「這台伺服器不靠協定工作階段也能擴展」這個宣稱？",
       "options": [
-        "為了滿足企業安全需求，同時仍能查詢每次呼叫的來龍去脈",
-        "PII 能提升搜尋效能",
-        "為了讓日誌更短",
-        "Presidio 能降低 ClickHouse 的寫入放大"
+        "server.json 裡的一筆 remote 項目",
+        "一次線路層級的並行執行，橫跨兩個可互換的副本，且不依賴任何親和性",
+        "一項建構出單一回應字典的單元測試",
+        "一張畫著負載平衡器的圖"
       ],
-      "correct": 0,
-      "explanation": ""
+      "correct": 1,
+      "explanation": "必須實際操練真正的傳輸與部署邊界。讓請求在副本之間輪替，才能證明正確性沒有藏在單一行程或黏著式工作階段裡。"
     }
   ]
 }
