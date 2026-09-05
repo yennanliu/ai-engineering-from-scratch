@@ -1,152 +1,344 @@
-# MCP 資源與提示詞 —— 工具之外的上下文暴露
+# MCP 資源與提示詞：無狀態伺服器的可定址脈絡
 
-> 工具拿走了 MCP 九成的注意力。另外兩個伺服器原語解決的是不同的問題。資源把資料暴露出來供讀取；提示詞則把可重用的模板暴露成斜線指令。許多伺服器應該改用資源，而不是把讀取包成工具；應該改用提示詞，而不是把工作流程寫死在客戶端的提示詞裡。這一課會替那條決策規則命名，並走過 `resources/*` 與 `prompts/*` 這些訊息。
+> 工具執行操作。資源暴露可定址的內容。提示詞把使用者挑選的訊息模板打包起來。好的 MCP 伺服器會讓這三份契約各自分離、各自可預期。
 
 **類型：** 實作
-**程式語言：** Python (stdlib, resource + prompt handler)
-**先修單元：** 階段 13 · 07（MCP 伺服器）
-**時間：** 約 45 分鐘
+**程式語言：** Python
+**先修單元：** 階段 13 單元 07（打造 MCP 伺服器）、階段 13 單元 09（MCP 傳輸）
+**時間：** 約 60 分鐘
 
 ## 學習目標
 
-- 針對給定的領域，決定一項能力該暴露成工具、資源，還是提示詞。
-- 實作 `resources/list`、`resources/read`、`resources/subscribe`，並處理 `notifications/resources/updated`。
-- 實作帶參數模板的 `prompts/list` 與 `prompts/get`。
-- 辨識宿主在什麼情況下把提示詞呈現成斜線指令，又在什麼情況下自動注入為上下文。
+- 從消費端的意圖出發，在工具、資源與提示詞之間做選擇。
+- 透過必備的 `server/discover` 公告資源與提示詞介面。
+- 建構確定性的 `resources/list` 與 `prompts/list` 結果。
+- 套用 `ttlMs` 與 `cacheScope`，同時不外洩使用者專屬資料。
+- 對無效或未知的資源 URI 回傳 JSON-RPC 錯誤 `-32602`。
+- 開啟一條 `subscriptions/listen` 的 POST 回應串流，並用訂閱 ID 對應每一個事件。
+- 把資源內容與提示詞模板視為不可信的伺服器輸出。
 
-## 問題所在
+## 從消費端出發
 
-一台為筆記應用寫的天真 MCP 伺服器，會把每樣東西都暴露成工具：`notes_read`、`notes_list`、`notes_search`。這等於把每一次資料存取都包進一次由模型驅動的工具呼叫。後果是：
+誤用 MCP 最容易的方式，就是從實作程式碼開始想。資料庫查詢變成工具，因為函數比較熟悉。可重用的工作流程變成資源，因為它存在檔案裡。提示詞變成隱藏的政策，因為宿主可以把它注入進去。
 
-- 每一個可能受惠於上下文的查詢，模型都得決定要不要呼叫 `notes_read`。
-- 唯讀內容無法被訂閱，也無法串流到宿主的側邊面板。
-- 客戶端 UI（Claude Desktop 的資源附加面板、Cursor 的「Include file」選擇器）呈現不了那些資料。
+從「誰在選」以及「他們期待什麼」開始想。
 
-正確的劃分是：把資料暴露成資源，把會變更狀態或需要運算的動作暴露成工具，把可重用的多步驟工作流程暴露成提示詞。每個原語都有它自己的 UX 承擔特性與存取模式。
+| 原語 | 主要意圖 | 選擇者 | 典型結果 |
+|---|---|---|---|
+| 工具 | 執行一個操作 | 模型或應用 | 結構化的動作結果 |
+| 資源 | 讀取某個 URI 上的內容 | 宿主、應用或使用者 | 文字或二進位內容 |
+| 提示詞 | 啟動一段可重用的訊息工作流程 | 使用者透過宿主 UI | 一則或多則提示詞訊息 |
 
-## 核心概念
+`notes://note-1` 上的一則筆記是資源，因為它是可定址的內容。`delete_note` 是工具，因為它改變狀態。`review_note` 是提示詞，因為使用者選的是一段已備好的審閱工作流程。
 
-### 工具對資源對提示詞 —— 那條決策規則
+不要只為了看起來完整，就把同一個操作同時暴露成三種形式。每多一個介面，就多一份發現、授權、快取、錯誤處理、測試與文件。
 
-| 能力 | 原語 |
-|------------|-----------|
-| 使用者想搜尋、篩選或轉換資料 | tool |
-| 使用者想讓宿主把這份資料納入上下文 | resource |
-| 使用者想要一套可以重跑的模板化工作流程 | prompt |
+## 2026-07-28 的無狀態信封
 
-指導原則：如果模型在每一次相關查詢時去呼叫它都有好處，那它是工具。如果使用者把它附加到一段對話中有好處，那它是資源。如果使用者想重用的單位是一整套多步驟工作流程，那它是提示詞。
+這一課鎖定 MCP 協定修訂版 `2026-07-28`。這個輪廓裡沒有初始化握手，也沒有協定工作階段。每一則請求都在保留的 `_meta` 鍵裡帶著自己的協定版本與客戶端能力。
 
-### 資源
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "resources/list",
+  "params": {
+    "_meta": {
+      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+      "io.modelcontextprotocol/clientInfo": {
+        "name": "course-client",
+        "version": "1.0.0"
+      },
+      "io.modelcontextprotocol/clientCapabilities": {}
+    }
+  }
+}
+```
 
-`resources/list` 回傳 `{resources: [{uri, name, mimeType, description?}]}`。`resources/read` 接收 `{uri}` 並回傳 `{contents: [{uri, mimeType, text | blob}]}`。
+伺服器必須實作 `server/discover`。它的結果會公告受支援的版本、資源與提示詞能力、
+實作身分，以及快取提示。客戶端可以直接呼叫其他方法，但發現能在它建構 UI 之前，
+給它一份穩定的快照。
 
-URI 可以是任何可定址的東西：
+```json
+{
+  "resultType": "complete",
+  "supportedVersions": ["2026-07-28"],
+  "capabilities": {
+    "resources": {"listChanged": true, "subscribe": true},
+    "prompts": {"listChanged": true}
+  },
+  "ttlMs": 3600000,
+  "cacheScope": "public"
+}
+```
 
-- `file:///Users/alice/notes/mcp.md`
-- `postgres://my-db/query/SELECT ...`
-- `notes://note-14`（自訂 scheme）
-- `memory://session-2026-04-22/recent`（伺服器專屬）
+一般的結果會宣告 `"resultType": "complete"`。回應的 `_meta` 用 `io.modelcontextprotocol/serverInfo` 標明是哪個實作在服務。這份資訊對診斷很有用。它不是認證身分。帶著不受支援之修訂版的請求會回傳 `-32022`，同時附上請求的修訂版與伺服器支援的修訂版。
 
-`contents[]` 同時支援文字與二進位。二進位使用 `blob`（一個 base64 編碼的字串）加上一個 `mimeType`。
+無狀態契約會改變你的設計直覺。清單不能依賴同一條連線上先前的某次呼叫。授權可以改變可見的集合，因為憑證是請求的輸入，但連線歷史不行。
 
-### 資源訂閱
+## 資源是穩定的 URI 契約
 
-在 capabilities 中宣告 `{resources: {subscribe: true}}`。客戶端呼叫 `resources/subscribe {uri}`。資源變動時，伺服器送出 `notifications/resources/updated {uri}`。客戶端再重讀。
+資源是由 URI 標識的內容。先設計 URI，再寫處理器。
 
-使用情境：一台以磁碟上檔案為資源的筆記伺服器；一個檔案監看器觸發更新通知；當檔案在宿主之外被編輯時，Claude Desktop 就把它重新拉進上下文。
+好的 URI 具備這些性質：
 
-### 資源模板（2025-11-25 新增）
+- 穩定到可以加書籤，或在請求之間傳遞。
+- 帶有伺服器領域的命名空間。
+- 與行程 ID 或連線無關。
+- 在存取儲存區之前先驗證。
+- 每一次讀取都做授權。
 
-`resourceTemplates` 讓你能暴露一個帶參數的 URI 模式：`notes://{id}`，並以 `id` 作為補全目標。客戶端就能在資源選擇器中自動補全那些 id。
+`notes://note-1` 比 `note-1` 好，因為它的命名空間是明確的。檔案伺服器可以用 `file://` URI，但它仍然必須在解析符號連結與相對路徑片段之後，檢查設定好的目錄邊界。
 
-### 提示詞
+`resources/list` 回傳呼叫者當下可見的資源。用 URI 這類穩定的鍵排序。確定性的順序能避免吵雜的快取未命中、變來變去的快照，以及在每次重新整理間跳動的宿主 UI。
 
-`prompts/list` 回傳 `{prompts: [{name, description, arguments?}]}`。`prompts/get` 接收 `{name, arguments}` 並回傳 `{description, messages: [{role, content}]}`。
+```json
+{
+  "resultType": "complete",
+  "resources": [
+    {
+      "uri": "notes://note-1",
+      "name": "Architecture decision",
+      "description": "Why the service uses a stateless boundary",
+      "mimeType": "text/markdown"
+    }
+  ],
+  "ttlMs": 300000,
+  "cacheScope": "public",
+  "_meta": {
+    "io.modelcontextprotocol/serverInfo": {
+      "name": "notes-server",
+      "version": "2.0.0"
+    }
+  }
+}
+```
 
-提示詞是一份會被填成訊息串的模板，由宿主餵給它的模型。舉例來說，一個 `code_review` 提示詞接收一個 `file_path` 參數，並回傳一段三則訊息的序列：一則系統訊息、一則帶檔案內容的使用者訊息，以及一則帶推理模板的 assistant 開場。
+`resources/read` 回傳一個或多個內容項目。未知的 URI 不是一次成功的空讀取。現行的 Resources 規格把無效或未知的資源 URI 歸到 JSON-RPC 的 invalid parameters，錯誤碼 `-32602`。
 
-### 宿主與提示詞
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "error": {
+    "code": -32602,
+    "message": "Unknown or invalid resource URI",
+    "data": {
+      "uri": "notes://missing"
+    }
+  }
+}
+```
 
-Claude Desktop、VS Code 與 Cursor 都把提示詞呈現成聊天 UI 中的斜線指令。使用者輸入 `/code_review`，再從一張表單中挑選參數。伺服器的提示詞，就是「使用者的捷徑」與「實際送給模型的完整提示詞」之間的那份契約。
+這個區分讓客戶端能把「不存在」跟「一份有效的空文件」分開。它也避免了不小心退回去做更大範圍的查找。
 
-不是每個客戶端都已經支援提示詞 —— 請查看能力協商的結果。若伺服器宣告了提示詞能力，但客戶端不支援，那就只是看不到那些斜線指令而已。
+### 資源模板
 
-### 「清單已變更」通知
+資源模板描述一整族帶參數的 URI。當把每一個具體項目都列出來會太貴、或數量無上限時，就用它。舉例來說，`notes://projects/{project}/decisions/{decision}` 告訴客戶端怎麼組出一個有效的位址，而不必回傳每一個決策。
 
-當集合變動時，資源與提示詞都會吐出 `notifications/list_changed`。一台剛匯入 20 則新筆記的筆記伺服器會吐出 `notifications/resources/list_changed`；客戶端於是重新呼叫 `resources/list` 把新增的抓進來。
+模板不會削弱驗證。要解析變數、套用授權、強制長度與字元限制，並用帶型別的參數組出儲存查詢。絕不要把任意的 URI 尾段串接進檔案系統路徑或資料庫語句裡。
 
-### 內容型別的慣例
+### 內容不是可信的指令
 
-文字用：`mimeType: "text/plain"`、`text/markdown`、`application/json`。
-二進位用：`image/png`、`application/pdf`，再加上 `blob` 欄位。
-MCP Apps（單元 14）用：在 `ui://` URI 中使用 `text/html;profile=mcp-app`。
+資源文字裡可能有提示詞注入、機密、誤導性的指令，或格式錯亂的標記。宿主應該保留來源出處，並把資源內容當成資料。伺服器應該限制內容大小、回傳準確的 MIME 型別、遮蔽呼叫者無權存取的欄位，並避免回傳無關的紀錄。
 
-### 動態資源
+## 提示詞是由使用者控制的模板
 
-資源 URI 不一定要對應一個靜態檔案。`notes://recent` 可以在每次讀取時回傳最新的五則筆記。`db://query/users/active` 可以執行一次帶參數的查詢。伺服器可以自由地動態計算內容。
+MCP 提示詞是為了「由使用者明確挑選」而設計的。宿主可以把它們算繪成斜線指令、選單項目或工作流程按鈕。協定並不要求特定的 UI。
 
-規則是：如果客戶端能依 URI 做快取，那個 URI 就必須穩定。如果那次運算是一次性的，URI 就該帶上時間戳或 nonce，好讓客戶端的快取不會過期失效。
+在同一份請求授權底下，`prompts/list` 應該是確定性的。每一個提示詞都需要穩定的名稱、有用的描述，以及參數宣告，好讓宿主在 `prompts/get` 之前先蒐集輸入。
 
-### 訂閱對輪詢
+```json
+{
+  "resultType": "complete",
+  "prompts": [
+    {
+      "name": "review_note",
+      "title": "Review a note",
+      "description": "Review one note for a named concern",
+      "arguments": [
+        {
+          "name": "uri",
+          "description": "The note resource URI",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "ttlMs": 600000,
+  "cacheScope": "public"
+}
+```
 
-具備訂閱能力的客戶端會透過 `notifications/resources/updated` 收到伺服器推播。不支援訂閱的客戶端或宿主，則靠重讀來輪詢。兩者都符合規格。伺服器的能力宣告會告訴客戶端它支援哪一種。
+`prompts/get` 把參數解析成訊息。它不會取代宿主的系統指令。宿主決定回傳的訊息如何進入模型脈絡，並讓自己受信任的政策維持在更高的優先序。
 
-訂閱的代價是：伺服器上每個工作階段的狀態（誰訂閱了什麼）。要讓訂閱集合有界；斷線的客戶端應該逾時。
+在伺服器邊界驗證提示詞參數。提示詞裡的 URI 應該通過跟直接資源讀取一樣的授權檢查。不要讓提示詞變成繞過資源存取的側通道。
 
-### 提示詞對系統提示詞
+## 快取提示是正確性的一部分
 
-MCP 中的提示詞不是系統提示詞。宿主的系統提示詞（它自己的運作指示）與 MCP 提示詞（由伺服器提供、由使用者調用的模板）是並存的。一個行為端正的客戶端，絕不會讓伺服器的提示詞覆寫它自己的系統提示詞；它會把兩者分層疊起來。
+`ttlMs` 告訴客戶端一個結果可以重用多久。`cacheScope` 描述誰可以共用那個快取值。
+
+| 範圍 | 意義 | 典型用途 |
+|---|---|---|
+| `public` | 在授權允許時可跨使用者重用 | 公開的提示詞目錄 |
+| `private` | 綁在發出請求的使用者或憑證脈絡上 | 使用者自有的筆記內容 |
+
+依資料的變動速率，以及過期資料造成的傷害，來挑 TTL。公開的提示詞目錄也許五分鐘就合適。私有筆記的讀取可以用一分鐘。
+
+MCP 只把 `public` 與 `private` 定義為 `cacheScope` 的值。對於帶有機密、或變動極快的結果，回傳 `cacheScope: "private"` 搭配 `ttlMs: 0`，再在宿主的快取政策裡套用更嚴格的 no-store 規則。`no-store` 本身不是 MCP 的 `cacheScope` 值。
+
+快取提示永遠不能取代授權。快取鍵必須涵蓋每一個會改變可見性的請求維度，包含租戶、使用者、範圍、語系與分頁游標。如果共用快取無法安全地表達那些維度，就用 `private` 搭配零 TTL，以及宿主層級的 no-store 政策。
+
+## 訂閱使用由客戶端開啟的回應串流
+
+現代的訂閱模式取代了先前的 `resources/subscribe` RPC，以及舊的 HTTP GET 事件端點。
+
+客戶端把 `subscriptions/listen` 當成一般的 JSON-RPC 請求送出。在 Streamable HTTP 上，這是一次 POST，它的回應會以 SSE 串流的形式保持開啟。`notifications` 物件是一份允許清單。伺服器不得推送未被請求的通知類型。
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 17,
+  "method": "subscriptions/listen",
+  "params": {
+    "_meta": {
+      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+      "io.modelcontextprotocol/clientCapabilities": {},
+      "io.modelcontextprotocol/clientInfo": {
+        "name": "course-client",
+        "version": "1.0.0"
+      }
+    },
+    "notifications": {
+      "resourcesListChanged": true,
+      "promptsListChanged": true,
+      "resourceSubscriptions": [
+        "notes://note-1"
+      ]
+    }
+  }
+}
+```
+
+請求 ID 就是訂閱 ID。在任何被請求的事件之前，伺服器會送出 `notifications/subscriptions/acknowledged`。它的過濾條件只包含伺服器接受的那個子集。
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "notifications/subscriptions/acknowledged",
+  "params": {
+    "_meta": {
+      "io.modelcontextprotocol/subscriptionId": 17
+    },
+    "notifications": {
+      "resourcesListChanged": true,
+      "resourceSubscriptions": [
+        "notes://note-1"
+      ]
+    }
+  }
+}
+```
+
+那條串流上後續的每一個事件，都帶著同樣的中繼資料。
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "notifications/resources/updated",
+  "params": {
+    "_meta": {
+      "io.modelcontextprotocol/subscriptionId": 17
+    },
+    "uri": "notes://note-1"
+  }
+}
+```
+
+通知說的是「資源變了」。客戶端在當前授權的前提下，透過 `resources/read` 再讀一次。它不會假設事件裡就帶著新文件。
+
+多個訂閱可以共用同一條 stdio 通道。訂閱 ID 讓客戶端能把它們解多工。在 HTTP 上，關閉回應串流即取消該訂閱。優雅結束串流的伺服器，會回傳一則與原始請求對應、`resultType: "complete"` 的最終回應。
+
+不要把訂閱串流當成協定工作階段。後續的讀取仍然是一則完整的請求，可以落在任何一個健康的伺服器實例上。
 
 ```figure
 t3-primitive-sort
 ```
 
-## 框架應用
+## 互動實驗
 
-`code/main.py` 在單元 07 那台筆記伺服器上，擴充了以下內容：
+用這張圖把專案追蹤系統的五項能力分類：議題細節、建立議題、衝刺審閱模板、專案政策，以及關閉議題。接著決定哪些清單可以公開快取、哪些讀取必須維持私有，以及哪些資源值得推送更新通知。
 
-- 每則筆記各自的資源（`notes://note-1` 等），並支援 `resources/subscribe`。
-- 一個會渲染成三則訊息模板的 `review_note` 提示詞。
-- 一個檔案監看器模擬，會在筆記被修改時吐出 `notifications/resources/updated`。
-- 一個總是回傳最新五則筆記的 `notes://recent` 動態資源。
+每做一次分類，都指出「誰在選」。如果是模型執行動作，用工具。如果是宿主讀取以 URI 定址的內容，用資源。如果是使用者啟動一段備好的訊息工作流程，用提示詞。
 
-跑一次示範，看看完整的流程。
+## 實作練習
 
-## 產出交付
+從版本庫根目錄執行模擬器：
 
-這一課產出 `outputs/skill-primitive-splitter.md`。給定一台提案中的 MCP 伺服器，這項技能會把每一項能力歸類成 tool／resource／prompt，並附上理由。
+```bash
+cd phases/13-tools-and-protocols/10-mcp-resources-and-prompts/code
+python3 main.py
+python3 -m unittest discover tests -v
+```
+
+照這個順序檢視逐字紀錄：
+
+1. 確認 `server/discover` 公告了當前修訂版與兩種能力。
+2. 確認兩份清單結果都已排序，並使用 `resultType: "complete"`。
+3. 確認清單與讀取結果都帶著刻意設定的快取提示。
+4. 把讀取的 URI 改成 `notes://missing`，觀察 `-32602`。
+5. 確認訂閱確認訊息出現在資源事件之前。
+6. 確認事件與優雅關閉都帶著訂閱 ID `5`。
+
+這份 Python 模型不會真的開一條 HTTP 連線。它呈現的是 SDK 必須放到請求範圍回應串流上的那些訊息。正式環境請用官方 SDK 處理框架化與傳輸。
+
+## 交付產物
+
+`outputs/skill-primitive-splitter.md` 是一份可重用的設計審查，用於 MCP 原語的選擇。它現在還會檢查確定性發現、快取範圍、無效 URI 行為，以及現代訂閱過濾條件。
+
+這一課同時交付 `assets/primitive-split.svg`，是原語與訂閱邊界的靜態版本，方便離線研讀。
+
+## 驗證
+
+```bash
+cd phases/13-tools-and-protocols/10-mcp-resources-and-prompts/code
+python3 main.py
+python3 -m unittest discover tests -v
+```
+
+預期結果：主程式印出一份 JSON 逐字紀錄，而測試指令回報至少十二項測試通過。
+
+## 與綜合專案的銜接
+
+當你的綜合專案伺服器要在動作之外，還暴露可定址的知識時，就採用這份契約。請包含一份確定性的目錄快照、一次已授權的資源讀取、一次提示詞解析、一個無效 URI 案例，以及一份訂閱逐字紀錄。
+
+你的證據應該顯示：沒有任何清單依賴連線歷史，而且訂閱事件本身絕不授予對底層資源的存取權。
 
 ## 練習
 
-1. 跑一次 `code/main.py`。觀察初始的資源清單，接著觸發一次筆記編輯，驗證 `notifications/resources/updated` 事件有觸發。
-
-2. 加上一個 `resources/list_changed` 的發送器：當有新筆記被建立時，送出那則通知，好讓客戶端重新探索。
-
-3. 為一台 GitHub MCP 伺服器設計三個提示詞：`summarize_pr`、`triage_issue`、`release_notes`。每個都要有參數 schema。提示詞本體要能不必再修改就直接跑。
-
-4. 從單元 07 的伺服器中挑一個既有工具，判斷它該維持是工具，還是該拆成「資源加工具」這一對。用一句話說明理由。
-
-5. 讀規格的 `server/resources` 與 `server/prompts` 章節。找出 `resources/read` 中那個很少被填、但規格支援的欄位。提示：看看資源內容上的 `_meta`。
+1. 加一個 `notes://projects/{project}/notes/{id}` 資源模板，並驗證兩個變數。
+2. 為 `resources/list` 加上分頁，同時保住確定性的排序。
+3. 把某個資源改成 `cacheScope: "private"` 搭配 `ttlMs: 0`，加上宿主層級的 no-store 政策，並說明是什麼威脅同時證成了這兩道控制。
+4. 加一個提示詞清單變更的訂閱，並證明當過濾條件裡沒有 `promptsListChanged` 時不會送出任何事件。
+5. 同時建立兩個訂閱，並證明每個事件都帶著正確的請求 ID。
+6. 在讀取處理器裡加上授權主體，並證明快取條目無法跨主體。
 
 ## 關鍵術語
 
-| 術語 | 大家怎麼說 | 實際上是什麼 |
-|------|----------------|------------------------|
-| 資源 | 「被暴露出來的資料」 | 以 URI 定址、宿主可讀取的內容 |
-| 資源 URI | 「指向資料的指標」 | 帶 scheme 前綴的識別字（`file://`、`notes://` 等） |
-| `resources/subscribe` | 「盯著變化」 | 由客戶端選擇加入、針對特定 URI 的伺服器推播更新 |
-| `notifications/resources/updated` | 「資源變了」 | 通知客戶端某個已訂閱資源有了新內容的訊號 |
-| 資源模板 | 「帶參數的 URI」 | 帶補全提示、供宿主選擇器使用的 URI 模式 |
-| 提示詞 | 「斜線指令模板」 | 帶參數插槽的具名多訊息模板 |
-| 提示詞參數 | 「模板輸入」 | 宿主在渲染前會蒐集的定型參數 |
-| `prompts/get` | 「渲染模板」 | 伺服器回傳填好的訊息串 |
-| 內容區塊 | 「定型的一塊」 | `{type: text \| image \| resource \| ui_resource}` |
-| 斜線指令 UX | 「使用者捷徑」 | 宿主把提示詞呈現成以 `/` 開頭的指令 |
+- **資源（Resource）：** MCP 伺服器暴露的、以 URI 定址的內容。
+- **提示詞（Prompt）：** MCP 伺服器暴露的、由使用者控制的訊息模板。
+- **確定性清單：** 在相同請求輸入下，成員與排序都穩定的發現結果。
+- **`ttlMs`：** 以毫秒為單位的快取新鮮度時長。
+- **`cacheScope`：** 一則快取結果的共用邊界。
+- **`subscriptions/listen`：** 長時間存活的請求，其回應串流推送經明確過濾的通知。
+- **訂閱 ID：** 原始 listen 請求的 ID，會在通知中繼資料裡重複出現。
+- **無效參數：** JSON-RPC 錯誤 `-32602`，用於無效或未知的資源 URI。
+- **不支援的協定版本：** JSON-RPC 錯誤 `-32022`，內含 `supported` 與 `requested` 修訂版。
+- **`server/discover`：** 必備的伺服器方法，回傳受支援的修訂版、能力、身分與選用的快取提示。
 
 ## 延伸閱讀
 
-- [MCP — Concepts: Resources](https://modelcontextprotocol.io/docs/concepts/resources) —— 資源 URI、訂閱與模板
-- [MCP — Concepts: Prompts](https://modelcontextprotocol.io/docs/concepts/prompts) —— 提示詞模板與斜線指令整合
-- [MCP — Server resources spec 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25/server/resources) —— `resources/*` 訊息的完整參考
-- [MCP — Server prompts spec 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25/server/prompts) —— `prompts/*` 訊息的完整參考
-- [MCP — Protocol info site: resources](https://modelcontextprotocol.info/docs/concepts/resources/) —— 在官方文件之外展開說明的社群指南
+- [MCP 2026-07-28 Resources](https://modelcontextprotocol.io/specification/2026-07-28/server/resources)
+- [MCP 2026-07-28 Prompts](https://modelcontextprotocol.io/specification/2026-07-28/server/prompts)
+- [MCP 2026-07-28 Subscriptions](https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/subscriptions)
+- [MCP 2026-07-28 Caching](https://modelcontextprotocol.io/specification/2026-07-28/basic/utilities/caching)

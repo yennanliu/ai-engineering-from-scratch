@@ -1,98 +1,182 @@
-# MCP 傳輸 —— stdio 對 Streamable HTTP 對 SSE 遷移
+# MCP 傳輸：stdio 與無狀態的 Streamable HTTP
 
-> stdio 在本機能用，在其他地方都不能。Streamable HTTP（2025-03-26）是遠端的標準。舊的 HTTP+SSE 傳輸已被棄用，並將在 2026 年年中移除。挑錯傳輸的代價是一次遷移；挑對的話，你買到的是一台可遠端託管、具備工作階段連續性與 DNS 重繫結防護的 MCP 伺服器。
+> 傳輸負責搬運 MCP 訊息。它不會補上缺漏的協定狀態。在 `2026-07-28` 裡，本機的 stdio 與遠端的 Streamable HTTP 搬的都是自我描述的請求。
 
 **類型：** 學習
-**程式語言：** Python (stdlib, Streamable HTTP endpoint skeleton)
-**先修單元：** 階段 13 · 07、08（MCP 伺服器與客戶端）
-**時間：** 約 45 分鐘
+**程式語言：** Python
+**先修單元：** 階段 13，單元 07 與 08
+**時間：** 約 65 分鐘
 
 ## 學習目標
 
-- 依部署形狀（本機對遠端、單行程對機隊），在 stdio 與 Streamable HTTP 之間做選擇。
-- 實作 Streamable HTTP 的單端點模式：用 POST 處理請求、用 GET 開工作階段串流。
-- 落實 `Origin` 驗證與工作階段 id 語意，以擊退 DNS 重繫結。
-- 在 2026 年年中的移除期限之前，把一台舊的 HTTP+SSE 伺服器遷移到 Streamable HTTP。
+- 本機子行程選 stdio，網路服務選 Streamable HTTP。
+- 實作現代的單一端點、只收 POST 的 Streamable HTTP 契約。
+- 把 MCP 版本、方法與名稱標頭對照 JSON-RPC 主體做鏡射與驗證。
+- 正確地送出請求範圍的 SSE，以及長時間存活的 `subscriptions/listen` 串流。
+- 遷移以工作階段為基礎的、以及舊版 HTTP+SSE 的部署，且不把舊行為包裝成現代行為。
 
 ## 問題所在
 
-第一版 MCP 遠端傳輸（2024-11）是 HTTP+SSE：兩個端點，一個接客戶端的 POST，一個是伺服器對客戶端串流用的 Server-Sent-Events 通道。它能用。但也很笨拙：每個工作階段兩個端點、在某些 CDN 前面會弄壞快取，還硬性依賴長連線的 SSE，而某些 WAF 會很積極地把它切斷。
+較早的 Streamable HTTP 修訂版，把協定協商跟連線與工作階段行為混在一起。伺服器可以鑄造 `Mcp-Session-Id`、暴露一條獨立的 GET 串流、接受 DELETE 來終止工作階段，還能用 `Last-Event-ID` 續傳 SSE。
 
-2025-03-26 版規格用 Streamable HTTP 取代了它：一個端點，POST 給客戶端請求，GET 用來建立工作階段串流，兩者共用一個 `Mcp-Session-Id` 標頭。從那時起打造或遷移的每一台伺服器都用 Streamable HTTP。舊的 SSE 模式正在被棄用 —— Atlassian Rovo 於 2026 年 6 月 30 日移除；Keboola 是 2026 年 4 月 1 日；其餘多數企業伺服器則在 2026 年底前完成。
+MCP `2026-07-28` 把那些機制從現代線路上移除了。每一則請求都能落在任何一個健康的 worker 上，因為它的協定版本與客戶端能力就在請求主體裡。HTTP 標頭為了路由與政策而鏡射部分欄位，但伺服器會在執行之前，拿那些標頭跟主體互相驗證。
 
-而 stdio 對本機伺服器仍然重要。Claude Desktop、VS Code，以及每一個 IDE 形狀的客戶端，都是透過 stdio 啟動伺服器的。正確的心智模型是：stdio 給「這台機器」，Streamable HTTP 給「跨網路」。兩者不交叉。
+結果是更容易擴展，也更容易推理。這也意味著：一台把 2025 年的傳輸方式當成現行做法在教的伺服器，教的是錯的失敗模型與安全模型。
 
 ## 核心概念
 
 ### stdio
 
-- 子行程傳輸。客戶端啟動伺服器，透過 stdin／stdout 溝通。
-- 每行一個 JSON 物件。以換行分隔。
-- 沒有工作階段 id；行程的身分就是那個工作階段。
-- 不需要認證（子行程繼承了父行程的信任邊界）。
-- 絕不要用在遠端伺服器上 —— 那會需要 SSH 或 socat 來做隧道，而既然如此，不如直接用 Streamable HTTP。
+stdio 綁定適用於由客戶端啟動的子行程：
 
-### Streamable HTTP
+- 客戶端每行寫一則 UTF-8 JSON-RPC 訊息到 stdin。
+- 伺服器每行寫一則 UTF-8 JSON-RPC 訊息到 stdout。
+- 伺服器把診斷訊息寫到 stderr。
+- 伺服器在 stdin 收到 EOF 時立刻結束。
+- 每一則現代請求都在 `params._meta` 裡帶著版本與客戶端能力。
 
-單一端點 `/mcp`（或任何路徑）。支援三種 HTTP 方法：
+這個行程可能撐過很多次呼叫，但它不是現代的協定工作階段。如果它意外結束，在途的請求就遺失了。重啟行程、重新發現、重新列清單、重新開啟訂閱，並用新的請求 id 重試安全的操作。
 
-- **POST /mcp。** 客戶端送出一則 JSON-RPC 訊息。伺服器回覆單一份 JSON 回應，或一道包含一則以上回應的 SSE 串流（對批次回應與該請求相關的通知很有用）。
-- **GET /mcp。** 客戶端開啟一條長連線的 SSE 通道。伺服器用它來發出伺服器對客戶端的請求（sampling、通知、elicitation）。
-- **DELETE /mcp。** 客戶端明確終止該工作階段。
+### 2026-07-28 的 Streamable HTTP
 
-工作階段以 `Mcp-Session-Id` 標頭識別 —— 伺服器在第一次回應時設定它，客戶端在之後每次請求都回敘它。工作階段 id「必須」是密碼學隨機的（128 位元以上）；為了安全，由客戶端指定的 id 會被拒絕。
+現代伺服器暴露單一個 MCP 端點，例如 `/mcp`，只接受 POST。
 
-### 單端點對雙端點
+每一則 JSON-RPC 請求或通知都是一次新的 HTTP POST。主體裡放一則 JSON-RPC 訊息。客戶端不會送 JSON-RPC 回應給伺服器。
 
-舊規格的雙端點模式在 2026 年仍可呼叫 —— 規格宣告它為「相容舊版」。但所有新伺服器都該用單端點。官方 SDK 產出的是單端點；只有在跟一個尚未遷移的遠端對話時，才使用舊版模式。
+對於請求，伺服器回傳以下兩者之一：
 
-### `Origin` 驗證與 DNS 重繫結
+- `Content-Type: application/json`，內含一則 JSON-RPC 回應；或
+- `Content-Type: text/event-stream`，內含與該請求相關的通知，最後接上最終的 JSON-RPC 回應。
 
-瀏覽器（在今天）不是 MCP 客戶端，但攻擊者可以打造一個網頁，說服瀏覽器去 POST 到 `localhost:1234/mcp` —— 也就是使用者本機 MCP 伺服器監聽的地方。如果伺服器不檢查 `Origin`，瀏覽器的同源政策救不了它，因為 `Origin: http://evil.com` 是一個合法的跨來源值。
+對於被接受的通知，伺服器回傳 `202 Accepted`，沒有主體。
 
-2025-11-25 版規格要求伺服器拒絕 `Origin` 不在白名單上的請求。白名單通常包含 MCP 客戶端的宿主（`https://claude.ai`、`vscode-webview://*`）以及給本機 UI 用的 localhost 變體。
+客戶端會同時公告兩種回應型別：
 
-### 工作階段 id 的生命週期
+```http
+Accept: application/json, text/event-stream
+```
 
-1. 客戶端送出第一次請求，不帶 `Mcp-Session-Id`。
-2. 伺服器指派一個隨機 id，並在回應標頭中設上 `Mcp-Session-Id`。
-3. 客戶端在之後所有請求，以及開串流的 `GET /mcp` 上，都回敘那個標頭。
-4. 工作階段可被伺服器撤銷；客戶端在後續請求上會看到 404，必須重新初始化。
-5. 客戶端可以明確 DELETE 該工作階段以乾淨地關閉。
+### 只收 POST 就是只收 POST
 
-### Keepalive 與重連
+現代 Streamable HTTP 沒有獨立的 GET 串流，也沒有 DELETE 工作階段端點。
 
-SSE 連線會斷。客戶端靠帶著同一個 `Mcp-Session-Id` 重新 GET 來重建它。伺服器「必須」把中斷期間錯過的事件排入佇列（在合理的視窗內），並透過客戶端回敘的 `last-event-id` 標頭重播。
+- `GET /mcp` 回傳 `405 Method Not Allowed`。
+- `DELETE /mcp` 回傳 `405 Method Not Allowed`。
+- `Mcp-Session-Id` 會被忽略，永遠不鑄造、也不回送。
+- `Last-Event-ID` 會被忽略，因為現代串流不可續傳。
 
-階段 13 · 13 會談 Tasks，它能讓長時間執行的工作，連整個工作階段重連都活得下來。
+如果請求範圍的串流在最終回應之前就斷了，客戶端就是遺失了那則在途請求。在重試安全的前提下，它可以用一個新的 JSON-RPC id 發出新請求。它不得嘗試續傳串流。
 
-### 向後相容的探測
+### Origin 驗證
 
-一個想同時支援新舊伺服器的客戶端會這樣做：
+伺服器會對進來的連線驗證 `Origin`，以防 DNS 重新綁定攻擊。如果標頭存在但未被明確允許，回傳 `403 Forbidden`。非瀏覽器的客戶端可以省略 `Origin`，官方的傳輸規則允許這一點。
 
-1. POST 到 `/mcp`。
-2. 如果回應是帶 JSON 或 SSE 的 `200 OK`，那就是 Streamable HTTP。
-3. 如果回應是帶 `Content-Type: text/event-stream` 的 `200 OK`，「而且」有一個指向次要端點的 `Location` 標頭，那就是舊版 HTTP+SSE；跟著 `Location` 走。
+本機伺服器應該綁在 `127.0.0.1`，而不是每一張網卡上。網路服務仍然需要在每一則請求上做認證與授權。Origin 驗證不是認證。
 
-### Cloudflare、ngrok 與託管
+在把設定正規化之後，採用精確的 origin 比對。像 `origin.startswith("https://trusted.example")` 這種前綴檢查並不安全，因為它可能接受由攻擊者控制的後綴。
 
-2026 年的生產級遠端 MCP 伺服器跑在 Cloudflare Workers（搭配他們的 MCP Agents SDK）、Vercel Functions，或容器化的 Node／Python 上。關鍵是：你的託管環境必須支援長連線的 HTTP，才能撐住那個 SSE GET。Vercel 的免費方案上限是 10 秒，不適用。Cloudflare Workers 支援無限期串流。
+### 必填的 HTTP 中繼資料標頭
 
-### 閘道的組合
+每一則現代 POST 請求都包含：
 
-當你用一個閘道罩住多台 MCP 伺服器時（階段 13 · 17），這個閘道就是單一個 Streamable HTTP 端點，負責改寫工作階段 id 並對上游做多工。工具在閘道層合併；客戶端看到的是單一台邏輯伺服器。
+```http
+MCP-Protocol-Version: 2026-07-28
+Mcp-Method: tools/call
+Mcp-Name: notes_search
+```
 
-### 傳輸的失敗模式
+標頭規則：
 
-- **stdio SIGPIPE。** 子行程在寫入途中死亡會引發 SIGPIPE；伺服器應該乾淨地結束。客戶端應該偵測到 EOF 並把工作階段標記為已死。
-- **HTTP 502／504。** Cloudflare、nginx 與其他代理在上游失敗時會吐出這些。Streamable HTTP 客戶端應該在短暫退避後重試一次。
-- **SSE 連線中斷。** TCP RST、代理逾時，或客戶端換網路都會關掉那道串流。客戶端帶著 `Mcp-Session-Id` 與選配的 `last-event-id` 重連以續傳。
-- **工作階段撤銷。** 伺服器讓某個工作階段 id 失效；客戶端在下次請求時看到 404。客戶端必須重新握手。
-- **時鐘偏移。** 客戶端的資源 TTL 計算與伺服器分歧。客戶端應該把伺服器的時間戳視為權威。
+- `MCP-Protocol-Version` 必填，且必須等於 `params._meta.io.modelcontextprotocol/protocolVersion`。
+- `Mcp-Method` 必填，且必須等於 JSON-RPC 的 `method`。
+- `Mcp-Name` 在 `tools/call`、`resources/read` 與 `prompts/get` 上必填。
+- `Mcp-Name` 等於 `params.name`，`resources/read` 則等於 `params.uri`。
+- 標頭名稱不分大小寫，但標頭值是分大小寫的。
 
-### 什麼時候該繞過 Streamable HTTP
+不安全或非 ASCII 的 `Mcp-Name` 值，使用精確的 UTF-8 Base64 標記形式：
 
-有些企業在自家網路內，把 MCP 伺服器部署在 gRPC 或訊息佇列傳輸之後。這是非標準的 —— MCP 規格並沒有正式定義這些。閘道可以對 MCP 客戶端暴露一個 Streamable HTTP 表面，內部卻使用 gRPC。讓對外的表面保持合規；轉譯由閘道負責。
+```text
+=?base64?{Base64EncodedValue}?=
+```
+
+伺服器會先解碼那個值，再拿去跟主體比對。
+
+鏡射標頭缺漏、格式錯誤或內容不符，回傳 HTTP `400` 與 JSON-RPC 錯誤碼 `-32020`。如果標頭與主體對某個伺服器不支援的版本取得一致，回傳 HTTP `400` 與 `-32022`，並附上精確的錯誤資料，例如 `{"supported":["2026-07-28"],"requested":"2027-01-01"}`。
+
+未知的現代方法回傳 HTTP `404` 與 JSON-RPC `-32601`。那個 JSON-RPC 主體很重要，因為跨時代的客戶端要靠它分辨「現代錯誤」與「舊版端點沒找到」。
+
+### 請求範圍的 SSE
+
+伺服器可以對某一則長時間執行的請求選用 SSE：
+
+```text
+POST tools/call id=41
+  <- notifications/progress related to id=41
+  <- notifications/progress related to id=41
+  <- JSON-RPC response id=41
+stream closes
+```
+
+伺服器不得在這條串流上送出獨立的 JSON-RPC 請求。Sampling、elicitation 與 roots 的互動一律走 Multi Round-Trip Request 結果。關閉回應串流即取消該請求。
+
+不要為了重播而加上 SSE 事件 id。`Last-Event-ID` 續傳不屬於現代修訂版。
+
+### 長時間存活的變更走 subscriptions/listen
+
+變更通知使用由客戶端開啟的請求，而不是獨立的 GET：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "listen-1",
+  "method": "subscriptions/listen",
+  "params": {
+    "notifications": {
+      "toolsListChanged": true,
+      "resourceSubscriptions": ["notes://note-1"]
+    },
+    "_meta": {
+      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+      "io.modelcontextprotocol/clientCapabilities": {},
+      "io.modelcontextprotocol/clientInfo": {
+        "name": "course-client",
+        "version": "1.0.0"
+      }
+    }
+  }
+}
+```
+
+這次 POST 的回應是一條長時間存活的 SSE 串流。它的第一則協定訊息是 `notifications/subscriptions/acknowledged`。這則確認、每一則變更通知，以及最終結果，都會在 `_meta` 裡帶著 `io.modelcontextprotocol/subscriptionId`，其值等於 listen 請求的 id。伺服器可以發出 SSE 註解當作保活。串流掉線時，客戶端用一個新的請求 id 重新送出 `subscriptions/listen`，並重新抓取受影響的資料。
+
+`resources/subscribe` 與 `resources/unsubscribe` 屬於舊版時代。不要在現代連線上使用它們。
+
+### 明確的應用狀態
+
+移除協定工作階段，並不代表禁止有狀態的工作流程。伺服器可以鑄造一個不透明的狀態把手，並把它當成一般的工具結果回傳。客戶端在後續呼叫時，把那個把手當成明確的參數送出。
+
+把把手綁定到已認證的主體、讓它無法被猜到、給它過期時間，並在每一次使用時做授權。這讓狀態顯露在應用層，而不是藏在傳輸親和性裡。
+
+隱藏的副本狀態所造成的失敗是很機械式的：
+
+1. 請求 A 抵達副本 1，在那個行程的記憶體裡建立了一份草稿。
+2. 回應沒有回傳草稿把手，因為那個實作假設連線本身就足以標識草稿。
+3. 請求 B 是一次全新的 POST，抵達副本 2。
+4. 副本 2 有有效的協定中繼資料，卻沒有辦法指名或載入那份草稿，於是工作流程失敗，或讀到錯誤的本地物件。
+5. 黏著式路由看起來把症狀解決了 —— 直到一次重啟、上線、重新排程或故障轉移，把下一則請求搬走。
+
+正確的邊界有兩個部分。協定脈絡留在每一則請求裡。持久的應用狀態放在共用儲存區，藏在一個由伺服器鑄造、回傳給客戶端的把手底下。下一次呼叫附上那個把手，任何副本都能載入同一筆紀錄，而授權會把那筆紀錄綁到已認證的主體與租戶上。副本記憶體可以快取一筆紀錄，但它不能是正確性所需的唯一一份副本。
+
+依生命期挑選狀態機制。請求範圍的區域變數只能服務單次呼叫。短暫的 MRTR 續行可以用有完整性保護的 `requestState`。草稿或持久任務則需要明確的把手，加上共用持久化、過期、並行控制與冪等性。這些物件沒有一個是 MCP 協定工作階段。
+
+### HTTP 跨時代相容
+
+同時支援現代與舊版伺服器的客戶端，會先嘗試一次現代 POST。如果收到 HTTP `400`、`404` 或 `405`，它就檢視主體：
+
+- 可辨識的現代 JSON-RPC 錯誤，證明伺服器是現代的。修正請求，或改用它公告的某個版本重試。不要降級。
+- 空主體或無法辨識的回應，可能代表對面是舊版 HTTP+SSE 伺服器。只有在這種情況下，才去試舊的 GET 端點，並預期它的舊版 `endpoint` 事件。
+
+伺服器在遷移期間可以同時支援兩個時代：把帶有現代中繼資料的流量導向只收 POST 的現代實作，同時為舊客戶端保留獨立的舊版端點。絕不要把舊版的 GET、DELETE、工作階段 id 或重播行為，描述成 `2026-07-28` 的一部分。
 
 ```figure
 tp-transport-handshake
@@ -100,49 +184,54 @@ tp-transport-handshake
 
 ## 框架應用
 
-`code/main.py` 用 `http.server`（stdlib）實作了一個最小的 Streamable HTTP 端點。它在 `/mcp` 上處理 POST、GET 與 DELETE，在第一次回應時設上 `Mcp-Session-Id`，驗證 `Origin`，並拒絕來自非白名單來源的請求。這個處理器重用了單元 07 那台筆記伺服器的分派邏輯。
+`code/main.py` 用 Python 標準函式庫實作了一台有限次、現代的 Streamable HTTP 伺服器。它驗證 Origin 與鏡射標頭、忽略已移除的工作階段標頭、對一般呼叫回傳 JSON，並示範一條有限次的 `subscriptions/listen` SSE 串流。
 
-要看的地方有：
+```bash
+cd code
+python3 main.py --probe
+python3 -m unittest discover tests -v
+```
 
-- POST 處理器讀取 JSON-RPC 主體、分派，然後寫出一份 JSON 回應（單一回應的變體；SSE 變體在結構上類似）。
-- `Origin` 檢查會拒絕預設的 `http://evil.example` 探測，但接受 `http://localhost`。
-- 工作階段 id 是隨機的 128 位元十六進位字串；伺服器把每個工作階段的狀態保存在記憶體中。
+這支探測會檢查：
+
+- 無效的 Origin 會被拒絕；
+- 沒有工作階段 id 也能成功發現；
+- `Mcp-Session-Id` 與 `Last-Event-ID` 會被忽略；
+- 標頭不一致回傳 `-32020`；
+- 不支援的版本回傳 `-32022`，並附上精確的 `supported` 與 `requested` 資料；
+- 被接受、沒有 id 的通知回傳 HTTP `202` 且沒有主體；
+- GET 與 DELETE 回傳 `405`；
+- `subscriptions/listen` 是一條 POST 回應串流，其確認、通知與最終結果都帶著它的訂閱 id。
 
 ## 產出交付
 
-這一課產出 `outputs/skill-mcp-transport-migrator.md`。給定一台 HTTP+SSE（舊版）MCP 伺服器，這項技能會產出一份遷移到 Streamable HTTP 的計畫，涵蓋工作階段 id 的連續性、Origin 檢查，以及向後相容的探測支援。
+這一課交付 `outputs/skill-mcp-transport-migrator.md`。它會移除現代的協定工作階段、加上標頭與主體的比對驗證、用 `subscriptions/listen` 取代獨立的 GET，並讓任何舊版橋接維持在明顯分離的位置。
 
 ## 練習
 
-1. 跑一次 `code/main.py`。用 `curl` POST 一次 `initialize`，並觀察回應中的 `Mcp-Session-Id` 標頭。再 POST 第二次請求並回敘該標頭，驗證工作階段的連續性。
-
-2. 加上一個開啟 SSE 串流的 GET 處理器。每五秒送出一則 `notifications/progress` 事件。用同一個工作階段 id 重新 GET 來重連，並確認伺服器接受它。
-
-3. 實作 `last-event-id` 的重播邏輯。重連時，把自那個 id 以來產生的所有事件重播一遍。
-
-4. 擴充 `Origin` 驗證以支援萬用字元模式（`https://*.example.com`），並確認它接受 `https://app.example.com` 卻拒絕 `https://evil.example.com.attacker.net`。
-
-5. 從官方登錄中挑一台舊版的 HTTP+SSE 伺服器（有好幾台），勾勒出遷移方案：端點處理、工作階段 id 產生與標頭語意各有什麼改變。
+1. 從一次 POST 裡拿掉 `Mcp-Method`。確認回傳 HTTP `400` 與錯誤 `-32020`。
+2. 送出標頭與主體一致、版本為 `2027-01-01` 的請求。確認回傳 HTTP `400`、錯誤 `-32022`，以及精確的資料 `{"supported":["2026-07-28"],"requested":"2027-01-01"}`。
+3. 為一個非 ASCII 的資源 URI 送出 Base64 標記形式的 `Mcp-Name`。確認解碼後的值有拿去跟 `params.uri` 比對。
+4. 在有限次的 listen 串流拿到最終回應之前把它弄斷。用新的 JSON-RPC id 重新送出它，並重抓工具。
+5. 為 ping 工具加上一個明確的工作流程把手。把它綁到一個授權主體上，過程中不使用連線親和性。
 
 ## 關鍵術語
 
-| 術語 | 大家怎麼說 | 實際上是什麼 |
-|------|----------------|------------------------|
-| stdio 傳輸 | 「本機子行程」 | 跑在 stdin／stdout 上、以換行分隔的 JSON-RPC |
-| Streamable HTTP | 「那個遠端傳輸」 | 單端點的 POST + GET + 選配 SSE，2025-03-26 版規格 |
-| HTTP+SSE | 「舊版」 | 將在 2026 年年中移除的雙端點模型 |
-| `Mcp-Session-Id` | 「工作階段標頭」 | 由伺服器指派、客戶端在之後每次請求都回敘的隨機 id |
-| `Origin` 白名單 | 「DNS 重繫結防禦」 | 拒絕 Origin 未經核准的請求 |
-| 單端點 | 「一個 URL」 | 由 `/mcp` 處理所有工作階段操作的 POST／GET／DELETE |
-| `last-event-id` | 「SSE 重播」 | 用來續接中斷串流而不漏事件的標頭 |
-| 向後相容探測 | 「新舊偵測」 | 客戶端檢查回應形狀以自動選定傳輸 |
-| 長連線 HTTP | 「SSE 串流」 | 伺服器在單一條 TCP 連線上推送數分鐘或數小時的事件 |
-| 工作階段撤銷 | 「強制重新初始化」 | 伺服器讓某個工作階段 id 失效；客戶端必須重新握手 |
+| 術語 | 意義 |
+|------|---------|
+| stdio | 在客戶端啟動的子行程上，以換行分隔的 JSON-RPC |
+| Streamable HTTP | 單一端點，每一則現代訊息都是一次新的 POST |
+| 請求範圍 SSE | POST 回應串流，內含相關通知與最終回應 |
+| `subscriptions/listen` | 長時間存活的 POST 請求，用於選擇性訂閱的變更通知 |
+| 標頭不一致 | 鏡射標頭與主體不符時的 HTTP `400` 與 JSON-RPC `-32020` |
+| Origin 驗證 | 針對進站連線的 DNS 重新綁定防禦，不是認證 |
+| 明確狀態把手 | 以一般參數傳遞的應用層權杖，取代隱藏的工作階段狀態 |
+| 舊版橋接 | 僅為相容性而保留、獨立存在的早期時代行為 |
 
 ## 延伸閱讀
 
-- [MCP — Basic transports spec 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports) —— stdio 與 Streamable HTTP 的權威參考
-- [MCP — Basic transports spec 2025-03-26](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports) —— 引入 Streamable HTTP 的那個修訂版
-- [Cloudflare — MCP transport](https://developers.cloudflare.com/agents/model-context-protocol/transport/) —— Workers 託管的 Streamable HTTP 模式
-- [AWS — MCP transport mechanisms](https://builder.aws.com/content/35A0IphCeLvYzly9Sw40G1dVNzc/mcp-transport-mechanisms-stdio-vs-streamable-http) —— 跨部署形狀的比較
-- [Atlassian — HTTP+SSE deprecation notice](https://community.atlassian.com/forums/Atlassian-Remote-MCP-Server/HTTP-SSE-Deprecation-Notice/ba-p/3205484) —— 一個具體的遷移期限案例
+- [MCP Transport Overview](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
+- [MCP stdio Transport](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio)
+- [MCP Streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http)
+- [MCP Subscriptions](https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/subscriptions)
+- [MCP 2026-07-28 Changelog](https://modelcontextprotocol.io/specification/2026-07-28/changelog)
