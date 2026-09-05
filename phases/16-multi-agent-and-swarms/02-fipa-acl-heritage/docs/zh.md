@@ -207,5 +207,5 @@ python3 code/main.py
 - [Liu et al. — A Survey of Agent Interoperability Protocols: MCP, ACP, A2A, ANP](https://arxiv.org/html/2505.02279v1) —— 把現代規格連回 FIPA 傳承的那份 2025 典範綜述
 - [FIPA ACL Message Structure Specification (fipa00037)](http://www.fipa.org/specs/fipa00037/) —— 2000 年批准的封套格式
 - [FIPA Communicative Act Library Specification (fipa00037)](http://www.fipa.org/specs/fipa00037/) —— 完整的 performative 目錄
-- [MCP specification 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25) —— `request`／`query-ref` 的現代工具使用對應物
+- [MCP specification 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28) —— `request`／`query-ref` 在當前無狀態工具使用上的對應物
 - [A2A specification](https://a2a-protocol.org/latest/specification/) —— contract-net 與 subscribe-notify 的現代代理對代理對應物
