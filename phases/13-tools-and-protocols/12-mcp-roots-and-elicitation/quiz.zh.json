@@ -1,0 +1,78 @@
+{
+  "lesson": "12-mcp-roots-and-elicitation",
+  "title": "Explicit Scope and Stateless Elicitation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "MCP 的 Roots 提供了什麼安全保證？",
+      "options": [
+        "只是提供資訊的工作區指引，不是授權，也不是沙箱",
+        "替每一個伺服器行程做作業系統層級的隔離",
+        "證明呼叫方擁有那個根目錄底下的每一個檔案",
+        "自動防止符號連結逃逸"
+      ],
+      "correct": 0,
+      "explanation": "Roots 只是提供資訊，而且在 2026-07-28 已被棄用。伺服器仍然需要授權、關押與沙箱。"
+    },
+    {
+      "stage": "check",
+      "question": "當工作區範圍會隨每一次工具呼叫而變時，最清楚的現代替代做法是什麼？",
+      "options": [
+        "一個藏在傳輸工作階段底下的值",
+        "在變更之後才送出的 roots/list 請求",
+        "客戶端自報的 clientInfo 名稱",
+        "一個明確的工作區 URI 引數，並由伺服器對它做授權"
+      ],
+      "correct": 3,
+      "explanation": "一個明確的把手看得見、也重播得了，但伺服器仍然必須替那個通過認證的主體對它做授權。"
+    },
+    {
+      "stage": "check",
+      "question": "在 MCP 2026-07-28 底下，表單模式的 elicitation 怎麼送達？",
+      "options": [
+        "以 server/discover 發出的 HTTP 重新導向",
+        "透過 notifications/roots/list_changed",
+        "以一條 Mcp-Session-Id 串流上的反向請求",
+        "放在一份 input_required 結果的 inputRequests 裡"
+      ],
+      "correct": 3,
+      "explanation": "MRTR 把 elicitation/create 內嵌在 inputRequests 裡，接著客戶端帶著 inputResponses 把原操作重試一次。elicitation {} 與 elicitation.form 支援表單模式；只支援 URL 的情況會回 -32021 並帶 data.requiredCapabilities.elicitation.form。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一種值絕不可以透過表單模式的 elicitation 收集？",
+      "options": [
+        "一個布林的破壞性動作確認",
+        "一個從 enum 裡選出來的筆記 id",
+        "一個 API 存取權杖",
+        "一項不敏感的顯示偏好"
+      ],
+      "correct": 2,
+      "explanation": "密鑰與憑證不得經過 MCP 客戶端。敏感的外部互動請走一條仔細綁定過的 URL 模式流程。"
+    },
+    {
+      "stage": "post",
+      "question": "使用者拒絕了一次刪除的 elicitation。安全的結果是什麼？",
+      "options": [
+        "照刪，因為模型已經選好了那則筆記",
+        "把缺漏的內容當成隱含同意",
+        "回傳一份完整、非錯誤的拒絕結果，並保住那則筆記",
+        "把同一個對話框重複跳到使用者接受為止"
+      ],
+      "correct": 2,
+      "explanation": "拒絕就是明確的拒絕。它不能被轉換成同意、錯誤迴圈式的追問，或一次變更操作。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種設計能安全地把一次破壞性確認，綁到使用者當時真的看到的東西上？",
+      "options": [
+        "把選中的筆記 id 做 Base64 編碼，而且不簽章",
+        "把主體、原始引數摘要、候選 id、階段與到期時間簽起來，然後再檢查一次即時的目標",
+        "把 clientInfo 當成權威的使用者身分",
+        "信任任何跟著 action accept 一起回來的筆記 id"
+      ],
+      "correct": 1,
+      "explanation": "受完整性保護的狀態能防止篡改。一個共用的原子一次性 nonce 宣告能防止重播，而最後對即時目標的檢查則處理變更前的競態。"
+    }
+  ]
+}
