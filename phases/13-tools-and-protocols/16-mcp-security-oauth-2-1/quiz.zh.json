@@ -1,0 +1,78 @@
+{
+  "lesson": "16-mcp-security-oauth-2-1",
+  "title": "MCP Authorization: CIMD, Issuer Binding, PKCE, and Step-Up",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 2026-07-28 裡，新的 MCP OAuth 客戶端登錄優先用哪一種機制？",
+      "options": [
+        "把存取權杖放在網址裡",
+        "Mcp-Session-Id",
+        "Client ID Metadata Documents",
+        "動態客戶端註冊"
+      ],
+      "correct": 2,
+      "explanation": "CIMD 是優先做法；DCR 已被棄用，只留作相容性路徑。"
+    },
+    {
+      "stage": "check",
+      "question": "在退回 DCR 時，一個使用 loopback 重新導向的桌面客戶端該宣告什麼 application_type？",
+      "options": [
+        "web",
+        "stateless",
+        "native",
+        "confidential"
+      ],
+      "correct": 2,
+      "explanation": "桌面、行動、命令列與 loopback 客戶端都是原生應用程式。"
+    },
+    {
+      "stage": "check",
+      "question": "客戶端必須怎麼處理授權回應裡的 iss 值？",
+      "options": [
+        "把它正規化，然後比較主機名稱",
+        "把它存成 clientInfo",
+        "在 PKCE 成功之後就忽略它",
+        "在使用那份回應之前，把它跟記錄下來的簽發者做精確比對"
+      ],
+      "correct": 3,
+      "explanation": "RFC 9207 的簽發者檢查，能防止授權回應在不同簽發者之間被混淆。"
+    },
+    {
+      "stage": "check",
+      "question": "客戶端該怎麼替簽發者發出的 OAuth 憑證與存取權杖建索引鍵？",
+      "options": [
+        "簽發者發出的憑證以簽發者為鍵，權杖以簽發者加資源為鍵",
+        "所有註冊與權杖都放在同一個全域的客戶端名稱底下",
+        "只用伺服器的顯示名稱",
+        "用協定工作階段識別碼"
+      ],
+      "correct": 0,
+      "explanation": "以簽發者與資源為鍵，能防止發出來的憑證跨越安全權威或受眾。一個自架的 CIMD 網址仍然是可攜的。"
+    },
+    {
+      "stage": "post",
+      "question": "某個資源回了 403，並附上範圍 notes:delete。正確的下一步是什麼？",
+      "options": [
+        "在本地把 notes:delete 加上去，不做授權",
+        "說明那個範圍、取得同意、為它完成授權，然後用一個新的請求 id 重試",
+        "把那個 MCP 權杖送給下游 API",
+        "沿用當前的權杖，忽略那個挑戰"
+      ],
+      "correct": 1,
+      "explanation": "提升授權會在重試那個操作之前，先取得一份重新授權過的權杖。"
+    },
+    {
+      "stage": "post",
+      "question": "對 MCP 資源 https://notes.example.com/mcp 來說，RFC 9728 的中繼資料網址是哪一個？",
+      "options": [
+        "https://notes.example.com/.well-known/oauth-protected-resource/mcp",
+        "https://auth.example.com/.well-known/oauth-protected-resource",
+        "https://notes.example.com/.well-known/oauth-protected-resource",
+        "https://notes.example.com/mcp/.well-known/oauth-protected-resource"
+      ],
+      "correct": 0,
+      "explanation": "RFC 9728 會把受保護資源的路徑保留在 well-known 片段之後，所以那個 /mcp 後綴是必要的。"
+    }
+  ]
+}
