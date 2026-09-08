@@ -1,0 +1,78 @@
+{
+  "lesson": "13-mcp-async-tasks",
+  "title": "MCP Tasks Extension: Durable Work on a Stateless Core",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "一台無狀態的 MCP 伺服器要怎麼支撐一件長達十分鐘的工作？",
+      "options": [
+        "讓一條 Mcp-Session-Id 連線開著十分鐘",
+        "只把進度存在 initialize 的狀態裡",
+        "要求每個客戶端都用黏著式負載平衡",
+        "回傳一個由應用程式儲存撐著的明確持久任務把手"
+      ],
+      "correct": 3,
+      "explanation": "無狀態說的是協定的請求模型。持久的應用程式狀態，由一個明確的任務 id 與共用儲存來表示。"
+    },
+    {
+      "stage": "check",
+      "question": "伺服器在什麼時候可以從 tools/call 回傳 resultType task？",
+      "options": [
+        "在當前請求公告了那個擴充，而且那個任務已經可以被持久讀取之後",
+        "只要先前某個工作階段公告過 Tasks 就行",
+        "在持久化之前，好讓客戶端樂觀地開始輪詢",
+        "只有在 params._meta.task.required 為 true 時"
+      ],
+      "correct": 0,
+      "explanation": "任務的建立由伺服器主導，但當前請求要具備能力支援、而且必須先持久化才回傳，這兩點是必要的。缺少支援時回 -32021 並帶 data.requiredCapabilities。"
+    },
+    {
+      "stage": "check",
+      "question": "一個 tasks/get 回應的 resultType 是 complete，而 status 是 working。這是什麼意思？",
+      "options": [
+        "這個回應違反了那個擴充",
+        "底下那件工作已經完成了",
+        "那個任務被取消了",
+        "那次輪詢的 RPC 完成了，但那件工作還在跑"
+      ],
+      "correct": 3,
+      "explanation": "resultType 描述的是 tasks/get 這個 RPC。任務狀態則獨立描述那件持久的工作。當 status 是 completed 時，內嵌的 CallToolResult 有它自己的 resultType complete 與 serverInfo 中繼資料。"
+    },
+    {
+      "stage": "check",
+      "question": "在一個任務已經存在之後，客戶端要怎麼回答 input_required？",
+      "options": [
+        "呼叫 tasks/result 並帶一個 answer 欄位",
+        "開一個新的 initialize 工作階段",
+        "用同一個 id 重試原本的 tools/call",
+        "送出 tasks/update，並替那些待答的任務鍵帶上 inputResponses"
+      ],
+      "correct": 3,
+      "explanation": "任務建立之後的輸入由 tasks/get 揭露，並透過 tasks/update 滿足，而不是靠重試原本那次呼叫。"
+    },
+    {
+      "stage": "post",
+      "question": "一份成功的 tasks/cancel 回應保證了什麼？",
+      "options": [
+        "伺服器確認收到了取消意圖",
+        "結果已經被刪掉了",
+        "最終的任務狀態一定會是 cancelled",
+        "工作者已經停下來了"
+      ],
+      "correct": 0,
+      "explanation": "取消是協作式的，而且是最終一致的。在確認收到之後，工作仍可能完成，或忽略那次取消。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一組方法符合現行的官方 Tasks 擴充？",
+      "options": [
+        "tools/task、notifications/task_result 與 roots/list",
+        "tasks/get、tasks/update 與 tasks/cancel",
+        "tasks/create、tasks/subscribe 與 tasks/delete",
+        "tasks/status、tasks/result 與 tasks/list"
+      ],
+      "correct": 1,
+      "explanation": "這個擴充用的是 tasks/get、tasks/update 與 tasks/cancel。每一個 HTTP 請求都把 Mcp-Name 設成 params.taskId。較舊的 status、result 與 list 方法只用於遷移。"
+    }
+  ]
+}
