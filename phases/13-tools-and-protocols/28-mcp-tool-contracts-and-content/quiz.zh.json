@@ -1,0 +1,78 @@
+{
+  "lesson": "28-mcp-tool-contracts-and-content",
+  "title": "MCP Tool Contracts and Content",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "某項工具發布了一份 type 為 array 的 outputSchema。哪一種 structuredContent 值是有效的？",
+      "options": [
+        "任何 JSON 值，因為 outputSchema 只是文件",
+        "只有物件，因為 MCP 的有結構結果只能是物件",
+        "一個陣列，而且它的元素滿足已發布的 schema",
+        "一個沒有 structuredContent 的文字區塊"
+      ],
+      "correct": 2,
+      "explanation": "structuredContent 可以是任何 JSON 值，包含陣列，但當工具發布了 outputSchema 時，它就必須符合那份 schema。"
+    },
+    {
+      "stage": "check",
+      "question": "一份 tools/list 結果裡的 nextCursor 是空字串。客戶端該怎麼做？",
+      "options": [
+        "把空字串當成分頁結束",
+        "用那個確切的空字串游標再發一次列表請求",
+        "把它換成游標 0",
+        "把它解碼，找出下一頁的頁碼"
+      ],
+      "correct": 1,
+      "explanation": "游標的值是不透明的。空字串是一個有效的非 null 游標，必須原樣送回去。"
+    },
+    {
+      "stage": "check",
+      "question": "當某個參數被標上 x-mcp-header 時，嚴格的部署政策應該拒絕哪一個？",
+      "options": [
+        "一個被鏡像成 Token 的字串 token 欄位",
+        "一個被鏡像成 Shard 的整數 shard 欄位",
+        "一個被鏡像成 Region 的字串 region 欄位",
+        "一個被鏡像成 Dry-Run 的布林 dry_run 欄位"
+      ],
+      "correct": 0,
+      "explanation": "協定建議不要鏡像敏感值。嚴格的客戶端准入政策應該拒絕 token、密碼、密鑰、憑證與個資欄位。"
+    },
+    {
+      "stage": "check",
+      "question": "resource_link 區塊與內嵌 resource 區塊的主要差別是什麼？",
+      "options": [
+        "資源連結指向之後才去取的資料，而內嵌資源現在就把資料帶著",
+        "資源連結會自動永久被授權",
+        "內嵌資源也必須出現在 resources/list 裡",
+        "只有資源連結可以包含 URI"
+      ],
+      "correct": 0,
+      "explanation": "連結把取回延後，而且在被跟隨時需要授權。內嵌資源把資料直接放進當前這份結果裡。"
+    },
+    {
+      "stage": "post",
+      "question": "當 tools/list 的某一頁裡有一份格式不對的工具描述子時，客戶端該怎麼處理？",
+      "options": [
+        "拒絕那一項工具，同時繼續評估其他不相干的工具",
+        "默默把那份描述子修好",
+        "把它暴露出來，但在模型提示詞裡加一段警告",
+        "把每一次工具執行都當成 JSON-RPC 通知"
+      ],
+      "correct": 0,
+      "explanation": "描述子准入是逐工具的。一份格式不對的定義應該被排除，而不該害得有效的工具不能用。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種失敗屬於 JSON-RPC 錯誤，而不是帶 isError true 的工具結果？",
+      "options": [
+        "某個報表來源暫時不可用",
+        "某個下游 API 回傳了一個可據以行動、工具專屬的錯誤",
+        "某條業務規則拒絕了被請求的日期",
+        "被請求的工具名稱不存在"
+      ],
+      "correct": 3,
+      "explanation": "未知的工具讓協定沒辦法派送，屬於 JSON-RPC 錯誤。模型可以據以行動的執行失敗則用 isError true。"
+    }
+  ]
+}
