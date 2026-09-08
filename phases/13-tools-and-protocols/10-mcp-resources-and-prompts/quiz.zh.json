@@ -1,0 +1,78 @@
+{
+  "lesson": "10-mcp-resources-and-prompts",
+  "title": "MCP Resources and Prompts",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "一個宿主需要依 URI 取回一份穩定的架構筆記。哪一個 MCP 原語最合適？",
+      "options": [
+        "一個資源",
+        "一則取消通知",
+        "一個協定工作階段",
+        "一項破壞性工具"
+      ],
+      "correct": 0,
+      "explanation": "資源透過 URI 暴露可定址的內容。工具執行的是一個操作，而工作階段與取消都不用來建模可讀的內容。"
+    },
+    {
+      "stage": "check",
+      "question": "當 resources/read 收到一個未知的資源 URI 時，一台 2026-07-28 伺服器該回什麼？",
+      "options": [
+        "一則 resources/list_changed 通知",
+        "JSON-RPC 錯誤 -32601",
+        "一個成功但 contents 為空的陣列",
+        "JSON-RPC 錯誤 -32602"
+      ],
+      "correct": 3,
+      "explanation": "現行的 Resources 契約對無效或未知的資源 URI，用的是無效參數，錯誤碼 -32602。回一個空的成功結果會把呼叫方的錯誤藏起來。"
+    },
+    {
+      "stage": "check",
+      "question": "對一份由 resources/read 回傳、屬於某位使用者的筆記，哪一種快取政策最安全？",
+      "options": [
+        "public，因為那個 URI 是穩定的",
+        "當 MIME 型別相同時就跨使用者共用",
+        "private，並帶一個有上限的 TTL",
+        "public，而且 TTL 無限"
+      ],
+      "correct": 2,
+      "explanation": "一份屬於某位使用者的結果不該跨越身分邊界。一個有上限的私有快取可以減少重複讀取，同時保住授權脈絡。"
+    },
+    {
+      "stage": "check",
+      "question": "在一條 subscriptions/listen 回應串流上，是什麼標識每一則通知？",
+      "options": [
+        "訂閱中繼資料裡那個原始 listen 請求的 ID",
+        "資源的 MIME 型別",
+        "一個新產生的協定工作階段",
+        "伺服器的行程 ID"
+      ],
+      "correct": 0,
+      "explanation": "subscriptions/listen 的 JSON-RPC ID 會變成 io.modelcontextprotocol/subscriptionId，並在那則確認與之後每一個事件裡重複出現。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼對同一組請求輸入，resources/list 與 prompts/list 必須是確定的？",
+      "options": [
+        "為了讓所有回傳的項目都變成公開存取",
+        "為了不必驗證分頁游標",
+        "為了讓快取、快照與宿主介面保持穩定",
+        "為了讓清單成員取決於先前的一次讀取"
+      ],
+      "correct": 2,
+      "explanation": "穩定的成員與排序，能避免吵雜的快取失誤與變動不定的介面。授權仍然可以影響可見性，因為憑證是明確的請求輸入。"
+    },
+    {
+      "stage": "post",
+      "question": "即使客戶端可以直接呼叫 resources/list，一台現行的 MCP 伺服器仍然必須暴露什麼？",
+      "options": [
+        "給每一個 URI 用的 resources/subscribe 方法",
+        "一個會建立協定工作階段的 initialize 方法",
+        "一條獨立的 HTTP GET 事件串流",
+        "帶著支援修訂版與能力的 server/discover"
+      ],
+      "correct": 3,
+      "explanation": "伺服器必須實作 server/discover，好讓客戶端拿到一份能力與版本的快照。呼叫它對客戶端仍是選配的，它可以先叫別的方法，再處理一個有結構的版本錯誤。"
+    }
+  ]
+}
