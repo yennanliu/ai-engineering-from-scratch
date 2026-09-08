@@ -1,0 +1,78 @@
+{
+  "lesson": "08-building-an-mcp-client",
+  "title": "Building an MCP Client: Discovery, Routing, and Dual-Era Fallback",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "一個跨雙紀元的 stdio 客戶端應該先送什麼？",
+      "options": [
+        "Mcp-Session-Id",
+        "server/discover",
+        "initialize",
+        "HTTP GET"
+      ],
+      "correct": 1,
+      "explanation": "那次發現探測，在現代的逐請求中繼資料與舊版初始化之間，劃出一條清楚的邊界。"
+    },
+    {
+      "stage": "check",
+      "question": "一次發現探測回了 -32022，而且附上一個雙方都支援的版本。客戶端該怎麼做？",
+      "options": [
+        "用那個被支援的版本重試現代發現",
+        "送出 initialize",
+        "開一條 HTTP GET",
+        "忽略這台伺服器"
+      ],
+      "correct": 0,
+      "explanation": "-32022 是已辨識的現代證據，所以客戶端留在現代分支並重試。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一個條件足以選定舊版紀元？",
+      "options": [
+        "任何 -32601 錯誤",
+        "那個對端在舊版允許清單上",
+        "那個對端在允許清單上，而且一次有界的 initialize 探測回了一份有效且受支援的舊版結果",
+        "光是一次發現逾時"
+      ],
+      "correct": 2,
+      "explanation": "允許清單只是准許探測，但只有一份針對已設定舊版修訂版、結構有效的正面 initialize 結果，才證明得了舊版紀元。"
+    },
+    {
+      "stage": "check",
+      "question": "客戶端該怎麼處理兩個都叫 search 的工具？",
+      "options": [
+        "默默把其中一個覆寫掉",
+        "信任啟動順序",
+        "依宣告好的政策加前綴或拒絕",
+        "建立一個協定工作階段"
+      ],
+      "correct": 2,
+      "explanation": "明確的加前綴或拒絕，讓路由維持看得見且是確定的。"
+    },
+    {
+      "stage": "post",
+      "question": "客戶端已經協商出舊版紀元之後，一份舊版結果省略了 resultType。它會被怎麼解讀？",
+      "options": [
+        "當成 input_required",
+        "當成 complete",
+        "當成一個傳輸錯誤",
+        "當成 server/discover"
+      ],
+      "correct": 1,
+      "explanation": "對來自較早協定版本的結果，客戶端把缺席的 resultType 當成 complete。"
+    },
+    {
+      "stage": "post",
+      "question": "現代傳輸掉線之後，在恢復路由之前必須做什麼？",
+      "options": [
+        "重連、重新發現，並重新列出",
+        "用 Last-Event-ID 續接",
+        "回送 Mcp-Session-Id",
+        "重用舊的連線中繼資料"
+      ],
+      "correct": 0,
+      "explanation": "客戶端重建對端的記帳資料，並只用新的請求 id 重試那些安全的操作。"
+    }
+  ]
+}
