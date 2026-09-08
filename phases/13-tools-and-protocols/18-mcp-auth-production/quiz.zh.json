@@ -1,0 +1,78 @@
+{
+  "lesson": "18-mcp-auth-production",
+  "title": "MCP Auth in Production: Issuer-Bound Enrollment and Tokens",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "一個 MCP 客戶端對同一個資源發現了另一個授權伺服器簽發者。它該怎麼處理既有的註冊與存取權杖？",
+      "options": [
+        "只重用那個存取權杖，並在本地把它的受眾改掉",
+        "為新的簽發者重新登錄，並讓憑證依簽發者互相隔離",
+        "兩個都重用，因為那個 MCP 資源網址沒變",
+        "把兩者都存在工具名稱底下，而不是簽發者底下"
+      ],
+      "correct": 1,
+      "explanation": "客戶端識別碼與註冊憑證屬於當初建立它們的那個授權伺服器簽發者。簽發者一換就需要獨立登錄，而每一份存取權杖都以那個簽發者與它的資源受眾一起做快取索引鍵。"
+    },
+    {
+      "stage": "check",
+      "question": "MCP 2026-07-28 的授權側寫優先採用哪一種登錄方式？",
+      "options": [
+        "每個請求都做一次 RFC 7591 動態客戶端註冊",
+        "一份由客戶端 HTTPS 網址提供的 Client ID Metadata Document",
+        "一個存著單一全域客戶端識別碼的協定工作階段",
+        "一把內嵌在每個桌面客戶端裡的共用客戶端密鑰"
+      ],
+      "correct": 1,
+      "explanation": "CIMD 讓授權伺服器能從一個 HTTPS 客戶端識別碼解析出客戶端中繼資料。DCR 已棄用，只為相容性保留。"
+    },
+    {
+      "stage": "check",
+      "question": "一個已棄用的 DCR 請求描述的是一個 loopback 桌面客戶端。哪一項中繼資料對正確分類最關鍵？",
+      "options": [
+        "Mcp-Session-Id",
+        "一個萬用字元的重新導向 URI",
+        "application_type 設成 native",
+        "一個可重用的 bearer 權杖"
+      ],
+      "correct": 2,
+      "explanation": "現行的相容性指引要求正確的應用程式類型。一個 loopback 桌面客戶端是 native；網頁客戶端用的是 HTTPS 重新導向 URI。"
+    },
+    {
+      "stage": "check",
+      "question": "客戶端為什麼要在兌換授權碼之前先驗證 RFC 9207 的 iss 值？",
+      "options": [
+        "為了防止把一個誠實簽發者的授權碼，拿到錯誤的權杖端點去兌換",
+        "為了避免更新 JWKS 快取",
+        "為了用簽發者發現取代 PKCE",
+        "為了從 server/discover 挑一項工具"
+      ],
+      "correct": 0,
+      "explanation": "簽發者檢查防的是授權伺服器混淆。它跟 PKCE 互補，確認那份回應來自重新導向之前記錄下來的那個簽發者。"
+    },
+    {
+      "stage": "post",
+      "question": "在現行的無狀態傳輸下，MCP 資源伺服器該把授權結果快取在哪裡？",
+      "options": [
+        "存在 Mcp-Session-Id 底下，直到客戶端送出 DELETE",
+        "放進 server/discover 的結果裡，供之後所有呼叫使用",
+        "放在那條 SSE 連線裡，直到它重連",
+        "不要當成協定工作階段的決定存在任何地方；每一個請求都驗證那個 bearer 權杖"
+      ],
+      "correct": 3,
+      "explanation": "MCP 2026-07-28 移除了協定工作階段。每一個請求都各自跨過那道授權邊界，所以身分、受眾、到期與範圍每次都要檢查。"
+    },
+    {
+      "stage": "post",
+      "question": "在信任一台授權伺服器之前，哪一種部署證據最強？",
+      "options": [
+        "那台目標伺服器被發現到的中繼資料，並對照 PKCE、簽發者、登錄與資源綁定的要求逐項檢查",
+        "從一堂較舊的課抄來的供應商分類表",
+        "一個寫著支援 OAuth 的產品頁面",
+        "一次成功的登入，但沒有檢視權杖的受眾"
+      ],
+      "correct": 0,
+      "explanation": "能力會隨部署與版本而變。那份即時的發現文件才是要檢查的具體契約，之後再做端到端的簽發者與受眾驗證。"
+    }
+  ]
+}
