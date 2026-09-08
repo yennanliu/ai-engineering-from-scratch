@@ -1,0 +1,78 @@
+{
+  "lesson": "09-mcp-transports",
+  "title": "MCP Transports: stdio and Stateless Streamable HTTP",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "現代 Streamable HTTP 的每一則訊息由哪個 HTTP 方法承載？",
+      "options": [
+        "PATCH",
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "correct": 3,
+      "explanation": "每一個現代的 JSON-RPC 請求或通知，都是對同一個 MCP 端點發出的一次新的 POST。"
+    },
+    {
+      "stage": "check",
+      "question": "一個只支援現代協定的 MCP 端點，對 GET 與 DELETE 應該回什麼？",
+      "options": [
+        "301",
+        "200",
+        "202",
+        "405"
+      ],
+      "correct": 3,
+      "explanation": "獨立的 GET 與 DELETE 不屬於 Streamable HTTP 2026-07-28。"
+    },
+    {
+      "stage": "check",
+      "question": "在每一個現代請求上，哪些標頭必須跟本體一致？",
+      "options": [
+        "Mcp-Session-Id 與 Last-Event-ID",
+        "ETag 與 If-None-Match",
+        "MCP-Protocol-Version 與 Mcp-Method",
+        "Cookie 與 Host"
+      ],
+      "correct": 2,
+      "explanation": "tools/call、resources/read 與 prompts/get 還必須帶 Mcp-Name。"
+    },
+    {
+      "stage": "check",
+      "question": "客戶端怎麼請求長生命週期的變更通知？",
+      "options": [
+        "POST subscriptions/listen",
+        "resources/subscribe",
+        "Mcp-Session-Id",
+        "GET /mcp"
+      ],
+      "correct": 0,
+      "explanation": "subscriptions/listen 會打開那條回應串流。它的確認、通知與最終結果，都帶著那個 listen 請求 id 當作訂閱中繼資料。"
+    },
+    {
+      "stage": "post",
+      "question": "一條現代的請求範圍 SSE 串流在最終回應之前斷了。接下來怎麼做？",
+      "options": [
+        "對那個工作階段發 DELETE",
+        "重用同一條回應串流",
+        "用 Last-Event-ID 續接",
+        "用一個新的 JSON-RPC id 安全地重試"
+      ],
+      "correct": 3,
+      "explanation": "現代的 SSE 不可續接。安全的重試就是一個帶新 id 的新請求。"
+    },
+    {
+      "stage": "post",
+      "question": "在一個 2026-07-28 請求上出現 Mcp-Session-Id 時，伺服器該怎麼做？",
+      "options": [
+        "忽略它，而且不要回送它",
+        "拒絕每一個含有它的請求",
+        "用它來做路由",
+        "把它輪替掉"
+      ],
+      "correct": 0,
+      "explanation": "協定工作階段與那個工作階段標頭，都已經從現代修訂版裡移除了。"
+    }
+  ]
+}
