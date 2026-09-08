@@ -1,0 +1,78 @@
+{
+  "lesson": "11-mcp-sampling",
+  "title": "MCP Model Input: Sampling Migration and Stateless MRTR",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "一台新的 MCP 伺服器需要模型推論。在 2026-07-28 之下，預設的架構是什麼？",
+      "options": [
+        "直接跟一個模型供應商整合",
+        "在每一次工具呼叫之前送出 sampling/createMessage",
+        "把客戶端的模型金鑰存在一個協定工作階段裡",
+        "為 Sampling 開一條永久的 SSE 串流"
+      ],
+      "correct": 0,
+      "explanation": "Sampling 對新設計已經棄用。當伺服器需要模型推論時，建議的預設做法是直接跟供應商整合。"
+    },
+    {
+      "stage": "check",
+      "question": "一台 2026-07-28 伺服器要怎麼在 tools/call 期間請求相容性用的 Sampling？",
+      "options": [
+        "把提示詞寫進 server/discover",
+        "把提示詞放進一個 Mcp-Session-Id 標頭",
+        "回傳 resultType input_required，並在 inputRequests 裡放 sampling/createMessage",
+        "在同一條連線上送出一個反向的 JSON-RPC 請求"
+      ],
+      "correct": 2,
+      "explanation": "MRTR 把伺服器到客戶端的請求裝在一份 input_required 結果裡，因此不需要反向請求通道。那個被公告的 summarize_repo 工具，必須先透過確定的 tools/list 帶著有效的 inputSchema 出現。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一項性質證明一次 MRTR 重試是一個獨立的 JSON-RPC 請求？",
+      "options": [
+        "它省略了逐請求的中繼資料",
+        "它用的是跟原請求一樣的 id",
+        "它用一個全新的 id，同時重複原本的方法與引數",
+        "它把原本的工具引數移除了"
+      ],
+      "correct": 2,
+      "explanation": "客戶端用一個新的 JSON-RPC id 把原本的操作重做一次，帶著當前的 inputResponses 與回送的 requestState。"
+    },
+    {
+      "stage": "check",
+      "question": "當 requestState 會影響資源存取時，必須用什麼保護它？",
+      "options": [
+        "綁定主體、請求與到期時間的 HMAC 或認證加密",
+        "光是 Base64 編碼",
+        "一個 clientInfo 名稱",
+        "一條長生命週期的傳輸工作階段"
+      ],
+      "correct": 0,
+      "explanation": "requestState 會經過一個不可信的客戶端。完整性保護與綁定能防止篡改與跨請求重播。"
+    },
+    {
+      "stage": "post",
+      "question": "客戶端在它的逐請求能力裡沒有公告 Sampling。伺服器該用哪個確切的協定回應？",
+      "options": [
+        "還是把那個內嵌的 sampling 請求送出去",
+        "回 -32021 並帶 data.requiredCapabilities，或改走非 Sampling 的路徑",
+        "把那個能力加進客戶端的中繼資料",
+        "從先前的請求推定那個能力"
+      ],
+      "correct": 1,
+      "explanation": "伺服器不得送出一個客戶端在當前請求上沒宣告支援的輸入請求。那個「缺少能力」的確切錯誤碼是 -32021。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種遷移方式，能讓一個兩回合的相容性迴圈在協定層維持無狀態？",
+      "options": [
+        "在每一次全新的重試上，只帶當前回合的 inputResponses 與已簽署的階段狀態",
+        "把階段狀態存在 Mcp-Session-Id 底下",
+        "一直重用原本的請求 id 直到完成",
+        "把所有模型回應累積在一個隱藏的工作階段裡"
+      ],
+      "correct": 0,
+      "explanation": "每一次重試都是自我完備的。已簽署的 requestState 承載通過驗證的中間狀態，而 inputResponses 只裝當前這一回合。"
+    }
+  ]
+}
