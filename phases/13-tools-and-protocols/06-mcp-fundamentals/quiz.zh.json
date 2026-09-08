@@ -1,0 +1,78 @@
+{
+  "lesson": "06-mcp-fundamentals",
+  "title": "MCP Fundamentals: Stateless Requests and JSON-RPC",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在兩個 MCP 2026-07-28 請求之間，是什麼造出協定狀態？",
+      "options": [
+        "那條 HTTP 連線",
+        "協定核心裡什麼都沒有",
+        "Mcp-Session-Id",
+        "那個 stdio 行程"
+      ],
+      "correct": 1,
+      "explanation": "現代的協定核心是無狀態的。每一個請求都自己帶著版本與能力。"
+    },
+    {
+      "stage": "check",
+      "question": "每一個現代請求上都必填的兩個 params._meta 欄位是哪兩個？",
+      "options": [
+        "clientInfo 與 cacheScope",
+        "protocolVersion 與 clientCapabilities",
+        "sessionId 與 capabilities",
+        "serverInfo 與 ttlMs"
+      ],
+      "correct": 1,
+      "explanation": "協定版本與客戶端能力是必填的。客戶端身分是建議帶上。"
+    },
+    {
+      "stage": "check",
+      "question": "每一台現代 MCP 伺服器都必須為事前發現實作哪個方法？",
+      "options": [
+        "tools/list",
+        "initialize",
+        "server/discover",
+        "notifications/initialized"
+      ],
+      "correct": 2,
+      "explanation": "server/discover 會公告支援的版本、能力、指示與伺服器身分。"
+    },
+    {
+      "stage": "check",
+      "question": "錯誤碼 -32022 是什麼意思？",
+      "options": [
+        "內部錯誤",
+        "標頭不一致",
+        "找不到方法",
+        "協定版本不被支援"
+      ],
+      "correct": 3,
+      "explanation": "UnsupportedProtocolVersionError 會附上被請求的版本，以及伺服器支援的那些版本。"
+    },
+    {
+      "stage": "post",
+      "question": "在 MCP 2026-07-28 裡，哪一種結果需要 ttlMs 與 cacheScope？",
+      "options": [
+        "一個 JSON-RPC 錯誤",
+        "一份 tools/list 結果",
+        "一份 tools/call 結果",
+        "一則取消通知"
+      ],
+      "correct": 1,
+      "explanation": "列表結果與 resources/read 都是可快取的結果，帶有必填的快取提示。"
+    },
+    {
+      "stage": "post",
+      "question": "伺服器該怎麼決定當前請求所適用的能力？",
+      "options": [
+        "從 Mcp-Session-Id 讀",
+        "從那個行程去推論",
+        "沿用第一個請求的宣告",
+        "從當前請求的中繼資料讀"
+      ],
+      "correct": 3,
+      "explanation": "伺服器不得從連線或先前請求的狀態去推論現代的能力。"
+    }
+  ]
+}
