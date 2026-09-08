@@ -1,0 +1,78 @@
+{
+  "lesson": "15-mcp-security-tool-poisoning",
+  "title": "MCP Security: Poisoned Metadata, Routing, and MRTR State",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "哪一個 MCP 欄位可以安全地當成通過認證的客戶端身分？",
+      "options": [
+        "自報的 clientInfo 欄位一個都不行",
+        "clientInfo.name",
+        "clientInfo.version",
+        "clientCapabilities"
+      ],
+      "correct": 0,
+      "explanation": "客戶端資訊與能力是協定中繼資料，不是認證證據。"
+    },
+    {
+      "stage": "check",
+      "question": "閘道在核可一項工具之後，應該對什麼取雜湊？",
+      "options": [
+        "那份正規化的完整描述子，包含描述、schema 與相關註記",
+        "只有工具名稱",
+        "只有伺服器的顯示名稱",
+        "當前的工作階段識別碼"
+      ],
+      "correct": 0,
+      "explanation": "把整份描述子釘住，才偵測得到那些只對描述取雜湊會漏掉的 schema 與註記變動。"
+    },
+    {
+      "stage": "check",
+      "question": "當兩個後端工具都叫 search 時，閘道應該怎麼暴露它們？",
+      "options": [
+        "叫模型自己推論是哪一台伺服器",
+        "隨機挑一個後端",
+        "用像 notes.search 與 issues.search 這種穩定的限定名稱",
+        "保留最後被發現的那個工具"
+      ],
+      "correct": 2,
+      "explanation": "限定名稱讓路由、核可、稽核與標頭驗證，都指到同一項穩定的工具。"
+    },
+    {
+      "stage": "check",
+      "question": "哪些客戶端能力宣告，撐得起一次 MCP 表單 elicitation？",
+      "options": [
+        "隱含的 elicitation: {}，或明確的 elicitation: {form: {}}",
+        "任何非空的 extensions 物件",
+        "只有一個開了 form 的協定工作階段",
+        "只有 elicitation.url"
+      ],
+      "correct": 0,
+      "explanation": "一個空的 elicitation 物件就隱含表示支援表單，而 form: {} 是明講。只支援 URL 不足以應付一次表單請求。"
+    },
+    {
+      "stage": "post",
+      "question": "為什麼 requestState 必須受完整性保護，並綁到確切的引數上？",
+      "options": [
+        "為了選出一個快取範圍",
+        "為了取代 OAuth",
+        "為了阻止客戶端把某次確認重用或改動到另一個動作上",
+        "為了讓 JSON 變小"
+      ],
+      "correct": 2,
+      "explanation": "requestState 會經過一個不可信的對端來回，所以伺服器必須偵測得到篡改與脈絡變動。一個共用的原子 nonce 宣告，能防止它在不同的處理器實例之間被重用。"
+    },
+    {
+      "stage": "post",
+      "question": "現代閘道的正確順序是哪一個？",
+      "options": [
+        "信任 clientInfo、執行，然後稽核",
+        "把宣告的能力當成權限",
+        "認證、驗證線路與標頭、檢查能力相容性、授權，然後執行",
+        "建立工作階段、依發現順序路由，然後授權"
+      ],
+      "correct": 2,
+      "explanation": "線路上的歧義與身分，必須在授權與執行之前先解決。"
+    }
+  ]
+}
