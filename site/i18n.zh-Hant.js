@@ -506,7 +506,7 @@ window.I18N_ZH_HANT = {
   "Tools & Protocols": "工具與協定",
   "The interfaces between AI and the real world.": "AI 與真實世界之間的介面。",
   "Agent Engineering": "代理程式工程",
-  "Build agents from first principles — loop, memory, planning, frameworks, benchmarks, production, workbench.":
+  "Build agents from first principles, use coding agents reliably, and shape the work before implementation.":
     "從第一原理打造代理程式 —— 迴圈、記憶、規劃、框架、基準測試、生產部署、工作台。",
   "Autonomous Systems": "自主系統",
   "Long-horizon agents, self-improvement, and the 2026 safety stack.":
@@ -843,6 +843,18 @@ window.I18N_ZH_HANT = {
   "Multi-Session Handoff": "跨工作階段交接",
   "The Workbench on a Real Repo": "在真實儲存庫上用工作台",
   "Capstone: Ship a Reusable Agent Workbench Pack": "總結專案：交付可重複使用的代理程式工作台套件",
+  "Frame the Task Before the Agent Writes Code": "在代理程式動手寫程式前先框定任務",
+  "Build an Evidence-Backed Execution Plan": "建立有證據支撐的執行計畫",
+  "Delegate Agent Work with Isolation and Merge Contracts": "以隔離與合併契約委派代理程式工作",
+  "Turn Every Agent Correction into a System Improvement": "把每一次代理程式修正轉化為系統改進",
+  "Define the Outcome Before You Choose the Output": "先定義成果，再選擇產出形式",
+  "Discover the Workflow People Actually Perform": "找出人們實際執行的工作流程",
+  "Map Assumptions and Resolve the Riskiest One First": "盤點假設，先解決風險最高的那一個",
+  "Choose the Smallest Slice That Can Change the Decision": "選出足以改變決策的最小切片",
+  "Write Specifications That Preserve Judgment": "撰寫保留判斷空間的規格",
+  "Design Success Metrics Before the Result Exists": "在結果出現之前先設計成功指標",
+  "Choose Prototype, Pilot, or Production Deliberately": "刻意選擇原型、試行或正式上線",
+  "Build a Feedback Ratchet with Ownership and Retirement": "建立有歸屬與退場機制的回饋棘輪",
   "From Chatbots to Long-Horizon Agents (METR)": "從聊天機器人到長時程代理程式（METR）",
   "STaR, V-STaR, Quiet-STaR: Self-Taught Reasoning": "STaR、V-STaR、Quiet-STaR：自學式推理",
   "AlphaEvolve: Evolutionary Coding Agents": "AlphaEvolve：演化式編碼代理程式",
