@@ -15,6 +15,7 @@ const {
   discoverFigureProviderOrder,
   discoverUsedFigureIds,
   discoverArtifacts,
+  githubSourceUrl,
   lessonDocumentSeo,
   parseLearningPaths,
   parseCertifications,
@@ -529,6 +530,8 @@ test('build-time SEO manifests cover every readable lesson and expose canonical 
   }
   inspectKeys(lessonManifest);
 
+  // Derived, not hardcoded: a fork's build resolves its own owner/repo.
+  const sourceUrlPrefix = githubSourceUrl('phases').replace(/phases$/, '');
   const lessonEntries = Object.values(lessonManifest.lessons);
   assert.equal(new Set(lessonEntries.map(entry => entry.seoTitle)).size, lessonEntries.length);
   const visionTransformerEntries = [
@@ -575,7 +578,7 @@ test('build-time SEO manifests cover every readable lesson and expose canonical 
     assert.ok(entry.excerpt.split(/\s+/).length <= 220);
     assert.match(entry.canonicalUrl, /^https:\/\/aiengineeringfromscratch\.com\/lesson\?path=/);
     assert.doesNotMatch(entry.canonicalUrl, /lesson\.html|[&?](?:track|learningPath)=/);
-    assert.match(entry.sourceUrl, /^https:\/\/github\.com\/rohitg00\/ai-engineering-from-scratch\//);
+    assert.ok(entry.sourceUrl.startsWith(sourceUrlPrefix), entry.sourceUrl);
     assert.ok(['course', 'certification'].includes(entry.context.kind));
     assert.deepEqual(entry.learningPathIds, (expectedLearningPathIds.get(lessonPath) || []).sort());
     assert.deepEqual(entry.fromTrackIds, (expectedFromTrackIds.get(lessonPath) || []).sort());
