@@ -1,0 +1,78 @@
+{
+  "lesson": "31-mcp-conformance-versioning-and-operations",
+  "title": "MCP Conformance Engineering: Versioning, Evidence, and Operations",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "為什麼一次成功的 SDK tools/list 呼叫，不足以當成一致性證據？",
+      "options": [
+        "正規化後的值可能把線路欄位、版本行為、代理的改動與無效回應都藏起來",
+        "SDK 沒辦法呼叫 MCP 工具",
+        "一次成功的呼叫一定會選到舊版紀元",
+        "一致性只適用於登錄庫的發布者"
+      ],
+      "correct": 0,
+      "explanation": "一致性必須檢視原始的請求與回應、選定的版本紀元、中介，以及 SDK 的轉換。"
+    },
+    {
+      "stage": "check",
+      "question": "一次現代探測回了 JSON-RPC 錯誤 -32021。一個具備退路能力的客戶端該怎麼做？",
+      "options": [
+        "立刻為舊版紀元送出 initialize",
+        "把那個對端當成離線",
+        "維持現代紀元，並修正或回報那個缺漏的能力宣告",
+        "忽略那個錯誤，並在不帶能力的情況下重試"
+      ],
+      "correct": 2,
+      "explanation": "一個已辨識的現代錯誤證明了現代行為。它是修正用的證據，不是降級的許可。"
+    },
+    {
+      "stage": "check",
+      "question": "當一份結果的 resultType 是 complete，卻多了一個不認識的可加欄位時，現代客戶端該怎麼處理？",
+      "options": [
+        "把 resultType 改成 input_required",
+        "拒絕每一份含有未知鍵的結果",
+        "接受那個已知的結果型別，並依那個可加欄位的角色去保留它或刻意忽略它",
+        "把那個不認識的欄位當成一次舊版握手"
+      ],
+      "correct": 2,
+      "explanation": "可加欄位支撐向前相容。它們跟一個未知的生命週期判別子是兩回事。"
+    },
+    {
+      "stage": "check",
+      "question": "對一則沒有 id 的通知，必要的 JSON-RPC 回應是什麼？",
+      "options": [
+        "一份 server/discover 結果",
+        "沒有任何 JSON-RPC 回應",
+        "一份內容為 null 的 complete 結果",
+        "一個 id 為 null 的錯誤"
+      ],
+      "correct": 1,
+      "explanation": "通知是單向的。最終的傳輸序列化器不得送出 JSON-RPC 的成功或錯誤。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種證據最能證明代理保住了源站的協定錯誤？",
+      "options": [
+        "遮蔽後的入口、源站與出口的狀態與本體證據，附上穩定的摘要",
+        "閘道儀表板的一張截圖",
+        "只有 SDK 的例外類別",
+        "代理行程的運行時間"
+      ],
+      "correct": 0,
+      "explanation": "三道邊界的證據會揭露狀態塌陷、本體被改寫，以及行為到底在哪一跳變了。"
+    },
+    {
+      "stage": "post",
+      "question": "一個候選版本在負向逐字紀錄上失敗了，而前一個版本沒有准入或健康證據。發布關卡該怎麼做？",
+      "options": [
+        "選最新的登錄庫版本",
+        "推上去，因為黃金逐字紀錄都過了",
+        "回滾到那個標了 latest 的套件",
+        "把發布壓住，直到證明出一個合格的回滾目標，或一個修正過的候選版本"
+      ],
+      "correct": 3,
+      "explanation": "一次缺少確切准入與健康證據的回滾，只是另一次未經驗證的發布，所以安全的動作是壓住。"
+    }
+  ]
+}

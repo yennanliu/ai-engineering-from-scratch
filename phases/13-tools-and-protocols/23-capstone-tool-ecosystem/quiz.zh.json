@@ -1,0 +1,78 @@
+{
+  "lesson": "23-capstone-tool-ecosystem",
+  "title": "Capstone: Stateless Tool Ecosystem",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "這一課那個只用標準庫的框架跑成功了，證明了什麼？",
+      "options": [
+        "行程內的政策與資料流按斷言的方式運作",
+        "一條真實的 MCP 傳輸完成了初始化",
+        "一台 OAuth 授權伺服器簽發了一份有效的權杖",
+        "一台收集器收到了每一個 OpenTelemetry span"
+      ],
+      "correct": 0,
+      "explanation": "這個框架用的是 Python 函式、靜態權杖、測試素材與記憶體內的 span。它驗證的是那些本地邊界，而協定、授權、輸出、瀏覽器與沙箱的整合留給後面的測試。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一條流程符合 MCP 修訂版 2026-07-28 裡「發現伺服器並輪詢長時間工作」的做法？",
+      "options": [
+        "server/connect、tools/poll、tasks/status",
+        "server/discover、tools/call 回傳一個任務把手、tasks/get",
+        "initialize、tools/call、tasks/result",
+        "GET /mcp、tools/call、tasks/list"
+      ],
+      "correct": 1,
+      "explanation": "無狀態的修訂版用的是必備的 `server/discover`。選配的 `io.modelcontextprotocol/tasks` 擴充會回傳一個任務把手，並用 `tasks/get`；終態的任務帶著它的最終結果。舊的握手、GET 端點、`tasks/result` 與 `tasks/list` 都不在這條流程裡。"
+    },
+    {
+      "stage": "check",
+      "question": "A2A v1 在它的 gRPC 與 JSON-RPC 繫結裡，把送訊息的操作叫做什麼？",
+      "options": [
+        "AgentMessage",
+        "message/create",
+        "tasks/send",
+        "SendMessage"
+      ],
+      "correct": 3,
+      "explanation": "A2A v1 在 gRPC 與 JSON-RPC 上用的是 `SendMessage`。它的 HTTP+JSON 繫結暴露的是 `POST /message:send`。"
+    },
+    {
+      "stage": "check",
+      "question": "哪一個 MCP Apps SDK 呼叫，能讓一個 App 向它的源伺服器請求一項工具？",
+      "options": [
+        "host.callTool(name, args)",
+        "app.callServerTool({ name, arguments })",
+        "app.invoke(name, args)",
+        "server.tools.call(args)"
+      ],
+      "correct": 1,
+      "explanation": "那個 App 實例用一個含有 `name` 與選配 `arguments` 的物件呼叫 `callServerTool`；宿主再把底下那個 `tools/call` 請求代理出去。"
+    },
+    {
+      "stage": "post",
+      "question": "這個總結專案裡的代理技能，對 MCP 工具與沙箱提供了什麼權限？",
+      "options": [
+        "在明確叫用之後它就繞過核可",
+        "它授予本體裡指名的每一項工具",
+        "它授予唯讀的網路存取",
+        "沒有；宿主轉接器與政策仍然要對每一項能力做授權"
+      ],
+      "correct": 3,
+      "explanation": "技能提供的是程序。發現、叫用、工具暴露、授權、憑證與隔離，都是由宿主與外部的執行環境邊界強制的。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一種證據最能證明遙測真的跨過了生產環境的輸出邊界？",
+      "options": [
+        "一段技能指示，說要發出 span",
+        "一個本地字典，裡面有一個 traceId 鍵",
+        "一張預期 span 階層的圖",
+        "接收端收集器的資料，附上追蹤與父子關係的斷言"
+      ],
+      "correct": 3,
+      "explanation": "接收端的觀察證明了 SDK、傳遞器、輸出器、傳輸與收集器這整條路徑都通了。本地資料與圖只證明了本地的建構或意圖。"
+    }
+  ]
+}

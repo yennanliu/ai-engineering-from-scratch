@@ -154,17 +154,48 @@ if torch.cuda.is_available():
 
 沒有 GPU？沒關係。大多數單元在 CPU 上就跑得動。訓練量大的單元可以用 Google Colab 或雲端 GPU。
 
-### 步驟 7：驗證全部設定
+### 步驟 7：驗證你想開始的那條路線
 
-執行驗證腳本：
+這一課的每一道指令，都請從版本庫根目錄執行，也就是放著 `README.md` 與
+`phases/` 的那個目錄。預檢只檢查你所選路線起步時真正需要的東西。它預設會
+跳過後面才用到的工具，讓新學習者看到的是一個清楚的答案，而不是一整面警告牆。
+
+啟動完整的初學者序列：
 
 ```bash
-python phases/00-setup-and-tooling/01-dev-environment/code/verify.py
+python3 phases/00-setup-and-tooling/01-dev-environment/code/verify.py --route beginner
+```
+
+或只檢查你想走的那條路線：
+
+```bash
+python3 phases/00-setup-and-tooling/01-dev-environment/code/verify.py --route ml-foundations
+python3 phases/00-setup-and-tooling/01-dev-environment/code/verify.py --route llm-engineering
+python3 phases/00-setup-and-tooling/01-dev-environment/code/verify.py --route agents
+python3 phases/00-setup-and-tooling/01-dev-environment/code/verify.py --route mcp
+python3 phases/00-setup-and-tooling/01-dev-environment/code/verify.py --route agent-skills
+python3 phases/00-setup-and-tooling/01-dev-environment/code/verify.py --route certification
+```
+
+想讓同一份預檢連後面單元會用到的選用工具與相依套件一起檢查，就加上
+`--show-later`。缺少後面才要用的工具，永遠不會擋住你目前選定的路線。
+
+每一項失敗的必要檢查，都會附上偵測到的路徑或匯入錯誤，以及一道精確的修正
+指令。Agent Skills 與認證這兩條路線還會列出需要人工確認的宿主檢查，因為
+Python 腳本無法證明某個 AI 宿主真的發現了某個技能，也無法證明你選的技能
+範圍是可寫入的。
+
+初學者預檢通過時，它會印出確切的第一個可執行單元：
+
+```text
+Ready to start Beginner course.
+Next: python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 ```
 
 ## 框架應用
 
-你的環境現在已經能應付本課程的每一個單元。以下是各種語言分別用在哪裡：
+你的環境已經可以開始你剛才檢查過的那條路線了。後面的工具等到某一課要求時
+再安裝，不要讓第一課卡在整套技術堆疊上。以下是各種語言分別用在哪裡：
 
 | 語言 | 使用於 | 套件管理器 |
 |----------|---------|-----------------|

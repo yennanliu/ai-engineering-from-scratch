@@ -1,0 +1,78 @@
+{
+  "lesson": "29-mcp-reliability-cancellation-and-flow-control",
+  "title": "MCP Reliability, Cancellation, and Flow Control",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "一次變更操作的回應丟了，客戶端用一個新的 JSON-RPC id 重試。是什麼讓這次重試變安全？",
+      "options": [
+        "新的 JSON-RPC id 會自動替這個變更操作去重",
+        "工具描述子裡有 idempotentHint",
+        "一個持久的應用程式幂等鍵，配上完全一樣的引數重用",
+        "重試用的是同一條 HTTP 連線"
+      ],
+      "correct": 2,
+      "explanation": "JSON-RPC 的 id 關聯的是訊息。業務層的幂等需要一個持久的鍵、一份引數指紋，以及一份存下的已提交結果。"
+    },
+    {
+      "stage": "check",
+      "question": "在 MCP 2026-07-28 裡，客戶端要怎麼在 stdio 上取消一個進行中的請求？",
+      "options": [
+        "對那個 JSON-RPC id 呼叫 tasks/cancel",
+        "帶著那個進行中的請求 id 送出 notifications/cancelled",
+        "關掉一條逐請求的 SSE 串流",
+        "對 MCP 端點送一個 DELETE 請求"
+      ],
+      "correct": 1,
+      "explanation": "stdio 沒有逐請求的回應串流，所以客戶端送出那則送出即忘的 notifications/cancelled 通知。"
+    },
+    {
+      "stage": "check",
+      "question": "客戶端要怎麼取消一個進行中的 Streamable HTTP 請求？",
+      "options": [
+        "關掉那個請求的 SSE 回應串流",
+        "對 MCP 端點 POST notifications/cancelled",
+        "等伺服器送出 notifications/cancelled",
+        "送出一個值為空的 Last-Event-ID"
+      ],
+      "correct": 0,
+      "explanation": "在現代的 Streamable HTTP 裡，關掉那個請求專屬的回應串流就是取消訊號。"
+    },
+    {
+      "stage": "check",
+      "question": "進度在每一個閒置逾時之前都持續傳來。哪一個期限仍然必須把一個失控的請求結束掉？",
+      "options": [
+        "一個從請求開始起算的絕對最大逾時",
+        "下一個分頁游標的到期時間",
+        "代理的保活間隔",
+        "Task 的輪詢間隔"
+      ],
+      "correct": 0,
+      "explanation": "有效的進度可以重置閒置時鐘，但一個絕對的最大期限必須始終有效。"
+    },
+    {
+      "stage": "post",
+      "question": "一份成功的 tasks/cancel 回應證明了什麼？",
+      "options": [
+        "那份持久結果被刪掉了",
+        "工作者已經停下來了",
+        "伺服器確認收到了取消意圖",
+        "這個 Task 最終一定會變成 cancelled"
+      ],
+      "correct": 2,
+      "explanation": "Task 的取消是協作式的。那個 Task 可能維持 working、可能先完成，也可能在某個工作者檢查點之後才進到 cancelled。"
+    },
+    {
+      "stage": "post",
+      "question": "一條訂閱的 SSE 串流在幾個進度事件之後掉線。哪一份復原計畫符合 MCP 2026-07-28？",
+      "options": [
+        "從 Last-Event-ID 續接，並把每一個進行中的變更操作重播一遍",
+        "開一條 GET 事件串流，並還原 Mcp-Session-Id",
+        "沿用舊的請求 id，並假設沒有漏掉任何更新",
+        "開一個新的 listen 請求、重新取回權威狀態，並避免重播不安全的變更操作"
+      ],
+      "correct": 3,
+      "explanation": "現代 MCP 的串流不能用 Last-Event-ID 續接。復原用的是一個新請求，加上向權威來源重新取回，以及明確的重試安全性。"
+    }
+  ]
+}

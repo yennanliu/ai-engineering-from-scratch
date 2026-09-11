@@ -1,0 +1,78 @@
+{
+  "lesson": "17-mcp-gateways-and-registries",
+  "title": "Stateless MCP Gateways and Registry Admission",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在一般的客戶端請求之間，現行的 MCP 閘道必須保住什麼？",
+      "options": [
+        "每個後端一個 Mcp-Session-Id",
+        "最後那條 HTTP 連線",
+        "一條獨立的 GET 事件串流",
+        "沒有協定工作階段；每個請求都自己帶著驗證與路由所需的資訊"
+      ],
+      "correct": 3,
+      "explanation": "MCP 2026-07-28 的一般請求是自我完備的，可以送到任何一個健康的閘道實例。"
+    },
+    {
+      "stage": "check",
+      "question": "一份依主體過濾過的 tools/list 結果，通常該用哪一種快取範圍？",
+      "options": [
+        "public",
+        "global",
+        "private",
+        "session"
+      ],
+      "correct": 2,
+      "explanation": "一份因人而異的工具清單，不得跨授權脈絡共用。"
+    },
+    {
+      "stage": "check",
+      "question": "閘道該怎麼把一次工具呼叫轉發給一個現行的後端？",
+      "options": [
+        "先開一條 GET 串流",
+        "把外層的 bearer 權杖與工作階段 id 抄過去",
+        "把外層的 JSON-RPC id 當成持久狀態重用",
+        "建一個全新、自我完備的請求，帶上閘道的客戶端中繼資料與仲裁後的能力"
+      ],
+      "correct": 3,
+      "explanation": "閘道是後端的客戶端，它會造出一個獨立有效的新請求。"
+    },
+    {
+      "stage": "check",
+      "question": "在准入時，閘道該怎麼使用一筆官方登錄庫的 server.json 紀錄？",
+      "options": [
+        "先驗證它的發布形狀，再把它接到另外驗證過的發布者、來源出處、政策與核可狀態上",
+        "把發布當成一次已完成的安全審查",
+        "從紀錄裡任意欄位抄下驗證主張",
+        "只要名稱看起來眼熟就信任那筆紀錄"
+      ],
+      "correct": 0,
+      "explanation": "server.json 帶的是發布中繼資料。已驗證的來源出處與閘道自己的核可決定，仍然是外部的准入證據。"
+    },
+    {
+      "stage": "post",
+      "question": "在現代的 Streamable HTTP 裡，長生命週期的清單變更通知是怎麼開啟的？",
+      "options": [
+        "透過一個 POST subscriptions/listen 請求，它的回應是 SSE",
+        "透過 resources/subscribe",
+        "透過一個帶 Last-Event-ID 的獨立 GET",
+        "透過 notifications/initialized"
+      ],
+      "correct": 0,
+      "explanation": "subscriptions/listen 取代了舊的非請求式 GET 與資源訂閱模型。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一條 Tasks 擴充的路由規則是現行的？",
+      "options": [
+        "用 tasks/result 取得最終輸出",
+        "用 tasks/list 把一個工作階段裡的所有任務救回來",
+        "用 taskId 當作 Mcp-Name 來路由 tasks/get、tasks/update 與 tasks/cancel",
+        "把任務存在 Mcp-Session-Id 裡"
+      ],
+      "correct": 2,
+      "explanation": "官方擴充用的是 get、update 與 cancel；任務 id 在沒有協定工作階段的情況下提供了路由把手。"
+    }
+  ]
+}

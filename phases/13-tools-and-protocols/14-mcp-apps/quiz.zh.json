@@ -1,0 +1,78 @@
+{
+  "lesson": "14-mcp-apps",
+  "title": "MCP Apps on the Stateless Protocol",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "現代的 MCP App 應該在哪裡把它的 UI 資源綁到一項工具上？",
+      "options": [
+        "只在最終的文字結果裡",
+        "在一條獨立的 HTTP GET 串流裡",
+        "在一個 MCP 工作階段 cookie 裡",
+        "在 tools/list 回傳的那份工具定義裡"
+      ],
+      "correct": 3,
+      "explanation": "工具定義上那個嵌套的 _meta.ui.resourceUri，讓宿主能在叫用之前先預先載入並審查那個 UI。"
+    },
+    {
+      "stage": "check",
+      "question": "一個 2026-07-28 的客戶端怎麼公告它支援 MCP Apps？",
+      "options": [
+        "用 notifications/initialized",
+        "用 Mcp-Session-Id",
+        "在每一個請求的 io.modelcontextprotocol/clientCapabilities.extensions 裡",
+        "藉由接受所有 ui:// 資源"
+      ],
+      "correct": 2,
+      "explanation": "擴充是選擇加入的，透過那份逐請求的客戶端能力映射公告。"
+    },
+    {
+      "stage": "check",
+      "question": "ui/initialize 初始化的是什麼？",
+      "options": [
+        "一個協定層級的伺服器工作階段",
+        "OAuth 的客戶端註冊",
+        "iframe 與宿主之間的 Apps postMessage 橋",
+        "Streamable HTTP 的 GET 通道"
+      ],
+      "correct": 2,
+      "explanation": "ui/initialize 屬於 Apps 橋的方言，跟已被移除的 MCP 核心握手是兩回事。"
+    },
+    {
+      "stage": "check",
+      "question": "對一個與使用者無關、隨附出貨的 App，哪一種資源回應最安全？",
+      "options": [
+        "沒有 resultType，也沒有快取政策",
+        "resultType complete、一個有上限的 ttlMs、public 的 cacheScope，以及預設拒絕的 CSP",
+        "把一個工作階段權杖內嵌在 HTML 裡",
+        "無限的 ttlMs 與萬用字元的 CSP 網域"
+      ],
+      "correct": 1,
+      "explanation": "一份 complete 的結果、明確的快取提示，以及一份很窄的 CSP，讓線路與瀏覽器的政策都能被檢視。"
+    },
+    {
+      "stage": "post",
+      "question": "宿主收到一份 resources/read，它的本體指向某個 URI，但 Mcp-Name 標頭指向另一個。應該怎麼做？",
+      "options": [
+        "兩個資源都打開",
+        "以標頭為準",
+        "以本體為準",
+        "回 HTTP 400 加 JSON-RPC 錯誤 -32020"
+      ],
+      "correct": 3,
+      "explanation": "在評估版本支援或功能政策之前，路由標頭與本體就必須先一致；傳輸會回 HTTP 400 加 JSON-RPC 錯誤 -32020。"
+    },
+    {
+      "stage": "post",
+      "question": "對一個不支援 MCP Apps 的宿主，正確的退路是什麼？",
+      "options": [
+        "把 HTML 當成受信任的宿主介面回傳",
+        "讓這項工具用一般文字或有結構的輸出仍然可用，並省略那個 UI 綁定",
+        "建一個隱藏的工作階段然後重試",
+        "自動把那個擴充授予它"
+      ],
+      "correct": 1,
+      "explanation": "一個選配的擴充，不該讓沒有協商它的客戶端連底下那項工具都不能用。"
+    }
+  ]
+}

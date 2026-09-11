@@ -3,64 +3,76 @@
   "title": "Model Context Protocol",
   "questions": [
     {
-      "stage": "post",
-      "question": "一個 MCP server 對外暴露哪三種基元？",
+      "stage": "pre",
+      "question": "在 MCP 2026-07-28 裡，客戶端把自己的協定版本與能力送在哪裡？",
       "options": [
-        "Agents、skills、workflows",
-        "Endpoints、webhooks、queues",
-        "Functions、types、classes",
-        "Tools、resources、prompts"
-      ],
-      "correct": 3,
-      "explanation": ""
-    },
-    {
-      "stage": "post",
-      "question": "MCP 使用哪種傳輸格式？",
-      "options": [
-        "搭配 protobuf 的 gRPC",
-        "JSON-RPC 2.0",
-        "搭配 OpenAPI 的 REST",
-        "走 HTTP 的 GraphQL"
-      ],
-      "correct": 1,
-      "explanation": ""
-    },
-    {
-      "stage": "post",
-      "question": "哪一個 metadata 欄位表示某個 tool 會變更狀態、應要求人工核准？",
-      "options": [
-        "destructiveHint: true",
-        "readonly: false",
-        "mutating: true",
-        "requiresAuth: true"
-      ],
-      "correct": 0,
-      "explanation": ""
-    },
-    {
-      "stage": "post",
-      "question": "2025-06-18 版取代先前僅支援 SSE 之遠端傳輸的是哪種傳輸方式？",
-      "options": [
-        "gRPC 雙向串流",
-        "僅限 WebSocket",
-        "Streamable HTTP",
-        "WebTransport"
+        "只放在 HTTP cookie 裡",
+        "只放在一則 initialize 請求裡",
+        "放在每一則請求的 params._meta 裡",
+        "放在伺服器端的工作階段紀錄裡"
       ],
       "correct": 2,
-      "explanation": ""
+      "explanation": "現代 MCP 是無狀態的。每一則請求都在 params._meta 裡帶著協定版本與客戶端能力。"
+    },
+    {
+      "stage": "check",
+      "question": "每一台現代 MCP 伺服器都必須實作哪個方法，來做事前的版本與能力發現？",
+      "options": [
+        "server/discover",
+        "sessions/create",
+        "logging/setLevel",
+        "initialize"
+      ],
+      "correct": 0,
+      "explanation": "server/discover 會公告受支援的版本、伺服器能力與伺服器身分。"
+    },
+    {
+      "stage": "check",
+      "question": "在 MCP 2026-07-28 裡，哪一種 Streamable HTTP 形狀才是現行的？",
+      "options": [
+        "每次工具呼叫之後送一則 DELETE 請求",
+        "一條由 Mcp-Session-Id 標識的 WebSocket 工作階段",
+        "每則 JSON-RPC 訊息一次 POST；請求型 POST 收到 JSON 或請求範圍的 SSE",
+        "一條 GET 串流，外加一個獨立的 POST 端點"
+      ],
+      "correct": 2,
+      "explanation": "現行傳輸只有單一個 POST 端點。請求型 POST 收到 JSON 或請求範圍的 SSE；被接受的通知型 POST 收到 HTTP 202 且沒有主體。"
+    },
+    {
+      "stage": "check",
+      "question": "伺服器該如何分辨「缺少協定版本中繼資料」與「格式正確但不受支援的版本」？",
+      "options": [
+        "兩種情況都回傳 -32022",
+        "缺少版本回傳 HTTP 301，不受支援的版本則鑄造 Mcp-Session-Id",
+        "缺漏或型別錯誤的中繼資料回傳 -32602；不受支援的版本字串回傳 -32022，並附上 supported/requested",
+        "接受缺少版本的請求，對不受支援的版本回傳 -32601"
+      ],
+      "correct": 2,
+      "explanation": "必填欄位缺漏或型別錯誤，屬於格式錯誤的 JSON-RPC params。UnsupportedProtocolVersionError 只適用於「有給版本字串、但伺服器沒有實作」的情況。"
     },
     {
       "stage": "post",
-      "question": "什麼時候該把一個 tool 拆成獨立的 MCP server，而不是留在行程內？",
+      "question": "某個多步驟工具需要跨呼叫的延續性。現代 MCP 的設計是什麼？",
       "options": [
-        "當它被兩個以上的 host 呼叫，且是唯讀／可快取的",
-        "永遠不用；MCP 只適合本機開發",
-        "當它每天被呼叫少於 10 次",
-        "當它回傳超過 1KB 的資料"
+        "把可變狀態放進 clientInfo",
+        "只為這個工具恢復 Mcp-Session-Id",
+        "鑄造一個不透明的把手，並要求它作為後續呼叫的工具參數",
+        "把狀態存在 TCP 連線背後"
       ],
-      "correct": 0,
-      "explanation": ""
+      "correct": 2,
+      "explanation": "跨呼叫狀態是明確的應用狀態。由伺服器鑄造的把手，會以一般且經過授權的參數形式傳遞。"
+    },
+    {
+      "stage": "post",
+      "question": "現代伺服器在工具操作進行中，要如何索取使用者、模型或 root 的輸入？",
+      "options": [
+        "把問題寫到 stderr",
+        "開第二條 SSE 連線",
+        "回傳 input_required，由客戶端帶著 inputResponses 重試",
+        "送出一則獨立的伺服器對客戶端 JSON-RPC 請求"
+      ],
+      "correct": 2,
+      "explanation": "Multi Round-Trip Requests 模式把 inputRequests 內嵌在 input_required 結果裡，然後重試原本的操作。"
     }
   ]
 }

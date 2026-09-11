@@ -1,115 +1,158 @@
-# MCP 基礎 —— 原語、生命週期、JSON-RPC 底層
+# MCP 基礎：無狀態請求與 JSON-RPC
 
-> MCP 之前的每一次整合都是一次性的。Model Context Protocol 由 Anthropic 在 2024 年 11 月首度出貨，如今由 Linux Foundation 的 Agentic AI Foundation 託管，它把探索與呼叫標準化，好讓任何客戶端都能跟任何伺服器對話。2025-11-25 版規格點名了六個原語（伺服器三個、客戶端三個）、一套三階段生命週期，以及 JSON-RPC 2.0 的線路格式。學會這些，本階段其餘的 MCP 章節就只剩下閱讀了。
+> 現代 MCP 沒有握手，也沒有協定工作階段。每一則請求都必須自帶足夠的中繼資料，才能被單獨理解、授權、路由與重試。
 
 **類型：** 學習
-**程式語言：** Python (stdlib, JSON-RPC parser)
-**先修單元：** 階段 13 · 01 到 05（工具介面與函數呼叫）
-**時間：** 約 45 分鐘
+**程式語言：** Python
+**先修單元：** 階段 13，單元 01 至 05
+**時間：** 約 55 分鐘
 
 ## 學習目標
 
-- 說出全部六個 MCP 原語（伺服器端的 tools、resources、prompts；客戶端的 roots、sampling、elicitation），並各舉一個使用情境。
-- 走過那三階段生命週期（initialize、operation、shutdown），並指出每個階段各由誰送出哪些訊息。
-- 解析並吐出 JSON-RPC 2.0 的 request、response 與 notification 封裝。
-- 說明 `initialize` 時的能力協商是什麼，以及少了它會壞掉什麼。
+- 分辨 MCP 的伺服器原語與它的客戶端功能。
+- 為 MCP `2026-07-28` 建構有效的 JSON-RPC 2.0 請求與回應。
+- 在每一則請求上附加協定版本、客戶端能力與客戶端身分。
+- 不靠握手就使用 `server/discover`，並處理 `UnsupportedProtocolVersionError`。
+- 追蹤一則獨立請求，從驗證一路走到完整結果。
 
 ## 問題所在
 
-在 MCP 之前，每個會用工具的代理都有自己的協定。Cursor 有一套形似 MCP 卻不相容的工具系統。Claude Desktop 出貨的是另一套。VS Code 的 Copilot 擴充套件則有第三套。一支做了「Postgres 查詢」工具的團隊，得把同一個工具寫三遍，各自對應不同宿主的 API。要重用就得複製程式碼。
+一台 MCP 伺服器可能在同一個行程或同一個 HTTP worker 上，連續收到來自不同客戶端、能力也不同的兩則請求。如果伺服器記住了上一則請求宣告了什麼，它就可能套用錯誤的權限，或回傳錯誤的線路形狀。
 
-結果是一次一次性整合的寒武紀大爆發，以及生態系速度上的一道天花板。
+MCP `2026-07-28` 消除了這種模稜兩可。協定核心是無狀態的。伺服器必須從「當下這則請求」來決定怎麼處理當下這則請求，而不是從連線歷史。
 
-MCP 靠標準化線路格式來修正這件事。單一台 MCP 伺服器就能在每一個 MCP 客戶端上運作：Claude Desktop、ChatGPT、Cursor、VS Code、Gemini、Goose、Zed、Windsurf，到 2026 年 4 月已有 300 個以上的客戶端。每月 1.1 億次 SDK 下載。1 萬台以上的公開伺服器。Linux Foundation 於 2025 年 12 月在新成立的 Agentic AI Foundation 之下接手託管。
+這改變了心智模型。舊的順序是先連線、再握手、然後才操作。現代的順序更簡單：
 
-本階段使用的規格修訂版是 **2025-11-25**。它加上了非同步 Tasks（SEP-1686）、URL 模式的 elicitation（SEP-1036）、帶工具的 sampling（SEP-1577）、增量式範圍同意（SEP-835），以及 OAuth 2.1 的資源指示子語意。階段 13 · 09 到 16 會涵蓋那些擴充。這一課只停在底層。
+1. 客戶端送出一則自我描述的請求。
+2. 伺服器驗證那則請求的版本與能力。
+3. 伺服器處理該方法。
+4. 伺服器回傳一個帶型別的結果，或一個 JSON-RPC 錯誤。
+
+下一則請求從頭把同樣的流程再走一遍。
 
 ## 核心概念
 
-### 三個伺服器原語
+### 伺服器原語
 
-1. **Tools。** 可呼叫的動作。就是階段 13 · 01 那個四步驟迴圈。
-2. **Resources。** 被暴露出來的資料。以 URI 定址的唯讀內容：`file:///path`、`db://query/...`，或自訂的 scheme。
-3. **Prompts。** 可重用的模板。在宿主 UI 中是斜線指令；伺服器提供模板，客戶端填入參數。
+MCP 伺服器暴露三種主要原語：
 
-### 三個客戶端原語
+1. **工具（Tools）** 是由模型控制的動作，用 `tools/list` 發現、用 `tools/call` 調用。
+2. **資源（Resources）** 是以 URI 定址的資料，用 `resources/list` 發現、用 `resources/read` 取得。
+3. **提示詞（Prompts）** 是可重用的模板，用 `prompts/list` 發現、用 `prompts/get` 算繪。
 
-4. **Roots。** 伺服器被允許碰觸的那組 URI。客戶端宣告它們；伺服器遵守它們。
-5. **Sampling。** 伺服器請求客戶端的模型執行一次補全。這讓伺服器端不必持有 API 金鑰就能託管代理迴圈。
-6. **Elicitation。** 伺服器在流程中途向客戶端的使用者索取結構化輸入。用表單或 URL（SEP-1036）。
+Roots、sampling 與 logging 為了相容性仍留在 `2026-07-28` 的 schema 裡，但已被棄用。新的實作應該改用明確的工具或資源輸入來取代 roots，用模型供應商的 API 直接處理 sampling，並用 stderr 或 OpenTelemetry 來做 logging。Elicitation 仍然可以透過 Multi Round-Trip Requests 使用：伺服器回傳一則輸入請求，客戶端再重試原本的操作。現代伺服器絕不主動發起獨立的 JSON-RPC 請求。
 
-MCP 中的每一項能力，都恰好歸屬於這六者之一。階段 13 · 10 到 14 會逐一深入。
+### JSON-RPC 信封
 
-### 線路格式：JSON-RPC 2.0
+MCP 使用 JSON-RPC 2.0：
 
-每則訊息都是一個帶下列欄位的 JSON 物件：
+- 請求：`{jsonrpc, id, method, params}`
+- 回應：`{jsonrpc, id, result}` 或 `{jsonrpc, id, error}`
+- 通知：`{jsonrpc, method, params}`，沒有 `id`
 
-- Request：`{jsonrpc: "2.0", id, method, params}`。
-- Response：`{jsonrpc: "2.0", id, result | error}`。
-- Notification：`{jsonrpc: "2.0", method, params}` —— 沒有 `id`，也不預期有回應。
+請求的 `id` 只用來對應一則回應。它不會建立協定工作階段。
 
-底層規格約有 15 個方法，依原語分組。重要的那些是：
+### 必要的請求中繼資料
 
-- `initialize`／`initialized`（握手）
-- `tools/list`、`tools/call`
-- `resources/list`、`resources/read`、`resources/subscribe`
-- `prompts/list`、`prompts/get`
-- `sampling/createMessage`（伺服器對客戶端）
-- `notifications/tools/list_changed`、`notifications/resources/updated`、`notifications/progress`
-
-### 三階段生命週期
-
-**第 1 階段：initialize。**
-
-客戶端送出帶著自己 `capabilities` 與 `clientInfo` 的 `initialize`。伺服器回覆它自己的 `capabilities`、`serverInfo`，以及它所說的規格版本。客戶端消化完回應後送出 `notifications/initialized`。從這裡開始，雙方都可以依協商好的能力發送請求。
-
-**第 2 階段：operation。**
-
-雙向。客戶端呼叫 `tools/list` 做探索，再用 `tools/call` 呼叫。若伺服器宣告了該能力，它可以送出 `sampling/createMessage`。當伺服器的工具集變動時，它可以送出 `notifications/tools/list_changed`。當使用者變更 root 範圍時，客戶端可以送出 `notifications/roots/list_changed`。
-
-**第 3 階段：shutdown。**
-
-任一方關閉傳輸。MCP 沒有結構化的關閉方法；連線結束的訊號由傳輸層（stdio 或 Streamable HTTP，見階段 13 · 09）承載。
-
-### 能力協商
-
-`initialize` 握手中的 `capabilities` 就是那份契約。以下是伺服器端的範例：
+每一則現代請求都在 `params` 裡帶一個 `_meta` 物件：
 
 ```json
 {
-  "tools": {"listChanged": true},
-  "resources": {"subscribe": true, "listChanged": true},
-  "prompts": {"listChanged": true}
+  "jsonrpc": "2.0",
+  "id": 7,
+  "method": "tools/list",
+  "params": {
+    "_meta": {
+      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+      "io.modelcontextprotocol/clientCapabilities": {},
+      "io.modelcontextprotocol/clientInfo": {
+        "name": "course-client",
+        "version": "1.0.0"
+      }
+    }
+  }
 }
 ```
 
-這台伺服器宣告它能吐出 `tools/list_changed` 通知，並支援 `resources/subscribe`。客戶端則以宣告自己的能力來回應：
+協定版本與客戶端能力是必填。客戶端身分是建議填寫。它是自行宣告、供顯示與除錯用的資料，不是安全憑證。
+
+伺服器不得從先前的請求、stdio 行程、HTTP 連線，或單靠某個傳輸標頭，去推斷這些值。
+
+### 完整結果與伺服器身分
+
+每一個成功的現代結果都包含 `resultType`。一般的最終結果用 `"complete"`。伺服器也應該在結果的中繼資料裡表明自己的身分：
 
 ```json
 {
-  "roots": {"listChanged": true},
-  "sampling": {},
-  "elicitation": {}
+  "jsonrpc": "2.0",
+  "id": 7,
+  "result": {
+    "resultType": "complete",
+    "tools": [],
+    "ttlMs": 30000,
+    "cacheScope": "public",
+    "_meta": {
+      "io.modelcontextprotocol/serverInfo": {
+        "name": "notes-server",
+        "version": "1.0.0"
+      }
+    }
+  }
 }
 ```
 
-如果客戶端沒有宣告 `sampling`，伺服器就不得呼叫 `sampling/createMessage`。反過來也一樣：如果伺服器沒有宣告 `resources.subscribe`，客戶端就不得嘗試訂閱。
+`tools/list`、`resources/list`、`prompts/list`、`resources/templates/list`、`resources/read` 與 `server/discover` 都是可快取的結果。它們會帶上 `ttlMs` 與 `cacheScope`。一個安全的預設是 `ttlMs: 0` 加上 `cacheScope: "private"`。清單項目應該有確定性的排序，這樣等價的回應才會產生穩定的快取鍵與穩定的模型脈絡。
 
-這正是防止生態系漂移的機制。一個不支援 sampling 的客戶端仍然是合法的 MCP 客戶端；一台不呼叫 `sampling` 的伺服器也仍然是合法的 MCP 伺服器。它們只是不在這項功能上一起使用而已。
+### 不靠握手的發現
 
-### 結構化內容與錯誤形狀
+每一台現代伺服器都必須實作 `server/discover`。客戶端可以在呼叫其他方法之前先呼叫它，取得：
 
-`tools/call` 回傳一個由定型區塊組成的 `content` 陣列：`text`、`image`、`resource`。階段 13 · 14 會把 MCP Apps（`ui://` 互動式 UI）加進這份清單。
+- `supportedVersions`
+- 伺服器 `capabilities`
+- 選用的使用 `instructions`
+- 結果 `_meta` 裡的伺服器身分
+- 快取提示
 
-錯誤使用 JSON-RPC 的錯誤碼。規格新增的有：`-32002`「Resource not found」、`-32603`「Internal error」，另外還有以 `error.data` 形式攜帶的 MCP 專屬錯誤資料。
+發現很有用，但它不是一道關卡。客戶端可以直接先送 `tools/list`，因為那則請求本身已經帶著自己的協定版本與能力。
 
-### 客戶端能力對工具呼叫的細節
+如果請求的版本不受支援，伺服器回傳 JSON-RPC 錯誤碼 `-32022`，並附上：
 
-一個常見的混淆：`capabilities.tools` 指的是客戶端支不支援工具清單變更通知。至於客戶端「會不會」去呼叫某些特定工具，那是由它的模型驅動的執行期選擇，不是能力旗標。能力旗標是規格層級的契約。模型的選擇則與之正交。
+```json
+{
+  "requested": "2027-01-01",
+  "supported": ["2026-07-28"]
+}
+```
 
-### 為什麼是 JSON-RPC 而不是 REST？
+客戶端挑一個雙方都支援的現代版本，用一個新的 JSON-RPC 請求 id 重試。
 
-JSON-RPC 2.0（2010）是一套輕量的雙向協定。REST 則是由客戶端發起的。MCP 需要由伺服器發起的訊息（sampling、通知），所以帶對稱請求／回應形狀的 JSON-RPC 自然合適。JSON-RPC 也能乾淨地疊在 stdio 與 WebSocket／Streamable HTTP 之上，不必重新發明 HTTP 那套請求形狀。
+### 一則請求的生命週期
+
+照這個順序追蹤一則現代請求：
+
+1. 解析一個 JSON-RPC 信封。
+2. 確認 `jsonrpc` 是 `"2.0"`、`id` 存在、`method` 是字串，而 `params` 是物件。
+3. 要求 `params._meta` 裡有版本字串與能力物件；中繼資料格式錯誤或缺漏就是 `-32602`。
+4. 在 HTTP 邊界上，把版本、方法與適用的名稱標頭拿去跟主體比對。不一致就是 `-32020`，即使兩個版本值當中有一個本來就不受支援也一樣。
+5. 確立一致之後，再把「一致但不受支援」的版本以 `-32022` 拒絕。
+6. 檢查必要能力，然後依 `method` 路由，並驗證該方法專屬的參數。
+7. 在處理器執行之前，對這個具體操作做認證與授權。
+8. 回傳一個帶有伺服器身分的完整結果。
+9. 忘掉請求範圍內的協定中繼資料。
+
+這個順序能防止兩個元件解讀成不同的呼叫。閘道不能一邊授權 `Mcp-Name: notes.read`，源站那頭卻執行 `params.name: notes.delete`。它也讓格式錯誤的輸入、標頭混淆、版本協商、能力失敗、授權與處理器失敗，各自留下互不混淆的證據。
+
+關閉 stdin 或一則 HTTP 回應，結束的是傳輸活動。它並不會終止協定工作階段，因為現代 MCP 根本沒有協定工作階段。
+
+### 明確的舊版相容
+
+到 `2025-11-25` 為止的版本使用 `initialize`、`notifications/initialized`、以連線為範圍的能力，而在更早的 Streamable HTTP 上還有選用的協定工作階段。當一個橫跨兩個時代的客戶端要跟舊伺服器對話時，那些行為仍然相關。
+
+讓兩個時代保持分離。現代請求是靠必填的每請求中繼資料來識別。舊版連線只能透過文件明訂的退路來選用。不要把 `initialize` 當成對 `2026-07-28` 伺服器的預設開場。
+
+因此「無狀態」帶有時代專屬的意義。在 `2026-07-28` 裡，它是一條協定不變式：每一則一般請求都能被獨立解讀，而且不存在 MCP 工作階段。在到 `2025-11-25` 為止的版本裡，初始化與協商出來的能力屬於一條連線，所以相容轉接層可以保留那份舊版連線狀態。跨時代的實作不是一台寬鬆的狀態機。它是一個無狀態的現代核心，旁邊擺著一個被隔離的舊版轉接層，而且在任何一邊的解析器啟動之前，就已經做出明確的選擇決定。
+
+這兩種意義都沒有禁止持久的應用狀態。工作流程、任務或草稿都可以藏在共用儲存區裡的一個不透明把手背後。客戶端把那個把手當成一般輸入送出，而每一個副本都要對它的使用做認證與授權。協定脈絡不得洩漏進那個儲存區，被拿來當作被移除的工作階段的替代品。
 
 ```figure
 mcp-tool-call
@@ -117,50 +160,47 @@ mcp-tool-call
 
 ## 框架應用
 
-`code/main.py` 出貨了一個最小的 JSON-RPC 2.0 解析器與產生器，接著手動走過 `initialize` → `tools/list` → `tools/call` → `shutdown` 這串序列，並印出每一則訊息。沒有真正的傳輸；就只有訊息形狀。拿它對照延伸閱讀連結的那份規格，逐一驗證每個封裝。
+`code/main.py` 不靠任何框架，就能建構、驗證、追蹤並分派現代 MCP 訊息。執行：
 
-要看的地方有：
+```bash
+python3 code/main.py
+python3 -m unittest discover code/tests -v
+```
 
-- `initialize` 雙向宣告能力；回應中有 `serverInfo` 與 `protocolVersion: "2025-11-25"`。
-- `tools/list` 回傳一個 `tools` 陣列；每一筆都有 `name`、`description`、`inputSchema`。
-- `tools/call` 用的是 `params.name` 與 `params.arguments`。
-- 回應的 `content` 是一個由 `{type, text}` 區塊組成的陣列。
+在輸出裡留意三條不變式：
+
+- 每一則請求都重複帶上自己的 `_meta` 欄位。
+- 每一個成功的結果都是 `resultType: "complete"`，而且包含伺服器身分。
+- 清單結果有確定性排序，並帶著明確的快取提示。
 
 ## 產出交付
 
-這一課產出 `outputs/skill-mcp-handshake-tracer.md`。給定一份 pcap 風格的 MCP 客戶端—伺服器互動逐字記錄，這項技能會為每則訊息標註它屬於哪個原語、哪個生命週期階段，以及它依賴哪一項能力。
+這一課交付 `outputs/skill-mcp-handshake-tracer.md`。歷史檔名維持不變，但這個產物現在是一支無狀態請求追蹤器。它獨立稽核每一則訊息，只在舊版握手流量真的出現時才把它標記出來。
 
 ## 練習
 
-1. 跑一次 `code/main.py`。找出能力協商發生的那一行，並描述如果伺服器沒有宣告 `tools.listChanged` 會有什麼不同。
-
-2. 擴充解析器以處理 `notifications/progress`。訊息形狀是：`{method: "notifications/progress", params: {progressToken, progress, total}}`。在一次長時間執行的 `tools/call` 進行中吐出它，並確認客戶端的處理器會顯示一條進度條。
-
-3. 把 MCP 2025-11-25 規格從頭讀到尾 —— 整份文件大約 80 頁。找出那個多數伺服器「不」需要的能力旗標。提示：它和資源訂閱有關。
-
-4. 在紙上勾勒出：一項假想的「排程任務」功能會歸屬於哪個原語。（提示：伺服器希望客戶端在排定的時間呼叫它。今天這六個原語沒有一個吻合。）MCP 的 2026 路線圖有一份針對此事的 SEP 草案。
-
-5. 從 GitHub 上某台開放的 MCP 伺服器抓一份工作階段日誌來解析。數一數 request、response 與 notification 各有多少則。算出流量中生命週期與 operation 各佔多少比例。
+1. 把某一則請求的協定版本改成 `2027-01-01`。確認錯誤碼是 `-32022`，而且 data 公告了受支援的版本。
+2. 從第二則請求裡拿掉 `io.modelcontextprotocol/clientCapabilities`。確認伺服器沒有沿用第一則請求的能力。
+3. 把記憶體裡的工具登錄表反轉。確認 `tools/list` 仍然回傳同樣的確定性排序。
+4. 把 `cacheScope` 從 `public` 改成 `private`。說明這兩種情況下，各有哪些授權脈絡可以重用該回應。
+5. 加一個「省略 `clientInfo`」的選用測試。這則請求應該仍然有效，因為客戶端身分是建議填寫，不是必填。
 
 ## 關鍵術語
 
-| 術語 | 大家怎麼說 | 實際上是什麼 |
-|------|----------------|------------------------|
-| MCP | 「Model Context Protocol」 | 用於模型對工具之探索與呼叫的開放協定 |
-| 伺服器原語 | 「伺服器暴露出什麼」 | tools（動作）、resources（資料）、prompts（模板） |
-| 客戶端原語 | 「客戶端讓伺服器用什麼」 | roots（範圍）、sampling（LLM 回呼）、elicitation（使用者輸入） |
-| JSON-RPC 2.0 | 「那套線路格式」 | 對稱的 request／response／notification 封裝 |
-| `initialize` 握手 | 「能力協商」 | 第一組訊息往返；伺服器與客戶端各自宣告支援的功能 |
-| `tools/list` | 「探索」 | 客戶端向伺服器索取它當前的工具集 |
-| `tools/call` | 「呼叫」 | 客戶端請伺服器帶著參數執行某個工具 |
-| `notifications/*_changed` | 「變更事件」 | 伺服器告訴客戶端它的原語清單變了 |
-| 內容區塊 | 「定型的結果」 | 工具結果中的 `{type: "text" \| "image" \| "resource" \| "ui_resource"}` |
-| SEP | 「Spec Evolution Proposal」 | 具名的草案提案（例如非同步 Tasks 的 SEP-1686） |
+| 術語 | 意義 |
+|------|---------|
+| 無狀態協定 | 每一則請求都自備解讀它所需的中繼資料 |
+| 請求中繼資料 | `params._meta` 裡的版本、客戶端能力，以及建議填寫的客戶端身分 |
+| `server/discover` | 必備的伺服器方法，提供版本、能力、使用說明與身分 |
+| `resultType` | 每一個成功的現代結果上的判別欄位 |
+| 可快取結果 | 帶有必填 `ttlMs` 與 `cacheScope` 提示的結果 |
+| 協定時代 | 現代的每請求中繼資料，或舊版以連線為範圍的初始化 |
+| 傳輸生命期 | 行程、連線或回應串流的生命期，不是協定工作階段狀態 |
+| `-32022` | 不支援的協定版本錯誤，附上請求版本與受支援版本 |
 
 ## 延伸閱讀
 
-- [Model Context Protocol — Specification 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25) —— 權威的規格文件
-- [Model Context Protocol — Architecture concepts](https://modelcontextprotocol.io/docs/concepts/architecture) —— 六原語的心智模型
-- [Anthropic — Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol) —— 2024 年 11 月的發布文
-- [MCP blog — First MCP anniversary](https://blog.modelcontextprotocol.io/posts/2025-11-25-first-mcp-anniversary/) —— 週年回顧與 2025-11-25 規格的變動
-- [WorkOS — MCP 2025-11-25 spec update](https://workos.com/blog/mcp-2025-11-25-spec-update) —— SEP-1686、1036、1577、835 與 1724 的摘要
+- [MCP Architecture](https://modelcontextprotocol.io/specification/2026-07-28/architecture)
+- [MCP Base Protocol](https://modelcontextprotocol.io/specification/2026-07-28/basic)
+- [MCP Server Discovery](https://modelcontextprotocol.io/specification/2026-07-28/server/discover)
+- [MCP 2026-07-28 Changelog](https://modelcontextprotocol.io/specification/2026-07-28/changelog)

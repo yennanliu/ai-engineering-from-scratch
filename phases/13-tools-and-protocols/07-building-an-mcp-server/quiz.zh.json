@@ -1,0 +1,78 @@
+{
+  "lesson": "07-building-an-mcp-server",
+  "title": "Building an MCP Server: Stateless Python and TypeScript",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "現代的 MCP 伺服器從哪裡讀客戶端能力？",
+      "options": [
+        "從 Mcp-Session-Id",
+        "從第一次 initialize 呼叫",
+        "從每一個當前請求",
+        "從行程的環境變數"
+      ],
+      "correct": 2,
+      "explanation": "MCP 2026-07-28 在每一個請求的 params._meta 裡帶著客戶端能力。"
+    },
+    {
+      "stage": "check",
+      "question": "現代伺服器必須實作哪個方法？",
+      "options": [
+        "initialize",
+        "server/discover",
+        "resources/subscribe",
+        "shutdown"
+      ],
+      "correct": 1,
+      "explanation": "server/discover 在現代伺服器上是必備的，雖然客戶端可以先呼叫別的方法。"
+    },
+    {
+      "stage": "check",
+      "question": "tools/list 的成功結果裡有哪些必填欄位？",
+      "options": [
+        "protocolVersion 與 tools",
+        "resultType、ttlMs、cacheScope、tools",
+        "initialized 與 tools",
+        "sessionId 與 tools"
+      ],
+      "correct": 1,
+      "explanation": "現代的列表結果是有型別且可快取的。"
+    },
+    {
+      "stage": "check",
+      "question": "伺服器為什麼應該用確定的方式替工具排序？",
+      "options": [
+        "為了讓快取與模型上下文穩定",
+        "為了建立一個工作階段",
+        "為了協商協定",
+        "為了取代授權"
+      ],
+      "correct": 0,
+      "explanation": "穩定的排序讓等價的登錄產出等價的回應。"
+    },
+    {
+      "stage": "post",
+      "question": "一次有效的工具呼叫跑了起來，但那個領域操作失敗了。哪一種形狀合適？",
+      "options": [
+        "notifications/initialized",
+        "HTTP DELETE",
+        "一份帶 isError true 的完整工具結果",
+        "一個新的伺服器請求"
+      ],
+      "correct": 2,
+      "explanation": "工具層級的失敗透過 content 與 isError，對模型維持看得見。"
+    },
+    {
+      "stage": "post",
+      "question": "什麼該結束一台 stdio 伺服器的傳輸生命期？",
+      "options": [
+        "stdin 上的 EOF",
+        "一個 GET 請求",
+        "一個必備的 shutdown RPC",
+        "Mcp-Session-Id 到期"
+      ],
+      "correct": 0,
+      "explanation": "EOF 是可攜的 stdio 關閉訊號。它並不會關閉某個現代的協定工作階段。"
+    }
+  ]
+}

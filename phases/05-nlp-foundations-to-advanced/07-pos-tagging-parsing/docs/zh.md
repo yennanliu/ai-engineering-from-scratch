@@ -41,11 +41,11 @@ at is prep of running
 ```
 
 ```figure
-dependency-arcs
+pos-tagger
 ```
 
 ```figure
-pos-tagger
+dependency-arcs
 ```
 
 ## 動手實作

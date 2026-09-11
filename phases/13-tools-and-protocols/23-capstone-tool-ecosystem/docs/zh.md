@@ -1,162 +1,269 @@
-# 總結專案 —— 打造一套完整的工具生態系
+# 總結專案：無狀態的工具生態系
 
-> 階段 13 把每一塊零件都教過了。這個總結專案要把它們接成一套生產形狀的系統：一台帶工具 + 資源 + 提示詞 + task + UI 的 MCP 伺服器、邊緣的 OAuth 2.1、一個 RBAC 閘道、一個多伺服器客戶端、一次 A2A 子代理呼叫、送進收集器的 OTel 追蹤、CI 中的工具下毒偵測，以及一份 AGENTS.md + SKILL.md 套組。做完之後，你能為每一項架構選擇辯護。
+> 一套生產級的代理系統是一組邊界，不是一堆功能。這個總結專案把一份讀得懂的行程內模擬，跟真實部署仍然需要的協定客戶端、授權伺服器、沙箱與遙測輸出器分開來。
 
 **類型：** 實作
-**程式語言：** Python (stdlib, end-to-end ecosystem harness)
-**先修單元：** 階段 13 · 01 到 21
+**程式語言：** Python (stdlib, in-process simulation)
+**先修單元：** 階段 13 · 01 到 22，使用 MCP 修訂版 `2026-07-28`
 **時間：** 約 120 分鐘
 
 ## 學習目標
 
-- 組出一台暴露工具、資源、提示詞，以及一個帶 `ui://` 應用之 task 的 MCP 伺服器。
-- 在伺服器前面擺一個強制 RBAC 與釘選雜湊的 OAuth 2.1 閘道。
-- 寫一個多伺服器客戶端，用 OTel GenAI 屬性做端到端追蹤。
-- 把部分工作負載委派給一個 A2A 子代理；驗證不透明性有被保留。
-- 用 AGENTS.md + SKILL.md 把整套堆疊打包起來，好讓其他代理也能驅動它。
+- 把工具呼叫、任務形狀的結果、被委派的工作、UI 資源、授權政策與追蹤紀錄，組進同一條流程。
+- 在每一個 MCP 請求上都帶著協定版本、客戶端身分與能力，而不是靠一條連線工作階段。
+- 在使用之前先探索伺服器，並透過官方的 Tasks 擴充來驅動長時間工作。
+- 分辨一份協定形狀的模擬，跟一份 MCP、A2A、OAuth 或 OpenTelemetry 的實作。
+- 把每一道被模擬的邊界，對映到那個非取代不可的生產元件。
+- 讓 `AGENTS.md`、一項代理技能、執行環境轉接器、工具與安全政策，各自留在正確的角色上。
+- 說明哪些主張可以從本機輸出驗證，哪些需要實際的整合測試。
 
 ## 問題所在
 
-出貨這套「研究並產出報告」系統：
+設計一套研究並產出報告的系統。一位使用者要求代理協定的相關論文。系統搜尋論文目錄、把摘要工作委派出去、產生一份報告、回傳一個 UI 資源，並記錄這條穿過系統的路徑。
 
-- 使用者問：「摘要 2026 年 arXiv 上關於代理協定、被引用最多的三篇論文。」
-- 系統：透過 MCP 搜尋 arXiv；透過 A2A 把論文摘要委派給一個專門的寫作代理；彙總結果；把互動式報告渲染成一個 MCP Apps 的 `ui://` 資源；並把每一步都記進 OTel。
+這句話藏了好幾份互相獨立的契約：
 
-階段 13 的所有原語都登場了。這不是玩具 —— 2026 年由 Anthropic（Claude Research 產品）、OpenAI（搭配 Apps SDK 的 GPTs）與第三方出貨的生產級研究助理系統，形狀就是這樣。
+- 一份面向模型的工具 schema；
+- 一份無狀態的請求信封與伺服器探索契約；
+- 一個針對行動者、範圍與工具身分的閘道決策；
+- 一份長時間執行的操作契約；
+- 一份委派協定；
+- 一座宿主到應用之間的橋；
+- 追蹤脈絡的傳遞與輸出；
+- 一套可重用的作業程序。
+
+`code/main.py` 用普通的 Python 函式與字典把那些邊界留在看得見的地方。它不開傳輸、不連 arXiv、不做 OAuth、不呼叫 A2A 伺服器、不渲染 MCP App，也不輸出遙測。這讓控制流很好檢視，同時不會把一份模擬說成一個合規的服務。
 
 ## 核心概念
 
-### 架構
+### 目標架構
 
-```
-[user] -> [client] -> [gateway (OAuth 2.1 + RBAC)] -> [research MCP server]
-                                                      |
-                                                      +- MCP tool: arxiv_search (pure)
-                                                      +- MCP resource: notes://recent
-                                                      +- MCP prompt: /research_topic
-                                                      +- MCP task: generate_report (long)
-                                                      +- MCP Apps UI: ui://report/current
-                                                      +- A2A call: writer-agent (tasks/send)
-                                                      |
-                                                      +- OTel GenAI spans
-```
-
-### 追蹤階層
-
-```
-agent.invoke_agent
- ├── llm.chat (kick off)
- ├── mcp.call -> tools/call arxiv_search
- ├── mcp.call -> resources/read notes://recent
- ├── mcp.call -> prompts/get research_topic
- ├── a2a.tasks/send -> writer-agent
- │    └── task transitions (opaque internals)
- ├── mcp.call -> tools/call generate_report (task-augmented)
- │    └── tasks/status polling
- │    └── tasks/result (completed, returns ui:// resource)
- └── llm.chat (final synthesis)
+```mermaid
+flowchart LR
+  U[User] --> C[Agent client]
+  C --> G[Authorization gateway]
+  G --> M[Research MCP server]
+  M --> T[Search and report tools]
+  M --> R[Resources and prompts]
+  M --> Q[Task store]
+  M --> A[A2A client]
+  A --> W[Writer agent]
+  M --> UI[MCP App resource]
+  C --> O[Telemetry exporter]
+  G --> O
+  M --> O
+  A --> O
 ```
 
-單一個 trace id。每個 span 都帶著正確的 `gen_ai.*` 屬性。
+這個架構是把公開的協定模式在概念上組合起來。它不是在主張任何產品的私有內部長什麼樣子。
+
+### 目標追蹤
+
+```mermaid
+flowchart TD
+  I[agent.invoke_agent] --> SD[server/discover]
+  I --> L1[llm.chat]
+  I --> S[tools/call: arxiv_search]
+  I --> D[A2A SendMessage]
+  D --> X[Opaque writer-agent execution]
+  I --> G[tools/call: generate_report]
+  G --> K[tasks/get polling]
+  K --> V[completed Task with final result]
+  V --> UI[ui:// report resource]
+  I --> L2[llm.chat final synthesis]
+```
+
+在真實的實作裡，每一次跳轉都會傳遞追蹤脈絡。span 名稱與屬性必須遵循你所選的儀器化版本所支援的 OpenTelemetry 語意慣例。光是共用一個追蹤識別碼，證明不了父子關係正確、輸出成功，或後端有收下。
+
+### 現行的協定介面
+
+用現行協定定義的方法名稱，不要用你從舊草案記下來的名字：
+
+| 邊界 | 現行介面 | 這個總結專案模擬了什麼 |
+|---|---|---|
+| MCP 探索 | 必備的 `server/discover` | 一個直接回傳版本、能力與伺服器身分的函式 |
+| MCP 請求脈絡 | 每一個 `params._meta` 裡的版本、能力與客戶端身分 | 傳給每一次模擬呼叫的全新請求中繼資料 |
+| MCP 工具呼叫 | `tools/call` | 直接的 Python 函式派送 |
+| MCP 任務輪詢 | `io.modelcontextprotocol/tasks` 搭配 `tasks/get` | 一個 working 的把手，之後接一個帶著最終結果的已完成任務 |
+| A2A 委派 | gRPC 與 JSON-RPC 裡的 `SendMessage`；HTTP+JSON 裡的 `POST /message:send` | 一個巢狀 span，沒有遠端呼叫也沒有人造延遲 |
+| MCP App 呼叫伺服器工具 | `app.callServerTool({ name, arguments })` | 一段 HTML 字串，沒有活的橋 |
+| OAuth 授權 | 授權伺服器、受保護資源中繼資料、受眾與範圍驗證 | 靜態 token 查表與範圍成員檢查 |
+| OpenTelemetry | SDK、傳遞器、輸出器，以及收集器或後端 | 記憶體內的 span 字典 |
+
+協定名稱只是第一層。生產測試必須在真實的線路上操練序列化、認證失敗、取消、逾時、重試與版本相容性。
+
+### 無狀態的 MCP 改變了整合邊界
+
+修訂版 `2026-07-28` 移除了協定工作階段，以及 `initialize` / `notifications/initialized` 握手。它也移除了 `Mcp-Session-Id`。每一個請求都帶著這些具命名空間的 `_meta` 欄位：
+
+```json
+{
+  "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+  "io.modelcontextprotocol/clientCapabilities": {
+    "extensions": {
+      "io.modelcontextprotocol/tasks": {}
+    }
+  },
+  "io.modelcontextprotocol/clientInfo": {
+    "name": "capstone-client",
+    "version": "1.0.0"
+  }
+}
+```
+
+伺服器必須實作 `server/discover`。一般結果用 `resultType: "complete"`；一個任務把手用 `resultType: "task"`。每一份結果都應該在 `_meta.io.modelcontextprotocol/serverInfo` 裡標明是哪台伺服器。
+
+任務擴充有 `tasks/get`、`tasks/update` 與 `tasks/cancel`。一項工具可以先回傳 `resultType: "task"`；`tasks/get` 本身回傳的是 `resultType: "complete"`，而那個已完成的 `Task` 裡裝著最終結果。舊的 `tasks/result` 與 `tasks/list` 方法不屬於現行的擴充。客戶端必須在那個可能收到任務把手的同一個請求裡公告 `io.modelcontextprotocol/tasks`。如果它沒公告，伺服器會回 `-32021`，其中 `requiredCapabilities` 的形狀是那個缺少的客戶端能力物件，包含 `extensions.io.modelcontextprotocol/tasks`。
 
 ### 安全態勢
 
-- OAuth 2.1 + PKCE，並以資源指示子把受眾釘在閘道上。
-- 閘道持有上游憑證；使用者永遠看不到它們。
-- RBAC：`alice` 有 `research:read`、`research:write`，可以呼叫所有工具。`bob` 只有 `research:read`，不能呼叫 `generate_report`。
-- 釘選的描述清單：任何工具雜湊變動過的伺服器都會被丟掉。
-- 二選二規則的稽核：沒有任何工具同時湊齊不可信輸入、敏感資料與有後果的動作。
+預期中的部署走的是縱深防禦：
 
-### 渲染
+- OAuth 授權，並在客戶端類型有此要求時搭配 PKCE；
+- 為簽發的存取 token 綁定資源與受眾；
+- 檢查所請求之工具與範圍的閘道 RBAC；
+- 上游憑證放在模型看不見的地方；
+- 一份被釘選或被審查過的工具描述清單；
+- 針對不可信輸入、敏感資料與有後果的動作做二選二規則審查；
+- 一個執行沙箱，它的檔案系統、行程、網路、憑證與資源上限都在技能之外被強制執行。
 
-最後那個 `generate_report` task 回傳的是內容區塊，加上一個 `ui://report/current` 資源。客戶端的宿主（Claude Desktop 等）會在沙箱 iframe 中渲染那個互動式儀表板。儀表板裡有一份排序過的論文清單、引用次數，以及一個按鈕 —— 使用者點任何一篇論文，它就呼叫 `host.callTool('summarize_paper', {arxiv_id})`。
+這份示範只實作靜態 token、範圍檢查與描述雜湊。它對政策流程有用，對安全驗證沒有。
 
-### 打包
+### 技能是程序，不是傳輸
 
-整套東西以這樣的形式出貨：
+一項代理技能可以告訴執行環境怎麼執行這套研究流程、該預期哪些工具契約、要保存哪些證據，以及什麼時候停下來。它沒辦法讓一台 MCP 伺服器存在、建立 A2A 相容性、授予範圍，或造出一個沙箱。
 
-```
-research-system/
-  AGENTS.md                     # project conventions
-  skills/
-    run-research/
-      SKILL.md                  # the top-level workflow
-  servers/
-    research-mcp/               # the MCP server
-      pyproject.toml
-      src/
-  agents/
-    writer/                     # the A2A agent
-  gateway/
-    config.yaml                 # RBAC + pinned manifest
+```mermaid
+flowchart TD
+  RI[Repository instructions] --> H[Host runtime]
+  SK[Agent Skill procedure] --> H
+  H --> P[Invocation and permission policy]
+  P --> MCP[MCP client adapter]
+  P --> A2A[A2A client adapter]
+  P --> EX[Sandboxed executor]
 ```
 
-使用者以 `docker compose up` 部署。Claude Code、Cursor、Codex 與 opencode 的使用者，只要調用 `run-research` 這項技能就能驅動整套系統。
+當程序會引用隨附檔案時，就要出貨完整的技能目錄。這個較舊的總結專案裡那份扁平產物是一張課程藍圖，不是宿主會保住一個可攜套組的證據。第 24 到 27 課會建起並測試完整的套組生命週期。
 
-### 階段 13 各課各貢獻了什麼
+### 課程產物中繼資料是一個本地轉接器
 
-| 單元 | 總結專案用到了什麼 |
-|--------|------------------------|
-| 01-05 | 工具介面、供應商可攜性、平行呼叫、schema、lint |
-| 06-10 | MCP 原語、伺服器、客戶端、傳輸、資源 + 提示詞 |
-| 11-14 | Sampling、roots + elicitation、非同步 task、`ui://` 應用 |
-| 15-17 | 工具下毒、OAuth 2.1、閘道 + 登錄 |
-| 18 | A2A 子代理委派 |
-| 19 | OTel GenAI 追蹤 |
-| 20 | LLM 層的路由閘道 |
-| 21 | SKILL.md + AGENTS.md 打包 |
+課程目錄與安裝程式認得名為 `skill-*.md` 的扁平檔案，但那是一項儲存庫慣例，不是可攜的 Agent Skills 套件契約。它們那個最小的 frontmatter 解析器只讀最上層的鍵。因此這一課把可攜的身分欄位與課程目錄欄位放在同一層：
+
+```yaml
+---
+name: ecosystem-blueprint
+description: Produce a full Phase 13 ecosystem architecture for a product need.
+version: "1.0.0"
+phase: "13"
+lesson: "23"
+tags: [mcp, capstone, ecosystem, architecture, a2a, otel]
+---
+```
+
+`name` 與 `description` 是可攜的身分欄位。`version`、`phase`、`lesson` 與 `tags` 是課程專用的目錄擴充。課程解析器要求 `tags` 是一個行內清單，`--tag capstone` 才配得上。
+
+一個可攜的目錄型技能可以用選配的 `metadata` 映射來裝值為字串的擴充資料。這不代表 `metadata` 跟這個儲存庫的目錄 schema 可以互換。如果這份扁平檔案把 `version` 或 `tags` 縮排到 `metadata` 底下，那個最小解析器會跳過那些縮排的鍵，目錄會記下一個空的版本，標籤過濾也找不到這份產物。生產環境的宿主應該用安全的 YAML 解析器，並驗證他們自己寫進文件的 schema。
+
+### 模擬與生產的對照
+
+| 層 | `code/main.py` | 生產環境的替代品 | 必要的證據 |
+|---|---|---|---|
+| 探索 | `server_discover()` 加上靜態的 `TOOLS` | `server/discover`，後面接會用快取的 `tools/list` | 線路逐字紀錄、確定的排序，以及 schema 驗證 |
+| 認證 | 以 token 為鍵的字典 | OAuth 授權與資源伺服器驗證 | 簽發者、受眾、範圍、到期與失敗測試 |
+| 授權 | 範圍成員檢查 | 綁定行動者、工具、目標與租戶的閘道政策 | 放行與拒絕的稽核案例 |
+| 搜尋 | 靜態的論文素材 | 搜尋 API 或 MCP 伺服器 | 來源出處、排序與錯誤測試 |
+| 任務 | 本機把手加上立即的 `tasks/get` | 持久化的 `io.modelcontextprotocol/tasks` 儲存，帶 `tasks/get`、`tasks/update`、`tasks/cancel` 與 TTL | 狀態轉換、輸入、取消與復原測試 |
+| 委派 | sleep 加上一個巢狀 span | A2A 客戶端與遠端 Agent Card | 契約、逾時、重試與不透明性測試 |
+| 應用 | HTML 字串與 URI | MCP Apps 資源與 `App` 橋 | CSP、權限、工具呼叫與瀏覽器測試 |
+| 遙測 | 記憶體內清單 | OTel SDK 與輸出器 | 收集器收件與 trace-parent 斷言 |
+| 沙箱 | 沒有 | 由宿主強制的隔離執行器 | 逃逸、外連、機密與資源上限測試 |
+
+這張表就是交接邊界。本機跑出綠燈，驗證的只有那份模擬。
+
+### 階段 13 地圖
+
+| 單元 | 貢獻了什麼 |
+|---|---|
+| 01-05 | 工具介面、呼叫、schema、有結構的結果，以及決定性的驗證 |
+| 06-14 | 無狀態的 MCP 請求信封、探索、傳輸、資源、提示詞、擴充與 Apps |
+| 15-18 | 下毒防禦、OAuth、閘道、登錄，以及生產環境的認證 |
+| 19 | A2A 訊息與任務委派 |
+| 20 | OpenTelemetry GenAI 追蹤設計 |
+| 21 | 模型供應商路由 |
+| 22 | 可攜的技能契約與執行環境邊界 |
 
 ```figure
 t3-capstone-chain
 ```
 
+## 動手實作
+
+跑這套行程內的框架：
+
+```bash
+cd phases/13-tools-and-protocols/23-capstone-tool-ecosystem
+python3 code/main.py
+```
+
+檢視五件事：
+
+1. `server/discover` 公告修訂版 `2026-07-28` 與 Tasks 擴充。
+2. Alice 可以讀取並產出報告，而 Bob 那個需要寫入範圍的呼叫被拒絕。
+3. 同一次編排執行裡的每一個本機 span 都共用同一個追蹤識別碼，並記下父 span 識別碼。
+4. 報告一開始是一個任務把手。`tasks/get` 回傳一個已完成的任務，它的最終結果裡有文字與一個 `ui://` 參照。
+5. 被委派的寫作者維持不透明，因為編排者只記錄那個邊界 span。
+6. 沒有任何輸出宣稱發生過網路連線、OAuth 交換、收集器輸出、瀏覽器渲染或沙箱執行。
+
+這支腳本會跑兩次，所以它會產出兩條根追蹤。稽核紀錄是行程本地的，下一次執行就重置。
+
 ## 框架應用
 
-`code/main.py` 把前面各課的模式縫成一份可執行的示範。全部 stdlib、全部在同一個行程內，好讓你從頭讀到尾。它把「研究並產出報告」這個情境的完整流程跑一遍：與閘道握手、模擬 OAuth 2.1、合併 tools/list、把 generate_report 當成 task、對寫作代理發 A2A 呼叫、回傳 ui:// 資源、吐出 OTel span。
+一次升級一層：
 
-要看的地方有：
+1. 把 `server_discover()` 與那份靜態工具清單，換成真正的 `server/discover` 與 `tools/list` 呼叫。在每一個請求裡送出版本、身分與能力。
+2. 把靜態 token 換成一台授權伺服器與受保護資源驗證。
+3. 實作 `io.modelcontextprotocol/tasks` 擴充，並測試 `tasks/get`、`tasks/update`、`tasks/cancel`、逾時、TTL 與重啟復原。不要加 `tasks/result` 或 `tasks/list`。
+4. 把委派的樁換成一個真正的 A2A 客戶端，它會解析 Agent Card 並送出訊息。
+5. 用官方 SDK 做出那個 App，並透過 `app.callServerTool` 呼叫伺服器工具。
+6. 把 span 輸出到一台測試用收集器，並在接收端斷言父子關係。
+7. 讓工具與腳本的執行跑在第 26 課的沙箱契約裡。
+8. 把這套程序打包成一個完整的目錄套組，並通過第 27 課的發布關卡。
 
-- 橫跨每一次跳轉的單一個 trace id。
-- 閘道政策擋下第二位使用者的寫入。
-- Task 生命週期走過 working → completed，並同時回傳文字與 ui:// 內容。
-- A2A 呼叫的內部狀態對編排者是不透明的。
-- AGENTS.md 與 SKILL.md 是另一個代理重現這套工作流程時唯一需要的檔案。
+每一次升級都需要一個跨過那道新邊界的整合測試。當線路變成真的之後，不要把較低層的政策測試刪掉。
 
 ## 產出交付
 
-這一課產出 `outputs/skill-ecosystem-blueprint.md`。給定一項產品需求（研究、摘要、自動化），這項技能會產出完整的架構：用哪些 MCP 原語、哪些閘道控制、哪些 A2A 呼叫、哪些遙測、以及怎麼打包。
+本單元會產出 `outputs/skill-ecosystem-blueprint.md`，一份沿用舊格式的單檔課程產物。它要的是一頁架構，涵蓋原語、安全、委派、遙測、打包，以及最難的那項維運風險。它最上層的目錄欄位，會被這個儲存庫真正的目錄與安裝程式解析器吃到。
+
+因為它不是一個目錄套組，它裝不了參考資料、腳本、素材或評估素材。當你要在這門課之外發布一個可重用的技能時，請用第 22 課與第 24 到 27 課的套件格式。
 
 ## 練習
 
-1. 跑一次 `code/main.py`。留意那個單一的 trace id 與 span 如何巢狀。數一數這份示範觸及了階段 13 的多少個原語。
-
-2. 擴充這份示範：加上第二台後端 MCP 伺服器（例如 `bibliography`），並確認閘道把它的工具合併進同一個命名空間。
-
-3. 把那個假的 A2A 寫作代理換成一個真正跑在子行程上的。用單元 19 的測試框架。
-
-4. 在編排者與 LLM 之間的路由閘道裡，加上一道 PII 遮蔽步驟。確認使用者查詢中的電子郵件會被清掉。
-
-5. 為一位將要維護這套系統的隊友寫一份 AGENTS.md。它應該五分鐘之內讀得完，並給他們在 Cursor 或 Codex 中驅動這個總結專案所需的一切。
+1. 跑一次 `code/main.py`。把輸出真正證明了的事實，跟仍然需要整合證據的生產主張分開。
+2. 加上第二個靜態後端，並定義兩個同名工具的衝突規則。然後把兩份清單都換成真正的 `tools/list` 呼叫。
+3. 把寫作者的樁換成一台 A2A 測試伺服器。記錄 Agent Card、訊息請求、逾時路徑與回傳的產物。
+4. 加上一個能撐過行程重啟的任務儲存。證明客戶端可以用 `tasks/get` 續接、遵守 `pollIntervalMs`，並且不靠 `tasks/result` 就讀到已完成任務的最終結果。
+5. 做一個最小的 MCP App，並在瀏覽器裡用一份嚴格的 CSP 與明確的權限驗證 `app.callServerTool`。
+6. 把模擬出來的 span 透過 OTel SDK 輸出到一台本機收集器。斷言收件、追蹤識別碼、父子關係與錯誤狀態。
+7. 為全儲存庫的維護規則寫一份 `AGENTS.md`，再為那套可重用的研究程序寫一個獨立的技能套組。說明為什麼這兩份檔案都不授予工具權限。
 
 ## 關鍵術語
 
 | 術語 | 大家怎麼說 | 實際上是什麼 |
-|------|----------------|------------------------|
-| 總結專案 | 「階段 13 的整合示範」 | 用上每一個原語的端到端系統 |
-| 研究並產出報告 | 「那個情境」 | 搜尋、摘要、渲染這套模式 |
-| 生態系 | 「所有零件湊在一起」 | 伺服器 + 客戶端 + 閘道 + 子代理 + 遙測 + 打包 |
-| 追蹤階層 | 「單一個 trace id」 | 每一次跳轉的 span 共用同一條追蹤；父子關係靠 span id |
-| 閘道簽發的 token | 「遞移式認證」 | 客戶端只看得到閘道的 token；閘道持有上游憑證 |
-| 合併命名空間 | 「所有工具攤成一份清單」 | 在閘道做多伺服器合併，衝突時加前綴 |
-| 不透明邊界 | 「A2A 呼叫藏住內部」 | 子代理的推理對編排者不可見 |
-| 三層堆疊 | 「AGENTS.md + SKILL.md + MCP」 | 專案上下文 + 工作流程 + 工具 |
-| 縱深防禦 | 「多層安全」 | 釘選雜湊、OAuth、RBAC、二選二規則、稽核日誌 |
-| 規格合規矩陣 | 「我們出貨的東西對上規格的要求」 | 把交付物對映到 2025-11-25 各項要求的檢查清單 |
+|---|---|---|
+| 總結專案 | 「全部接在一起」 | 一次分階段的整合，其中被模擬的邊界與真實的邊界始終標得清清楚楚 |
+| 協定形狀的模擬 | 「這基本上就是 MCP」 | 長得像某個協定、但沒有實作它線路契約的本機資料與呼叫 |
+| Tasks 擴充 | 「很長的工具呼叫」 | 一套選配的 `io.modelcontextprotocol/tasks` 生命週期，帶持久身分、輪詢、客戶端輸入、最終結果與取消語意 |
+| 不透明邊界 | 「那件事交給另一個代理」 | 呼叫方看到的是宣告好的介面與產物，不是私有的推理或內部狀態 |
+| 執行環境轉接器 | 「技能整合」 | 把可攜的程序對映到發現、叫用、工具、政策與上下文的宿主程式碼 |
+| 整合證據 | 「它過了」 | 一份逐字紀錄、產物，或接收端的觀察，能證明那道真實邊界真的被跨過 |
 
 ## 延伸閱讀
 
-- [MCP — Specification 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25) —— 整併過的參考
-- [MCP blog — 2026 roadmap](https://blog.modelcontextprotocol.io/posts/2026-mcp-roadmap/) —— 這份協定要往哪裡走
-- [a2a-protocol.org](https://a2a-protocol.org/latest/) —— A2A v1.0 參考
-- [OpenTelemetry — GenAI semconv](https://opentelemetry.io/docs/specs/semconv/gen-ai/) —— 權威的追蹤慣例
-- [Anthropic — Claude Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview) —— 生產級代理執行環境的模式
+- [MCP specification 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28)，無狀態請求、探索、工具、授權與傳輸行為。
+- [MCP 2026-07-28 key changes](https://modelcontextprotocol.io/specification/2026-07-28/changelog)，工作階段移除、每請求中繼資料、MRTR、擴充與棄用。
+- [MCP Tasks extension](https://tasks.extensions.modelcontextprotocol.io/specification/draft/tasks)，`tasks/get`、`tasks/update`、`tasks/cancel`，以及由終態任務承載的最終結果。
+- [MCP Apps SDK](https://github.com/modelcontextprotocol/ext-apps/blob/main/docs/overview.md)，`App` 與 `app.callServerTool`。
+- [A2A protocol](https://a2a-protocol.org/latest/)，Agent Card、訊息傳遞、任務、產物與傳輸繫結。
+- [OpenTelemetry GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/)，追蹤與屬性慣例。
+- [Agent Skills specification](https://agentskills.io/specification)，程序層所用的可攜套件契約。
