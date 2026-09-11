@@ -6,6 +6,11 @@
  * `<out>/<source>/index.html` for each entry, making /catalog, /glossary,
  * /path, /roadmap and /about resolve the way they do on Vercel.
  *
+ * Two rewrites target serverless functions (/lesson and /certification are
+ * server-rendered on Vercel to inject SEO metadata). Pages runs no functions,
+ * so those fall back to the very template the function renders — the page
+ * works, only the prerendered <head> is missing.
+ *
  * A redirect stub, not a copy: every page in site/ references its assets
  * relatively ("data.js", "style.css"), so a copy one directory down would
  * resolve them against /catalog/ and 404.
@@ -30,6 +35,14 @@ const stub = (target) => `<!doctype html>
 <p>Redirecting to <a href="${target}">${target}</a>…</p>
 `;
 
+// Serverless destinations have no runtime on Pages; each maps to the static
+// template its function renders. An /api/ destination missing from this table
+// is skipped rather than pointed at a URL that would 404.
+const API_STATIC_FALLBACK = {
+  '/api/lesson': '/lesson.html',
+  '/api/certification': '/certification.html',
+};
+
 const { rewrites = [] } = JSON.parse(
   readFileSync(join(ROOT, 'vercel.json'), 'utf8')
 );
@@ -42,13 +55,17 @@ for (const { source, destination, has } of rewrites) {
   if (has) continue;
   const slug = source.replace(/^\/+|\/+$/g, '');
   if (!slug || !destination) continue;
+  const staticDest = destination.startsWith('/api/')
+    ? API_STATIC_FALLBACK[destination.split('?')[0]]
+    : destination;
+  if (!staticDest) continue;
   // Climb back out of the alias directory so the stub's target stays
   // relative, and the site keeps working under a /<repo>/ base path.
-  const target = '../'.repeat(slug.split('/').length) + destination.replace(/^\/+/, '');
+  const target = '../'.repeat(slug.split('/').length) + staticDest.replace(/^\/+/, '');
   const dir = join(OUT, slug);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, 'index.html'), stub(target), 'utf8');
-  console.log(`   /${slug} -> ${destination}`);
+  console.log(`   /${slug} -> ${staticDest}${staticDest === destination ? '' : ` (static fallback for ${destination})`}`);
   count++;
 }
 console.log(`wrote ${count} clean-URL alias${count === 1 ? '' : 'es'}`);

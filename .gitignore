@@ -82,6 +82,7 @@ site/certification-seo.json
 
 # Clean-URL redirect stubs generated per-deploy by scripts/pages_aliases.mjs
 # from vercel.json's rewrites. Pages-only; Vercel rewrites natively.
+site/lesson/
 site/glossary/
 site/catalog/
 site/certifications/
