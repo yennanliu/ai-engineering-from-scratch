@@ -1,0 +1,42 @@
+# Progress
+
+## 20260901
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/08-fine-tuning-lora
+
+
+## 20260831
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/07-advanced-rag
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/08-fine-tuning-lora
+
+
+
+## 20260830
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/05-context-engineering
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/06-rag
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/07-advanced-rag
+
+## 20260829
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/04-embeddings
+
+
+## 20260827
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/01-math-foundations/09-information-theory
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/01-prompt-engineering
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/02-few-shot-cot
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/03-structured-outputs
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/11-llm-engineering/04-embeddings
+
+
+
+
+## 20260826
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/01-math-foundations/07-bayes-theorem
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/01-math-foundations/08-optimization
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/01-math-foundations/09-information-theory
+
+
+## 20260825
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/01-math-foundations/01-linear-algebra-intuition
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/01-math-foundations/03-matrix-transformations
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/01-math-foundations/06-probability-and-distributions
+- https://yennj12.js.org/ai-engineering-from-scratch/lesson.html?path=phases/01-math-foundations/07-bayes-theorem
