@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build translated README files from the canonical English README.
 
-The README is mostly structure: a banner, badges, a 584-row lesson table, and
+The README is mostly structure: a banner, badges, the full lesson table, and
 HTML blocks. Only prose and headings are translated; every other byte is kept
 exactly, so a translation can never break the layout, the lesson table, or a
 link. The generator works by replacing only the translated line-spans in a copy
@@ -100,6 +100,9 @@ def spans(text):
 # paths that already point upward. Two capture groups: the opener and the target.
 _HTML_LINK = re.compile(r'((?:href|src)=")(?!https?://|/|#|mailto:|data:|\.\.?/)([^"]+)')
 _MD_LINK = re.compile(r'(\]\()(?!https?://|/|#|mailto:|data:|\.\.?/)([^)]+)')
+_HTML_ALT = re.compile(r'(\balt=")([^"]+)(")')
+_HTML_TEXT = re.compile(r'>([^<>]+)<')
+_PROTECTED_HTML_TEXT = frozenset({'Become a sponsor'})
 
 
 def localize_links(md):
@@ -123,6 +126,22 @@ def localize_links(md):
     return "\n".join(out)
 
 
+def translate_html(line, table):
+    """Translate mapped alt text and visible HTML text without changing markup."""
+    line = _HTML_ALT.sub(
+        lambda match: match.group(1) + table.get(match.group(2), match.group(2)) + match.group(3),
+        line,
+    )
+
+    def replace_text(match):
+        text = match.group(1)
+        if text in _PROTECTED_HTML_TEXT:
+            return match.group(0)
+        return '>' + table.get(text, text) + '<'
+
+    return _HTML_TEXT.sub(replace_text, line)
+
+
 def render(text, lang, translations):
     table = translations.get(lang, {})
     lines = text.split("\n")
@@ -133,6 +152,13 @@ def render(text, lang, translations):
             continue
         replacement = [sp["prefix"] + ln for ln in t.split("\n")]
         lines[sp["start"]:sp["end"]] = replacement
+    in_code = False
+    for index, line in enumerate(lines):
+        if FENCE.match(line):
+            in_code = not in_code
+            continue
+        if not in_code:
+            lines[index] = translate_html(table.get(line, line), table)
     return "\n".join(lines)
 
 

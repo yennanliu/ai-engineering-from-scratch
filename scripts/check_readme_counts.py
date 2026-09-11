@@ -5,7 +5,7 @@ Requires Python 3.10+. Stdlib only.
 
 catalog.json is filesystem-truth (rebuilt by scripts/build_catalog.py in CI,
 or built ephemerally when the file is absent locally). The README, however,
-sprinkles hardcoded counts ("428 lessons", "373 skills, 99 prompts, ...") that
+sprinkles hardcoded counts (lesson totals, skill totals, prompt totals) that
 drift every time the curriculum grows or shrinks. This script pins each
 hardcoded count to a field in catalog.json's `totals` block and fails when they
 disagree.

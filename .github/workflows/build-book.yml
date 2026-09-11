@@ -39,7 +39,10 @@ jobs:
           # it xelatex drops every CJK glyph and emits a book of blank pages,
           # which still exits 0 -- so the font is a build requirement, not a
           # nicety. build_book.py's pick_font falls back to no CJKmainfont.
-          sudo apt-get install -y -q texlive-xetex texlive-fonts-recommended fonts-dejavu fonts-noto-cjk librsvg2-bin
+          sudo apt-get install -y -q texlive-xetex texlive-fonts-recommended fonts-dejavu fonts-noto-cjk librsvg2-bin poppler-utils
+
+      - name: Validate book rendering
+        run: python3 scripts/test_book_rendering.py
 
       - name: Build EPUB volumes
         if: github.event_name == 'push'
