@@ -14,6 +14,15 @@ on:
       - "site/**"
       - "vercel.json"
       - "scripts/pages_aliases.mjs"
+      - "scripts/test_pages_aliases.mjs"
+      - ".github/workflows/pages.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "vercel.json"
+      - "scripts/pages_aliases.mjs"
+      - "scripts/test_pages_aliases.mjs"
+      - "site/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -29,9 +38,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Pages has no rewrite engine, so vercel.json's clean URLs exist only as the
+  # stubs pages_aliases.mjs writes. Nothing else checks them: a stub aimed at a
+  # missing file publishes a 404 at a URL the whole site links to.
+  validate:
+    name: clean-URL aliases resolve
+    runs-on: ubuntu-latest
+    # Reads only; the workflow-level pages/id-token grants belong to deploy.
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: every alias stub points at a file that ships
+        run: node --test scripts/test_pages_aliases.mjs
+
   deploy:
     name: build + deploy
     runs-on: ubuntu-latest
+    needs: validate
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}

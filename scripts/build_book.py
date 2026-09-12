@@ -60,7 +60,7 @@ def phase_title(phase):
 def urls_for(phase, lesson):
     rel = f"phases/{phase}/{lesson}"
     return {
-        "web": f"{SITE}/lesson.html?path={rel}",
+        "web": f"{SITE}/lesson?path={rel}",
         "code": f"{REPO}/tree/main/{rel}/code",
         "repo": f"{REPO}/tree/main/{rel}",
     }
@@ -496,6 +496,7 @@ def render(vol, md, chapters, pdf=False):
         "pandoc", str(meta), str(md),
         "-o", str(epub),
         "--from", "markdown+fenced_divs",
+        "--lua-filter", str(ROOT / "book" / "literal-tokens.lua"),
         "--toc", "--toc-depth=1",
         "--top-level-division=chapter",
         "--css", str(ROOT / "book" / "epub.css"),
@@ -528,7 +529,9 @@ def render(vol, md, chapters, pdf=False):
         cmd_pdf = [
             "pandoc", str(md),
             "-o", str(pdf_out),
-            "--from", "markdown+fenced_divs",
+            "--from", "markdown+fenced_divs+autolink_bare_uris",
+            "--lua-filter", str(ROOT / "book" / "literal-tokens.lua"),
+            "--lua-filter", str(ROOT / "book" / "pdf-layout.lua"),
             "--toc", "--toc-depth=1",
             "--top-level-division=chapter",
             "--pdf-engine=xelatex",
@@ -567,11 +570,8 @@ def render(vol, md, chapters, pdf=False):
             cjk = pick_font(cjk_candidates[BOOK_LANG])
             if cjk:
                 cmd_pdf += ["-V", f"CJKmainfont={cjk}"]
-        try:
-            subprocess.run(cmd_pdf, check=True, cwd=ROOT)
-            results.append(pdf_out)
-        except subprocess.CalledProcessError:
-            print(f"warning: PDF render failed for {vol['slug']} (non-fatal)", file=sys.stderr)
+        subprocess.run(cmd_pdf, check=True, cwd=ROOT)
+        results.append(pdf_out)
     return results
 
 

@@ -14,8 +14,21 @@ To add a language: add its code here and to the README language bar; run
 
 # --- exact English block keys (must match build_readme_i18n.py normalization) ---
 HERO1 = "**84% of students already use AI tools. Only 18% feel prepared to use them professionally.** This curriculum closes that gap."
-HERO2 = "503 lessons. 20 phases. ~320 hours. Python, TypeScript, Rust, Julia. Every lesson ships a reusable artifact: a prompt, a skill, an agent, an MCP server. Free, open source, MIT."
+HERO2 = "523 lessons. 20 phases. ~342 hours. Python, TypeScript, Rust, Julia. Every lesson ships a reusable artifact: a prompt, a skill, an agent, an MCP server. Free, open source, MIT."
 HERO3 = "You don't just learn AI. You build it. End-to-end. By hand."
+H_START_BUILD = "Start here: choose what you want to build"
+START_BUILD = "You do not need to scan 523 lessons before beginning. Pick one goal. Each link opens the same curriculum on GitHub or the website, and both versions use the same lesson code."
+NOT_SURE = "Not sure where you fit? Use the [`start-learning` placement tutor](skills/start-learning/SKILL.md) or the [website prerequisites guide](https://aiengineeringfromscratch.com/prereqs.html)."
+LEARNING_PATHS = "Compare four core domains and six career routes in the [AI Engineering Learning Paths](https://aiengineeringfromscratch.com/learning-paths.html)."
+H_SPONSORS = "Sponsors"
+SPONSOR_ALT = "SerpApi. Web Search API for your AI apps. Available in Markdown and JSON for any integration."
+SPONSOR_THANKS = "Thank you to our sponsors."
+SPONSOR_SUPPORT = "Your support keeps every lesson free and open source."
+SEE_SUPPORTERS = "See all supporters"
+H_USE_LESSON = "Use every lesson the same way"
+LESSON_COMMANDS = "Commands in lesson pages are paths from the repository root unless the lesson explicitly says to change directories. If a lesson offers several languages, run the implementation for the language you are learning."
+H_CLONE_EVIDENCE = "Clone it and produce your first evidence"
+PREFLIGHT = "The preflight separates requirements needed now from tools needed later. Every required failure includes the detected reason and a corrective command. The second command is a dependency-free lesson and ends by showing that a matrix times a vector is the operation inside a neural network layer. Save that terminal output as your first evidence."
 WAYS = "Three ways in. Pick one."
 LICENSE_LINE = "MIT. Use it however you want — fork it, teach it, sell it, ship it. Attribution appreciated, not required."
 MAINTAINED = "Maintained by [Rohit Ghumare](https://github.com/rohitg00) and the community."
@@ -35,6 +48,8 @@ H_CONTRIB = "Contributing"
 H_SPONSOR = "Sponsor the work"
 H_STAR = "Star history"
 H_LICENSE = "License"
+SPONSOR_CLOSING = "Free, MIT-licensed, 523 lessons. Thank you to the sponsors and backers who make the work possible. [See all sponsors and backers](BACKERS.md)."
+SPONSOR_INVITE = "Want to support the work? See [sponsorship options](SPONSORS.md), including [hardware sponsorships](SPONSORS.md#hardware-lab-partner), or [sponsor on GitHub](https://github.com/sponsors/rohitg00)."
 
 README_NOTE = {
     "es": '<p align="center"><sub>Traducción de la comunidad. El <a href="../../README.md">inglés es la versión canónica</a> · <a href="https://aiengineeringfromscratch.com">aiengineeringfromscratch.com</a></sub></p>',
@@ -54,7 +69,7 @@ README_NOTE = {
 TRANSLATIONS = {
     "es": {
         HERO1: "**El 84 % de los estudiantes ya usa herramientas de IA. Solo el 18 % se siente preparado para usarlas de forma profesional.** Este plan de estudios cierra esa brecha.",
-        HERO2: "503 lecciones. 20 fases. ~320 horas. Python, TypeScript, Rust, Julia. Cada lección entrega un artefacto reutilizable: un prompt, una skill, un agente, un servidor MCP. Gratis, código abierto, MIT.",
+        HERO2: "523 lecciones. 20 fases. ~342 horas. Python, TypeScript, Rust, Julia. Cada lección entrega un artefacto reutilizable: un prompt, una skill, un agente, un servidor MCP. Gratis, código abierto, MIT.",
         HERO3: "No solo aprendes IA. La construyes. De principio a fin. A mano.",
         WAYS: "Tres formas de empezar. Elige una.",
         LICENSE_LINE: "MIT. Úsalo como quieras: bifúrcalo, enséñalo, véndelo, publícalo. La atribución se agradece, pero no es obligatoria.",
@@ -67,7 +82,7 @@ TRANSLATIONS = {
     },
     "fr": {
         HERO1: "**84 % des étudiants utilisent déjà des outils d'IA. Seuls 18 % se sentent prêts à les utiliser de façon professionnelle.** Ce cursus comble cet écart.",
-        HERO2: "503 leçons. 20 phases. ~320 heures. Python, TypeScript, Rust, Julia. Chaque leçon livre un artefact réutilisable : un prompt, une skill, un agent, un serveur MCP. Gratuit, open source, MIT.",
+        HERO2: "523 leçons. 20 phases. ~342 heures. Python, TypeScript, Rust, Julia. Chaque leçon livre un artefact réutilisable : un prompt, une skill, un agent, un serveur MCP. Gratuit, open source, MIT.",
         HERO3: "Vous n'apprenez pas seulement l'IA. Vous la construisez. De bout en bout. À la main.",
         WAYS: "Trois façons de commencer. Choisissez-en une.",
         LICENSE_LINE: "MIT. Utilisez-le comme vous voulez : forkez-le, enseignez-le, vendez-le, publiez-le. L'attribution est appréciée, mais pas obligatoire.",
@@ -80,8 +95,31 @@ TRANSLATIONS = {
     },
     "pt": {
         HERO1: "**84% dos estudantes já usam ferramentas de IA. Apenas 18% se sentem preparados para usá-las profissionalmente.** Este currículo fecha essa lacuna.",
-        HERO2: "503 lições. 20 fases. ~320 horas. Python, TypeScript, Rust, Julia. Cada lição entrega um artefato reutilizável: um prompt, uma skill, um agente, um servidor MCP. Grátis, código aberto, MIT.",
+        HERO2: "523 lições. 20 fases. ~342 horas. Python, TypeScript, Rust, Julia. Cada lição entrega um artefato reutilizável: um prompt, uma skill, um agente, um servidor MCP. Grátis, código aberto, MIT.",
         HERO3: "Você não apenas aprende IA. Você a constrói. Do início ao fim. À mão.",
+        H_START_BUILD: "Comece aqui: escolha o que você quer construir",
+        START_BUILD: "Você não precisa percorrer 523 lições antes de começar. Escolha um objetivo. Cada link abre o mesmo currículo no GitHub ou no site, e as duas versões usam o mesmo código das lições.",
+        "| Your goal | Learn on GitHub | Learn on the website |": "| Seu objetivo | Aprenda no GitHub | Aprenda no site |",
+        "| I am new and want the complete foundation | [Phase 0: Setup and Tooling](phases/00-setup-and-tooling/) | [Dev Environment](https://aiengineeringfromscratch.com/lesson?path=phases/00-setup-and-tooling/01-dev-environment) |": "| Estou começando e quero a base completa | [Fase 0: Configuração e ferramentas](phases/00-setup-and-tooling/) | [Ambiente de desenvolvimento](https://aiengineeringfromscratch.com/lesson?path=phases/00-setup-and-tooling/01-dev-environment) |",
+        "| I know Python and want math plus ML foundations | [Phase 1: Math Foundations](phases/01-math-foundations/) | [Linear Algebra Intuition](https://aiengineeringfromscratch.com/lesson?path=phases/01-math-foundations/01-linear-algebra-intuition) |": "| Sei Python e quero fundamentos de matemática e ML | [Fase 1: Fundamentos matemáticos](phases/01-math-foundations/) | [Intuição de álgebra linear](https://aiengineeringfromscratch.com/lesson?path=phases/01-math-foundations/01-linear-algebra-intuition) |",
+        "| I want to build production LLM applications | [Phase 11: LLM Engineering](phases/11-llm-engineering/) | [Prompt Engineering](https://aiengineeringfromscratch.com/lesson?path=phases/11-llm-engineering/01-prompt-engineering) |": "| Quero criar aplicações de LLM para produção | [Fase 11: Engenharia de LLM](phases/11-llm-engineering/) | [Engenharia de prompts](https://aiengineeringfromscratch.com/lesson?path=phases/11-llm-engineering/01-prompt-engineering) |",
+        "| I want to build agents | [Phase 14: Agent Engineering](phases/14-agent-engineering/) | [The Agent Loop](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/01-the-agent-loop) |": "| Quero criar agentes | [Fase 14: Engenharia de agentes](phases/14-agent-engineering/) | [O loop do agente](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/01-the-agent-loop) |",
+        "| I want to use coding agents on real repositories | [Agent-Assisted Engineering path](learning-paths/using-coding-agents.json) | [Agent-Assisted Engineering](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/31-agent-workbench-why-models-fail&learningPath=using-coding-agents) |": "| Quero usar agentes de código em repositórios reais | [Trilha de engenharia assistida por agentes](learning-paths/using-coding-agents.json) | [Engenharia assistida por agentes](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/31-agent-workbench-why-models-fail&learningPath=using-coding-agents) |",
+        "| I want to shape the right build before implementation | [Product Judgment and Delivery path](learning-paths/shaping-the-build.json) | [Product Judgment and Delivery](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/47-outcomes-before-output&learningPath=shaping-the-build) |": "| Quero definir a solução certa antes de implementar | [Trilha de julgamento de produto e entrega](learning-paths/shaping-the-build.json) | [Julgamento de produto e entrega](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/47-outcomes-before-output&learningPath=shaping-the-build) |",
+        "| I want to build with Model Context Protocol (MCP) | [Model Context Protocol (MCP) route](phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Model Context Protocol (MCP) path](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |": "| Quero desenvolver com o Model Context Protocol (MCP) | [Rota do Model Context Protocol (MCP)](phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Trilha do Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |",
+        "| I want to write and ship Agent Skills | [Focused Agent Skills route](phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills path](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |": "| Quero escrever e publicar Agent Skills | [Rota focada de Agent Skills](phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Trilha de Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |",
+        "| I want to prepare for a Claude certification | [Certification onboarding](certifications/claude/GETTING_STARTED.md) | [Certification Academy](https://aiengineeringfromscratch.com/certifications.html) |": "| Quero me preparar para uma certificação Claude | [Introdução à certificação](certifications/claude/GETTING_STARTED.md) | [Academia de certificação](https://aiengineeringfromscratch.com/certifications.html) |",
+        NOT_SURE: "Não sabe onde se encaixa? Use o [tutor de nivelamento `start-learning`](skills/start-learning/SKILL.md) ou o [guia de pré-requisitos do site](https://aiengineeringfromscratch.com/prereqs.html).",
+        LEARNING_PATHS: "Compare quatro domínios centrais e seis rotas de carreira nas [Trilhas de aprendizagem em Engenharia de IA](https://aiengineeringfromscratch.com/learning-paths.html).",
+        H_USE_LESSON: "Use todas as lições da mesma maneira",
+        "1. **Read** `docs/en.md` and explain the core idea in your own words.": "1. **Leia** `docs/en.md` e explique a ideia central com suas próprias palavras.",
+        "2. **Type and build** the important code instead of treating the code block as decoration.": "2. **Digite e construa** o código importante em vez de tratar o bloco de código como decoração.",
+        "3. **Run** the lesson command from the repository root, the directory containing `README.md` and `phases/`.": "3. **Execute** o comando da lição na raiz do repositório, o diretório que contém `README.md` e `phases/`.",
+        "4. **Keep evidence**: the command, working directory, exit code, meaningful output, and the artifact you changed or produced.": "4. **Guarde evidências**: o comando, o diretório de trabalho, o código de saída, a saída relevante e o artefato alterado ou produzido.",
+        "5. **Continue** only when you can explain the output and make one small change without guessing.": "5. **Continue** somente quando conseguir explicar a saída e fazer uma pequena mudança sem adivinhar.",
+        LESSON_COMMANDS: "Os comandos nas páginas das lições usam caminhos a partir da raiz do repositório, salvo quando a lição manda mudar de diretório. Se houver várias linguagens, execute a implementação da linguagem que você está aprendendo.",
+        H_CLONE_EVIDENCE: "Clone o repositório e produza sua primeira evidência",
+        PREFLIGHT: "A verificação inicial separa os requisitos necessários agora das ferramentas necessárias depois. Cada falha obrigatória mostra a causa detectada e um comando corretivo. O segundo comando executa uma lição sem dependências e termina mostrando que multiplicar uma matriz por um vetor é a operação dentro de uma camada de rede neural. Guarde essa saída do terminal como sua primeira evidência.",
         WAYS: "Três formas de começar. Escolha uma.",
         LICENSE_LINE: "MIT. Use como quiser: faça fork, ensine, venda, publique. A atribuição é bem-vinda, mas não obrigatória.",
         MAINTAINED: "Mantido por [Rohit Ghumare](https://github.com/rohitg00) e pela comunidade.",
@@ -93,7 +131,7 @@ TRANSLATIONS = {
     },
     "de": {
         HERO1: "**84 % der Studierenden nutzen bereits KI-Tools. Nur 18 % fühlen sich bereit, sie professionell einzusetzen.** Dieser Lehrplan schließt diese Lücke.",
-        HERO2: "503 Lektionen. 20 Phasen. ~320 Stunden. Python, TypeScript, Rust, Julia. Jede Lektion liefert ein wiederverwendbares Artefakt: einen Prompt, eine Skill, einen Agenten, einen MCP-Server. Kostenlos, Open Source, MIT.",
+        HERO2: "523 Lektionen. 20 Phasen. ~342 Stunden. Python, TypeScript, Rust, Julia. Jede Lektion liefert ein wiederverwendbares Artefakt: einen Prompt, einen Skill, einen Agenten, einen MCP-Server. Kostenlos, Open Source, MIT.",
         HERO3: "Du lernst KI nicht nur. Du baust sie. Von Anfang bis Ende. Von Hand.",
         WAYS: "Drei Einstiege. Wähle einen.",
         LICENSE_LINE: "MIT. Nutze es, wie du willst: forke es, unterrichte es, verkaufe es, veröffentliche es. Nennung ist willkommen, aber nicht erforderlich.",
@@ -106,7 +144,7 @@ TRANSLATIONS = {
     },
     "it": {
         HERO1: "**L'84% degli studenti usa già strumenti di IA. Solo il 18% si sente pronto a usarli professionalmente.** Questo percorso colma quel divario.",
-        HERO2: "503 lezioni. 20 fasi. ~320 ore. Python, TypeScript, Rust, Julia. Ogni lezione produce un artefatto riutilizzabile: un prompt, una skill, un agente, un server MCP. Gratis, open source, MIT.",
+        HERO2: "523 lezioni. 20 fasi. ~342 ore. Python, TypeScript, Rust, Julia. Ogni lezione produce un artefatto riutilizzabile: un prompt, una skill, un agente, un server MCP. Gratis, open source, MIT.",
         HERO3: "Non impari solo l'IA. La costruisci. Dall'inizio alla fine. A mano.",
         WAYS: "Tre modi per iniziare. Scegline uno.",
         LICENSE_LINE: "MIT. Usalo come vuoi: forkalo, insegnalo, vendilo, pubblicalo. L'attribuzione è gradita, ma non obbligatoria.",
@@ -119,7 +157,7 @@ TRANSLATIONS = {
     },
     "zh": {
         HERO1: "**84% 的学生已经在使用 AI 工具，却只有 18% 觉得自己能专业地使用它们。** 这套课程正是为了填补这道鸿沟。",
-        HERO2: "503 节课。20 个阶段。约 320 小时。Python、TypeScript、Rust、Julia。每节课都产出一个可复用的成果：一个提示词、一个技能、一个智能体、一个 MCP 服务器。免费、开源、MIT 许可。",
+        HERO2: "523 节课。20 个阶段。约 342 小时。Python、TypeScript、Rust、Julia。每节课都产出一个可复用的成果：一个提示词、一个技能、一个智能体、一个 MCP 服务器。免费、开源、MIT 许可。",
         HERO3: "你不只是学 AI，你亲手把它造出来。从头到尾，全部手写。",
         WAYS: "三种入门方式，任选其一。",
         LICENSE_LINE: "MIT 许可。随你怎么用：复刻、教学、出售、发布都行。欢迎署名，但并非必须。",
@@ -132,7 +170,7 @@ TRANSLATIONS = {
     },
     "ja": {
         HERO1: "**学生の84%はすでにAIツールを使っていますが、それを専門的に使いこなせると感じているのはわずか18%です。** このカリキュラムはそのギャップを埋めます。",
-        HERO2: "503のレッスン。20のフェーズ。約320時間。Python、TypeScript、Rust、Julia。各レッスンは再利用できる成果物を残します。プロンプト、スキル、エージェント、MCPサーバー。無料、オープンソース、MIT。",
+        HERO2: "523のレッスン。20のフェーズ。約342時間。Python、TypeScript、Rust、Julia。各レッスンは再利用できる成果物を残します。プロンプト、スキル、エージェント、MCPサーバー。無料、オープンソース、MIT。",
         HERO3: "AIをただ学ぶのではありません。自分の手で作ります。最初から最後まで、手作業で。",
         WAYS: "入り方は3つ。ひとつ選んでください。",
         LICENSE_LINE: "MIT。好きなように使ってください。フォークする、教える、売る、公開する。クレジットは歓迎しますが、必須ではありません。",
@@ -145,7 +183,7 @@ TRANSLATIONS = {
     },
     "ko": {
         HERO1: "**학생의 84%는 이미 AI 도구를 사용하지만, 이를 전문적으로 다룰 준비가 되었다고 느끼는 사람은 18%뿐입니다.** 이 커리큘럼이 그 간극을 메웁니다.",
-        HERO2: "503개 레슨. 20개 단계. 약 320시간. Python, TypeScript, Rust, Julia. 모든 레슨은 재사용 가능한 결과물을 남깁니다. 프롬프트, 스킬, 에이전트, MCP 서버. 무료, 오픈소스, MIT.",
+        HERO2: "523개 레슨. 20개 단계. 약 342시간. Python, TypeScript, Rust, Julia. 모든 레슨은 재사용 가능한 결과물을 남깁니다. 프롬프트, 스킬, 에이전트, MCP 서버. 무료, 오픈소스, MIT.",
         HERO3: "AI를 배우기만 하는 것이 아닙니다. 직접 만듭니다. 처음부터 끝까지, 손으로.",
         WAYS: "시작하는 방법은 세 가지. 하나를 고르세요.",
         LICENSE_LINE: "MIT. 원하는 대로 쓰세요. 포크하고, 가르치고, 팔고, 배포하세요. 출처 표기는 환영하지만 필수는 아닙니다.",
@@ -158,7 +196,7 @@ TRANSLATIONS = {
     },
     "hi": {
         HERO1: "**84% छात्र पहले से ही AI टूल इस्तेमाल करते हैं। पर केवल 18% ही उन्हें पेशेवर रूप से इस्तेमाल करने के लिए तैयार महसूस करते हैं।** यह पाठ्यक्रम इसी खाई को पाटता है।",
-        HERO2: "503 पाठ। 20 चरण। ~320 घंटे। Python, TypeScript, Rust, Julia। हर पाठ एक पुन: उपयोग योग्य कलाकृति देता है: एक प्रॉम्प्ट, एक स्किल, एक एजेंट, एक MCP सर्वर। मुफ़्त, ओपन सोर्स, MIT।",
+        HERO2: "523 पाठ। 20 चरण। ~342 घंटे। Python, TypeScript, Rust, Julia। हर पाठ एक पुन: उपयोग योग्य कलाकृति देता है: एक प्रॉम्प्ट, एक स्किल, एक एजेंट, एक MCP सर्वर। मुफ़्त, ओपन सोर्स, MIT।",
         HERO3: "आप केवल AI सीखते नहीं। आप उसे बनाते हैं। शुरू से अंत तक। अपने हाथों से।",
         WAYS: "शुरू करने के तीन तरीके। कोई एक चुनें।",
         LICENSE_LINE: "MIT। जैसे चाहें इस्तेमाल करें: फ़ोर्क करें, पढ़ाएँ, बेचें, प्रकाशित करें। श्रेय देना अच्छा है, पर ज़रूरी नहीं।",
@@ -171,7 +209,7 @@ TRANSLATIONS = {
     },
     "ar": {
         HERO1: "**\u200f84% من الطلاب يستخدمون أدوات الذكاء الاصطناعي بالفعل، لكن 18% فقط يشعرون بأنهم مستعدون لاستخدامها باحتراف.** هذا المنهج يسدّ هذه الفجوة.",
-        HERO2: "\u200f503 دروس. 20 مرحلة. نحو 320 ساعة. Python وTypeScript وRust وJulia. كل درس ينتج مخرجًا قابلًا لإعادة الاستخدام: موجّهًا، أو مهارة، أو وكيلًا، أو خادم MCP. مجاني، مفتوح المصدر، برخصة MIT.",
+        HERO2: "\u200f523 دروس. 20 مرحلة. نحو 342 ساعة. Python وTypeScript وRust وJulia. كل درس ينتج مخرجًا قابلًا لإعادة الاستخدام: موجّهًا، أو مهارة، أو وكيلًا، أو خادم MCP. مجاني، مفتوح المصدر، برخصة MIT.",
         HERO3: "أنت لا تتعلّم الذكاء الاصطناعي فحسب، بل تبنيه بنفسك. من البداية إلى النهاية. يدويًا.",
         WAYS: "ثلاث طرق للبدء. اختر واحدة.",
         LICENSE_LINE: "رخصة MIT. استخدمه كما تشاء: انسخه، وعلّمه، وبِعه، وانشره. ذكر المصدر محلّ تقدير، لكنه غير مطلوب.",
@@ -184,8 +222,31 @@ TRANSLATIONS = {
     },
     "ru": {
         HERO1: "**84% студентов уже используют инструменты ИИ, но лишь 18% чувствуют себя готовыми применять их профессионально.** Этот курс закрывает этот разрыв.",
-        HERO2: "503 урока. 20 фаз. ~320 часов. Python, TypeScript, Rust, Julia. Каждый урок оставляет переиспользуемый артефакт: промпт, навык, агент, сервер MCP. Бесплатно, открытый исходный код, лицензия MIT.",
+        HERO2: "523 урока. 20 фаз. ~342 часа. Python, TypeScript, Rust, Julia. Каждый урок оставляет переиспользуемый артефакт: промпт, навык, агент, сервер MCP. Бесплатно, открытый исходный код, лицензия MIT.",
         HERO3: "Вы не просто изучаете ИИ. Вы строите его. От начала до конца. Своими руками.",
+        H_START_BUILD: "Начните здесь: выберите, что хотите создать",
+        START_BUILD: "Перед началом не нужно просматривать все 523 урока. Выберите одну цель. Каждая ссылка открывает один и тот же курс на GitHub или сайте, и обе версии используют один и тот же код уроков.",
+        "| Your goal | Learn on GitHub | Learn on the website |": "| Ваша цель | Учиться на GitHub | Учиться на сайте |",
+        "| I am new and want the complete foundation | [Phase 0: Setup and Tooling](phases/00-setup-and-tooling/) | [Dev Environment](https://aiengineeringfromscratch.com/lesson?path=phases/00-setup-and-tooling/01-dev-environment) |": "| Я начинаю и хочу получить полную базу | [Фаза 0: Настройка и инструменты](phases/00-setup-and-tooling/) | [Среда разработки](https://aiengineeringfromscratch.com/lesson?path=phases/00-setup-and-tooling/01-dev-environment) |",
+        "| I know Python and want math plus ML foundations | [Phase 1: Math Foundations](phases/01-math-foundations/) | [Linear Algebra Intuition](https://aiengineeringfromscratch.com/lesson?path=phases/01-math-foundations/01-linear-algebra-intuition) |": "| Я знаю Python и хочу освоить математику и основы ML | [Фаза 1: Математические основы](phases/01-math-foundations/) | [Интуиция линейной алгебры](https://aiengineeringfromscratch.com/lesson?path=phases/01-math-foundations/01-linear-algebra-intuition) |",
+        "| I want to build production LLM applications | [Phase 11: LLM Engineering](phases/11-llm-engineering/) | [Prompt Engineering](https://aiengineeringfromscratch.com/lesson?path=phases/11-llm-engineering/01-prompt-engineering) |": "| Я хочу создавать промышленные приложения на LLM | [Фаза 11: Инженерия LLM](phases/11-llm-engineering/) | [Инженерия промптов](https://aiengineeringfromscratch.com/lesson?path=phases/11-llm-engineering/01-prompt-engineering) |",
+        "| I want to build agents | [Phase 14: Agent Engineering](phases/14-agent-engineering/) | [The Agent Loop](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/01-the-agent-loop) |": "| Я хочу создавать агентов | [Фаза 14: Инженерия агентов](phases/14-agent-engineering/) | [Цикл агента](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/01-the-agent-loop) |",
+        "| I want to use coding agents on real repositories | [Agent-Assisted Engineering path](learning-paths/using-coding-agents.json) | [Agent-Assisted Engineering](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/31-agent-workbench-why-models-fail&learningPath=using-coding-agents) |": "| Я хочу использовать агентов программирования в реальных репозиториях | [Маршрут инженерии с агентами](learning-paths/using-coding-agents.json) | [Инженерия с агентами](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/31-agent-workbench-why-models-fail&learningPath=using-coding-agents) |",
+        "| I want to shape the right build before implementation | [Product Judgment and Delivery path](learning-paths/shaping-the-build.json) | [Product Judgment and Delivery](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/47-outcomes-before-output&learningPath=shaping-the-build) |": "| Я хочу определить правильное решение до реализации | [Маршрут продуктовых решений и поставки](learning-paths/shaping-the-build.json) | [Продуктовые решения и поставка](https://aiengineeringfromscratch.com/lesson?path=phases/14-agent-engineering/47-outcomes-before-output&learningPath=shaping-the-build) |",
+        "| I want to build with Model Context Protocol (MCP) | [Model Context Protocol (MCP) route](phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Model Context Protocol (MCP) path](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |": "| Я хочу разрабатывать с Model Context Protocol (MCP) | [Маршрут Model Context Protocol (MCP)](phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Маршрут Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |",
+        "| I want to write and ship Agent Skills | [Focused Agent Skills route](phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills path](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |": "| Я хочу писать и выпускать Agent Skills | [Сфокусированный маршрут Agent Skills](phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Маршрут Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |",
+        "| I want to prepare for a Claude certification | [Certification onboarding](certifications/claude/GETTING_STARTED.md) | [Certification Academy](https://aiengineeringfromscratch.com/certifications.html) |": "| Я хочу подготовиться к сертификации Claude | [Начало подготовки](certifications/claude/GETTING_STARTED.md) | [Академия сертификации](https://aiengineeringfromscratch.com/certifications.html) |",
+        NOT_SURE: "Не знаете, что выбрать? Используйте [наставника `start-learning` для определения уровня](skills/start-learning/SKILL.md) или [руководство по предварительным требованиям на сайте](https://aiengineeringfromscratch.com/prereqs.html).",
+        LEARNING_PATHS: "Сравните четыре основных направления и шесть карьерных маршрутов в [учебных маршрутах по AI Engineering](https://aiengineeringfromscratch.com/learning-paths.html).",
+        H_USE_LESSON: "Проходите каждый урок одинаково",
+        "1. **Read** `docs/en.md` and explain the core idea in your own words.": "1. **Прочитайте** `docs/en.md` и объясните основную идею своими словами.",
+        "2. **Type and build** the important code instead of treating the code block as decoration.": "2. **Наберите и соберите** важный код, а не воспринимайте блок кода как иллюстрацию.",
+        "3. **Run** the lesson command from the repository root, the directory containing `README.md` and `phases/`.": "3. **Запустите** команду урока из корня репозитория, где находятся `README.md` и `phases/`.",
+        "4. **Keep evidence**: the command, working directory, exit code, meaningful output, and the artifact you changed or produced.": "4. **Сохраните доказательства**: команду, рабочий каталог, код выхода, значимый вывод и изменённый или созданный артефакт.",
+        "5. **Continue** only when you can explain the output and make one small change without guessing.": "5. **Продолжайте** только тогда, когда можете объяснить вывод и внести небольшое изменение без догадок.",
+        LESSON_COMMANDS: "Команды на страницах уроков используют пути от корня репозитория, если урок явно не требует перейти в другой каталог. Если доступно несколько языков, запускайте реализацию для языка, который изучаете.",
+        H_CLONE_EVIDENCE: "Клонируйте репозиторий и получите первое доказательство",
+        PREFLIGHT: "Предварительная проверка отделяет требования, нужные сейчас, от инструментов, которые понадобятся позже. Для каждой обязательной ошибки показаны обнаруженная причина и команда исправления. Вторая команда запускает урок без зависимостей и показывает, что умножение матрицы на вектор является операцией внутри слоя нейронной сети. Сохраните этот вывод терминала как первое доказательство.",
         WAYS: "Три способа начать. Выберите один.",
         LICENSE_LINE: "MIT. Используйте как угодно: форкайте, преподавайте, продавайте, публикуйте. Указание авторства приветствуется, но не обязательно.",
         MAINTAINED: "Поддерживается [Rohit Ghumare](https://github.com/rohitg00) и сообществом.",
@@ -197,7 +258,7 @@ TRANSLATIONS = {
     },
     "tr": {
         HERO1: "**Öğrencilerin %84'ü zaten yapay zeka araçlarını kullanıyor, ama yalnızca %18'i bunları profesyonelce kullanmaya hazır hissediyor.** Bu müfredat bu boşluğu kapatır.",
-        HERO2: "503 ders. 20 aşama. ~320 saat. Python, TypeScript, Rust, Julia. Her ders yeniden kullanılabilir bir çıktı verir: bir istem, bir beceri, bir ajan, bir MCP sunucusu. Ücretsiz, açık kaynak, MIT.",
+        HERO2: "523 ders. 20 aşama. ~342 saat. Python, TypeScript, Rust, Julia. Her ders yeniden kullanılabilir bir çıktı verir: bir istem, bir beceri, bir ajan, bir MCP sunucusu. Ücretsiz, açık kaynak, MIT.",
         HERO3: "Yapay zekayı yalnızca öğrenmezsiniz. Onu kendiniz kurarsınız. Baştan sona. Elle.",
         WAYS: "Başlamanın üç yolu. Birini seçin.",
         LICENSE_LINE: "MIT. İstediğiniz gibi kullanın: çatallayın, öğretin, satın, yayımlayın. Atıf makbule geçer ama zorunlu değildir.",
@@ -209,3 +270,117 @@ TRANSLATIONS = {
         H_SPONSOR: "Projeye sponsor olun", H_STAR: "Yıldız geçmişi", H_LICENSE: "Lisans",
     },
 }
+
+SPONSOR_TRANSLATIONS = {
+    "es": {
+        H_SPONSORS: "Patrocinadores",
+        SPONSOR_ALT: "SerpApi. API de búsqueda web para tus aplicaciones de IA. Disponible en Markdown y JSON para cualquier integración.",
+        SPONSOR_THANKS: "Gracias a nuestros patrocinadores.",
+        SPONSOR_SUPPORT: "Tu apoyo mantiene cada lección gratuita y de código abierto.",
+        SEE_SUPPORTERS: "Ver todos los colaboradores",
+        SPONSOR_CLOSING: "Gratis, con licencia MIT, 523 lecciones. Gracias a los patrocinadores y colaboradores que hacen posible este trabajo. [Ver todos los patrocinadores y colaboradores](BACKERS.md).",
+        SPONSOR_INVITE: "¿Quieres apoyar el proyecto? Consulta las [opciones de patrocinio](SPONSORS.md), incluidos los [patrocinios de hardware](SPONSORS.md#hardware-lab-partner), o [patrocina en GitHub](https://github.com/sponsors/rohitg00).",
+    },
+    "fr": {
+        H_SPONSORS: "Partenaires",
+        SPONSOR_ALT: "SerpApi. API de recherche Web pour vos applications d’IA. Disponible en Markdown et JSON pour toute intégration.",
+        SPONSOR_THANKS: "Merci à nos sponsors.",
+        SPONSOR_SUPPORT: "Votre soutien permet à chaque leçon de rester gratuite et open source.",
+        SEE_SUPPORTERS: "Voir tous les soutiens",
+        SPONSOR_CLOSING: "Gratuit, sous licence MIT, 523 leçons. Merci aux sponsors et aux soutiens qui rendent ce travail possible. [Voir tous les sponsors et soutiens](BACKERS.md).",
+        SPONSOR_INVITE: "Vous souhaitez soutenir le projet ? Consultez les [options de sponsoring](SPONSORS.md), notamment le [sponsoring matériel](SPONSORS.md#hardware-lab-partner), ou [soutenez le projet sur GitHub](https://github.com/sponsors/rohitg00).",
+    },
+    "pt": {
+        H_SPONSORS: "Patrocinadores",
+        SPONSOR_ALT: "SerpApi. API de busca na Web para seus aplicativos de IA. Disponível em Markdown e JSON para qualquer integração.",
+        SPONSOR_THANKS: "Agradecemos aos nossos patrocinadores.",
+        SPONSOR_SUPPORT: "Seu apoio mantém todas as lições gratuitas e de código aberto.",
+        SEE_SUPPORTERS: "Ver todos os apoiadores",
+        SPONSOR_CLOSING: "Grátis, com licença MIT, 523 lições. Agradecemos aos patrocinadores e apoiadores que tornam este trabalho possível. [Ver todos os patrocinadores e apoiadores](BACKERS.md).",
+        SPONSOR_INVITE: "Quer apoiar o projeto? Veja as [opções de patrocínio](SPONSORS.md), incluindo [patrocínios de hardware](SPONSORS.md#hardware-lab-partner), ou [patrocine pelo GitHub](https://github.com/sponsors/rohitg00).",
+    },
+    "de": {
+        H_SPONSORS: "Sponsoren",
+        SPONSOR_ALT: "SerpApi. Websuch-API für deine KI-Anwendungen. Für jede Integration in Markdown und JSON verfügbar.",
+        SPONSOR_THANKS: "Vielen Dank an unsere Sponsoren.",
+        SPONSOR_SUPPORT: "Deine Unterstützung hält jede Lektion kostenlos und quelloffen.",
+        SEE_SUPPORTERS: "Alle Unterstützer ansehen",
+        SPONSOR_CLOSING: "Kostenlos, MIT-lizenziert, 523 Lektionen. Vielen Dank an die Sponsoren und Unterstützer, die diese Arbeit ermöglichen. [Alle Sponsoren und Unterstützer ansehen](BACKERS.md).",
+        SPONSOR_INVITE: "Möchtest du die Arbeit unterstützen? Sieh dir die [Sponsoring-Optionen](SPONSORS.md) einschließlich [Hardware-Sponsoring](SPONSORS.md#hardware-lab-partner) an oder [unterstütze das Projekt auf GitHub](https://github.com/sponsors/rohitg00).",
+    },
+    "it": {
+        H_SPONSORS: "Sponsor",
+        SPONSOR_ALT: "SerpApi. API di ricerca Web per le tue applicazioni di IA. Disponibile in Markdown e JSON per qualsiasi integrazione.",
+        SPONSOR_THANKS: "Grazie ai nostri sponsor.",
+        SPONSOR_SUPPORT: "Il tuo sostegno mantiene ogni lezione gratuita e open source.",
+        SEE_SUPPORTERS: "Vedi tutti i sostenitori",
+        SPONSOR_CLOSING: "Gratuito, con licenza MIT, 523 lezioni. Grazie agli sponsor e ai sostenitori che rendono possibile questo lavoro. [Vedi tutti gli sponsor e i sostenitori](BACKERS.md).",
+        SPONSOR_INVITE: "Vuoi sostenere il progetto? Consulta le [opzioni di sponsorizzazione](SPONSORS.md), incluse le [sponsorizzazioni hardware](SPONSORS.md#hardware-lab-partner), oppure [sostienilo su GitHub](https://github.com/sponsors/rohitg00).",
+    },
+    "zh": {
+        H_SPONSORS: "赞助方",
+        SPONSOR_ALT: "SerpApi。面向 AI 应用的网页搜索 API，可为任何集成提供 Markdown 和 JSON 格式。",
+        SPONSOR_THANKS: "感谢我们的赞助方。",
+        SPONSOR_SUPPORT: "你的支持让每节课都能保持免费和开源。",
+        SEE_SUPPORTERS: "查看所有支持者",
+        SPONSOR_CLOSING: "免费、采用 MIT 许可证，共 523 节课。感谢所有让这项工作成为可能的赞助方和支持者。[查看所有赞助方和支持者](BACKERS.md)。",
+        SPONSOR_INVITE: "想支持这项工作？请查看[赞助方案](SPONSORS.md)，包括[硬件赞助](SPONSORS.md#hardware-lab-partner)，或[通过 GitHub 赞助](https://github.com/sponsors/rohitg00)。",
+    },
+    "ja": {
+        H_SPONSORS: "スポンサー",
+        SPONSOR_ALT: "SerpApi。AIアプリ向けのWeb検索API。あらゆる連携に使えるMarkdown形式とJSON形式に対応しています。",
+        SPONSOR_THANKS: "スポンサーの皆さまに感謝します。",
+        SPONSOR_SUPPORT: "皆さまの支援により、すべてのレッスンを無料かつオープンソースで提供できます。",
+        SEE_SUPPORTERS: "すべての支援者を見る",
+        SPONSOR_CLOSING: "無料、MITライセンス、523レッスン。この取り組みを支えるスポンサーと支援者の皆さまに感謝します。[すべてのスポンサーと支援者を見る](BACKERS.md)。",
+        SPONSOR_INVITE: "この取り組みを支援するには、[スポンサーシップの選択肢](SPONSORS.md)と[ハードウェアスポンサーシップ](SPONSORS.md#hardware-lab-partner)をご覧になるか、[GitHubでスポンサーになる](https://github.com/sponsors/rohitg00)ことができます。",
+    },
+    "ko": {
+        H_SPONSORS: "후원사",
+        SPONSOR_ALT: "SerpApi. AI 앱을 위한 웹 검색 API. 어떤 통합에도 사용할 수 있도록 Markdown과 JSON으로 제공합니다.",
+        SPONSOR_THANKS: "후원사 여러분께 감사드립니다.",
+        SPONSOR_SUPPORT: "여러분의 후원으로 모든 레슨을 무료 오픈소스로 유지할 수 있습니다.",
+        SEE_SUPPORTERS: "모든 후원자 보기",
+        SPONSOR_CLOSING: "무료, MIT 라이선스, 523개 레슨. 이 작업을 가능하게 해 주는 후원사와 후원자 여러분께 감사드립니다. [모든 후원사와 후원자 보기](BACKERS.md).",
+        SPONSOR_INVITE: "이 작업을 지원하려면 [후원 옵션](SPONSORS.md)과 [하드웨어 후원](SPONSORS.md#hardware-lab-partner)을 확인하거나 [GitHub에서 후원](https://github.com/sponsors/rohitg00)하세요.",
+    },
+    "hi": {
+        H_SPONSORS: "प्रायोजक",
+        SPONSOR_ALT: "SerpApi। आपके AI ऐप्स के लिए वेब खोज API। किसी भी एकीकरण के लिए Markdown और JSON में उपलब्ध।",
+        SPONSOR_THANKS: "हमारे प्रायोजकों का धन्यवाद।",
+        SPONSOR_SUPPORT: "आपका सहयोग हर पाठ को मुफ़्त और ओपन सोर्स बनाए रखता है।",
+        SEE_SUPPORTERS: "सभी समर्थक देखें",
+        SPONSOR_CLOSING: "मुफ़्त, MIT लाइसेंस के अंतर्गत, 523 पाठ। इस काम को संभव बनाने वाले प्रायोजकों और समर्थकों का धन्यवाद। [सभी प्रायोजक और समर्थक देखें](BACKERS.md)।",
+        SPONSOR_INVITE: "इस काम में सहयोग करना चाहते हैं? [प्रायोजन विकल्प](SPONSORS.md), जिनमें [हार्डवेयर प्रायोजन](SPONSORS.md#hardware-lab-partner) शामिल है, देखें या [GitHub पर प्रायोजित करें](https://github.com/sponsors/rohitg00)।",
+    },
+    "ar": {
+        H_SPONSORS: "الرعاة",
+        SPONSOR_ALT: "SerpApi. واجهة API للبحث على الويب لتطبيقات الذكاء الاصطناعي، متاحة بصيغتي Markdown وJSON لأي تكامل.",
+        SPONSOR_THANKS: "شكرًا لرعاتنا.",
+        SPONSOR_SUPPORT: "دعمكم يُبقي كل درس مجانيًا ومفتوح المصدر.",
+        SEE_SUPPORTERS: "عرض جميع الداعمين",
+        SPONSOR_CLOSING: "مجاني، بترخيص MIT، ويضم 523 درسًا. شكرًا للرعاة والداعمين الذين يجعلون هذا العمل ممكنًا. [عرض جميع الرعاة والداعمين](BACKERS.md).",
+        SPONSOR_INVITE: "هل ترغب في دعم العمل؟ اطّلع على [خيارات الرعاية](SPONSORS.md)، بما فيها [رعاية الأجهزة](SPONSORS.md#hardware-lab-partner)، أو [قدّم رعايتك عبر GitHub](https://github.com/sponsors/rohitg00).",
+    },
+    "ru": {
+        H_SPONSORS: "Спонсоры",
+        SPONSOR_ALT: "SerpApi. API веб-поиска для ваших приложений с ИИ. Доступен в форматах Markdown и JSON для любой интеграции.",
+        SPONSOR_THANKS: "Спасибо нашим спонсорам.",
+        SPONSOR_SUPPORT: "Ваша поддержка помогает сохранять все уроки бесплатными и открытыми.",
+        SEE_SUPPORTERS: "Посмотреть всех сторонников",
+        SPONSOR_CLOSING: "Бесплатно, по лицензии MIT, 523 урока. Спасибо спонсорам и сторонникам, благодаря которым эта работа возможна. [Посмотреть всех спонсоров и сторонников](BACKERS.md).",
+        SPONSOR_INVITE: "Хотите поддержать проект? Посмотрите [варианты спонсорства](SPONSORS.md), включая [спонсорство оборудования](SPONSORS.md#hardware-lab-partner), или [станьте спонсором на GitHub](https://github.com/sponsors/rohitg00).",
+    },
+    "tr": {
+        H_SPONSORS: "Sponsorlar",
+        SPONSOR_ALT: "SerpApi. Yapay zeka uygulamalarınız için Web Arama API'si. Her türlü entegrasyon için Markdown ve JSON biçimlerinde sunulur.",
+        SPONSOR_THANKS: "Sponsorlarımıza teşekkür ederiz.",
+        SPONSOR_SUPPORT: "Desteğiniz her dersin ücretsiz ve açık kaynak kalmasını sağlar.",
+        SEE_SUPPORTERS: "Tüm destekçileri görüntüle",
+        SPONSOR_CLOSING: "Ücretsiz, MIT lisanslı, 523 ders. Bu çalışmayı mümkün kılan sponsorlara ve destekçilere teşekkür ederiz. [Tüm sponsorları ve destekçileri görüntüle](BACKERS.md).",
+        SPONSOR_INVITE: "Çalışmayı desteklemek ister misiniz? [Sponsorluk seçeneklerini](SPONSORS.md), [donanım sponsorluğunu](SPONSORS.md#hardware-lab-partner) inceleyin veya [GitHub üzerinden sponsor olun](https://github.com/sponsors/rohitg00).",
+    },
+}
+
+for language, sponsor_translations in SPONSOR_TRANSLATIONS.items():
+    TRANSLATIONS[language].update(sponsor_translations)

@@ -25,17 +25,20 @@
   <main class="container"><article class="trust-page">
     <p class="about-eyebrow">AI Engineering from Scratch</p>
     <h1>Developer resources</h1>
-    <p>This is the machine-readable entry point for AI Engineering from Scratch. The project is a static, open-source curriculum rather than a hosted application API. Agents and developer tools should start with <a href="llms.txt">llms.txt</a>, which maps the lessons to their canonical pages and raw Markdown sources.</p>
+    <p>This is the machine-readable entry point for AI Engineering from Scratch. The curriculum is static and open source, with a read-only representation API for agents and developer tools. Start with <a href="llms.txt">llms.txt</a>, which maps the lessons to their canonical pages and raw Markdown sources.</p>
     <h2>Stable resources</h2>
     <ul>
       <li><a href="llms.txt"><code>/llms.txt</code></a> is the agent-oriented curriculum map.</li>
       <li><a href="sitemap.xml"><code>/sitemap.xml</code></a> lists canonical public URLs.</li>
       <li><a href="openapi.json"><code>/openapi.json</code></a> describes the read-only resource surface.</li>
+      <li><a href="/api/v1/markdown"><code>/api/v1/markdown</code></a> serves HTML or Markdown for a public navigation page selected by the <code>path</code> query parameter.</li>
       <li><a href="catalog.html"><code>/catalog.html</code></a> is the searchable human catalog.</li>
       <li><a href="https://github.com/rohitg00/ai-engineering-from-scratch"><code>GitHub</code></a> is the source of truth for lessons, code, quizzes, and reusable artifacts.</li>
     </ul>
     <h2>Markdown negotiation</h2>
     <p>Requests for the homepage or major navigation routes with <code>Accept: text/markdown</code> receive the agent map with <code>Content-Type: text/markdown</code>. Responses vary on <code>Accept</code> so a cache cannot mix the HTML and Markdown representations.</p>
+    <p>The representation API accepts <code>GET</code> and <code>HEAD</code>. Responses include <code>X-API-Version: 1</code>; HEAD returns the same metadata without a body. Unsupported representations and methods receive <a href="https://www.rfc-editor.org/rfc/rfc9457.html">RFC 9457 problem details</a>. Missing pages retain HTML or Markdown recovery links for readers and agents, with problem details for other API clients.</p>
+    <p><code>/api/markdown</code> remains a compatible alias. Additive changes stay under <code>/api/v1/markdown</code>; breaking representation changes require a new versioned path. The API does not publish quota headers because it does not implement per-client rate limiting.</p>
     <h2>MCP status</h2>
     <p>The website does not currently expose a hosted MCP server or authenticated product API. The curriculum does teach how to build and operate MCP servers, and those lesson artifacts live in the repository. A remote Streamable HTTP MCP endpoint would require a separate product decision, authentication policy, and operational owner.</p>
   </article></main>
