@@ -940,4 +940,5 @@ def main():
     print(f'phases {len(phase_pairs)}  titles {len(title_pairs)}  glossary {len(gloss_pairs)}')
 
 
-main()
+if __name__ == '__main__':
+    main()
