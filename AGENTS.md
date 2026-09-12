@@ -4,6 +4,9 @@ Operating manual for contributors and AI agents touching this repo. Read it befo
 
 The repo is a curriculum, not a SaaS app. The lessons are the product. Every rule below keeps 435 lessons coherent over time.
 
+
+
+
 ---
 
 ## Philosophy
