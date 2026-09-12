@@ -1961,7 +1961,12 @@ function sourceRevision() {
 // lesson markdown and its own edits — translations included — never appear.
 // Vercel exports the owner/slug directly; GitHub Pages exports neither, so fall
 // back to GITHUB_REPOSITORY and then to the origin remote.
+let resolvedRepo = null;
+
 function resolveRepo() {
+  // Memoized: githubSourceUrl() runs once per lesson, and without this the
+  // `git remote` fallback would spawn a subprocess for every one of them.
+  if (resolvedRepo !== null) return resolvedRepo;
   let repo = process.env.GITHUB_REPOSITORY || '';   // set by GitHub Actions
   if (!repo) {
     try {
@@ -1974,16 +1979,20 @@ function resolveRepo() {
       if (m) repo = m[1];
     } catch (e) { repo = ''; }
   }
-  return repo || 'rohitg00/ai-engineering-from-scratch';
+  resolvedRepo = repo || 'rohitg00/ai-engineering-from-scratch';
+  return resolvedRepo;
 }
 
 function sourceRepository() {
-  const [fallbackOwner, fallbackRepo] = resolveRepo().split('/');
   const ownerValue = String(process.env.VERCEL_GIT_REPO_OWNER || '').trim();
   const repoValue = String(process.env.VERCEL_GIT_REPO_SLUG || '').trim();
+  const ownerOk = /^[A-Za-z0-9-]+$/.test(ownerValue);
+  const repoOk = /^[A-Za-z0-9_.-]+$/.test(repoValue);
+  if (ownerOk && repoOk) return { owner: ownerValue, repo: repoValue };
+  const [fallbackOwner, fallbackRepo] = resolveRepo().split('/');
   return {
-    owner: /^[A-Za-z0-9-]+$/.test(ownerValue) ? ownerValue : fallbackOwner,
-    repo: /^[A-Za-z0-9_.-]+$/.test(repoValue) ? repoValue : fallbackRepo,
+    owner: ownerOk ? ownerValue : fallbackOwner,
+    repo: repoOk ? repoValue : fallbackRepo,
   };
 }
 
