@@ -1,0 +1,66 @@
+name: fork tooling
+
+# The fork-only scripts, which upstream's curriculum.yml knows nothing about.
+# Kept in its own workflow so curriculum.yml stays byte-identical to upstream
+# and never conflicts on a sync.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "phases/**"
+      - "scripts/i18n_curriculum.py"
+      - "scripts/i18n_status.py"
+      - "scripts/check_quiz_translations.py"
+      - "scripts/test_i18n_curriculum.py"
+      - "scripts/test_i18n_status.py"
+      - "scripts/test_check_quiz_translations.py"
+      - "site/data.js"
+      - "site/i18n.zh-Hant.js"
+      - ".github/workflows/fork-tooling.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "phases/**"
+      - "scripts/i18n_curriculum.py"
+      - "scripts/i18n_status.py"
+      - "scripts/check_quiz_translations.py"
+      - "scripts/test_i18n_curriculum.py"
+      - "scripts/test_i18n_status.py"
+      - "scripts/test_check_quiz_translations.py"
+      - "site/data.js"
+      - "site/i18n.zh-Hant.js"
+      - ".github/workflows/fork-tooling.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tooling:
+    name: fork-only script checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # i18n_curriculum.py reads site/data.js through node.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: unit tests — zh-Hant dictionary generator
+        run: python3 scripts/test_i18n_curriculum.py
+      - name: unit tests — translation coverage reporter
+        run: python3 scripts/test_i18n_status.py
+      - name: unit tests — translated-quiz validator
+        run: python3 scripts/test_check_quiz_translations.py
+
+      # The unit tests pin the rules; these run them over the real curriculum.
+      - name: every translated quiz matches its English schema
+        run: python3 scripts/check_quiz_translations.py
+      - name: every translated lesson keeps its English structure
+        run: python3 scripts/i18n_status.py --verify
