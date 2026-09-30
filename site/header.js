@@ -411,7 +411,9 @@
     for (var i = 0; i < headers.length; i++) setupNavigation(headers[i]);
     loadStars();
     ensureNarration();
-    ensureUiI18n();
+    // Fork: i18n.js is the only translator. ui-i18n.js reads the same `lang`
+    // key and ?lang=zh, then applies upstream's Simplified zh/ui.json over the
+    // zh-Hant dictionary and resets <html lang>.
     ensureNewsletter();
   }
 
