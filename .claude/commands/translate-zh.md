@@ -12,7 +12,8 @@ curriculum. English is canonical. A translation is a mirror: same structure,
 same code, same links, prose in natural Taiwan technical Chinese.
 
 Fork-only. Upstream has no `docs/zh.md`. Read `docs/zh-translation-gap.md` for the
-current gap list before choosing work, `TRANSLATION-STYLE.md` for the house
+current gap list and `docs/zh-translation-plan.md` for the work order and review checklist
+before choosing work, `TRANSLATION-STYLE.md` for the house
 style, and `CLAUDE.md` § *Translating a lesson body* for why the structural
 rules below exist.
 

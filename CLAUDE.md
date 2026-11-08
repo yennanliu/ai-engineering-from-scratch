@@ -43,6 +43,7 @@ delete them to tidy an upstream diff):
 | `CLAUDE.md` | this file |
 | `docs/fork-sync.md` | the upstream-sync runbook and the per-sync log — read it before syncing, append to it after |
 | `docs/zh-translation-gap.md` | the zh-Hant gap list and improvement backlog |
+| `docs/zh-translation-plan.md` | how to close those gaps step by step, and how to review and validate each PR |
 | `TRANSLATION-STYLE.md` | the zh-Hant style guide every translation follows |
 | `scripts/zh_drift.py`, `scripts/zh_terms.py` (+ tests) | the drift report and the Taiwan-terminology CI gate in `fork-tooling.yml` |
 | `.claude/commands/translate-zh.md` + its `.gitignore` exception | `/translate-zh`, the agent workflow for translating, syncing and reviewing zh lessons. Keep fork-only skills out of `.claude/skills/`: `site/test_skills_page.js` requires that folder to mirror upstream's public `skills/` catalog exactly |

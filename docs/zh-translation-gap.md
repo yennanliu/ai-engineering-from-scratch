@@ -150,6 +150,9 @@ context, so they are not auto-fixed. The largest:
 
 ## Suggested order
 
+`docs/zh-translation-plan.md` turns this order into workstreams, per-lesson steps, and the review
+and validation each PR needs.
+
 1. Port the wording drift (gap 3), worst phases first. Readers are being taught claims the English
    no longer makes.
 2. Copy the inline math (gap 4). Mechanical, and it can share a pass with item 1.
