@@ -133,9 +133,11 @@ site/langs.js
 
 !.claude/skills/build-project/
 !.claude/skills/build-project/**
-# fork-only: zh-Hant translation workflow
-!.claude/skills/translate-zh/
-!.claude/skills/translate-zh/**
+# fork-only: the zh-Hant translation command. Not under .claude/skills/, which
+# site/test_skills_page.js requires to mirror upstream's public skills/ catalog.
+!.claude/commands/
+.claude/commands/*
+!.claude/commands/translate-zh.md
 site/projects-data.js
 site/project-content/
 

@@ -22,7 +22,7 @@ python3 scripts/zh_terms.py --strict                  # Taiwan terms, standard h
 python3 scripts/zh_drift.py --diff <lesson-dir>       # English changes not yet ported
 ```
 
-The `translate-zh` skill (`.claude/skills/translate-zh/`) runs this workflow end to end, and
+`/translate-zh` (`.claude/commands/translate-zh.md`) runs this workflow end to end, and
 `docs/zh-translation.md` lists the current gaps.
 
 ## Mirror the English structure exactly

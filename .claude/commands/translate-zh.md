@@ -1,19 +1,11 @@
 ---
-name: translate-zh
-version: 1.0.0
-description: >
-  Translate, sync and review the fork's 繁體中文 (zh-Hant, Taiwan) lesson
-  translations: write a new docs/zh.md or quiz.zh.json, port the English changes
-  a translated lesson has not absorbed, or review a translation against the
-  house style and the Taiwan terminology rules. Every run ends on the fork's
-  verification gates. Trigger phrases: "translate lesson to Chinese",
-  "translate to zh", "sync the zh translation", "zh drift", "fix the zh lesson",
-  "review the Chinese translation", "translate the quiz", "翻譯這一課",
-  "同步中文翻譯".
-tags: [i18n, zh-Hant, translation, fork-only]
+description: "Translate, sync and review the fork's 繁體中文 (zh-Hant, Taiwan) lesson translations: write a new docs/zh.md or quiz.zh.json, port the English changes a translated lesson has not absorbed, or review a translation against the house style and the Taiwan terminology rules. Every run ends on the fork's verification gates. Trigger phrases: \"translate lesson to Chinese\", \"translate to zh\", \"sync the zh translation\", \"zh drift\", \"fix the zh lesson\", \"review the Chinese translation\", \"translate the quiz\", \"翻譯這一課\", \"同步中文翻譯\"."
+argument-hint: "[new|sync|quiz|review] <lesson-dir>"
 ---
 
 # translate-zh
+
+Arguments: `$ARGUMENTS` (a mode and a lesson directory; ask for either if missing).
 
 You maintain the fork's Traditional Chinese (Taiwan) layer over an English
 curriculum. English is canonical. A translation is a mirror: same structure,

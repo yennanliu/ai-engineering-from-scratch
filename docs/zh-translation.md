@@ -7,7 +7,7 @@ the last column, so rerun it rather than trusting this snapshot.
 What exists today: lesson bodies (`phases/**/docs/zh.md`), quizzes (`quiz.zh.json`), the site
 dictionary (`site/i18n.zh-Hant.js`: interface strings, every phase name, lesson title and glossary
 term), 33 README locales including `zh-TW`, and the zh-Hant book edition. `TRANSLATION-STYLE.md` is
-the style guide; `.claude/skills/translate-zh/` is the agent workflow for all of the work below.
+the style guide; `/translate-zh` (`.claude/commands/translate-zh.md`) is the agent workflow for all of the work below.
 
 ## Gaps
 
@@ -167,4 +167,4 @@ context, so they are not auto-fixed. The largest:
 | `scripts/zh_drift.py` | **New.** English changes a translation has not absorbed, classified wording vs math |
 | `scripts/zh_terms.py` | **New.** Taiwan terminology, standard headings and type labels; `--fix` for the safe ones |
 | `scripts/i18n_curriculum.py` | Regenerates the curriculum section of `site/i18n.zh-Hant.js` |
-| `.claude/skills/translate-zh/` | **New.** Agent workflow: new lesson, sync drift, quiz, review |
+| `.claude/commands/translate-zh.md` | **New.** `/translate-zh`: Agent workflow: new lesson, sync drift, quiz, review |
