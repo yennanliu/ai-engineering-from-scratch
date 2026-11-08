@@ -9,7 +9,7 @@
 
 ## 學習目標
 
-- 推導出有效批次的恆等式：`effective_batch = micro_batch * accum_steps`。
+- 推導出有效批次的恆等式：`effective_batch = micro_batch * accum_steps * world_size`，在這一課所用的單一裝置上就是 `micro_batch * accum_steps`。
 - 實作逐微批次的損失縮放，好讓累積出來的梯度與單次全批次反向傳遞相符。
 - 在最後一個微批次之前跳過最佳化器同步（sync-on-last-step）。
 - 讀懂「吞吐量對有效批次」的曲線，並解釋那個報酬遞減。
