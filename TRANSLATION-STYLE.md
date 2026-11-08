@@ -23,7 +23,7 @@ python3 scripts/zh_drift.py --diff <lesson-dir>       # English changes not yet 
 ```
 
 `/translate-zh` (`.claude/commands/translate-zh.md`) runs this workflow end to end, and
-`docs/zh-translation.md` lists the current gaps.
+`docs/zh-translation-gap.md` lists the current gaps.
 
 ## Mirror the English structure exactly
 
