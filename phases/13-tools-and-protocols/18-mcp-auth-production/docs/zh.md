@@ -354,7 +354,7 @@ python3 -m unittest discover -s code/tests -v
 
 ## 練習
 
-1. 執行 `code/main.py`。追蹤那條流程。留意 IdP 在第 6 步輪替一把金鑰、排程的 `refresh_jwks` 重新拉取已發布的金鑰組，而舊權杖（重疊窗口內）與新權杖都不必重啟就能驗證通過。
+1. 執行 `code/main.py`。追蹤那條流程。留意 IdP 在腳本輸出的第 6 步（上面流程的第 7 步）輪替一把金鑰、排程的 `refresh_jwks` 重新拉取已發布的金鑰組，而舊權杖（重疊窗口內）與新權杖都不必重啟就能驗證通過。
 
 2. 在受保護資源中繼資料的 `authorization_servers` 清單裡加一家新的 IdP。簽發一個由新 IdP 簽章的權杖，確認驗證器接受它。再簽發一個由未列出之 IdP 簽章的權杖，確認驗證器以 `WWW-Authenticate: Bearer error="invalid_token", error_description="iss not allowed"` 拒絕。
 
