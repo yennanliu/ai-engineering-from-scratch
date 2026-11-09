@@ -200,7 +200,7 @@ pipe.fit(X_train, y_train)
 print(pipe.score(X_test, y_test))
 ```
 
-有三件事要注意。`stop_words=None` 把否定詞留下來。`ngram_range=(1, 2)` 加入 bigram，於是 `not_good` 成為一個特徵。`sublinear_tf=True` 壓抑重複出現的詞。在 SST-2 上，這三個旗標就是「75% 準確率的基準線」和「85% 準確率的基準線」之間的差別。
+有三件事要注意。`stop_words=None` 把否定詞留下來。`ngram_range=(1, 2)` 加入 bigram，於是 `not good` 成為一個特徵（scikit-learn 用一個空格把兩個詞接起來）。`sublinear_tf=True` 壓抑重複出現的詞。在 SST-2 上，這三個旗標就是「75% 準確率的基準線」和「85% 準確率的基準線」之間的差別。
 
 ### 什麼時候該伸手去拿 transformer
 
