@@ -79,7 +79,7 @@ Anthropic 直接用 `input_schema`。OpenAI 用 `function.parameters`。兩者�
 
 ### 沙箱化
 
-工具執行就是沙箱邊界。細節見第 09 課。簡短版：每項工具都該指明讀寫表面、網路存取、逾時、記憶體上限。泛用的 `run_shell(cmd)` 是紅旗；專用的 `git_status()` 比較安全。
+工具執行就是沙箱邊界。細節見階段 13 · 26。簡短版：每項工具都該指明讀寫表面、網路存取、逾時、記憶體上限。泛用的 `run_shell(cmd)` 是紅旗；專用的 `git_status()` 比較安全。
 
 ```figure
 tool-routing
