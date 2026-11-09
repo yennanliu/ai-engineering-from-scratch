@@ -36,9 +36,9 @@ Large-v3 有 15.5 億參數。Turbo 用 4 層解碼器（原本 32 層），延�
 <|startoftranscript|><|en|><|transcribe|><|notimestamps|> Hello world.<|endoftext|>
 ```
 
-- `<|en|>` —— 語言標籤；強制決定是翻譯還是轉錄的行為。
-- `<|transcribe|>` 或 `<|translate|>` —— 把任何語言的輸入翻成英文輸出，或是逐字轉錄。
-- `<|notimestamps|>` —— 跳過詞層級的時間戳（更快）。
+- `<|en|>`：語言標籤；指明音訊裡說的是哪種語言。省略它，Whisper 會先偵測語言。
+- `<|transcribe|>` 或 `<|translate|>`：任務標籤；用原本的語言轉錄語音，或是把它翻譯成英文文字。
+- `<|notimestamps|>`：跳過詞層級的時間戳（更快）。
 
 提示詞正是讓一個模型能做很多任務的關鍵。把 `<|en|>` 換成 `<|fr|>`，它就轉錄法文。
 
