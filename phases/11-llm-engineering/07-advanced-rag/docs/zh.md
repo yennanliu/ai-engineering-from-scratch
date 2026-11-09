@@ -89,7 +89,7 @@ graph LR
 - Jina-Reranker-v2 Multilingual：開放權重，支援 100 多種語言
 - bge-reranker-v2-m3：開放權重，很強的基準線
 - cross-encoder/ms-marco-MiniLM-L-6-v2：開放權重，可在 CPU 上跑，適合原型開發
-- ColBERTv2 / Jina-ColBERT-v2：後期互動的多向量重排器 —— 評分時是 O(詞元數) 而非 O(文件數)
+- ColBERTv2 / Jina-ColBERT-v2：後期互動的多向量重排器 —— 評分時是 $O(\text{tokens})$ 而非 $O(\text{docs})$
 
 ### 查詢轉換
 
