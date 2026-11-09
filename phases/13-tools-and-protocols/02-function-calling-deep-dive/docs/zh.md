@@ -52,12 +52,12 @@
 | 結果區塊 | 角色 `tool`，帶 `tool_call_id` | `user` 帶 `tool_result`，附 `tool_use_id` | `functionResponse` 帶相符的 `id` |
 | 強制指定工具 | `tool_choice: {type: "function", function: {name}}` | `tool_choice: {type: "tool", name}` | `tool_config: {function_calling_config: {mode: "ANY"}}` |
 | 禁止使用工具 | `tool_choice: "none"` | `tool_choice: {type: "none"}` | `mode: "NONE"` |
-| 嚴格 schema | `strict: true` | schema 就是 schema（一律強制） | 請求層級的 `responseSchema` |
+| 嚴格 schema | `strict: true` | 每個工具各自設 `strict: true`（需主動啟用） | 請求層級的 `responseSchema` |
 
 ### 你真的會撞到的上限
 
 - **OpenAI。** 每次請求 128 個工具。schema 深度 5。參數字串 <= 8192 位元組。嚴格模式要求不得有 `$ref`、不得有互相重疊的 `oneOf`／`anyOf`／`allOf`，且每個屬性都要列進 `required`。
-- **Anthropic。** 每次請求 64 個工具。schema 深度實際上無上限，但實務上限是 10。沒有嚴格模式旗標；schema 是一份契約，而模型傾向遵守。
+- **Anthropic。** 每次請求 64 個工具。schema 深度實際上無上限，但實務上限是 10。嚴格工具使用需主動啟用，在工具定義上設 `strict: true`。沒有它的話，schema 是一份模型傾向遵守的契約，而不是保證。
 - **Gemini。** 每次請求 64 個函數。schema 型別是 OpenAPI 3.0 的子集（與 JSON Schema 2020-12 略有出入）。從 Gemini 3 起平行呼叫帶唯一 id。
 
 ### `tool_choice` 的行為
@@ -94,7 +94,7 @@ OpenAI 的 `parallel_tool_calls: true`（預設）會在同一則 assistant 訊�
 
 - **OpenAI（非嚴格模式）。** 模型回傳 `arguments: "{bad json}"`，你的 JSON 解析失敗，於是你注入一則錯誤訊息再呼叫一次。
 - **OpenAI（嚴格模式）。** 驗證發生在解碼期間；無效 JSON 不可能出現，但可能冒出 `refusal`。
-- **Anthropic。** `input` 可能含有非預期的欄位；schema 只是建議性的。要在伺服器端驗證。
+- **Anthropic（非嚴格）。** `input` 可能含有非預期的欄位；schema 只是建議性的。要在伺服器端驗證。設了 `strict: true` 時，取樣會被限制在 schema 之內。
 - **Gemini。** OpenAPI 3.0 的怪癖：物件欄位上的 `enum` 會被靜默忽略；請自己驗證。
 
 ### 轉譯器模式
