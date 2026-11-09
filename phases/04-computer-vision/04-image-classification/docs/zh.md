@@ -65,7 +65,7 @@ flowchart LR
 \end{aligned}
 ```
 
-右邊那個形式才是數值穩定的版本（log-sum-exp）。PyTorch 的 `nn.CrossEntropyLoss` 把 softmax + NLL 融合成一個運算，直接吃原始 logits。自己先套一次 softmax 幾乎一定是 bug —— 你算出來的是 log(softmax(softmax(z)))，一個沒有意義的量。
+右邊那個形式才是數值穩定的版本（log-sum-exp）。PyTorch 的 `nn.CrossEntropyLoss` 把 softmax + NLL 融合成一個運算，直接吃原始 logits。自己先套一次 softmax 幾乎一定是 bug —— 你算出來的是 $\log(\mathop{\mathrm{softmax}}(\mathop{\mathrm{softmax}}(z)))$，一個沒有意義的量。
 
 ### 資料增強為什麼有用
 
@@ -100,14 +100,14 @@ Cutmix:
 
 ### 標籤平滑
 
-mixup 的近親。不再拿 `[0, 0, 1, 0, 0]` 當訓練目標，而是改用 `[eps/C, eps/C, 1-eps, eps/C, eps/C]`，其中 `eps` 是個小值，例如 0.1。這會阻止模型產生任意尖銳的 logits，並且幾乎不花成本就改善了校準。自 PyTorch 1.10 起，`nn.CrossEntropyLoss(label_smoothing=0.1)` 已內建這個功能。
+mixup 的近親。不再拿 `[0, 0, 1, 0, 0]` 當訓練目標，而是改用 `[eps/C, eps/C, 1-eps+eps/C, eps/C, eps/C]`，其中 `eps` 是個小值，例如 0.1（也就是把 one-hot 目標和均勻分布混合，所以總和仍然是 1）。這會阻止模型產生任意尖銳的 logits，並且幾乎不花成本就改善了校準。自 PyTorch 1.10 起，`nn.CrossEntropyLoss(label_smoothing=0.1)` 已內建這個功能。
 
 ### 超越準確率的評估
 
 總體準確率會藏住不平衡。一個 90-10 的二元分類器只要永遠預測多數類別就有 90%。真正能告訴你發生了什麼事的工具是：
 
 - **各類別準確率** —— 每個類別一個數字；表現不佳的類別立刻現形。
-- **混淆矩陣** —— 一個 C x C 的格子，第 i 橫列、第 j 縱行是實際類別 i 被預測成類別 j 的次數；對角線是預測正確的部分，而你的模型真正的樣貌就住在非對角線上。
+- **混淆矩陣** —— 一個 $C \times C$ 的格子，第 $i$ 橫列、第 $j$ 縱行是實際類別 $i$ 被預測成類別 $j$ 的次數；對角線是預測正確的部分，而你的模型真正的樣貌就住在非對角線上。
 - **Top-1／Top-5** —— 正確類別有沒有出現在機率最高的 1 個或 5 個預測裡；Top-5 對 ImageNet 很重要，因為像「Norwich terrier」與「Norfolk terrier」這樣的類別確實有真正的模糊性。
 - **校準（ECE）** —— 信心值 0.8 的預測，真的有 80% 的時候是對的嗎？現代網路系統性地過度自信；用溫度縮放或標籤平滑可以修正。
 
@@ -415,7 +415,7 @@ val_ds   = CIFAR10(root="./data", train=False, download=True, transform=eval_tf)
 | DataLoader | 「打包批次的東西」 | 把資料集包上打亂、分批，以及（選配的）多工作行程載入；一半的訓練 bug 都被算在它頭上 |
 | 資料增強 | 「隨機變換」 | 訓練時任何保持標籤不變的像素層級變換；教會 CNN 它天生沒有的不變性 |
 | Mixup／Cutmix | 「把兩張影像混起來」 | 同時混合輸入與標籤，讓分類器學到平滑的內插而不是硬邊界 |
-| 標籤平滑 | 「軟一點的目標」 | 把 one-hot 換成 (1-eps, eps/(C-1), ...)；改善校準，並小幅提升準確率 |
+| 標籤平滑 | 「軟一點的目標」 | 把 one-hot 換成 (1-eps+eps/C, eps/C, ...)；改善校準，並小幅提升準確率 |
 | Top-k 準確率 | 「Top-5」 | 正確類別出現在機率最高的 k 個預測裡；用在類別本身確實有模糊性的資料集上 |
 | 混淆矩陣 | 「錯誤都住在哪裡」 | 一張 C x C 的表格，第 (i, j) 格數的是實際類別 i 被預測成 j 的影像數；對角線是對的，非對角線告訴你該修什麼 |
 
