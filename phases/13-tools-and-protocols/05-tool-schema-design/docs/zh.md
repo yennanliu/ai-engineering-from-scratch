@@ -84,7 +84,7 @@ notes_search(query)
 ### 參數設計
 
 - **封閉集合一律用 enum。** 是 `units: "celsius" | "fahrenheit"`，不是 `units: string`。enum 會告訴模型可接受值的全集。
-- **必填對選填。** 只標出最低限度需要的。其餘全部選填。OpenAI 嚴格模式要求每個欄位都進 `required`；那就在你的程式碼裡加一條 `is_default: true` 的慣例，並讓模型可以略過它。
+- **必填對選填。** 只標出最低限度需要的。其餘全部選填。OpenAI 嚴格模式要求每個欄位都進 `required`，所以模型不能略過任何一個。把選填欄位的型別寫成與 `null` 的聯集，讓模型在沒有值時送出 `null`。
 - **定型的 ID。** `note_id: string` 沒問題，但要加上一個 `pattern`（`^note-[0-9]{8}$`）來攔下幻覺出來的 id。
 - **不要用過度彈性的型別。** 避開 `type: any`。模型會幻覺出各種形狀。
 - **要描述那個欄位。** `{"type": "string", "description": "ISO 8601 date in UTC, e.g. 2026-04-22"}`。這段描述是模型提示詞的一部分。
