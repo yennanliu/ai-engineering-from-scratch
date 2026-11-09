@@ -1,6 +1,6 @@
 # 無伺服器 LLM 的冷啟動緩解
 
-> 一份 20 GB 的模型映像，從冷到能服務要 5-10 分鐘（7B）到 20 分鐘以上（70B）。在真正的無伺服器世界裡，那不是暖機 —— 那是一次停擺。緩解手段作用在五個層次上：預先播種的節點映像（AWS 上的 Bottlerocket、雙磁碟區架構）、模型串流（NVIDIA Run:ai Model Streamer，在 vLLM 中已原生支援）、GPU 記憶體快照（Modal 的檢查點，重啟最多快 10 倍）、暖池（`min_workers=1`）、分層載入（ServerlessLLM 的 NVMe→DRAM→HBM 管線，延遲降低 10-200 倍），以及搬移輸入詞元（KB）而不是 KV 快取（GB）的即時遷移。Modal 公布 2-4 秒的冷啟動作為地板；Baseten 預設 5-10 秒，有預熱時可到次秒級。這一課教你量測、編列預算，並把這五層疊起來。
+> 一個大型模型從冷到能服務要好幾分鐘：一個 70B 模型在全新節點上，大約要 3-8 分鐘才吐出第一個詞元。在真正的無伺服器世界裡，那不是暖機 —— 那是一次停擺。緩解手段作用在五個層次上：預先播種的節點映像（AWS 上的 Bottlerocket、雙磁碟區架構）、模型串流（NVIDIA Run:ai Model Streamer，在 vLLM 中已原生支援）、GPU 記憶體快照（Modal 的檢查點，重啟最多快 10 倍）、暖池（`min_workers=1`）、分層載入（ServerlessLLM 的 NVMe→DRAM→HBM 管線，延遲降低 10-200 倍），外加一個額外的第六種模式：搬移輸入詞元（KB）而不是 KV 快取（GB）的即時遷移。Modal 公布 2-4 秒的冷啟動作為地板；Baseten 預設 5-10 秒，有預熱時可到次秒級。這一課教你量測、編列預算，並把這五層疊起來。
 
 **類型：** 學習
 **程式語言：** Python (stdlib, toy cold-start path simulator)
