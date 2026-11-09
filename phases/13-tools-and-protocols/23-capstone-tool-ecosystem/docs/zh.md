@@ -205,7 +205,7 @@ cd phases/13-tools-and-protocols/23-capstone-tool-ecosystem
 python3 code/main.py
 ```
 
-檢視五件事：
+檢視六件事：
 
 1. `server/discover` 公告修訂版 `2026-07-28` 與 Tasks 擴充。
 2. Alice 可以讀取並產出報告，而 Bob 那個需要寫入範圍的呼叫被拒絕。
