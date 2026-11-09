@@ -34,7 +34,7 @@
 
 ### 規模上的延遲落差
 
-Artificial Analysis 持續跑基準。在等價的 Llama 3.1 405B 部署上（共享隨需），Azure OpenAI 的首個詞元延遲中位數約 50 毫秒；Bedrock 約 75 毫秒。這個落差不是 AWS 的失誤 —— 它是容量模型的差異。Azure 賣 PTU（預配吞吐量單位），替你的租戶保留 GPU 容量。Bedrock 的對應物（Provisioned Throughput）也存在，但每單位起跳約每小時 21 美元，而多數客戶留在共享隨需上。
+Artificial Analysis 持續跑基準。在等價的 Llama 3.1 405B 部署上，使用 PTU 的 Azure 首個詞元延遲中位數約 50 毫秒；共享隨需的 Bedrock 約 75 毫秒。這個落差不是 AWS 的失誤 —— 它是容量模型的差異。Azure 賣 PTU（預配吞吐量單位），替你的租戶保留 GPU 容量。Bedrock 的對應物（Provisioned Throughput）也存在，但每單位起跳約每小時 21 美元，而多數客戶留在共享隨需上。
 
 隨需的共享容量要跟其他所有客戶的流量競爭。專屬容量不用。若你的產品 SLA 是 P99 的 TTFT < 100 毫秒，你要嘛在 Azure 買 PTU、要嘛買 Bedrock 的 Provisioned Throughput，要嘛接受預設的變異。
 
@@ -96,7 +96,7 @@ i4-platform-lanes
 2. 你的產品需要 Claude 3.7 Sonnet 與 GPT-4o。設計一份雙供應商部署 —— 哪個放哪家超大規模業者、前面擺什麼閘道、故障轉移政策是什麼？
 3. 一位受監管的醫療客戶要求 BAA、美東資料落地，以及 P99 TTFT 低於 100 毫秒。挑一個平台，並用三項具體功能來論證。
 4. 你發現這個月的 Bedrock 帳單漲了 4 倍，但流量沒變。在沒有 Application Inference Profile 的情況下，你要怎麼找出元凶？有 profile 的話要多久？
-5. 讀 Azure OpenAI 與 Bedrock 的定價頁。對一份每月 1 億詞元的 Claude 工作負載，哪一個比較便宜 —— 直接用 Anthropic API、Bedrock 隨需，還是 Bedrock Provisioned Throughput？
+5. 讀 Anthropic API 與 Bedrock 的定價頁。對一份每月 1 億詞元的 Claude 工作負載，哪一個比較便宜 —— 直接用 Anthropic API、Bedrock 隨需，還是 Bedrock Provisioned Throughput？
 
 ## 關鍵術語
 
