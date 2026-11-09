@@ -26,7 +26,7 @@
 
 ### 套用在網路上的連鎖律
 
-你在階段 1 的單元 05 見過連鎖律。快速複習：若 y = f(g(x))，則 dy/dx = f'(g(x)) * g'(x)。把鏈上的導數一路乘起來。
+你在階段 1 的單元 05 見過連鎖律。快速複習：若 $y = f(g(x))$，則 $\frac{dy}{dx} = f'(g(x)) \cdot g'(x)$。把鏈上的導數一路乘起來。
 
 在神經網路裡，這條「鏈」就是從輸入到損失的那一串運算。每一層乘上權重、加上偏差項、再穿過激活函式。損失函式把最後的輸出跟目標比較。反向傳播沿著這條鏈往回走，算出每個運算對誤差的貢獻有多少。
 
@@ -45,9 +45,9 @@ graph LR
     y["target"] --> loss
 ```
 
-前向傳播：數值從左流到右。x 與 w 產生 z1 = w*x。加上 b 得到 z2。sigmoid 給出激活值 a。再用損失函式把 a 跟目標 y 比較。
+前向傳播：數值從左流到右。$x$ 與 $w$ 產生 $z_1 = w x$。加上 $b$ 得到 $z_2$。sigmoid 給出激活值 $a$。再用損失函式把 $a$ 跟目標 $y$ 比較。
 
-反向傳播：梯度從右流到左。從 dL/da（損失隨激活值怎麼變）開始。乘上 da/dz2（sigmoid 的導數），得到 dL/dz2。再拆成 dL/db（因為 z2 = z1 + b，它等於 dL/dz2）與 dL/dz1。接著 dL/dw = dL/dz1 * x、dL/dx = dL/dz1 * w。
+反向傳播：梯度從右流到左。從 $\partial L/\partial a$（損失隨激活值怎麼變）開始。乘上 $\partial a/\partial z_2$（sigmoid 的導數），得到 $\partial L/\partial z_2$。再拆成 $\partial L/\partial b$（因為 $z_2 = z_1 + b$，它等於 $\partial L/\partial z_2$）與 $\partial L/\partial z_1$。接著 $\partial L/\partial w = \partial L/\partial z_1 \cdot x$、$\partial L/\partial x = \partial L/\partial z_1 \cdot w$。
 
 反向傳播時，圖上每個節點只做一件事：接住從上游來的梯度，乘上自己的局部梯度，再往下傳。
 
@@ -84,7 +84,7 @@ graph RL
     L1 -- "dL/dz1 = dL/da1 * sigmoid'(z1)" --> I["Input"]
 ```
 
-在每一層，梯度都會再乘上一次 sigmoid 的導數。sigmoid 的導數是 a * (1 - a)，最大值只有 0.25（在 a = 0.5 時）。往下三層，梯度最多只被乘上 0.25^3 = 0.0156。往下十層：0.25^10 = 0.000001。
+在每一層，梯度都會再乘上一次 sigmoid 的導數。sigmoid 的導數是 $a(1 - a)$，最大值只有 0.25（在 $a = 0.5$ 時）。往下三層，梯度最多只被乘上 $0.25^3 = 0.0156$。往下十層：$0.25^{10} = 0.000001$。
 
 ### 梯度消失
 
@@ -102,7 +102,7 @@ After 10 layers:  gradient * 0.25^10 = 0.000001x original
 
 ### 推導一個 2 層網路的梯度
 
-以下是具體的數學，網路是：輸入 x、一層帶 sigmoid 的隱藏層、一層帶 sigmoid 的輸出層，加上 MSE 損失。
+以下是具體的數學，網路是：輸入 $x$、一層帶 sigmoid 的隱藏層、一層帶 sigmoid 的輸出層，加上 MSE 損失。
 
 前向傳播：
 ```math
@@ -186,9 +186,9 @@ def __mul__(self, other):
     return out
 ```
 
-加法：d(a+b)/da = 1、d(a+b)/db = 1。所以兩個輸入都直接拿到輸出的梯度。
+加法：$\partial(a+b)/\partial a = 1$、$\partial(a+b)/\partial b = 1$。所以兩個輸入都直接拿到輸出的梯度。
 
-乘法：d(a*b)/da = b、d(a*b)/db = a。每個輸入拿到的是另一個輸入的值乘上輸出的梯度。
+乘法：$\partial(ab)/\partial a = b$、$\partial(ab)/\partial b = a$。每個輸入拿到的是另一個輸入的值乘上輸出的梯度。
 
 `+=` 很關鍵。一個 Value 可能被用在多個運算裡，它的梯度是所有路徑傳回來的梯度總和。
 
@@ -210,7 +210,7 @@ def sigmoid(self):
     return out
 ```
 
-sigmoid 的導數：sigmoid(x) * (1 - sigmoid(x))。前向傳播時我們已經算出 sigmoid(x) = s，直接重用就好，不必多做事。
+sigmoid 的導數：$\text{sigmoid}(x) \cdot (1 - \text{sigmoid}(x))$。前向傳播時我們已經算出 $\text{sigmoid}(x) = s$，直接重用就好，不必多做事。
 
 ```python
 def mse_loss(predicted, target):
@@ -218,7 +218,7 @@ def mse_loss(predicted, target):
     return diff * diff
 ```
 
-單一輸出的 MSE：(predicted - target)^2。我們把減法寫成加上一個取負的 Value。
+單一輸出的 MSE：$(\text{predicted} - \text{target})^2$。我們把減法寫成加上一個取負的 Value。
 
 ### 步驟 4：反向傳播
 
@@ -242,7 +242,7 @@ def backward(self):
         v._backward()
 ```
 
-從損失開始（梯度 = 1.0，因為 dL/dL = 1）。沿著排序好的圖往回走。每個節點的 `_backward` 把梯度推給它的子節點。
+從損失開始（梯度 = 1.0，因為 $dL/dL = 1$）。沿著排序好的圖往回走。每個節點的 `_backward` 把梯度推給它的子節點。
 
 ### 步驟 5：層與網路
 
@@ -302,7 +302,7 @@ class Network:
             p.grad = 0.0
 ```
 
-一個 Neuron 接收輸入，算出加權和加偏差項，再套上 sigmoid。權重初始化以 sqrt(2/n_inputs) 縮放，避免較深的網路裡 sigmoid 飽和。一個 Layer 是一串 Neuron。一個 Network 是一串 Layer。`parameters()` 方法把所有可學習的 Value 蒐集起來，這樣我們才能對它們做參數更新。
+一個 Neuron 接收輸入，算出加權和加偏差項，再套上 sigmoid。權重初始化以 $\sqrt{2/n_{\text{inputs}}}$ 縮放，避免較深的網路裡 sigmoid 飽和。一個 Layer 是一串 Neuron。一個 Network 是一串 Layer。`parameters()` 方法把所有可學習的 Value 蒐集起來，這樣我們才能對它們做參數更新。
 
 ### 步驟 6：在 XOR 上訓練
 
@@ -440,9 +440,9 @@ with torch.no_grad():
 
 ## 練習
 
-1. 為 Value 類別加上 `__sub__` 方法（a - b = a + (-1 * b)）。接著實作 `__neg__` 方法。拿 (a - b)^2 這種簡單的表達式跟手算結果比對，驗證梯度是對的。
+1. 為 Value 類別加上 `__sub__` 方法 $(a - b = a + (-1 \cdot b))$。接著實作 `__neg__` 方法。拿 $(a - b)^2$ 這種簡單的表達式跟手算結果比對，驗證梯度是對的。
 
-2. 為 Value 加上 `relu` 方法（輸出 max(0, x)，導數在 x > 0 時是 1，否則是 0）。把隱藏層的 sigmoid 換成 relu，再訓練一次 XOR。比較收斂速度。你應該會看到訓練變快 —— 這是單元 04 的預告。
+2. 為 Value 加上 `relu` 方法（輸出 $\max(0, x)$，導數在 $x \gt 0$ 時是 1，否則是 0）。把隱藏層的 sigmoid 換成 relu，再訓練一次 XOR。比較收斂速度。你應該會看到訓練變快 —— 這是單元 04 的預告。
 
 3. 在 Value 上實作 `__pow__` 方法以支援整數次方。用它把 `mse_loss` 換成正規的 `(predicted - target) ** 2` 表達式。驗證梯度跟原本的實作一致。
 
@@ -454,14 +454,14 @@ with torch.no_grad():
 
 | 術語 | 大家怎麼說 | 實際上是什麼 |
 |------|----------------|----------------------|
-| 反向傳播（backpropagation） | 「網路在學習」 | 一套演算法，靠著在計算圖上反向套用連鎖律，算出每個權重的 dL/dw |
+| 反向傳播（backpropagation） | 「網路在學習」 | 一套演算法，靠著在計算圖上反向套用連鎖律，算出每個權重的 $\partial L/\partial w$ |
 | 計算圖 | 「網路的結構」 | 一張有向無環圖，節點是運算，邊上帶著數值（前向）與梯度（反向） |
-| 連鎖律 | 「把導數乘起來」 | 若 y = f(g(x))，則 dy/dx = f'(g(x)) * g'(x) —— 反向傳播的數學基礎 |
+| 連鎖律 | 「把導數乘起來」 | 若 $y = f(g(x))$，則 $\frac{dy}{dx} = f'(g(x)) \cdot g'(x)$ —— 反向傳播的數學基礎 |
 | 梯度 | 「最陡上升的方向」 | 損失對某個參數的偏導數 —— 告訴你要怎麼改那個參數才能讓損失變小 |
 | 梯度消失 | 「深層網路學不動」 | 梯度穿過像 sigmoid 這種會飽和的激活函式時，會逐層指數縮小 |
 | 前向傳播 | 「跑一次網路」 | 依序套用每一層的運算，從輸入算出輸出，並把中間值存下來 |
 | 反向傳播（backward pass） | 「算梯度」 | 反向走過計算圖，用連鎖律在每個節點累積梯度 |
-| 學習率 | 「學得多快」 | 一個純量，控制參數更新的步長：w_new = w_old - lr * gradient |
+| 學習率 | 「學得多快」 | 一個純量，控制參數更新的步長：$w_{\text{new}} = w_{\text{old}} - \text{lr} \cdot \text{gradient}$ |
 | 拓撲排序 | 「正確的順序」 | 一種圖節點的排序，讓每個節點都排在它所有相依項之後 —— 保證梯度傳下去之前已經完全累積好 |
 | Autograd | 「自動微分」 | 一套在前向計算時建出計算圖、並自動算出梯度的系統 —— PyTorch 的引擎做的就是這件事 |
 
