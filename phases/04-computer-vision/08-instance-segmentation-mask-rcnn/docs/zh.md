@@ -84,7 +84,7 @@ RoIAlign 在 COCO 上白白把遮罩 AP 拉高 3 到 4 個點。現在只要在�
 
 ### 損失
 
-Mask R-CNN 有四種損失加在一起：
+Mask R-CNN 有五種損失加在一起：
 
 ```math
 L = L_{\text{rpn\_cls}} + L_{\text{rpn\_box}} + L_{\text{box\_cls}} + L_{\text{box\_reg}} + L_{\text{mask}}
@@ -261,7 +261,7 @@ def train_step(model, images, targets, optimizer):
     return {k: v.item() for k, v in loss_dict.items()}
 ```
 
-`targets` 這個 list 裡每張影像要有一個 dict，含 `boxes`、`labels` 與 `masks`（形狀為 `(num_instances, H, W)` 的二值張量）。模型在訓練時回傳一個裝著四種損失的 dict，在評估時回傳一串預測，依 `model.training` 切換。
+`targets` 這個 list 裡每張影像要有一個 dict，含 `boxes`、`labels` 與 `masks`（形狀為 `(num_instances, H, W)` 的二值張量）。模型在訓練時回傳一個裝著五種損失的 dict，在評估時回傳一串預測，依 `model.training` 切換。
 
 `pycocotools` 的評估器會同時給出框與遮罩的 mAP@IoU=0.5:0.95；兩個數字都要看，才知道瓶頸是在框頭還是遮罩頭。
 
