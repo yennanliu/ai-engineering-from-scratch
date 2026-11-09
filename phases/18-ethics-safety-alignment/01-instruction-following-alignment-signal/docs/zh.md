@@ -84,7 +84,7 @@ al-instruct-pipeline
 要看什麼：
 
 - `beta = 0.1` 對比 `beta = 0.0` 的獎勵軌跡。
-- KL(pi || pi_SFT) 隨訓練步數的變化。
+- $\mathrm{KL}(\pi \Vert \pi_{\text{SFT}})$ 隨訓練步數的變化。
 - 最終的動作分布與標註員偏好的比較。
 
 ## 產出交付
@@ -109,7 +109,7 @@ al-instruct-pipeline
 |------|-----------------|------------------------|
 | SFT | 「指令微調」 | 第一階段：在提示詞－回應配對上做交叉熵微調 |
 | 獎勵模型 | 「那個 RM」 | 在 (提示詞, 回應) 上的純量迴歸器，用 Bradley-Terry 在成對標籤上訓練 |
-| Bradley-Terry | 「成對偏好損失」 | -log sigmoid(r_w - r_l)；把成對排序化約成二元分類 |
+| Bradley-Terry | 「成對偏好損失」 | $-\log \sigma(r_w - r_l)$；把成對排序化約成二元分類 |
 | KL 懲罰 | 「那個正則化項」 | `beta * KL(pi \|\| pi_SFT)` —— 讓 RL 策略待在 SFT 錨點附近 |
 | PPO-ptx | 「混了預訓練的 PPO」 | 在 PPO 目標函式裡加上一部分預訓練對數概似，以抵銷對齊稅 |
 | 對齊稅 | 「RLHF 造成的退步」 | RLHF 之後在它沒針對的標準基準上掉下來的分數 |
