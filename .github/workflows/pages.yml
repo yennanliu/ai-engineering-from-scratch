@@ -23,6 +23,8 @@ on:
       - "vercel.json"
       - "scripts/pages_aliases.mjs"
       - "scripts/test_pages_aliases.mjs"
+      - "scripts/pages_i18n.mjs"
+      - "scripts/test_pages_i18n.mjs"
       - ".github/workflows/pages.yml"
   pull_request:
     branches: [main]
@@ -31,6 +33,8 @@ on:
       - "vercel.json"
       - "scripts/pages_aliases.mjs"
       - "scripts/test_pages_aliases.mjs"
+      - "scripts/pages_i18n.mjs"
+      - "scripts/test_pages_i18n.mjs"
       - "site/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
@@ -66,6 +70,8 @@ jobs:
           node-version: "22"
       - name: every alias stub points at a file that ships
         run: node --test scripts/test_pages_aliases.mjs
+      - name: zh-Hant layer injection
+        run: node --test scripts/test_pages_i18n.mjs
 
   # Runs on pull requests too, so a change that breaks the site build fails
   # its PR instead of the first deploy after merge.
@@ -113,6 +119,12 @@ jobs:
       # pages it produced.
       - name: generate clean-URL aliases
         run: node scripts/pages_aliases.mjs
+
+      # Fork-only. Most pages, and every generated one, never load the zh-Hant
+      # dictionary; this adds it (plus a page's own dictionary from
+      # site/i18n-pages/) after the build, so upstream's templates stay untouched.
+      - name: load the zh-Hant layer on every page
+        run: node scripts/pages_i18n.mjs
 
       - name: no alias replaced a real page
         run: |

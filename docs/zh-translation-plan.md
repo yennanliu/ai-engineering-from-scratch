@@ -63,6 +63,10 @@ every sync. Pages that render mostly English body content (interviews, cheat she
 translated header, navigation and language toggle. Test it the way `test_pages_aliases.mjs` tests the
 alias step.
 
+Done: `scripts/pages_i18n.mjs` + `scripts/test_pages_i18n.mjs`. Page body text is the follow-on: add
+`site/i18n-pages/<page>.zh-Hant.js` (`Object.assign(window.I18N_ZH_HANT, {...})`, keys are the
+page's text nodes, whitespace collapsed); the step loads it on that page only.
+
 ### W4: missing lessons, in this order
 
 | Order | Lessons | Words | Why first |

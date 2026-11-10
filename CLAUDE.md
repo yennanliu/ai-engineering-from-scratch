@@ -39,6 +39,7 @@ delete them to tidy an upstream diff):
 |---|---|
 | `.github/workflows/pages.yml` | the entire GitHub Pages deployment |
 | `scripts/pages_aliases.mjs` | `/catalog`, `/glossary`, `/path`, `/roadmap`, `/about` clean URLs |
+| `scripts/pages_i18n.mjs` (+ test), `site/i18n-pages/` | the zh-Hant dictionary and language toggle on every page `pages.yml` builds, and per-page string tables (e.g. `learning-paths`) |
 | `.gitignore` alias-stub block | leaves generated redirect stubs untracked-but-dirty |
 | `CLAUDE.md` | this file |
 | `docs/fork-sync.md` | the upstream-sync runbook and the per-sync log — read it before syncing, append to it after |

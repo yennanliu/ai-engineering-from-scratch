@@ -76,24 +76,30 @@ Upstream's KaTeX migration (#598) turned inline code spans into `$…$` and ````
 `en.md`. The 2026-11 sync had copied only the formula blocks; PRs #39–#47 copied the inline math, so
 zh pages now typeset the same formulas the English pages do.
 
-### 5. Pages that never load the Chinese dictionary
+### 5. Pages that never load the Chinese dictionary: closed for the layer, open for page text
 
-`site/i18n.js` translates any page that includes it, but only 9 of 24 top-level pages do, and none
-of the generated sections do. A reader who switches to Chinese and then follows the main navigation
-lands on English with no language toggle:
+`site/i18n.js` translates any page that includes it, but only 9 of 24 top-level pages did, and none
+of the generated sections did, so a reader who switched to Chinese and followed the main navigation
+landed on English with no language toggle.
 
-| Pages | Count |
+`scripts/pages_i18n.mjs` (a fork-only post-build step in `pages.yml`) now adds the dictionary and
+`i18n.js` to every built page that has a `header.js` tag: 1,305 pages in a full build (hubs,
+interviews, cheat sheets, practice, manuals, and the 15 top-level pages). Each gains the language
+toggle and the translated header and navigation.
+
+What that does *not* translate is a page's own body text, which the shared dictionary has no entries
+for. A page gets that from a per-page table, `site/i18n-pages/<page>.zh-Hant.js`, which the step
+loads when it exists:
+
+| Page | Body text |
 |---|---|
-| `learning-paths`, `projects`, `project`, `skills`, `how-to-learn`, `highlights`, `sponsors`, `blogs`, `developer`, `contact`, `privacy`, `404`, three `inside-*` explainers | 15 |
-| Generated `site/hubs/` (glossary and topic hubs) | 257 |
-| Generated `site/interviews/` | 566 |
-| Generated `site/cheatsheets/` | 156 |
-| Generated `site/practice/` | 64 |
+| `learning-paths` | English |
+| `projects`, `skills`, `how-to-learn`, `highlights`, the other top-level pages | English |
+| Generated hubs, interviews, cheat sheets, practice, manuals | English (by design for now; see gap 6) |
 
-The generated pages are built by upstream's `site/build-*.js`. Patching those generators would
-conflict on every sync. A fork-only post-build step in `pages.yml` (the way `pages_aliases.mjs`
-works) that adds the two `<script>` tags to every built page avoids that.
-Source: `grep -L 'i18n.zh-Hant.js' site/*.html`.
+Known issue: generated pages use `<base href="/">` and `/header.js`, which on GitHub Pages resolve to
+the domain root rather than `/ai-engineering-from-scratch/`, so those pages load without their
+scripts and styles there. The zh layer follows the same prefix and works once that is fixed.
 
 ### 6. Content that is English-only
 
