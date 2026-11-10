@@ -19,7 +19,10 @@ node_modules/
 package-lock.json
 .next/
 out/
-!manuals/*/capture/out/
+!manuals/*/capture/
+
+
+out/
 .vercel
 
 target/
