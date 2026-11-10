@@ -40,14 +40,14 @@ PE_{(pos, 2i+1)} &= \cos\left(pos / 10000^{2i / d_{\text{model}}}\right)
 
 ### RoPE
 
-旋轉 Q 與 K 向量（不是嵌入）。對一對維度 `(2i, 2i+1)`：
+旋轉 Q 與 K 向量（不是嵌入）。對一對維度 $(2i, 2i+1)$：
 
 ```math
 \begin{bmatrix} q'_{2i} \\ q'_{2i+1} \end{bmatrix} = \begin{bmatrix} \cos(pos \cdot \theta_i) & -\sin(pos \cdot \theta_i) \\ \sin(pos \cdot \theta_i) & \cos(pos \cdot \theta_i) \end{bmatrix} \begin{bmatrix} q_{2i} \\ q_{2i+1} \end{bmatrix}
 \qquad \theta_i = \text{base}^{-2i / d_{\text{head}}}, \quad \text{base} = 10000 \text{ by default}
 ```
 
-對位置為 `pos_k` 的 key 施加同樣的旋轉。點積 `q'_m · k'_n` 於是變成只與 `(m - n)` 有關的函式。也就是說：**注意力分數只取決於相對距離**，即使旋轉是依絕對位置算出來的。漂亮的把戲。
+對位置為 `pos_k` 的 key 施加同樣的旋轉。點積 $q'_m \cdot k'_n$ 於是變成只與 $(m - n)$ 有關的函式。也就是說：**注意力分數只取決於相對距離**，即使旋轉是依絕對位置算出來的。漂亮的把戲。
 
 擴展 RoPE：`base` 可以被縮放（NTK-aware、YaRN、LongRoPE），從而在不重新訓練的情況下外推到更長的脈絡。Llama 3 就是這樣把脈絡從 8K 擴到 128K。
 
@@ -59,7 +59,7 @@ PE_{(pos, 2i+1)} &= \cos\left(pos / 10000^{2i / d_{\text{model}}}\right)
 \text{attn\_score}[i, j] = \frac{q_i \cdot k_j}{\sqrt{d}} - m_h \cdot |i - j|
 ```
 
-其中 `m_h` 是每個頭專屬的斜率（例如 `1 / 2^(8·h/H)`）。越近的詞元被加分；越遠的詞元被扣分。訓練期不花額外成本。論文顯示它的長度外推勝過正弦位置編碼，而在其原始訓練長度上與 RoPE 打平。
+其中 $m_h$ 是每個頭專屬的斜率（例如 $1 / 2^{8h/H}$）。越近的詞元被加分；越遠的詞元被扣分。訓練期不花額外成本。論文顯示它的長度外推勝過正弦位置編碼，而在其原始訓練長度上與 RoPE 打平。
 
 ### 2026 年該選哪個
 
@@ -113,7 +113,7 @@ def apply_rope(x, pos, base=10000):
     return out
 ```
 
-關鍵：對位置 `m` 的 Q 與位置 `n` 的 K 施加同一個函式。它們的點積會在每一組座標對上帶出一個 `cos((m-n)·θ_i)` 因子。注意力於是免費學到了相對位置。
+關鍵：對位置 $m$ 的 Q 與位置 $n$ 的 K 施加同一個函式。它們的點積會在每一組座標對上帶出一個 $\cos((m-n) \cdot \theta_i)$ 因子。注意力於是免費學到了相對位置。
 
 ### 步驟 3：ALiBi 的斜率與偏差
 
@@ -168,7 +168,7 @@ model = AutoModel.from_pretrained("meta-llama/Llama-3.2-3B")
 | 位置編碼 | 「告訴注意力順序是什麼」 | 任何加進嵌入或注意力、用來編碼位置的訊號。 |
 | 正弦位置編碼 | 「最原始那個」 | 以幾何頻率排列的 `sin/cos`，加到嵌入上；無法外推。 |
 | RoPE | 「旋轉式嵌入」 | 依位置決定角度來旋轉 Q、K；點積便編碼了相對距離。 |
-| ALiBi | 「線性偏差的把戲」 | 對注意力分數加上 `-m·\|i-j\|`；不需要嵌入，外推能力極好。 |
+| ALiBi | 「線性偏差的把戲」 | 對注意力分數加上 $-m \cdot \lvert i-j \rvert$；不需要嵌入，外推能力極好。 |
 | base | 「RoPE 的旋鈕」 | RoPE 裡的頻率縮放係數；調大即可在推論時擴展脈絡。 |
 | NTK-aware | 「一種 RoPE 縮放招數」 | 重新縮放 `base`，讓脈絡擴展時高頻維度不被壓縮。 |
 | YaRN | 「花俏的那一個」 | 逐維度的插值加外推，能保住注意力的熵。 |

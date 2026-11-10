@@ -16,7 +16,7 @@
 
 ## 問題所在
 
-標準 softmax 注意力有一個數學性質，一放大到規模就變成營運上的頭痛問題。對一個查詢 `q`，注意力權重是 `softmax(qK^T / sqrt(d))`。softmax 永遠產不出精確的零 —— 每個不匹配的詞元都會拿到一些正的質量。這些殘留質量就是雜訊，而且它會隨脈絡長度放大。在 12.8 萬個詞元下，就算每個不匹配的詞元只拿到 0.001% 的機率，127,999 個加起來也貢獻了約 12%。模型必須學會繞開一層會隨脈絡長大的雜訊底噪。
+標準 softmax 注意力有一個數學性質，一放大到規模就變成營運上的頭痛問題。對一個查詢 `q`，注意力權重是 `softmax(qK^T / sqrt(d))`。softmax 永遠產不出精確的零：每個不匹配的詞元都會拿到一些正的質量。這些殘留質量就是雜訊，而且它會隨脈絡長度放大。在 12.8 萬個詞元下，就算每個不匹配的詞元只拿到 0.0001% 的機率，127,999 個加起來也貢獻了約 13%。模型必須學會繞開一層會隨脈絡長大的雜訊底噪。
 
 實證上，這會表現成注意力頭的互相干擾：長脈絡 RAG 裡幻覺出來的引用、10 萬詞元檢索任務上的 lost-in-the-middle 失敗，以及超過 32k 之後大海撈針基準上細微的準確率退化。Differential Transformer 論文（arXiv:2410.05258，ICLR 2025）量測出了這個落差：DIFF Transformer 相較同尺寸的基準模型，困惑度更低、長脈絡準確率更高、幻覺更少。
 
@@ -38,7 +38,7 @@ w_i = \frac{\exp(q \cdot k_i / \sqrt{d})}{\sum_j \exp(q \cdot k_j / \sqrt{d})}
 
 ### 差分的想法
 
-把每個頭的 Q 與 K 投影切成兩份：Q = (Q_1, Q_2) 與 K = (K_1, K_2)。算出兩張注意力圖：
+把每個頭的 Q 與 K 投影切成兩份：$Q = (Q_1, Q_2)$ 與 $K = (K_1, K_2)$。算出兩張注意力圖：
 
 ```math
 \begin{aligned}
@@ -65,7 +65,7 @@ A_2 &= \mathop{\mathrm{softmax}}(Q_2 K_2^T / \sqrt{d})
 
 V1 讓參數量與基準 Transformer 持平。為了讓每個頭有兩個查詢，它把頭維度砍半。這犧牲了頭的表達力，更痛的是把每個頭的 value 快取也砍半了。解碼時每一步得把 value 快取載入兩次（兩個 softmax 分支各一次）。結果是：參數量雖然打平，解碼卻比基準還慢。
 
-V2 把查詢頭的數量加倍，KV 頭維持不變（參數是從 up-projection 借來的）。頭維度與基準相同。做完減法後，多出來的那個維度會被投影回去，好對上基準 Transformer 的 O_W 投影。三件事同時發生：
+V2 把查詢頭的數量加倍，KV 頭維持不變（參數是從 up-projection 借來的）。頭維度與基準相同。做完減法後，多出來的那個維度會被投影回去，好對上基準 Transformer 的 $O_W$ 投影。三件事同時發生：
 
 1. 解碼速度追平基準（KV 快取只載入一次）。
 2. FlashAttention 原封不動就能跑（不用自訂 kernel）。
@@ -141,8 +141,8 @@ out = [[sum(w * v[j] for w, v in zip(row, V)) for j in range(d_v)] for row in di
 給定一組設定（hidden=4096、heads=32、d_head=128），印出：
 
 - 基準 Transformer：Q、K、V 各為 `hidden * hidden` 大小，MLP 為 4 * hidden。
-- DIFF V1：Q、K 各為 `hidden * hidden`，V 為 `hidden * hidden`（不變），頭維度在內部砍半。多出逐頭的 `lambda` 參數（`O(heads * d_head)`）。
-- DIFF V2：Q 為 `2 * hidden * hidden`，K 為 `hidden * hidden`，V 為 `hidden * hidden`。多出來的維度在進 O_W 之前投影回去。多出同樣的 `lambda` 參數。
+- DIFF V1：Q、K 各為 `hidden * hidden`，V 為 `hidden * hidden`（不變），頭維度在內部砍半。多出逐頭的 `lambda` 參數 $(O(\text{heads} \cdot d_{\text{head}}))$。
+- DIFF V2：Q 為 `2 * hidden * hidden`，K 為 `hidden * hidden`，V 為 `hidden * hidden`。多出來的維度在進 $O_W$ 之前投影回去。多出同樣的 `lambda` 參數。
 
 這個玩具會量出 V2 多付的參數成本（每個注意力區塊大約多 `hidden * hidden`）並印出來。
 
@@ -184,8 +184,8 @@ out = [[sum(w * v[j] for w, v in zip(row, V)) for j in range(d_v)] for row in di
 
 | 術語 | 大家怎麼說 | 實際上是什麼 |
 |------|----------------|------------------------|
-| 差分注意力 | 「兩個 softmax 相減」 | 把 Q、K 切成兩半、算出兩張 softmax 圖，把第二張（乘上 lambda）從第一張減掉，再乘上 V |
-| 雜訊底噪 | 「softmax 那條不為零的尾巴」 | softmax 給每個無關詞元的 O(1/N) 權重；在長脈絡下加總起來是 O(1) |
+| 差分注意力 | 「兩個 softmax 相減」 | 把 Q、K 切成兩半、算出兩張 softmax 圖，把第二張（乘上 $\lambda$）從第一張減掉，再乘上 V |
+| 雜訊底噪 | 「softmax 那條不為零的尾巴」 | softmax 給每個無關詞元的 $O(1/N)$ 權重；在長脈絡下加總起來是 $O(1)$ |
 | lambda | 「減法的比例」 | 每個頭一個的可學習純量，參數化成 `exp(lq1.lk1) - exp(lq2.lk2) + lambda_init`；可以是負的 |
 | DIFF V1 | 「ICLR 2025 的那版」 | 最初的 Differential Transformer；為了維持參數量而把頭維度砍半，需要自訂 kernel，解碼較慢 |
 | DIFF V2 | 「2026 年 1 月的修正版」 | 把 Q 頭加倍、KV 頭不變；解碼速度追平基準，而且能配合 FlashAttention |
