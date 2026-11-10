@@ -120,7 +120,7 @@ a &= \text{sigmoid}(z) \quad \text{(activation)}
 | 輸出層線性運算 | $W_2 h + b_2$ | $W_2$: (1, 3), $b_2$: (1,) | (1,) |
 | 輸出層激活 | $\text{sigmoid}(z_2)$ | —— | (1,) |
 
-規則是：第 $k$ 層的權重矩陣 $W$ 形狀為 (neurons_in_layer_k, neurons_in_layer_k_minus_1)。行數對應當前層。列數對應前一層。如果形狀對不上，你就有 bug。
+規則是：第 $k$ 層的權重矩陣 $W$ 形狀為 (neurons_in_layer_k, neurons_in_layer_k_minus_1)。列數對應當前層。行數對應前一層。如果形狀對不上，你就有 bug。
 
 ### 通用近似定理
 
