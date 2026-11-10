@@ -36,7 +36,7 @@
 2. 用 25ms 的窗、10ms 的跳距做短時傅立葉變換。
 3. 取 FFT 結果的幅值。
 4. 套用梅爾濾波器組（通常是 80 個在 0 到 8000 Hz 之間對數分布的濾波器），把頻率彎折到感知尺度。
-5. 做對數壓縮（log(1 + x)）以壓縮動態範圍。
+5. 做對數壓縮 $(\log(1 + x))$ 以壓縮動態範圍。
 
 結果：一個形狀為 (T, 80) 的二維陣列，其中 T 是時間畫格數。以一段 30 秒、畫格率 100 Hz 的片段而言：(3000, 80)。
 
@@ -54,7 +54,7 @@ Whisper 是在以語音為主的資料上訓練的。它在音樂與環境音訊
 
 BEATs（Chen 等人，2022）是一個在 AudioSet 上訓練的自監督 Transformer。在相同參數量下，它捕捉音樂與環境聲的能力勝過 Whisper。
 
-AF-Whisper（Audio Flamingo 3 的混合體）：把 Whisper 與 BEATs 的特徵串接起來當作音訊輸入。Whisper 承載語言訊號，BEATs 承載聲學訊號。
+AF-Whisper（Audio Flamingo 3 的編碼器）：從 Whisper-large-v3 編碼器出發，持續在語音、聲音與音樂上一起訓練它，讓單一編碼器同時承載語言訊號與聲學訊號。SALMONN 等較早的系統則是把 Whisper 與 BEATs 的特徵串接起來，達到同樣的涵蓋範圍。
 
 ### 音訊 Q-former
 
@@ -70,7 +70,7 @@ Qwen-Audio（Chu 等人，2023）：架構類似，在更豐富的資料集上�
 
 LTU —— Listen, Think, Understand（Gong 等人，2023）：明確的推理資料，聚焦在音訊片段上的思維鏈。規模較小但更聚焦。
 
-Audio Flamingo 3（Goel 等人，2025 年 7 月）：當前的開放 SOTA。8B 的 LLM 骨幹（Qwen2 7B）、Whisper-large 編碼器串接 BEATs、64 query 的 Q-former，在 100 萬組以上的音訊—文字指令配對上訓練。MMAU 0.72，在部分子任務上追平專有的前沿模型。
+Audio Flamingo 3（Goel 等人，2025 年 7 月）：當前的開放 SOTA。7B 的 LLM 骨幹（Qwen2.5-7B）、一個從 Whisper-large-v3 打造的 AF-Whisper 音訊編碼器、接進 LLM 的小型轉接層，在 100 萬組以上的音訊—文字指令配對上訓練。MMAU 0.72，在部分子任務上追平專有的前沿模型。
 
 AF3 還引入了音訊上的隨選思維鏈：模型可以選擇在最終答案之前先吐出思考詞元（「我先來辨識一下樂器：……」）。啟用思考時，複雜推理任務的準確率會提升 3 到 5 分。
 
