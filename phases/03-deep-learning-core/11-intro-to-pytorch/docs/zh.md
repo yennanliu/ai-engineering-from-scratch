@@ -143,11 +143,11 @@ class MLP(nn.Module):
 
 | 模組 | 做什麼 | 參數量 |
 |--------|-------------|------------|
-| nn.Linear(in, out) | Wx + b | in*out + out |
+| nn.Linear(in, out) | $Wx + b$ | in*out + out |
 | nn.Conv2d(in_ch, out_ch, k) | 二維卷積 | in_ch*out_ch*k*k + out_ch |
 | nn.BatchNorm1d(features) | 正規化激活值 | 2 * features |
 | nn.Dropout(p) | 隨機歸零 | 0 |
-| nn.ReLU() | max(0, x) | 0 |
+| nn.ReLU() | $\max(0, x)$ | 0 |
 | nn.GELU() | 高斯誤差線性單元 | 0 |
 | nn.Embedding(vocab, dim) | 查表 | vocab * dim |
 | nn.LayerNorm(dim) | 逐樣本正規化 | 2 * dim |
@@ -356,7 +356,7 @@ class MNISTModel(nn.Module):
 
 輸出層產生 10 個原始 logits（每個數字一個）。不接 softmax——`CrossEntropyLoss` 內部會處理。
 
-參數量：784*256 + 256 + 256*128 + 128 + 128*10 + 10 = 235,146。以現代標準來說小得可以。GPT-2 small 有 124M。這個幾秒鐘就訓練完了。
+參數量：$784 \cdot 256 + 256 + 256 \cdot 128 + 128 + 128 \cdot 10 + 10 = 235{,}146$。以現代標準來說小得可以。GPT-2 small 有 124M。這個幾秒鐘就訓練完了。
 
 ### 步驟 3：訓練迴圈
 
