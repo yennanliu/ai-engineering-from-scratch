@@ -503,7 +503,7 @@ RAGAS 量的是通用評估漏掉的東西：模型的答案是否有紮根在�
 | MMLU | 「那個基準測試」 | Massive Multitask Language Understanding —— 57 個科目、15,908 道選擇題，到 2025 年已在 88% 以上飽和 |
 | HumanEval | 「程式碼評估」 | OpenAI 出的 164 道 Python 函式補完題，只測孤立的函式生成 |
 | SWE-bench | 「真實的程式評估」 | 取自 12 個 Python 儲存庫的 2,294 個 GitHub issue，量測端到端的修 bug 能力，包含測試生成 |
-| 困惑度 | 「模型有多困惑」 | exp(-avg(log P(token_i given context))) —— 愈低代表模型給實際出現的詞元愈高的機率 |
+| 困惑度 | 「模型有多困惑」 | $\exp(-\mathop{\mathrm{avg}}(\log P(\text{token}_i \text{ given context})))$ —— 愈低代表模型給實際出現的詞元愈高的機率 |
 | ELO 評分 | 「模型版的西洋棋排名」 | 由成對勝負紀錄算出的相對實力評分，Chatbot Arena 用它排名 100 多個模型 |
 | LLM 評審 | 「用 AI 幫 AI 打分」 | 由一個強模型依評分標準替弱模型的輸出打分，與人類評審約 80% 一致，每次判斷約 $0.01 |
 | 資料汙染 | 「模型看過考題」 | 訓練資料含有基準測試題目，分數被灌水，真實能力卻沒進步 |
