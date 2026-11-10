@@ -80,7 +80,7 @@ L_{\text{PPO}} = \mathbb{E}\left[\min\left(r(\theta) \cdot A, \mathop{\mathrm{cl
 
 其中 `A` 是優勢，通常用 GAE 搭配一個學來的價值網路 `V(s)` 估計。價值網路是第二個模型，大小跟策略一樣。它讓記憶體翻倍，還帶來自己的一套訓練迴圈。
 
-GRPO 把價值函式丟掉。對每一個提示詞，它取樣一組 G 個回應（通常 G=16 或 64）。算出每個回應的獎勵之後，在群組內做正規化：
+GRPO 把價值函式丟掉。對每一個提示詞，它取樣一組 $G$ 個回應（通常 $G=16$ 或 64）。算出每個回應的獎勵之後，在群組內做正規化：
 
 ```math
 A_i = \frac{r_i - \mathop{\mathrm{mean}}(r_1, \ldots, r_G)}{\mathop{\mathrm{std}}(r_1, \ldots, r_G)}
