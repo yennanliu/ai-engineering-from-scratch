@@ -8,7 +8,7 @@
 
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
@@ -58,6 +58,16 @@ test('adds only the page dictionary to a page that already loads the layer', () 
   assert.deepEqual(s, ['i18n.zh-Hant.js?v=1', 'i18n-pages/index.zh-Hant.js', 'i18n.js?v=1', 'header.js']);
 });
 
+test('adds only the dictionary to a page that already loads the runtime', () => {
+  const s = srcs(inject(page('header.js', '<script src="i18n.js?v=1"></script>')));
+  assert.deepEqual(s, ['i18n.zh-Hant.js', 'i18n.js?v=1', 'header.js']);
+});
+
+test('does not mistake upstream ui-i18n.js for the runtime', () => {
+  const s = srcs(inject(page('header.js', '<script src="ui-i18n.js?v=1"></script>')));
+  assert.deepEqual(s, ['ui-i18n.js?v=1', 'header.js', 'i18n.zh-Hant.js', 'i18n.js']);
+});
+
 test('skips redirect stubs and pages without header.js', () => {
   assert.equal(inject('<!doctype html><title>Redirecting…</title><script src="header.js"></script>'), null);
   assert.equal(inject(page(null)), null);
@@ -86,13 +96,15 @@ test('is idempotent over a built tree, and resolves page dictionaries by path', 
     .includes('0 of 3'), true);
 });
 
-test('every page dictionary in site/ extends the shared one and names a real page', () => {
-  let files = [];
-  try { files = readdirSync(join(SITE, 'i18n-pages'), { recursive: true }).filter((f) => f.endsWith('.zh-Hant.js')); } catch {}
+test('every page dictionary in site/ extends the shared one and names a real page', (t) => {
+  const dir = join(SITE, 'i18n-pages');
+  if (!existsSync(dir)) return t.skip('no site/i18n-pages/ yet');
+  const files = readdirSync(dir, { recursive: true }).filter((f) => f.endsWith('.zh-Hant.js'));
+  assert.ok(files.length > 0, 'site/i18n-pages/ exists but holds no *.zh-Hant.js table');
   for (const f of files) {
-    const src = readFileSync(join(SITE, 'i18n-pages', f), 'utf8');
+    const src = readFileSync(join(dir, f), 'utf8');
     assert.match(src, /Object\.assign\(window\.I18N_ZH_HANT,/, `${f} must merge into window.I18N_ZH_HANT`);
     const key = f.replace(/\.zh-Hant\.js$/, '');
-    assert.doesNotThrow(() => readFileSync(join(SITE, `${key}.html`)), `${f} has no site/${key}.html`);
+    assert.ok(existsSync(join(SITE, `${key}.html`)), `${f} has no site/${key}.html`);
   }
 });

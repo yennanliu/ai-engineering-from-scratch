@@ -34,9 +34,12 @@ export const PAGE_DIR = 'i18n-pages';
 
 const STUB_MARK = '<title>Redirecting…</title>';
 const HEADER = /<script\b[^>]*\bsrc="([^"]*?)header\.js(?:\?[^"]*)?"/i;
-const HAS_DICT = /<script\b[^>]*\bsrc="[^"]*i18n\.zh-Hant\.js(?:\?[^"]*)?"/i;
-const RUNTIME_TAG = /<script\b[^>]*\bsrc="[^"]*\bi18n\.js(?:\?[^"]*)?"[^>]*><\/script>/i;
+// The file name must start the src or follow a "/": upstream's own ui-i18n.js
+// is a different script and must not count as either file.
+const HAS_DICT = /<script\b[^>]*\bsrc="(?:[^"]*\/)?i18n\.zh-Hant\.js(?:\?[^"]*)?"/i;
+const RUNTIME_TAG = /<script\b[^>]*\bsrc="(?:[^"]*\/)?i18n\.js(?:\?[^"]*)?"[^>]*><\/script>/i;
 
+/** Every .html file under dir, skipping node_modules and the page dictionaries. */
 function htmlFiles(dir) {
   const out = [];
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -48,6 +51,7 @@ function htmlFiles(dir) {
   return out;
 }
 
+/** A short content hash of the given files, for the ?v= cache-buster. */
 function stamp(...files) {
   const h = createHash('sha256');
   for (const f of files) if (existsSync(f)) h.update(readFileSync(f));
@@ -71,28 +75,36 @@ export function inject(html, { pageDict = null, version = '' } = {}) {
   const v = version ? `?v=${version}` : '';
   const tag = (src) => `<script src="${prefix}${src}${v}"></script>`;
   const pageTag = pageDict && !html.includes(pageDict) ? tag(pageDict) : '';
+  const hasDict = HAS_DICT.test(html);
+  const runtime = RUNTIME_TAG.exec(html);
 
-  if (HAS_DICT.test(html)) {
-    if (!pageTag) return null;
-    const rt = RUNTIME_TAG.exec(html);
-    if (!rt) return null;
-    return html.slice(0, rt.index) + pageTag + '\n' + html.slice(rt.index);
+  // The dictionaries must load before i18n.js, so when the page already loads
+  // the runtime, whatever it is missing goes right in front of that tag.
+  if (runtime) {
+    const missing = [hasDict ? '' : tag(DICT), pageTag].filter(Boolean);
+    if (!missing.length) return null;
+    return html.slice(0, runtime.index) + missing.join('\n') + '\n' + html.slice(runtime.index);
   }
 
-  const block = [tag(DICT), pageTag, tag(RUNTIME)].filter(Boolean).join('\n') + '\n';
+  const block = [hasDict ? '' : tag(DICT), pageTag, tag(RUNTIME)].filter(Boolean).join('\n') + '\n';
   const at = html.toLowerCase().lastIndexOf('</body>');
   return at === -1 ? html + '\n' + block : html.slice(0, at) + block + html.slice(at);
 }
 
+/** Injects the layer into every page under outDir and returns the counts. */
 export function run(outDir) {
   const counts = { pages: 0, injected: 0, pageDicts: 0, skipped: 0 };
+  // The shared files are the same for every page: hash them once.
+  const shared = stamp(join(outDir, DICT), join(outDir, RUNTIME));
   for (const file of htmlFiles(outDir)) {
     counts.pages++;
     const key = pageKey(outDir, file);
     const pageRel = `${PAGE_DIR}/${key}.zh-Hant.js`;
     const pagePath = join(outDir, pageRel);
     const pageDict = existsSync(pagePath) ? pageRel : null;
-    const version = stamp(join(outDir, DICT), join(outDir, RUNTIME), pageDict ? pagePath : '');
+    const version = pageDict
+      ? createHash('sha256').update(shared).update(readFileSync(pagePath)).digest('hex').slice(0, 12)
+      : shared;
     const html = readFileSync(file, 'utf8');
     const next = inject(html, { pageDict, version });
     if (next === null || next === html) { counts.skipped++; continue; }
