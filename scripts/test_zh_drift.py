@@ -114,6 +114,18 @@ class Baseline(unittest.TestCase):
         [row] = zh_drift.drift(self.lesson, None, self.repo)
         self.assertEqual(row["kind"], "content")
 
+    def test_fence_already_copied_is_absorbed(self):
+        self.commit({"docs/en.md": "# T\n\n```text\nx = a * b\n```\n", "docs/zh.md": "# T\n\n```text\nx = a * b\n```\n"}, "both")
+        self.commit({"docs/en.md": "# T\n\n```math\nx = a \\cdot b\n```\n"}, "math")
+        self.commit({"docs/zh.md": "# T\n\n```math\nx = a \\cdot b\n```\n"}, "copy fences\n\nZh-Sync: none")
+        self.assertEqual(zh_drift.drift(self.lesson, None, self.repo), [])
+
+    def test_fence_not_yet_copied_is_drift(self):
+        self.commit({"docs/en.md": "# T\n\n```text\nx = a * b\n```\n", "docs/zh.md": "# T\n\n```text\nx = a * b\n```\n"}, "both")
+        self.commit({"docs/en.md": "# T\n\n```math\nx = a \\cdot b\n```\n"}, "math")
+        [row] = zh_drift.drift(self.lesson, None, self.repo)
+        self.assertEqual(row["kind"], "math")
+
     def test_quiz_pair_is_tracked(self):
         self.commit({"quiz.json": "[1]\n", "quiz.zh.json": "[1]\n", "docs/en.md": "x\n"}, "quiz")
         self.commit({"quiz.json": "[2]\n"}, "fix quiz")

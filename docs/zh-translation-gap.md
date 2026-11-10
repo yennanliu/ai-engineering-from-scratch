@@ -28,7 +28,7 @@ Source: `python3 scripts/i18n_status.py --next 40`.
 Exactly the 31 lessons above: every translated lesson that has a quiz also has `quiz.zh.json`.
 Translate each quiz together with its lesson. Source: `python3 scripts/check_quiz_translations.py`.
 
-### 3. Translations behind their English: 232 lessons
+### 3. Translations behind their English: 183 lessons
 
 This is the largest gap, and it is invisible on the site. `i18n_status.py --verify` checks
 *structure* only (headings, fences, links), so when upstream corrects a claim in a paragraph, the
@@ -38,18 +38,20 @@ lessons `--verify` flagged; the rest of upstream's prose edits had no detector u
 
 | | Lessons | Changed passages (hunks) |
 |---|---|---|
-| Wording changed (fix these first) | 198 | 455 |
-| Math notation only (`` `π_θ` `` became `$\pi_\theta$`) | 34 | 612 total, across both rows |
+| Wording changed (fix these first) | 143 | 293 wording, plus math |
+| Math notation only (`` `π_θ` `` became `$\pi_\theta$`) | 40 | 493 math, across both rows |
 
 Most of the wording changes come from upstream's correctness sweeps: `fix(lessons): correct phase N
 … source errors` (phases 12, 13, 14, 15, 16, 17, 18, 19), `source errors from #585` (phases 00–11),
 and `correct lesson claims found in interview reviews` (#749). Each one fixes a fact, a number or a
 citation.
 
-By phase, lessons with wording drift: 19 → 38, 12 → 17, 17 → 15, 04 → 14, 10 → 14, 14 → 14,
-02 → 12, 18 → 10, 08 → 9, 13 → 9, 03 → 8, 05 → 8, 07 → 8, 11 → 6, 15 → 5, 16 → 5, 09 → 3, 06 → 2,
-01 → 1. The most-changed: 12/17 video-language temporal grounding, 10/18 multi-token prediction,
-02/05 SVMs, 03/03 backpropagation, 02/03 logistic regression, 02/06 kNN, 12/08 LLaVA-OneVision.
+By phase, lessons with wording drift (2026-11-10, after phase 19 was synced): 12 → 16,
+17 → 15, 14 → 14, 10 → 12, 02 → 11, 04 → 10, 18 → 10, 07 → 8, 08 → 8, 13 → 8, 05 → 6, 03 → 5,
+15 → 5, 16 → 5, 11 → 4, 09 → 3, 06 → 2, 01 → 1, 19 → 0. On 2026-11-08 the list started at 198
+lessons with phase 19 at 38. The most-changed: 12/17 video-language temporal grounding, 10/18
+multi-token prediction, 02/05 SVMs, 03/03 backpropagation, 02/03 logistic regression, 02/06 kNN,
+12/08 LLaVA-OneVision.
 
 Quizzes have no drift: the 2026-11 sync retranslated every rewritten question.
 

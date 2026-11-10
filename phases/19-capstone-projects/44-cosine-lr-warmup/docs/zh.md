@@ -108,7 +108,7 @@ python3 code/main.py
 
 1. 加上這份排程的「反平方根」變體，並在一次 200 步的玩具訓練上比較。哪一條曲線產出較低的最終損失？
 2. 加上一個 `--restart` 旗標，在 `total_steps / 2` 處再加一次暖身。針對「暖重啟在這次玩具訓練上是有幫助還是有害」提出辯護。
-3. 加上一項單元測試，檢驗排程是連續的：對 `[0, total_steps]` 內的每一步，差值 `|lr(step+1) - lr(step)|` 都被 `lr_max / warmup_steps` 界住。
+3. 加上一項單元測試，檢驗排程是連續的：在 `warmup_steps > 0` 時，對 `[0, total_steps]` 內的每一步，差值 `|lr(step+1) - lr(step)|` 都被暖身斜率 `lr_max / warmup_steps` 與最陡餘弦斜率 `pi * (lr_max - lr_min) / (2 * (total_steps - warmup_steps))` 兩者中較大的那個界住。一段很短的餘弦區段可能比暖身坡道還陡，所以單靠暖身斜率並不是一個安全的上界。
 4. 把排程接進一個 `torch.optim.lr_scheduler.LambdaLR`，好讓它與框架程式碼組合。這一課用的是一個純粹的 step 函數；那層包裝改變了什麼？
 5. 加上一個 `--plot-png` 旗標，透過 `matplotlib` 寫出一張真的圖。針對「對 CI 執行而言，這一課的文字圖與 PNG 哪一個是更好的預設」提出辯護。
 

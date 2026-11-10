@@ -115,10 +115,32 @@ def hunks(diff: str) -> list[tuple[list[str], list[str]]]:
     return out
 
 
-def classify(diff: str) -> tuple[str, int, int]:
-    """(kind, math hunks, content hunks) for a unified diff."""
+def _substantive(lines: list[str]) -> list[str]:
+    """Lines that identify a change: not blank, not a bare fence marker."""
+    return [l.strip() for l in lines if l.strip() and not re.fullmatch(r"```\w*", l.strip())]
+
+
+def absorbed(removed: list[str], added: list[str], translation: str) -> bool:
+    """True when the translation already carries this hunk verbatim.
+
+    Code and math stay verbatim in a translation, so a hunk that only rewrote a
+    fence is done once its new lines are in zh.md and its old ones are gone,
+    even if the commit that did it never became a drift baseline. Prose never
+    matches: it is translated, not copied.
+    """
+    new, old = _substantive(added), _substantive(removed)
+    lines = {l.strip() for l in translation.splitlines()}
+    return bool(new) and all(l in lines for l in new) and not any(
+        l in lines for l in old if l not in new)
+
+
+def classify(diff: str, translation: str | None = None) -> tuple[str, int, int]:
+    """(kind, math hunks, content hunks) for a unified diff. With the
+    translation's text, hunks it already carries verbatim are not counted."""
     math = content = 0
     for removed, added in hunks(diff):
+        if translation is not None and absorbed(removed, added, translation):
+            continue
         if normalize("\n".join(removed)) == normalize("\n".join(added)):
             math += 1
         else:
@@ -163,7 +185,9 @@ def drift(lesson: Path, since: str | None, repo: Path = ROOT) -> list[dict]:
         diff = git("diff", "-U0", base, "HEAD", "--", rel_s, cwd=repo)
         if not diff:
             continue
-        kind, math, content = classify(diff)
+        kind, math, content = classify(diff, t.read_text(encoding="utf-8"))
+        if kind == "fresh":
+            continue
         commits = git("log", "--format=%h %s", f"{base}..HEAD", "--", rel_s, cwd=repo)
         changed = sum(1 for l in diff.splitlines()
                       if l[:1] in "+-" and not l.startswith(("+++", "---")))
