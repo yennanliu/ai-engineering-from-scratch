@@ -79,7 +79,7 @@ def encode_bpe(word, merges):
     return symbols
 ```
 
-這是樸素的 O(n·|merges|) 做法。生產級實作（tiktoken、HF Tokenizers）改用合併排名查表搭配優先佇列，可以跑到接近線性時間。
+這是樸素的 $O(n \cdot \lvert \text{merges} \rvert)$ 做法。生產級實作（tiktoken、HF Tokenizers）改用合併排名查表搭配優先佇列，可以跑到接近線性時間。
 
 ### 步驟 3：實務上的 SentencePiece
 

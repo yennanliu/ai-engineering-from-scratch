@@ -92,7 +92,7 @@ Z &= d
 \end{aligned}
 ```
 
-相機內參來自 EXIF metadata、校正板，或是單目內參估計器（Perspective Fields、UniDepth）。沒有內參，你還是可以假設 60 到 70 度的 FOV 與中等解析度的主點，硬渲染出一團點雲 —— 拿來視覺化可以，拿來量測不行。
+相機內參來自 EXIF metadata、校正板，或是單目內參估計器（Perspective Fields、UniDepth）。沒有內參，你還是可以假設 60 到 70 度的 FOV，並把主點放在影像中心，硬渲染出一團點雲。這樣拿來視覺化可以，拿來量測不行。
 
 ### 評估
 
@@ -248,7 +248,7 @@ depth_np = np.array(out["depth"])
 | 單目深度 | 「單張影像的深度」 | 從一張 RGB 影格估計深度，不用立體視覺也不用 LiDAR |
 | 相對深度 | 「有序的深度」 | 有序的 z 值，但沒有真實世界單位 |
 | 度量深度 | 「絕對距離」 | 以公尺計的深度；需要校正，或需要一個用度量監督訓練過的模型 |
-| AbsRel | 「絕對相對誤差」 | |d_pred - d_gt| / d_gt 的平均；標準的深度指標 |
+| AbsRel | 「絕對相對誤差」 | $\lvert d_{\text{pred}} - d_{\text{gt}} \rvert / d_{\text{gt}}$ 的平均；標準的深度指標 |
 | Delta 準確率 | 「delta < 1.25」 | 預測落在標準答案 25% 以內的像素比例 |
 | 針孔相機 | 「fx, fy, cx, cy」 | 用來把 (u, v, d) 提升成 (X, Y, Z) 的相機模型 |
 | DPT | 「Dense Prediction Transformer」 | 疊在凍結 ViT 編碼器上做深度的卷積式解碼器 |

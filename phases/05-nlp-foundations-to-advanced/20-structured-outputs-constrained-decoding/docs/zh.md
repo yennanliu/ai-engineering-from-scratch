@@ -29,7 +29,7 @@
 
 2026 年的實作：
 
-- **Outlines。** 把 JSON Schema 或正規表達式編譯成一台有限狀態機。每個詞元都能以 O(1) 查到是否為合法的下一個詞元。因為以 FSM 為基礎，遞迴的結構定義需要先攤平。
+- **Outlines。** 把 JSON Schema 或正規表達式編譯成一台有限狀態機。每個詞元都能以 $O(1)$ 查到是否為合法的下一個詞元。因為以 FSM 為基礎，遞迴的結構定義需要先攤平。
 - **XGrammar / llguidance。** 上下文無關文法引擎，能處理遞迴的 JSON Schema，解碼額外開銷近乎為零。OpenAI 在 2025 年的結構化輸出實作中公開致謝 llguidance。
 - **vLLM guided decoding。** 內建 `guided_json`、`guided_regex`、`guided_choice`、`guided_grammar`，後端可選 Outlines、XGrammar 或 lm-format-enforcer。
 - **Instructor。** 基於 Pydantic、包在任何 LLM 外面的一層封裝。驗證失敗就重試。跨供應商，但它不修改 logit——靠的是重試加上懂結構化輸出的提示詞。
@@ -210,7 +210,7 @@ Refuse any design that puts `answer` or `decision` before reasoning fields. Refu
 |------|-----------------|-----------------------|
 | 受限解碼（constrained decoding） | 強制輸出合法 | 在每個生成步驟遮蔽不合法詞元的 logit。 |
 | logit 處理器 | 負責施加約束的那個東西 | 一個函式：`(logits, state) -> masked_logits`。 |
-| FSM | 有限狀態機 | 編譯後的文法表示；查合法的下一個詞元是 O(1)。 |
+| FSM | 有限狀態機 | 編譯後的文法表示；查合法的下一個詞元是 $O(1)$。 |
 | CFG | 上下文無關文法 | 能處理遞迴的文法；比 FSM 慢，但表達力更強。 |
 | 結構定義的欄位順序 | 這有差嗎？ | 有——第一個欄位就定案了；永遠把推理放在答案之前。 |
 | Guided decoding | vLLM 對它的稱法 | 同一個概念，整合進推論伺服器裡。 |

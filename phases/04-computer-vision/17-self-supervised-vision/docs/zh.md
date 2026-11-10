@@ -177,7 +177,7 @@ print(f"InfoNCE with identical pairs:  {loss_same:.3f}")
 print(f"InfoNCE with random pairs:     {loss_random:.3f}")
 ```
 
-完全相同的配對應該給出很低的損失（批次大、溫度參數低的時候會接近 0）。隨機配對在 16 對的批次下應該給出 log(2N-1) = ~log(31) = ~3.4。
+完全相同的配對應該給出很低的損失（批次大、溫度參數低的時候會接近 0）。隨機配對在 16 對的批次下應該給出 $\log(2N-1) \approx \log(31) \approx 3.4$。
 
 ### 步驟 4：MAE 風格的遮罩
 

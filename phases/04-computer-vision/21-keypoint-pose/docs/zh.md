@@ -60,7 +60,7 @@ flowchart LR
 
 ### 次像素定位
 
-Argmax 給的是整數座標。要拿到次像素精度，就對 argmax 及其鄰居擬一條拋物線來做精修，或是沿用那個眾所皆知的偏移量 `(dx, dy) = 0.25 * (heatmap[y, x+1] - heatmap[y, x-1], ...)` 方向。
+Argmax 給的是整數座標。要拿到次像素精度，就對 argmax 及其鄰居擬一條拋物線來做精修，或是用 `dx = 0.25 * (heatmap[y, x+1] - heatmap[y, x-1])` 把 argmax 往數值較高的鄰居挪一點，`dy` 也比照辦理，程式碼就是這麼做的。
 
 ### 部位親和場（PAF）
 

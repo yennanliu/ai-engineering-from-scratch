@@ -235,7 +235,7 @@ for step, batch in enumerate(dataloader):
 
 - **模型家族**：要吃開源社群的微調成果就選 SD 1.5，要更高的擬真度就選 SDXL，要最先進的效果又要應付嚴格的授權要求就選 SD3 / FLUX。
 - **排程器**：20 到 30 步就用 DPM-Solver++ 2M Karras，延遲要壓在 1 秒以內就用 LCM-LoRA。
-- **精度**：4080/4090 用 `float16`，A100 及更新的卡用 `bfloat16`，VRAM 很緊時用 `int8`（透過 `bitsandbytes` 或 `compel`）。
+- **精度**：4080/4090 用 `float16`，A100 及更新的卡用 `bfloat16`，VRAM 很緊時用 `int8`（透過 `bitsandbytes`）。
 - **條件控制**：純文字就能用；要更強的控制力，就在基礎流程之上加 ControlNet（canny、深度、姿態）。
 
 要批次生成的話，社群工具是 `AUTO1111` / `ComfyUI`；要做生產級 API，則是 `diffusers` + `accelerate`，或 `optimum-nvidia` 搭配 TensorRT 編譯。

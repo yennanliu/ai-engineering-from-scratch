@@ -174,7 +174,7 @@ Refuse BERTopic on documents longer than the embedding model's context window wi
 | 混合歸屬 | 「一份文件同時屬於多個主題」 | LDA 會給每份文件一個涵蓋所有主題的分布。 |
 | UMAP | 「降維」 | 保留局部結構的流形學習；BERTopic 用它。 |
 | HDBSCAN | 「密度分群」 | 找出大小不一的群；為離群值產生「雜訊」標籤（-1）。 |
-| c_v 連貫性 | 「主題品質指標」 | 主題前排詞在滑動視窗內的平均逐點互資訊。 |
+| c_v 連貫性 | 「主題品質指標」 | 主題前排詞在滑動視窗上的 NPMI，轉成脈絡向量後再用餘弦相似度比較。 |
 
 ## 延伸閱讀
 
