@@ -43,7 +43,7 @@ P(\text{class} \mid \text{features}) = \frac{P(\text{features} \mid \text{class}
 
 ### 單純獨立假設
 
-要精確算出 `P(features | class)`，就得估計所有特徵的聯合機率。詞彙表有 10,000 個詞的話，你得估出一個橫跨 2^10,000 種可能組合的分布。不可能。
+要精確算出 `P(features | class)`，就得估計所有特徵的聯合機率。詞彙表有 10,000 個詞的話，你得估出一個橫跨 $2^{10{,}000}$ 種可能組合的分布。不可能。
 
 條件獨立假設是這樣的：在給定類別的條件下，每個特徵都彼此條件獨立。
 
@@ -51,7 +51,7 @@ P(\text{class} \mid \text{features}) = \frac{P(\text{features} \mid \text{class}
 P(w_1, w_2, \ldots, w_n \mid \text{class}) = P(w_1 \mid \text{class}) \cdot P(w_2 \mid \text{class}) \cdots P(w_n \mid \text{class})
 ```
 
-於是你不必去估一個辦不到的聯合分布，只要估 n 個簡單的單特徵分布。每一個都只需要一組計數。
+於是你不必去估一個辦不到的聯合分布，只要估 $n$ 個簡單的單特徵分布。每一個都只需要一組計數。
 
 這個假設顯然是錯的。在任何文件裡，「machine」跟「learning」都不會獨立。但分類器並不需要正確的機率估計，它需要的是正確的排序——哪個類別的機率最高。獨立假設會引入系統性的誤差，但這些誤差對所有類別的影響差不多，所以排序仍然是對的。
 
@@ -59,7 +59,7 @@ P(w_1, w_2, \ldots, w_n \mid \text{class}) = P(w_1 \mid \text{class}) \cdot P(w_
 
 三個理由：
 
-1. **排序重於校準。** 分類只需要排在最前面的那個類別是對的。就算真實機率是 0.7 而模型算出 P(spam) = 0.99999，分類器還是會正確地選中垃圾郵件。我們不需要正確的機率，我們需要正確的贏家。
+1. **排序重於校準。** 分類只需要排在最前面的那個類別是對的。就算真實機率是 0.7 而模型算出 $P(\text{spam}) = 0.99999$，分類器還是會正確地選中垃圾郵件。我們不需要正確的機率，我們需要正確的贏家。
 
 2. **高偏差、低變異。** 獨立假設是一個很強的先驗。它把模型限制得很緊，因而擋住了過度擬合。訓練資料有限時，一個稍微有偏但穩定的模型，會勝過一個理論上正確卻極度不穩定的模型。這就是偏差－變異權衡在起作用。
 
@@ -76,7 +76,7 @@ P(w_1, w_2, \ldots, w_n \mid \text{class}) = P(w_1 \mid \text{class}) \cdot P(w_
 - 非垃圾郵件裡「free」出現 5 次、「money」10 次、「meeting」100 次（共 115 個詞）
 - 40% 的郵件是垃圾郵件，60% 不是
 
-加上拉普拉斯平滑（alpha=1）之後：
+加上拉普拉斯平滑（$\alpha=1$）之後：
 
 ```math
 \begin{aligned}
@@ -102,7 +102,7 @@ P(\text{meeting} \mid \text{not-spam}) &= (100 + 1) / (115 + 3) = 101/118 = 0.85
 \end{aligned}
 ```
 
-spam 以很大的差距勝出。「free」出現兩次，是垃圾郵件的強烈證據。注意「meeting」沒有出現，對兩邊的對數總和都貢獻零（0 * log(P)）——在多項式 NB 裡，缺席的詞完全沒有作用。會明確為詞的缺席建模的是伯努利 NB。
+spam 以很大的差距勝出。「free」出現兩次，是垃圾郵件的強烈證據。注意「meeting」沒有出現，對兩邊的對數總和都貢獻零（$0 \cdot \log P$）——在多項式 NB 裡，缺席的詞完全沒有作用。會明確為詞的缺席建模的是伯努利 NB。
 
 ### 三種變體
 
@@ -158,7 +158,7 @@ P(\text{word}_i \mid \text{class}) = \frac{\text{docs in class containing } \tex
 P(\text{word}_i \mid \text{class}) = \frac{\text{count}(\text{word}_i, \text{class}) + \alpha}{\text{total\_words\_in\_class} + \alpha \cdot \text{vocab\_size}}
 ```
 
-alpha=1 時，每個詞至少都拿到一點點機率。測試郵件裡出現「discombobulate」，不會再把垃圾郵件的機率整個殺掉。這個平滑有貝氏上的解讀：它等同於在詞分布上放一個均勻的 Dirichlet 先驗。
+$\alpha=1$ 時，每個詞至少都拿到一點點機率。測試郵件裡出現「discombobulate」，不會再把垃圾郵件的機率整個殺掉。這個平滑有貝氏上的解讀：它等同於在詞分布上放一個均勻的 Dirichlet 先驗。
 
 alpha 越大表示平滑越強（分布越趨近均勻）。alpha 越小表示模型越相信資料。alpha 是一個你要調的超參數。
 
@@ -196,7 +196,7 @@ prediction = argmax(log_scores)
 
 | 面向 | 單純貝氏 | 邏輯迴歸 |
 |--------|------------|-------------------|
-| 類型 | 生成式（建模 P(X\|Y)） | 判別式（建模 P(Y\|X)） |
+| 類型 | 生成式（建模 $P(X \mid Y){}$） | 判別式（建模 $P(Y \mid X){}$） |
 | 訓練 | 數頻率 | 最佳化損失函式 |
 | 小資料 | 較好（強先驗有幫助） | 較差（不足以估出權重） |
 | 大資料 | 較差（錯的假設開始扣分） | 較好（邊界較有彈性） |
@@ -241,7 +241,7 @@ naive-bayes
 
 1. **fit(X, y)**：對每個類別，數出每個特徵的頻率。加上拉普拉斯平滑。算出對數機率。存下類別先驗（類別頻率取對數）。
 
-2. **predict_log_proba(X)**：對每個樣本，針對所有類別算出 log P(class) 加上所有 log P(feature_i | class) 的總和。這就是一次矩陣乘法：X @ log_probs.T + log_priors。
+2. **predict_log_proba(X)**：對每個樣本，針對所有類別算出 $\log P(\text{class})$ 加上所有 $\log P(\text{feature}_i \mid \text{class})$ 的總和。這就是一次矩陣乘法：X @ log_probs.T + log_priors。
 
 3. **predict(X)**：回傳對數機率最高的那個類別。
 
@@ -314,9 +314,9 @@ class GaussianNB:
 
 ### 預測速度
 
-單純貝氏的預測就是一次矩陣乘法。對 n 個樣本、d 個特徵、k 個類別來說：
-- MultinomialNB：一次矩陣乘法 (n x d) @ (d x k) = O(n * d * k)
-- GaussianNB：n * k 次高斯 PDF 計算，每次跨 d 個特徵 = O(n * d * k)
+單純貝氏的預測就是一次矩陣乘法。對 $n$ 個樣本、$d$ 個特徵、$k$ 個類別來說：
+- MultinomialNB：一次矩陣乘法 $(n \times d) \mathbin{@} (d \times k) = O(n \cdot d \cdot k)$
+- GaussianNB：$n \cdot k$ 次高斯 PDF 計算，每次跨 $d$ 個特徵 = $O(n \cdot d \cdot k)$
 
 兩者在每個維度上都是線性的。把這拿來跟 KNN（需要計算到所有訓練點的距離）或用 RBF 核的 SVM（需要對所有支持向量做核運算）比一比。在預測時間上，NB 快了好幾個數量級。
 
@@ -389,7 +389,7 @@ CountVectorizer 的 `binary=True` 旗標會把所有計數轉成 0/1。少了它
 
 ### 校準 NB 機率
 
-NB 的機率校準得很差。當 NB 說 P(spam) = 0.95 時，真實機率可能是 0.7。如果你需要可靠的機率估計（例如要設一個閾值，或要跟其他模型結合），就用 sklearn 的 CalibratedClassifierCV：
+NB 的機率校準得很差。當 NB 說 $P(\text{spam}) = 0.95$ 時，真實機率可能是 0.7。如果你需要可靠的機率估計（例如要設一個閾值，或要跟其他模型結合），就用 sklearn 的 CalibratedClassifierCV：
 
 ```python
 from sklearn.calibration import CalibratedClassifierCV
@@ -407,7 +407,7 @@ proba = calibrated_nb.predict_proba(X_test)
 
 2. **變異數為零的特徵。** GaussianNB 會除以變異數。如果某個特徵在某個類別裡的變異數是零（所有值都一樣），機率計算就會壞掉。程式碼會對所有變異數加上一個很小的平滑項（1e-9）來避免這件事。
 
-3. **類別不平衡。** 如果 99% 的郵件都不是垃圾郵件，先驗 P(not-spam) = 0.99 強到會壓過概似提供的證據。你可以手動設定類別先驗，或使用 sklearn 的 class_prior 參數。
+3. **類別不平衡。** 如果 99% 的郵件都不是垃圾郵件，先驗 $P(\text{not-spam}) = 0.99$ 強到會壓過概似提供的證據。你可以手動設定類別先驗，或使用 sklearn 的 class_prior 參數。
 
 4. **特徵縮放。** MultinomialNB 不需要縮放（它處理的是計數）。GaussianNB 也不需要（它估的是每個特徵各自的統計量）。這相對於邏輯迴歸與 SVM 是個優勢，那兩者對特徵尺度很敏感。
 
@@ -433,7 +433,7 @@ proba = calibrated_nb.predict_proba(X_test)
 
 1. **平滑實驗。** 用 alpha 值 0.01、0.1、1.0、10.0 與 100.0 在文本資料上訓練 MultinomialNB。畫出準確率對 alpha 的曲線。表現在哪裡達到高峰？為什麼 alpha 非常大時會扣分？
 
-2. **特徵獨立性檢驗。** 拿一份真實的文本資料集。挑兩個明顯相關的詞（「machine」與「learning」）。算出 P(word1 | class) * P(word2 | class)，再跟 P(word1 AND word2 | class) 比較。這個獨立假設錯得有多離譜？它會影響分類準確率嗎？
+2. **特徵獨立性檢驗。** 拿一份真實的文本資料集。挑兩個明顯相關的詞（「machine」與「learning」）。算出 $P(\text{word}_1 \mid \text{class}) \cdot P(\text{word}_2 \mid \text{class})$，再跟 $P(\text{word}_1 \text{ AND } \text{word}_2 \mid \text{class})$ 比較。這個獨立假設錯得有多離譜？它會影響分類準確率嗎？
 
 3. **伯努利實作。** 為程式碼加上一個 BernoulliNB 類別。把詞袋轉成二元（出現／未出現），在文本資料上跟 MultinomialNB 比準確率。伯努利在什麼情況下會贏？
 
@@ -446,14 +446,14 @@ proba = calibrated_nb.predict_proba(X_test)
 | 術語 | 大家怎麼說 | 實際上是什麼 |
 |------|----------------|----------------------|
 | 單純貝氏 | 「那個簡單的機率式分類器」 | 套用貝氏定理的分類器，並假設在給定類別的條件下各特徵彼此條件獨立 |
-| 條件獨立 | 「特徵之間互不影響」 | P(A, B \| C) = P(A \| C) * P(B \| C)——一旦知道 C，知道 B 就不會再告訴你關於 A 的任何新事情 |
+| 條件獨立 | 「特徵之間互不影響」 | $P(A, B \mid C) = P(A \mid C) \cdot P(B \mid C)$——一旦知道 $C$，知道 $B$ 就不會再告訴你關於 $A$ 的任何新事情 |
 | 拉普拉斯平滑 | 「加一平滑」 | 給每個特徵都加上一個小小的計數，避免機率為零主導整個預測 |
-| 先驗 | 「看到資料之前你相信的事」 | P(class)——在觀測到任何特徵之前，每個類別的機率 |
-| 概似 | 「資料吻合得有多好」 | P(features \| class)——已知類別的情況下，觀測到這些特徵的機率 |
-| 後驗 | 「看到資料之後你相信的事」 | P(class \| features)——觀測到那些特徵之後，該類別更新後的機率 |
-| 生成式模型 | 「建模資料是怎麼生成的」 | 學出 P(X \| Y) 與 P(Y)，再用貝氏定理得到 P(Y \| X) 的模型 |
-| 判別式模型 | 「建模決策邊界」 | 直接學出 P(Y \| X)，不去建模 X 是怎麼生成的模型 |
-| 對數機率 | 「避免下溢」 | 用 log P 取代 P，避免很多小數字的乘積在浮點數裡變成零 |
+| 先驗 | 「看到資料之前你相信的事」 | $P(\text{class})$——在觀測到任何特徵之前，每個類別的機率 |
+| 概似 | 「資料吻合得有多好」 | $P(\text{features} \mid \text{class})$——已知類別的情況下，觀測到這些特徵的機率 |
+| 後驗 | 「看到資料之後你相信的事」 | $P(\text{class} \mid \text{features})$——觀測到那些特徵之後，該類別更新後的機率 |
+| 生成式模型 | 「建模資料是怎麼生成的」 | 學出 $P(X \mid Y)$ 與 $P(Y)$，再用貝氏定理得到 $P(Y \mid X)$ 的模型 |
+| 判別式模型 | 「建模決策邊界」 | 直接學出 $P(Y \mid X)$，不去建模 $X$ 是怎麼生成的模型 |
+| 對數機率 | 「避免下溢」 | 用 $\log P$ 取代 $P$，避免很多小數字的乘積在浮點數裡變成零 |
 
 ## 延伸閱讀
 
