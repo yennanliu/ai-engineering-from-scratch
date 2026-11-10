@@ -93,7 +93,7 @@ loads when it exists:
 
 | Page | Body text |
 |---|---|
-| `learning-paths` | English |
+| `learning-paths` | translated (`site/i18n-pages/learning-paths.zh-Hant.js`) |
 | `projects`, `skills`, `how-to-learn`, `highlights`, the other top-level pages | English |
 | Generated hubs, interviews, cheat sheets, practice, manuals | English (by design for now; see gap 6) |
 
