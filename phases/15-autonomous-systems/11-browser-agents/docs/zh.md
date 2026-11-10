@@ -1,6 +1,6 @@
 # 瀏覽器代理與長時程網頁任務
 
-> ChatGPT agent（2025 年 7 月）把 Operator 與 deep research 併成單一個瀏覽器／終端機代理，並在 BrowseComp 上以 68.9% 創下 SOTA。OpenAI 在 2025 年 8 月 31 日關掉了 Operator —— 產品層的整併。Anthropic 併購 Vercept 之後，把 Claude Sonnet 在 OSWorld 上的成績從 15% 以下推到 72.5%。WebArena-Verified（ServiceNow，ICLR 2026）修掉了原始 WebArena 中 11.3 個百分點的偽陰性率，並出貨了 258 項任務的 Hard 子集。這些數字都是真的。攻擊面也是：OpenAI 的準備度負責人公開表示，對瀏覽器代理的間接提示詞注入「不是一個可以被完全修補的臭蟲」。2025–2026 年有記錄的攻擊：Tainted Memories（Atlas CSRF）、HashJack（Cato Networks），以及 Perplexity Comet 中的一鍵劫持。
+> ChatGPT agent（2025 年 7 月）把 Operator 與 deep research 併成單一個瀏覽器／終端機代理，並在 BrowseComp 上以 68.9% 創下 SOTA。OpenAI 在 2025 年 8 月 31 日關掉了 Operator —— 產品層的整併。Anthropic 併購 Vercept 之後，把 Claude Sonnet 在 OSWorld 上的成績從 15% 以下推到 72.5%。WebArena-Verified（ServiceNow，ICLR 2026）修掉了原始 WebArena 中約 11.3% 的偽陰性率，並出貨了 258 項任務的 Hard 子集。這些數字都是真的。攻擊面也是：OpenAI 的準備度負責人公開表示，對瀏覽器代理的間接提示詞注入「不是一個可以被完全修補的臭蟲」。2025–2026 年有記錄的攻擊：Tainted Memories（Atlas CSRF）、HashJack（Cato Networks），以及 Perplexity Comet 中的一鍵劫持。
 
 **類型：** 學習
 **程式語言：** Python (stdlib, indirect prompt-injection attack surface model)
@@ -9,7 +9,7 @@
 
 ## 問題所在
 
-瀏覽器代理是一個「讀不可信內容、又採取有後果行動」的長時程代理。代理造訪的每個頁面，都是一份使用者沒有寫的輸入。每個頁面上的每張表單，都是一條潛在的命令通道。2025–2026 年的攻擊語料顯示這不是假想：Tainted Memories 讓攻擊者透過一個特製頁面，把惡意指令綁進代理的記憶；HashJack 把命令藏在代理造訪的 URL 片段裡；Perplexity Comet 的劫持只要一次點擊就中。
+瀏覽器代理是一個「讀不可信內容、又採取有後果行動」的長時程代理。代理造訪的每個頁面，都是一份使用者沒有寫的輸入。每個頁面上的每張表單，都是一條潛在的命令通道。2025–2026 年的攻擊語料顯示這不是假想：Tainted Memories 讓攻擊者透過一個特製頁面，把惡意指令綁進代理的記憶；HashJack 把命令藏在代理造訪的 URL 片段裡；Perplexity Comet 的劫持只需要一次點擊。
 
 防禦這一面的圖景令人不安。OpenAI 的準備度負責人把大家不敢說的話說白了：間接提示詞注入「不是一個可以被完全修補的臭蟲」。原因在於這種攻擊住在代理的「閱讀對行動」邊界上，而那條邊界在架構上就是模糊的 —— 原則上，模型讀到的每一個詞元都可能被讀成一道指令。
 

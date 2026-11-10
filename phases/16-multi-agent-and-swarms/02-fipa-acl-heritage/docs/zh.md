@@ -1,6 +1,6 @@
 # FIPA-ACL 與言語行為的傳承
 
-> 在 MCP 之前、在 A2A 之前，有 FIPA-ACL。2000 年，IEEE 的 Foundation for Intelligent Physical Agents 批准了一套代理通訊語言，帶二十種 performative、兩種內容語言，以及一組互動協定 —— contract net、subscribe/notify、request-when。它從業界淡出，是因為本體論的開銷對網頁來說太重；但多代理系統在 LLM 時代的復興，正悄悄地把同樣的構想重新實作一遍，只是少了形式語意：JSON 契約頂替 performative，自然語言頂替本體論。這一課認真讀 FIPA-ACL，好讓你看得出 2026 年哪些協定決策是重新發明、哪些是真的新，以及當前這一波會在哪裡重新發現 2000 年代早就解過的問題。
+> 在 MCP 之前、在 A2A 之前，有 FIPA-ACL。2000 年，Foundation for Intelligent Physical Agents（FIPA，2005 年成為 IEEE Computer Society 的一個標準委員會）批准了一套代理通訊語言，帶二十種 performative、兩種內容語言，以及一組互動協定 —— contract net、subscribe/notify、request-when。它從業界淡出，是因為本體論的開銷對網頁來說太重；但多代理系統在 LLM 時代的復興，正悄悄地把同樣的構想重新實作一遍，只是少了形式語意：JSON 契約頂替 performative，自然語言頂替本體論。這一課認真讀 FIPA-ACL，好讓你看得出 2026 年哪些協定決策是重新發明、哪些是真的新，以及當前這一波會在哪裡重新發現 2000 年代早就解過的問題。
 
 **類型：** 學習
 **程式語言：** Python (stdlib)
@@ -193,7 +193,7 @@ python3 code/main.py
 | 術語 | 大家怎麼說 | 實際是什麼意思 |
 |------|----------------|------------------------|
 | 言語行為 | 「一句會做事的話」 | Austin／Searle：話語即行動。ACL 的理論父輩。 |
-| FIPA | 「那個很舊的 XML 東西」 | IEEE Foundation for Intelligent Physical Agents。2000 年把 ACL 標準化。 |
+| FIPA | 「那個很舊的 XML 東西」 | Foundation for Intelligent Physical Agents。2000 年把 ACL 標準化；2005 年成為 IEEE Computer Society 的一個標準委員會。 |
 | ACL | 「代理通訊語言」 | FIPA 的封套格式：performative + 內容 + 中繼資料。 |
 | Performative | 「那個動詞」 | 一則訊息的意圖類別：`inform`、`request`、`propose`、`cfp` 等。 |
 | KQML | 「FIPA 的前身」 | Knowledge Query and Manipulation Language（1993）。更簡單、更窄。 |

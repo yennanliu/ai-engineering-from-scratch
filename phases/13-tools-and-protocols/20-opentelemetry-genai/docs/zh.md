@@ -150,7 +150,7 @@ t3-span-waterfall
 | Span | 「一段計時的操作」 | 帶起點、終點與屬性的一個工作單位 |
 | Trace | 「跨 span 的血緣」 | 共用同一個 trace id 的 span 構成的樹 |
 | SpanKind | 「CLIENT／SERVER／INTERNAL」 | 關於 span 方向的提示 |
-| OTLP | 「OpenTelemetry Line Protocol」 | 匯出器使用的線路格式 |
+| OTLP | 「OpenTelemetry Protocol」 | 匯出器使用的線路格式 |
 | 選擇加入的內容 | 「提示詞／補全擷取」 | 預設關閉；用環境變數啟用 |
 | traceparent | 「W3C 標頭」 | 跨服務傳播追蹤上下文 |
 | 匯出器 | 「各後端專屬的輸送器」 | 把 span 送到 Jaeger／Datadog 等處的元件 |

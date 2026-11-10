@@ -19,7 +19,7 @@
 
 ### CAIS —— AI 安全中心
 
-- 成立：2022 年於舊金山，由 Dan Hendrycks 及同事創立（「Zhang」這個名字指的是一位早期合作者，不是現任共同創辦人；現任領導層見 CAIS 網站）。
+- 成立：2022 年於舊金山，由 Dan Hendrycks 與 Oliver Zhang 創立。Hendrycks 是執行暨研究總監；Zhang 是常務總監。
 - 身分：501(c)(3) 非營利組織。
 - 2023 年值得注意的產出：關於滅絕風險的聲明，由數百位研究者與 CEO 共同連署。內文寫著：「減緩來自 AI 的滅絕風險，應該與流行病、核戰等其他社會尺度風險並列為全球優先事項。」
 - 2026 年的產出：供前沿模型評測的 AI Dashboard、Remote Labor Index（與 Scale AI 合作）、Superintelligence Strategy Paper、AI Frontiers 電子報。

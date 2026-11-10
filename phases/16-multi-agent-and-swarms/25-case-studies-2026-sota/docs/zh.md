@@ -57,7 +57,7 @@ MacNet（arXiv:2406.07155）把 ChatDev 延伸到**透過 DAG 支撐 1000 個以
 那個生產級的族群規模案例。時間軸：
 
 - **2025 年 11 月：** Clawdbot（Peter Steinberger 的本地 ReAct 迴圈寫程式代理）出貨。
-- **2025 年 12 月 – 2026 年 3 月：** 改名兩次（Clawdbot → OpenClaw → 續以 OpenClaw 為名）。
+- **2026 年 1 月：** 一週內改名兩次（因商標申訴，於 1 月 27 日由 Clawdbot → Moltbot；三天後再由 Moltbot → OpenClaw）。
 - **2026 年 2 月：** Moltbook 以同一套原語上線，成為只有代理的社群網路；幾天內約 230 萬個代理帳號。
 - **2026 年 3 月（2026-03-10）：** Meta 收購 Moltbook。
 - **2026 年 3 月：** 中國限制政府電腦使用 OpenClaw。

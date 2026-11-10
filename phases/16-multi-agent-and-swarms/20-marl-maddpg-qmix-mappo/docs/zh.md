@@ -42,7 +42,7 @@ critic update:   TD on Q_i(x, a_1..n) given next-state joint estimate
 
 ### QMIX（2018）—— 價值分解
 
-只適用合作。全域獎勵是逐代理 Q 值某個單調函數的總和：
+只適用合作。聯合動作價值 `Q_tot` 是逐代理 Q 值的一個單調混合函數：
 
 ```math
 Q_{\text{tot}}(\tau, a) = f\big(Q_1(\tau_1, a_1), \ldots, Q_n(\tau_n, a_n)\big), \quad \frac{\partial f}{\partial Q_i} \ge 0

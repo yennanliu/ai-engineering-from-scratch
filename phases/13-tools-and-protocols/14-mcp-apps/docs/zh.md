@@ -268,7 +268,7 @@ python3 code/main.py
 python3 -m unittest discover code/tests -v
 ```
 
-在輸出裡檢視四件事：
+在輸出裡檢視五件事：
 
 1. 每一次呼叫都是獨立的。
 2. 每一則請求都有 `_meta` 能力。
