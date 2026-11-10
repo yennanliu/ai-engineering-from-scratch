@@ -1,6 +1,6 @@
 # 從 CLIP 到 BLIP-2 —— 把 Q-Former 當成模態橋樑
 
-> CLIP 能對齊影像與文字，卻沒辦法生成字幕、回答問題，或撐起一段對話。BLIP-2（Salesforce，2023）用一座小小的可訓練橋樑解決了這件事：32 個可學習的 query 向量，透過交叉注意力去關注一個凍結 ViT 的特徵，然後直接插進一個凍結 LLM 的輸入串流。1.88 億參數的橋樑，把一個 11B 的 LLM 接到了 ViT-g/14 上。一路到 2026 年，每一個以 adapter 為基礎的 VLM —— MiniGPT-4、InstructBLIP、LLaVA 的表親們 —— 都是它的後裔。這一課會讀 Q-Former 的架構、解釋它的兩階段訓練，並做一個玩具版，把視覺詞元餵進一個凍結的文字解碼器。
+> CLIP 能對齊影像與文字，卻沒辦法生成字幕、回答問題，或撐起一段對話。BLIP-2（Salesforce，2023）用一座小小的可訓練橋樑解決了這件事：32 個可學習的 query 向量，透過交叉注意力去關注一個凍結 ViT 的特徵，然後直接插進一個凍結 LLM 的輸入串流。1.88 億參數的橋樑，把 ViT-g/14 接到了凍結的 LLM 上，最大到 11B 的 Flan-T5-XXL。一路到 2026 年，每一個以 adapter 為基礎的 VLM —— MiniGPT-4、InstructBLIP、LLaVA 的表親們 —— 都是它的後裔。這一課會讀 Q-Former 的架構、解釋它的兩階段訓練，並做一個玩具版，把視覺詞元餵進一個凍結的文字解碼器。
 
 **類型：** 實作
 **程式語言：** Python (stdlib, cross-attention + learnable-query demo)
@@ -117,7 +117,7 @@ modality-projection
 
 4. 讀 BLIP-2 論文（arXiv:2301.12597）第 3.2 節關於 Q-Former 如何初始化的部分。說明為什麼從 BERT-base 初始化（而不是隨機）能加速收斂。
 
-5. 對一段 10 分鐘、以 1 FPS 取樣成 60 個畫格的影片，算出（Q-Former → 每畫格 32 詞元）與（MLP 投影器 → 每畫格 576 詞元）之下每畫格的詞元成本。哪一個塞得進 128k 詞元的 LLM 脈絡視窗？
+5. 對一段 10 分鐘、以 1 FPS 取樣成 60 個畫格的影片，算出（Q-Former → 每畫格 32 詞元）與（MLP 投影器 → 每畫格 576 詞元）之下每畫格的詞元成本。在還沒替提示詞文字留下任何空間之前，每種橋樑能把多少個畫格塞進 128k 詞元的 LLM 脈絡視窗？
 
 ## 關鍵術語
 
@@ -132,7 +132,7 @@ modality-projection
 | 兩階段預訓練 | 「先表徵、後生成」 | 第 1 階段單獨訓練 Q-Former（ITC／ITM／ITG）；第 2 階段接上凍結的 LLM，只訓練投影 + Q-Former |
 | 凍結骨幹 | 「不要微調」 | 視覺編碼器與 LLM 的權重固定不動；只有橋樑在訓練 |
 | 投影 head | 「線性映到 LLM 維度」 | 最後那層線性層，把 Q-Former 的輸出映射到 LLM 的嵌入維度 |
-| Perceiver resampler | 「Flamingo 的版本」 | 類似的可學習 query 交叉注意力，Flamingo 把它放在每一層而非當成單一的一座橋 |
+| Perceiver resampler | 「Flamingo 的版本」 | 類似的可學習 query 交叉注意力；Flamingo 對每張影像跑一次，產出固定的 latent，再在 LLM 的每一層透過帶閘門交叉注意力讀取它們 |
 
 ## 延伸閱讀
 

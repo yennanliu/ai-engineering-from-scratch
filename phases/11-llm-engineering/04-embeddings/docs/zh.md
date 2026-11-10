@@ -134,7 +134,7 @@ MTEB（Massive Text Embedding Benchmark）v2 涵蓋檢索、分類、分群、�
 2. 上層是稀疏的 —— 遠距叢集之間的長程連結
 3. 下層是稠密的 —— 鄰近向量之間的細緻連結
 4. 搜尋從最上層開始，貪婪地往下逐層精修
-5. 以 O(log n) 而非 O(n) 的時間回傳近似的 top-k 結果
+5. 以 $O(\log n)$ 而非 $O(n)$ 的時間回傳近似的 top-k 結果
 
 HNSW 用一點點正確率損失（通常是 95-99% 的召回率）換來巨大的速度提升。1000 萬個向量時，暴力搜尋要好幾秒，HNSW 只要幾毫秒。
 
@@ -491,7 +491,7 @@ embeddings = model.encode(["semantic search query", "another document"])
 | 嵌入（Embedding） | 「文字變數字」 | 一個稠密向量，其中幾何上的接近程度編碼了語意相似度 |
 | Word2Vec | 「嵌入的元祖」 | 2013 年的模型，透過預測上下文詞來學詞向量；證明了向量算術能編碼語意 |
 | 餘弦相似度（Cosine similarity） | 「兩個向量有多像」 | 兩個向量夾角的餘弦值；1 = 方向相同，0 = 正交，-1 = 相反 |
-| HNSW | 「快速向量搜尋」 | Hierarchical Navigable Small World 圖 —— 讓近似最近鄰搜尋達到 O(log n) 的多層結構 |
+| HNSW | 「快速向量搜尋」 | Hierarchical Navigable Small World 圖 —— 讓近似最近鄰搜尋達到 $O(\log n)$ 的多層結構 |
 | 雙編碼器（Bi-encoder） | 「分開嵌入，比較快」 | 把查詢和文件各自獨立編成向量；可以預先計算並快速檢索 |
 | 交叉編碼器（Cross-encoder） | 「慢但準的重排器」 | 把查詢-文件配對一起送進完整模型處理；正確率更高，但無法預先計算 |
 | Matryoshka 嵌入 | 「可截斷的向量」 | 訓練時就讓前 N 維承載最重要資訊的嵌入，使儲存大小可變 |

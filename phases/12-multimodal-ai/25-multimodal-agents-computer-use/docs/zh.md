@@ -128,7 +128,7 @@ mm-agent-loop
 
 `code/main.py` 就是那份總結專案的鷹架：
 
-- 動作 schema 的 JSON 定義（10 種動作）。
+- 動作 schema 的 JSON 定義（10 種動作：上面列出的九種，加上 `screenshot_region` 這個裁切 + 縮放工具）。
 - 以 dict 表示的模擬瀏覽器狀態。
 - 代理程式迴圈骨架：接收狀態、吐出動作、施加、循環。
 - 一份 10 題的迷你基準（合成頁面），用來量測端到端成功率。
@@ -140,7 +140,7 @@ mm-agent-loop
 
 ## 練習
 
-1. 用一個 `screenshot_region` 工具（裁切 + 縮放）擴充那份動作 schema。哪些任務會因此受益？
+1. 程式碼的 schema 在九種核心動作之外，加了一個 `screenshot_region` 工具（裁切 + 縮放）。哪些任務會因此受益？
 
 2. 讀 AgentVista（arXiv:2602.23166）。描述最困難的那類任務，以及前沿模型為什麼仍然失敗。
 

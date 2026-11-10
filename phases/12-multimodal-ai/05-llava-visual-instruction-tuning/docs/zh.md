@@ -1,6 +1,6 @@
 # LLaVA 與視覺指令微調
 
-> LLaVA（2023 年 4 月）是這顆星球上被抄襲最多次的多模態架構。它把 BLIP-2 的 Q-Former 換成一個兩層 MLP，把 Flamingo 的帶閘門交叉注意力換成天真的詞元串接，然後用 GPT-4 從純文字字幕生成的 158k 輪視覺指令來訓練。2023 到 2026 年間，任何做過 VLM 的實務工作者，做的都是某種 LLaVA 變體。LLaVA-1.5 加了 AnyRes。LLaVA-NeXT 拉高了解析度。LLaVA-OneVision 用一套配方統一了影像、多影像與影片。這一課會讀這份配方、實作投影器，並解釋為什麼是「比較簡單的那個贏了」。
+> LLaVA（2023 年 4 月）是這顆星球上被抄襲最多次的多模態架構。它把 BLIP-2 的 Q-Former 換成一個兩層 MLP，把 Flamingo 的帶閘門交叉注意力換成天真的詞元串接，然後用 GPT-4 從純文字字幕生成的 158k 輪視覺指令來訓練。2023 到 2026 年間，任何做過 VLM 的實務工作者，做的都是某種 LLaVA 變體。LLaVA-1.5 換上了 MLP 投影器與 336px 的編碼器。LLaVA-NeXT 為高解析度輸入加了 AnyRes 鋪排。LLaVA-OneVision 用一套配方統一了影像、多影像與影片。這一課會讀這份配方、實作投影器，並解釋為什麼是「比較簡單的那個贏了」。
 
 **類型：** 實作
 **程式語言：** Python (stdlib, projector + instruction-template builder)
@@ -32,10 +32,10 @@ LLaVA 的答案簡單到令人難堪：拿 ViT 的 576 個 patch 詞元，每個
 
 ### 架構
 
-13B 的 LLaVA-1.5：
+7B 的 LLaVA-1.5：
 - 視覺編碼器：CLIP ViT-L/14 @ 336（第 1 階段凍結，第 2 階段可選擇解凍）。
 - 投影器：兩層 MLP 搭配 GELU 激活，`1024 → 4096 → 4096`。
-- LLM：Vicuna-13B（後來換成 Llama-3.1-8B）。
+- LLM：Vicuna-7B v1.5（13B 變體用 Vicuna-13B；後來的分支改用 Llama-3.1-8B）。
 
 在一張影像 + 一段文字提示詞上的前向傳播：
 
@@ -83,10 +83,11 @@ decode response
 LLaVA-1.5（2023 年 10 月）加了：
 - 把學術任務資料（VQA、OKVQA、RefCOCO）混進指令微調。
 - 更好的系統提示詞。
-- 脈絡從 2048 拉到 32k。
+- 用兩層 MLP 投影器取代原本的單一線性層，並用 336px 的 CLIP ViT-L/14（576 個詞元）取代 224px（256 個詞元）。訓練序列維持在 2048 個詞元。
+- 論文中一個切分網格的 HD 變體，後來由 LLaVA-NeXT 以 AnyRes 之名推出。
 
 LLaVA-NeXT（2024 年 1 月）加了：
-- AnyRes：把高解析度影像切成 2x2 或 1x3 的 336x336 裁切網格，再加一張全域的低解析度縮圖。每塊裁切變成 576 個詞元；每張影像總共約 2880 個視覺詞元。OCR 與圖表任務的分數大幅跳升。
+- AnyRes：把高解析度影像切成 2x2 或 1x3 的 336x336 裁切網格，再加一張全域的低解析度縮圖。每塊裁切變成 576 個詞元。2x2 網格加上縮圖，每張影像約 2880 個視覺詞元。1x3 網格的裁切較少，所以花的詞元也較少。OCR 與圖表任務的分數大幅跳升。
 - 用 ShareGPT4V（高品質的 GPT-4V 字幕）調出更好的指令資料配方。
 - 更強的基礎 LLM（Mistral-7B、Yi-34B）。
 
@@ -98,8 +99,8 @@ LLaVA-NeXT（2024 年 1 月）加了：
 
 | | Q-Former (BLIP-2) | MLP (LLaVA) |
 |---|---|---|
-| 每張影像的視覺詞元 | 32 | 576（基礎）或 2880（AnyRes） |
-| 可訓練參數 | 1.88 億 + LM | 4000 萬 + LM |
+| 每張影像的視覺詞元 | 32 | 576（基礎）或約 2880（AnyRes，2x2 網格） |
+| 可訓練參數 | 1.88 億 + LM | 約 2200 萬（7B）+ LM |
 | 第 1 階段損失 | ITC+ITM+ITG | 只有 LM |
 | LLM 直接替換 | 需要重訓 | 只要極少的重訓就能換 |
 | 多影像 | 彆扭 | 自然（串接） |
@@ -114,7 +115,7 @@ MLP 在簡潔性與詞元彈性上勝出。Q-Former 在詞元預算上勝出。�
 A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions. USER: <image> Describe this image in detail. ASSISTANT: The image shows ...
 ```
 
-`<image>` 是一個佔位符詞元。在分詞之前，它會被換成那 576 個視覺詞元（用 AnyRes 就是 2880 個）。分詞器看到的序列會比它訓練時見過的略長一些，但 LLM 應付得了這種新輸入，因為第 1 階段就是在教它這件事。
+`<image>` 是一個佔位符詞元。在分詞之前，它會被換成那 576 個視覺詞元（用 2x2 的 AnyRes 網格則約 2880 個）。分詞器看到的序列會比它訓練時見過的略長一些，但 LLM 應付得了這種新輸入，因為第 1 階段就是在教它這件事。
 
 ### 參數的經濟性
 

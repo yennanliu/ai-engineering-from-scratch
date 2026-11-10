@@ -20,7 +20,7 @@ BLIP-2 把 32 個視覺詞元餵進凍結 LLM 的輸入層。一段提示詞配�
 
 Flamingo 的答案是：完全不去動 LLM 的輸入串流。改成在既有的 LLM 區塊之間，插入額外的交叉注意力層。文字詞元一如既往地流過 LLM 的因果自注意力。每隔幾個 LLM 區塊，文字詞元會再透過一個新的帶閘門層，去交叉關注影像特徵。那個閘門（初始化為零）意味著在第 0 步時這些新層形同無作用 —— 模型的行為和預訓練好的 LLM 一模一樣。隨著訓練推進，閘門打開，視覺資訊才開始流動。
 
-Flamingo 回答的第二個問題是：每段提示詞的影像數量不定（0 張、1 張或很多張）時要怎麼處理？靠一個 Perceiver resampler —— 一個小型的交叉注意力模組，不管你手上有多少 patch，都產出固定數量的視覺 latent 詞元。無論提示詞裡有幾張影像，LLM 的交叉注意力層看到的形狀都一樣。
+Flamingo 回答的第二個問題是：每段提示詞的影像數量不定（0 張、1 張或很多張）時要怎麼處理？靠一個 Perceiver resampler —— 一個小型的交叉注意力模組，不管你手上有多少 patch，每張影像都產出固定數量的視覺 latent 詞元。總數會隨影像張數成長，但每個文字詞元只讀一張影像的 latent，所以無論提示詞裡有幾張影像，任何單一文字詞元在交叉注意力中看到的形狀都一樣。
 
 ## 核心概念
 
@@ -30,18 +30,18 @@ Flamingo 以一個凍結的 Chinchilla 70B LLM 為起點。全部 700 億權重�
 
 ### Perceiver resampler
 
-提示詞裡的每一張影像，ViT 都會產出 N 個 patch 詞元。Perceiver resampler 有 K 個固定的可學習 latent（Flamingo 用 K=64）。每個 resampler 區塊分兩個子步驟：
+提示詞裡的每一張影像，ViT 都會產出 $N$ 個 patch 詞元。Perceiver resampler 有 $K$ 個固定的可學習 latent（Flamingo 用 $K=64$）。每個 resampler 區塊分兩個子步驟：
 
-1. 交叉注意力：K 個 latent 去關注那 N 個 patch 詞元（Q 來自 latent，K/V 來自 patch）。
+1. 交叉注意力：$K$ 個 latent 去關注那 $N$ 個 patch 詞元（Q 來自 latent，K/V 來自 patch）。
 2. latent 之間的自注意力 + FFN。
 
-跑完 6 個 resampler 區塊後，輸出是 K=64 個維度 1024 的視覺詞元，與 ViT 產出多少 patch 無關。一張 224x224 的影像（196 個 patch）和一張 480x480 的影像（900 個 patch），出來的都是 64 個 resampler 詞元。
+跑完 6 個 resampler 區塊後，輸出是 $K=64$ 個維度 1024 的視覺詞元，與 ViT 產出多少 patch 無關。一張 224x224 的影像（196 個 patch）和一張 480x480 的影像（900 個 patch），出來的都是 64 個 resampler 詞元。
 
-對影片，resampler 是沿時間軸套用的：每個畫格的 patch 產出 64 個 latent，再用一個時間位置編碼讓模型能分辨 t=0 與 t=N。整段影片就變成 T * 64 個視覺詞元。
+對影片，resampler 是沿時間軸套用的：每個畫格的 patch 產出 64 個 latent，再用一個時間位置編碼讓模型能分辨 $t=0$ 與 $t=N$。整段影片就變成 $T \cdot 64$ 個視覺詞元。
 
 ### 帶閘門的交叉注意力
 
-在凍結 LLM 每隔 M 層的地方（Flamingo 用 M=4），插入一個新的帶閘門交叉注意力區塊：
+在凍結 LLM 每隔 $M$ 層的地方（Flamingo 用 $M=4$），插入一個新的帶閘門交叉注意力區塊：
 
 ```
 x_after_llm_block = llm_block(x_before)
@@ -59,7 +59,7 @@ x_before_next_block = gated
 
 ### 給交錯輸入用的遮罩式交叉注意力
 
-在「<image A> caption A <image B> caption B <image C> ?」這樣的提示詞裡，每個文字詞元只應該看到序列中排在它前面的影像。交叉注意力遮罩強制的規則是：位置 `t` 的文字詞元，只關注影像索引 `i < i_t` 的影像 resampler 詞元，其中 `i_t` 是位置 `t` 之前最近的那張影像。「只看到緊鄰在前的那一張影像」與「看到前面所有影像」都是合理的選擇；Flamingo 選了前者。
+在「<image A> caption A <image B> caption B <image C> ?」這樣的提示詞裡，每個文字詞元只應該看到序列中排在它前面的影像。交叉注意力遮罩強制的規則是：位置 `t` 的文字詞元，只關注影像 `i_t` 的 resampler 詞元，其中 `i_t` 是位置 `t` 之前最近的那張影像；其他每一張影像的詞元都被遮蔽。「只看到緊鄰在前的那一張影像」與「看到前面所有影像」都是合理的選擇；Flamingo 選了前者。
 
 ### 脈絡內的少樣本學習
 
@@ -76,7 +76,7 @@ x_before_next_block = gated
 Flamingo 用三份資料集訓練：
 
 1. MultiModal MassiveWeb（M3W）：4300 萬個影像與文字交錯的網頁，並還原閱讀順序。
-2. 影像—文字配對（ALIGN + LTIP）：44 億組配對。
+2. 影像—文字配對：ALIGN（18 億組配對）加上 LTIP（3.12 億組配對），合計約 21 億組。
 3. 影片—文字配對（VTP）：2700 萬段短影片。
 
 OBELICS（2023）是這份交錯網頁語料的開放重現，Idefics、Idefics2 以及多數開放的「類 Flamingo」模型都用它訓練。
@@ -102,7 +102,7 @@ Otter（2023）在 OpenFlamingo 之上，用 MIMIC-IT（一份多模態指令資
 | 凍結 LLM | 是 | 是 |
 | 少樣本脈絡內學習 | 弱 | 強 —— 論文的核心賣點 |
 | 交錯輸入 | 沒有原生支援 | 有，這就是設計目標 |
-| 訓練資料 | 1.3 億組配對 | 13 億組配對 + 4300 萬個交錯網頁 |
+| 訓練資料 | 1.3 億組配對 | 約 21 億組配對 + 2700 萬段影片片段 + 4300 萬個交錯網頁 |
 | 參數量 | 訓練 1.88 億 | 訓練約 100 億（交叉注意力層） |
 | 計算量 | 8 張 A100 跑幾天 | 數千張 TPUv4 跑幾週 |
 
@@ -148,7 +148,7 @@ cross-attention-fusion
 | OBELICS | 「交錯網頁語料」 | 一份開放資料集，含 1.41 億個依閱讀順序排列影像與文字的網頁 |
 | Chinchilla | 「70B 的凍結基礎模型」 | Flamingo 凍結的文字 LLM，出自 DeepMind 的 Chinchilla 論文 |
 | 閘門排程 | 「alpha 怎麼動」 | 訓練期間交叉注意力閘門打開的速率 |
-| 交叉注意力頻率 | 「每 M 層一次」 | 隔多久插入一個帶閘門交叉注意力區塊；Flamingo 用 M=4 |
+| 交叉注意力頻率 | 「每 M 層一次」 | 隔多久插入一個帶閘門交叉注意力區塊；Flamingo 用 $M=4$ |
 | OpenFlamingo | 「開放重現版」 | MosaicML／LAION 的 3B 到 9B 開放檢查點；架構與 Flamingo 相同 |
 
 ## 延伸閱讀

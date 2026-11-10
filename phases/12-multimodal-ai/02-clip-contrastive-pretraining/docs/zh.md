@@ -35,7 +35,7 @@ CLIP 有兩座塔：
 
 兩座塔都會把輸出正規化成單位長度。既然兩邊都是單位範數，相似度就是 `cos(f(x), g(y)) = f(x)^T g(y)`。
 
-對一批 N 組 (影像, 字幕) 配對，建出形狀為 `(N, N)` 的相似度矩陣 `S`：
+對一批 $N$ 組 (影像, 字幕) 配對，建出形狀為 `(N, N)` 的相似度矩陣 `S`：
 
 ```math
 S[i, j] = \cos(f(x_i), g(y_j)) / \tau
@@ -57,7 +57,7 @@ loss = (loss_i2t + loss_t2i) / 2
 
 ### 溫度
 
-`tau` 控制 softmax 的銳利程度。tau 低 → 分布銳利，有難負例挖掘的效果。tau 高 → 平緩，所有樣本都有貢獻。CLIP 學的是 log(1/tau)，並做截斷以避免崩潰。SigLIP 2 則固定初始的 tau，改用一個學習得到的偏置。
+`tau` 控制 softmax 的銳利程度。$\tau$ 低 → 分布銳利，有難負例挖掘的效果。$\tau$ 高 → 平緩，所有樣本都有貢獻。CLIP 學的是 $\log(1/\tau)$，並做截斷以避免崩潰。SigLIP 2 則固定初始的 $\tau$，改用一個學習得到的偏置。
 
 ### 為什麼 sigmoid 擴展得更好（SigLIP）
 
@@ -132,7 +132,7 @@ multimodal-fusion
 
 3. 做一個貓 vs 狗的零樣本分類器。試兩種提示詞模板：`a photo of a {class}` 與 `a picture of a {class}`。在 100 張測試影像上量測準確率。模板的集成有贏過單一模板嗎？
 
-4. 算出在 512 張 GPU、批次 32k 的訓練中，softmax InfoNCE 與 sigmoid 成對損失各自的通訊成本。哪一個是 O(N)，哪一個是 O(N^2)？引用 SigLIP 第 4 節。
+4. 算出在 512 張 GPU、批次 32k 的訓練中，softmax InfoNCE 與 sigmoid 成對損失各自的通訊成本。哪一個是 $O(N)$，哪一個是 $O(N^2)$？引用 SigLIP 第 4 節。
 
 5. 讀 OpenCLIP 的尺度法則論文（arXiv:2212.07143，Cherti 等人）。從圖表中重現他們關於資料規模的結論：在固定模型大小下，ImageNet 零樣本準確率與訓練資料量之間，呈現什麼樣的對數線性關係？
 
