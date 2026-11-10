@@ -17,6 +17,9 @@ House style lives in `TRANSLATION-STYLE.md`. The agent workflow is `/translate-z
 | Pages without the zh dictionary | ~1,050 | 0, or excluded on purpose | `grep -L 'i18n.zh-Hant.js' site/*.html` (+ generated dirs) |
 | Error-tier terms, non-standard headings | 0 | stays 0 | `python3 scripts/zh_terms.py --strict` |
 
+**2026-11-10:** W1 and W2 are done (#39–#47). Wording drift is 0 lessons, math-only drift is 1
+(03/13, a capitalisation with no Chinese counterpart). Next up: W3, then W4.
+
 Every upstream sync adds new drift, so "done" is a state to return to after each sync, not a one-time
 finish line. `docs/fork-sync.md` runs the drift report as part of every sync.
 

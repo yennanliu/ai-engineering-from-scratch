@@ -28,44 +28,53 @@ Source: `python3 scripts/i18n_status.py --next 40`.
 Exactly the 31 lessons above: every translated lesson that has a quiz also has `quiz.zh.json`.
 Translate each quiz together with its lesson. Source: `python3 scripts/check_quiz_translations.py`.
 
-### 3. Translations behind their English: 183 lessons
+### 3. Translations behind their English: closed (1 lesson, no Chinese change needed)
 
-This is the largest gap, and it is invisible on the site. `i18n_status.py --verify` checks
-*structure* only (headings, fences, links), so when upstream corrects a claim in a paragraph, the
-check stays green and the zh page keeps teaching the old claim. The 2026-11 sync repaired the 76
-lessons `--verify` flagged; the rest of upstream's prose edits had no detector until
-`scripts/zh_drift.py`.
+`i18n_status.py --verify` checks *structure* only (headings, fences, links), so when upstream
+corrects a claim in a paragraph, the check stays green and the zh page keeps teaching the old claim.
+`scripts/zh_drift.py` is the detector for that.
 
-| | Lessons | Changed passages (hunks) |
+On 2026-11-08 it listed 232 lessons: 198 with wording changes (455 passages) and 34 with math
+notation only. Most of the wording changes came from upstream's correctness sweeps (`fix(lessons):
+correct phase N … source errors`, `source errors from #585`, and #749), each fixing a fact, a number
+or a citation. PRs #39–#47 (merged 2026-11-10) ported all of them, one commit per lesson:
+
+| PR | Phases | Lessons |
 |---|---|---|
-| Wording changed (fix these first) | 143 | 293 wording, plus math |
-| Math notation only (`` `π_θ` `` became `$\pi_\theta$`) | 40 | 493 math, across both rows |
+| #39 | 19 | 38 |
+| #40 | 13, 15, 16 | 22 |
+| #41 | 14, 17, 18 | 40 |
+| #42 | 04, 05, 06 | 32 |
+| #43 | 01, 03 | 11 |
+| #44 | 02 | 15 |
+| #45 | 11, 12 | 24 |
+| #46 | 08, 09 | 14 |
+| #47 | 07, 10 | 24 |
 
-Most of the wording changes come from upstream's correctness sweeps: `fix(lessons): correct phase N
-… source errors` (phases 12, 13, 14, 15, 16, 17, 18, 19), `source errors from #585` (phases 00–11),
-and `correct lesson claims found in interview reviews` (#749). Each one fixes a fact, a number or a
-citation.
+What remains: 03/13 shows one `math` hunk. Its only English change after the formula blocks (already
+ported) is "the canonical" → "The canonical", which has no Chinese counterpart.
 
-By phase, lessons with wording drift (2026-11-10, after phase 19 was synced): 12 → 16,
-17 → 15, 14 → 14, 10 → 12, 02 → 11, 04 → 10, 18 → 10, 07 → 8, 08 → 8, 13 → 8, 05 → 6, 03 → 5,
-15 → 5, 16 → 5, 11 → 4, 09 → 3, 06 → 2, 01 → 1, 19 → 0. On 2026-11-08 the list started at 198
-lessons with phase 19 at 38. The most-changed: 12/17 video-language temporal grounding, 10/18
-multi-token prediction, 02/05 SVMs, 03/03 backpropagation, 02/03 logistic regression, 02/06 kNN,
-12/08 LLaVA-OneVision.
+Every upstream sync reopens this gap. Run `python3 scripts/zh_drift.py` after each sync and record
+the counts in `docs/fork-sync.md`.
 
-Quizzes have no drift: the 2026-11 sync retranslated every rewritten question.
+Open questions from the sync, for a follow-up pass:
+
+- **English inside `\text{}`.** Math is copied verbatim, so most zh pages now show English words
+  inside formulas (`$O(\text{parameters})$`, `\text{Total error}`). 07/15 puts Chinese there
+  instead (`\text{活躍比例}`). `TRANSLATION-STYLE.md` should pick one rule.
+- **Upstream inconsistencies the zh mirrors:** 12/12's intro and 12/19's objectives contradict their
+  corrected bodies; 08/02 has a stray `)` inside `$\mathcal{N}(0, I))$`.
+- **Pre-existing gaps seen in passing:** 17/16's summary lacks "across US/UK/EU deployments"; 06/02's
+  glossary row still writes the mel formula as a code span.
 
 Source: `python3 scripts/zh_drift.py` (table), `--kind content`, `--phase N`,
 `--diff <lesson-dir>` (the English to port).
 
-### 4. Math renders as code on the zh page: ~122 lessons
+### 4. Math renders as code on the zh page: closed with gap 3
 
-Part of gap 3, listed separately because it is a visible rendering difference, not a wording one.
-Upstream's KaTeX migration (#598) turned inline code spans and plain-text formulas into `$…$` and
-```` ```math ```` in `en.md`. The 2026-11 sync copied the rewritten formula *blocks* into `zh.md`, but
-not the inline math in prose, so a Chinese reader sees `` `R_φ(x, y)` `` where the English reader
-sees typeset math. Each one is a mechanical copy from the English diff; `zh_drift.py` labels these
-hunks `math`.
+Upstream's KaTeX migration (#598) turned inline code spans into `$…$` and ```` ```math ```` in
+`en.md`. The 2026-11 sync had copied only the formula blocks; PRs #39–#47 copied the inline math, so
+zh pages now typeset the same formulas the English pages do.
 
 ### 5. Pages that never load the Chinese dictionary
 
@@ -112,7 +121,7 @@ By policy or by default, not by oversight. Listed so the choice is explicit:
 - All three are now CI checks (`zh_terms.py --strict` in `fork-tooling.yml`), so they cannot come
   back.
 
-### Needs a human: 1,656 warn-tier terms
+### Needs a human: 1,657 warn-tier terms
 
 `python3 scripts/zh_terms.py` lists terms that are usually Mainland usage but correct in some
 context, so they are not auto-fixed. The largest:
@@ -155,9 +164,7 @@ context, so they are not auto-fixed. The largest:
 `docs/zh-translation-plan.md` turns this order into workstreams, per-lesson steps, and the review
 and validation each PR needs.
 
-1. Port the wording drift (gap 3), worst phases first. Readers are being taught claims the English
-   no longer makes.
-2. Copy the inline math (gap 4). Mechanical, and it can share a pass with item 1.
+1. ~~Port the wording drift (gap 3)~~ and 2. ~~copy the inline math (gap 4)~~: done in #39–#47.
 3. Load the dictionary on the remaining pages (gap 5) with a post-build step.
 4. Phase 14 lessons 43–54 and their quizzes (gaps 1–2). About 9,000 words, which finishes a phase.
 5. Phase 02 19–21, 00/13 and 17/29, then the phase 13 reverse-engineering track.
