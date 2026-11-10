@@ -124,7 +124,7 @@ flowchart LR
 
 這一段你不需要客氣。
 
-- LangChain 的《Anatomy of an Agent Harness》列了十一個組件 —— 提示詞、工具、掛鉤、沙箱、編排、記憶、技能、子代理，以及一個「笨迴圈」執行環境。它沒有點名佇列、把 worker 當成部署單位、觸發語意、把工作階段持久化當成獨立的關注點，或授權政策。它把 harness 當成一個你去設定的物件，而不是一套你去部署的系統。
+- LangChain 的《Anatomy of an Agent Harness》逐一介紹了 harness 的核心組件：提示詞、工具、掛鉤、沙箱、編排、記憶、技能、子代理，以及一個「笨迴圈」執行環境。它沒有點名佇列、把 worker 當成部署單位、觸發語意、把工作階段持久化當成獨立的關注點，或授權政策。它把 harness 當成一個你去設定的物件，而不是一套你去部署的系統。
 - Addy Osmani 的《Agent Harness Engineering》立下了 `Agent = Model + Harness` 這個框架與棘輪模式，但沒有講到 harness 是由什麼組成的。它讀起來像一個立場，不是一份規格。
 - Anthropic 與 OpenAI 在表面這件事上挖得最深，但都待在自己的執行環境裡。2026 年 4 月 Agents SDK 那則「harness-compute 分離」公告，是第一份明確認可控制平面／資料平面拆分的廠商文章。那是個原語式的構想，不是新構想。
 - agentic_harness 這本書把 harness 當成一個設定物件（Jaymin West，《Agentic Engineering》第 6 章），而書裡最強的一句是「harness 是代理式系統中主要的安全邊界」。那就只是授權政策，重講一遍。
@@ -193,7 +193,7 @@ python3 code/main.py
 廠商的框架：
 
 - [Addy Osmani, Agent Harness Engineering](https://addyosmani.com/blog/agent-harness-engineering/) —— `Agent = Model + Harness` 與棘輪模式；基礎設施著墨很薄
-- [LangChain, The Anatomy of an Agent Harness](https://blog.langchain.com/the-anatomy-of-an-agent-harness/) —— 十一個組件：提示詞、工具、掛鉤、編排、沙箱、記憶、技能、子代理、執行環境；略過佇列、部署、授權
+- [LangChain, The Anatomy of an Agent Harness](https://blog.langchain.com/the-anatomy-of-an-agent-harness/) —— harness 的核心組件：提示詞、工具、掛鉤、編排、沙箱、記憶、技能、子代理、執行環境；略過佇列、部署、授權
 - [OpenAI, Harness engineering: leveraging Codex in an agent-first world](https://openai.com/index/harness-engineering/) —— Codex 團隊對他們自家執行環境周邊表面的看法
 - [OpenAI, Unrolling the Codex agent loop](https://openai.com/index/unrolling-the-codex-agent-loop/) —— 把代理迴圈化約成對函數呼叫的一個 `while`
 - [Anthropic, Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) —— 特定執行環境內的長時程表面

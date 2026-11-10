@@ -1,6 +1,6 @@
 # 審核系統 —— OpenAI、Perspective、Llama Guard
 
-> 生產環境的審核系統，把第 12-16 課所定義的安全政策操作化。OpenAI 審核 API：`omni-moderation-latest`（2024）建在 GPT-4o 之上，能在同一次呼叫裡分類文字 + 影像；在多語測試集上比前一版好 42%；回應結構回傳 13 個類別布林值 —— 騷擾、騷擾/威脅、仇恨、仇恨/威脅、違法、違法/暴力、自傷、自傷/意圖、自傷/指導、性、性/未成年、暴力、暴力/血腥；對多數開發者免費。分層樣式：輸入審核（生成前）、輸出審核（生成後）、自訂審核（領域規則）。非同步的平行呼叫能把延遲藏起來；被標記時回傳佔位回應。Llama Guard 3/4（第 16 課）：14 項 MLCommons 危害、程式碼直譯器濫用、8 種語言（v3）、多影像（v4）。Perspective API（Google Jigsaw）：早於 LLM-as-moderator 浪潮的毒性評分；主要是單維度毒性，另有嚴重毒性／侮辱／髒話等變體；是內容審核研究的基線。淘汰時程：Azure Content Moderator 於 2024 年 2 月宣告淘汰、2027 年 2 月退役，由 Azure AI Content Safety 取代。
+> 生產環境的審核系統，把第 12-16 課所定義的安全政策操作化。OpenAI 審核 API：`omni-moderation-latest`（2024）建在 GPT-4o 之上，能在同一次呼叫裡分類文字 + 影像；在多語測試集上比前一版好 42%；回應結構回傳 13 個類別布林值 —— 騷擾、騷擾/威脅、仇恨、仇恨/威脅、違法、違法/暴力、自傷、自傷/意圖、自傷/指導、性、性/未成年、暴力、暴力/血腥；對多數開發者免費。分層樣式：輸入審核（生成前）、輸出審核（生成後）、自訂審核（領域規則）。非同步的平行呼叫能把延遲藏起來；在輸入審核完成之前，可以用一段佔位回應撐過等待時間。Llama Guard 3/4（第 16 課）：14 項 MLCommons 危害、程式碼直譯器濫用、8 種語言（v3）、多影像（v4）。Perspective API（Google Jigsaw）：早於 LLM-as-moderator 浪潮的毒性評分；主要是單維度毒性，另有嚴重毒性／侮辱／髒話等變體；是內容審核研究的基線。淘汰時程：Azure Content Moderator 於 2024 年 2 月宣告淘汰、2027 年 2 月退役，由 Azure AI Content Safety 取代。
 
 **類型：** 實作
 **程式語言：** Python (stdlib, three-layer moderation harness)

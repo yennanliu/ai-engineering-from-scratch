@@ -10,7 +10,7 @@
 ## 學習目標
 
 - 描述 Claude computer use：截圖進去、鍵盤／滑鼠指令出來，不用無障礙 API。
-- 說出這三個模型在 OSWorld／WebArena／Online-Mind2Web 上的基準數字。
+- 記得本課引用的發布時基準數字：OpenAI CUA 在 OSWorld／WebArena／WebVoyager 上的成績，以及 Gemini 2.5 Computer Use 在 Online-Mind2Web 上的成績。
 - 解釋 Gemini 2.5 Computer Use 文件中那套逐步安全模式。
 - 摘要這三個模型共同強制執行的「不可信輸入」契約。
 

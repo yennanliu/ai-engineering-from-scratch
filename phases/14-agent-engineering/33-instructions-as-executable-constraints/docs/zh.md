@@ -108,7 +108,7 @@ python3 code/main.py
 
 **用規則到期日當作逼迫機制。** 每條規則帶一個 `expires_at` 日期（預設從撰寫起算 90 天）。當一條未到期的規則連續 60 天零違規時，檢查器就發出警告；下一次季度審查要嘛替它辯護而保留、要嘛把它降級成 `info`、要嘛刪掉。Cloudflare 的生產 AI Code Review 資料（2026 年 4 月，30 天內橫跨 5,169 個儲存庫的 131,246 次審查執行）顯示：有明確到期日的規則集，每個儲存庫維持在 30 條以下；沒有的則長到 80 條以上，而且多數從沒觸發過。
 
-**Markdown 當來源，JSON 當快取。** `agent-rules.md` 是被撰寫的檔案；`agent-rules.lock.json` 是檢查器在熱路徑上讀的快取。那個 lock 由 pre-commit 掛鉤重新產生。Markdown 的 diff 可審查；JSON 解析則不必出現在每一輪裡。跟 `package.json`／`package-lock.json` 與 `Cargo.toml`／`Cargo.lock` 是同一種形狀。
+**Markdown 當來源，JSON 當快取。** `agent-rules.md` 是被撰寫的檔案；`agent-rules.lock.json` 是檢查器在熱路徑上讀的快取。那個 lock 由 pre-commit 掛鉤重新產生。Markdown 的 diff 可審查；Markdown 解析則不必出現在每一輪裡，因為檢查器只載入那份預先建好的小 JSON。跟 `package.json`／`package-lock.json` 與 `Cargo.toml`／`Cargo.lock` 是同一種形狀。
 
 ## 框架應用
 

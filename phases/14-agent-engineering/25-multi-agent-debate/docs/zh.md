@@ -117,7 +117,7 @@ python3 code/main.py
 
 ## 延伸閱讀
 
-- [Du et al., Society of Minds (arXiv:2305.14325)](https://arxiv.org/abs/2305.14325) —— 典範化的多代理辯論
+- [Du et al., Improving Factuality and Reasoning in Language Models through Multiagent Debate (arXiv:2305.14325)](https://arxiv.org/abs/2305.14325) —— 典範化的多代理辯論
 - [Sparse Communication Topology (arXiv:2406.11776)](https://arxiv.org/abs/2406.11776) —— 稀疏拓撲的結果
 - [Anthropic, Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) —— 把 orchestrator-workers 當成辯論的變體
 - [Madaan et al., Self-Refine (arXiv:2303.17651)](https://arxiv.org/abs/2303.17651) —— 單一模型自我批評的對照物
